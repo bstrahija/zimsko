@@ -1,3 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* @import url(https://fonts.bunny.net/css?family=Oswald:400,500,600,700); */
+@import url(https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap);
+
+html, body {
+    min-height: 100vh;
+}
+
+[x-cloak] {
+    display: none !important;
+}
+
+.container {
+    @apply px-4 md:px-8 lg:px-16 mx-auto;
+}

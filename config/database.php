@@ -62,6 +62,26 @@ return [
             ]) : [],
         ],
 
+        'mysql_legacy' => [
+            'driver' => 'mysql',
+            'url' => env('DATABASE_URL'),
+            'host' => env('DB_LEGACY_HOST', '127.0.0.1'),
+            'port' => env('DB_LEGACY_PORT', '3306'),
+            'database' => env('DB_LEGACY_DATABASE', 'forge'),
+            'username' => env('DB_LEGACY_USERNAME', 'forge'),
+            'password' => env('DB_LEGACY_PASSWORD', ''),
+            'unix_socket' => env('DB_LEGACY_SOCKET', ''),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'prefix_indexes' => true,
+            'strict' => true,
+            'engine' => null,
+            'options' => extension_loaded('pdo_mysql') ? array_filter([
+                PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+            ]) : [],
+        ],
+
         'mariadb' => [
             'driver' => 'mariadb',
             'url' => env('DB_URL'),
@@ -147,7 +167,7 @@ return [
 
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'redis'),
-            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_database_'),
+            'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_') . '_database_'),
         ],
 
         'default' => [

@@ -1,15 +1,29 @@
 {
-    "name": "laravel/laravel",
+    "name": "creolab/zimsko",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
-    "keywords": ["laravel", "framework"],
+    "description": "Website for Zimsko.hr",
+    "keywords": [
+        "laravel",
+        "framework"
+    ],
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "blade-ui-kit/blade-heroicons": "^2.4",
+        "codeat3/blade-forkawesome": "^1.10",
+        "filament/filament": "^3.2",
+        "laravel/folio": "^1.1",
         "laravel/framework": "^11.9",
-        "laravel/tinker": "^2.9"
+        "laravel/tinker": "^2.9",
+        "livewire/livewire": "^3.5",
+        "livewire/volt": "^1.6",
+        "panphp/pan": "^0.1.3",
+        "spatie/enum": "^3.13",
+        "spatie/laravel-medialibrary": "^11.9",
+        "spatie/laravel-permission": "^6.9"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.14",
         "fakerphp/faker": "^1.23",
         "laravel/pail": "^1.1",
         "laravel/pint": "^1.13",
@@ -34,7 +48,8 @@
     "scripts": {
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover --ansi"
+            "@php artisan package:discover --ansi",
+            "@php artisan filament:upgrade"
         ],
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force"
