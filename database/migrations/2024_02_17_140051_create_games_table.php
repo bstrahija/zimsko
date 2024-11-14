@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::disableForeignKeyConstraints();
 
         Schema::create('games', function (Blueprint $table) {
-            $table->id();
+            $table->ulid('id')->primary();
             $table->unsignedInteger('external_id')->nullable()->index();
             $table->foreignId('event_id')->constrained();
             $table->foreignId('round_id')->nullable()->index();

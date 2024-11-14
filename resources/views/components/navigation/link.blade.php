@@ -1,4 +1,3 @@
- <a href="{{ $href }}"
-     class="inline-block font-oswald text-sm font-bold uppercase hover:text-accent transition-colors">
+ <a href="{{ $href }}" class="inline-block font-oswald font-medium uppercase hover:text-burger transition-colors">
      {{ $slot }}
  </a>

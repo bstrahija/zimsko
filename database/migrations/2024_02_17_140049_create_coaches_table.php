@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::disableForeignKeyConstraints();
 
         Schema::create('coaches', function (Blueprint $table) {
-            $table->id();
+            $table->ulid('id')->primary();
             $table->unsignedInteger('external_id')->nullable()->index();
             $table->string('slug')->nullable()->index();
             $table->string('name');

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -14,12 +15,12 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Team extends Model implements HasMedia
 {
-    use HasFactory, InteractsWithMedia, SoftDeletes;
+    use HasFactory, HasUlids, InteractsWithMedia, SoftDeletes;
 
     protected $casts = [
-        'id' => 'integer',
+        'id'          => 'string',
         'external_id' => 'integer',
-        'data' => 'object',
+        'data'        => 'object',
     ];
 
     public function events(): BelongsToMany

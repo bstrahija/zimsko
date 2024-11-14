@@ -47,12 +47,12 @@ class SyncLegacy extends Command
             $sync->syncTeams($this->option('media'));
             $this->info("Syncing players...");
             $sync->syncPlayers($this->option('media'));
-            $this->info("Syncing games...");
-            $sync->syncGames($this->option('media'));
             $this->info("Syncing coaches...");
             $sync->syncCoaches($this->option('media'));
             $this->info("Syncing referees...");
             $sync->syncReferees($this->option('media'));
+            $this->info("Syncing games...");
+            $sync->syncGames($this->option('media'));
             $this->info("Syncing player stats...");
             $sync->syncPlayerStats();
             $this->info("Syncing team stats...");

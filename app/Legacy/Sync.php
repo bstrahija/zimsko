@@ -32,14 +32,14 @@ class Sync
             ->get()
             ->each(function ($post) {
                 // Create new post
-                $newPost = new \App\Models\Post();
-                $newPost->external_id = $post->ID;
-                $newPost->title = $post->post_title;
-                $newPost->slug = $post->post_name;
-                $newPost->body = $post->post_content;
-                $newPost->created_at = $post->post_date;
+                $newPost               = new \App\Models\Post();
+                $newPost->external_id  = $post->ID;
+                $newPost->title        = $post->post_title;
+                $newPost->slug         = $post->post_name;
+                $newPost->body         = $post->post_content;
+                $newPost->created_at   = $post->post_date;
                 $newPost->published_at = $post->post_modified;
-                $newPost->updated_at = $post->post_modified;
+                $newPost->updated_at   = $post->post_modified;
                 $newPost->save();
             });
     }
@@ -52,14 +52,14 @@ class Sync
             ->get()
             ->each(function ($page) {
                 // Create new page
-                $newPage = new \App\Models\Page();
-                $newPage->external_id = $page->ID;
-                $newPage->title = $page->post_title;
-                $newPage->slug = $page->post_name;
-                $newPage->body = $page->post_content;
-                $newPage->created_at = $page->post_date;
+                $newPage               = new \App\Models\Page();
+                $newPage->external_id  = $page->ID;
+                $newPage->title        = $page->post_title;
+                $newPage->slug         = $page->post_name;
+                $newPage->body         = $page->post_content;
+                $newPage->created_at   = $page->post_date;
                 $newPage->published_at = $page->post_modified;
-                $newPage->updated_at = $page->post_modified;
+                $newPage->updated_at   = $page->post_modified;
                 $newPage->save();
             });
     }
@@ -68,14 +68,14 @@ class Sync
     {
         DB::connection('mysql_legacy')->table('wp_zmsk_events')->get()
             ->each(function ($event) {
-                $newEvent = new \App\Models\Event();
+                $newEvent              = new \App\Models\Event();
                 $newEvent->external_id = $event->wp_id;
-                $newEvent->slug = $event->slug;
-                $newEvent->title = $event->title;
-                $newEvent->status = $event->status;
-                $newEvent->data = @json_decode($event->data);
-                $newEvent->created_at = $event->created_at;
-                $newEvent->updated_at = $event->updated_at;
+                $newEvent->slug        = $event->slug;
+                $newEvent->title       = $event->title;
+                $newEvent->status      = $event->status;
+                $newEvent->data        = @json_decode($event->data);
+                $newEvent->created_at  = $event->created_at;
+                $newEvent->updated_at  = $event->updated_at;
                 $newEvent->save();
             });
     }
@@ -84,14 +84,14 @@ class Sync
     {
         DB::connection('mysql_legacy')->table('wp_zmsk_teams')->get()
             ->each(function ($team) use ($media) {
-                $newTeam = new \App\Models\Team();
+                $newTeam              = new \App\Models\Team();
                 $newTeam->external_id = $team->wp_id;
-                $newTeam->title = $team->title;
-                $newTeam->slug = $team->slug;
-                $newTeam->body = $team->body;
-                $newTeam->data = @json_decode($team->data);
-                $newTeam->created_at = $team->created_at;
-                $newTeam->updated_at = $team->updated_at;
+                $newTeam->title       = $team->title;
+                $newTeam->slug        = $team->slug;
+                $newTeam->body        = $team->body;
+                $newTeam->data        = @json_decode($team->data);
+                $newTeam->created_at  = $team->created_at;
+                $newTeam->updated_at  = $team->updated_at;
                 $newTeam->save();
 
                 if ($media) {
@@ -121,18 +121,18 @@ class Sync
     {
         DB::connection('mysql_legacy')->table('wp_zmsk_players')->get()
             ->each(function ($player) use ($media) {
-                $newPlayer = new \App\Models\Player();
+                $newPlayer              = new \App\Models\Player();
                 $newPlayer->external_id = $player->wp_id;
-                $newPlayer->name = $player->name;
-                $newPlayer->slug = $player->slug;
-                $newPlayer->body = $player->body;
-                $newPlayer->position = $player->position;
-                $newPlayer->number = $player->number;
-                $newPlayer->birthday = $player->birthday;
-                $newPlayer->status = $player->status;
-                $newPlayer->data = @json_decode($player->data);
-                $newPlayer->created_at = $player->created_at;
-                $newPlayer->updated_at = $player->updated_at;
+                $newPlayer->name        = $player->name;
+                $newPlayer->slug        = $player->slug;
+                $newPlayer->body        = $player->body;
+                $newPlayer->position    = $player->position;
+                $newPlayer->number      = $player->number;
+                $newPlayer->birthday    = $player->birthday;
+                $newPlayer->status      = $player->status;
+                $newPlayer->data        = @json_decode($player->data);
+                $newPlayer->created_at  = $player->created_at;
+                $newPlayer->updated_at  = $player->updated_at;
                 $newPlayer->save();
 
                 // We also need to assign the team

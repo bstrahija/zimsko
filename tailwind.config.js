@@ -12,10 +12,11 @@ export default {
     theme: {
         extend: {
             colors: {
-                primary: '#FF6B00', // Vibrant orange like a basketball
-                secondary: '#47A8BD', // Deep navy blue like classic sports jerseys
-                accent: '#FFAD69', // Clean white/grey like court lines
-                'burger-weekend': '#009dbc',
+                primary: '#FF6B00',
+                secondary: '#009dbc',
+                accent: '#FFAD69',
+                logo: '#009dbc',
+                burger: '#009dbc',
             },
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],

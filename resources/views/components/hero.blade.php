@@ -4,8 +4,6 @@
 
     <x-navigation.main />
 
-    <x-burger-weekend />
-
     <div class="container">
         <div class="w-full h-full flex flex-col justify-center items-center relative z-0">
             <p class="text-white text-2xl font-bold drop-shadow-lg my-4 uppercase">Zimsko košarkaško prvenstvo</p>
@@ -14,4 +12,8 @@
     </div>
 
     <x-basket.hero-video />
+</div>
+
+<div class="mb-12">
+    <x-burger-weekend />
 </div>
