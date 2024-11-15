@@ -16,6 +16,10 @@ class Player extends Model implements HasMedia
 {
     use HasFactory, HasUlids, SoftDeletes, InteractsWithMedia;
 
+    protected $fillable = [
+        'name',
+    ];
+
     protected $casts = [
         'id'          => 'string',
         'external_id' => 'integer',

@@ -34,3 +34,5 @@
         </li>
     </ul>
 </div>
+
+<x-navigation.mobile />

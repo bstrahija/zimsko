@@ -17,6 +17,8 @@ class Team extends Model implements HasMedia
 {
     use HasFactory, HasUlids, InteractsWithMedia, SoftDeletes;
 
+    protected $keyType = 'string';
+
     protected $casts = [
         'id'          => 'string',
         'external_id' => 'integer',
@@ -28,9 +30,9 @@ class Team extends Model implements HasMedia
         return $this->belongsToMany(Event::class);
     }
 
-    public function players(): HasMany
+    public function players(): BelongsToMany
     {
-        return $this->hasMany(Player::class);
+        return $this->BelongsToMany(Player::class);
     }
 
     public function coaches(): HasMany

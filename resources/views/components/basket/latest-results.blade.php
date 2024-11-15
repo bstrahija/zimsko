@@ -1,10 +1,7 @@
 <div class="latest-results mb-12">
-    <h2 class="space-y-2 text-center">
-        <div class="text-sm uppercase font-bold text-primary">Rezultati</div>
-        <div class="text-5xl uppercase font-medium font-oswald">Posljednje utakmice</div>
-    </h2>
+    <x-ui.h2-double sub="Rezultati">Posljednje utakmice</x-ui.h2-double>
 
-    <div class="grid grid-cols-5 gap-8 mt-8">
+    <div class="grid grid-cols-5 gap-8">
         <x-basket.latest-results-item />
         <x-basket.latest-results-item />
         <x-basket.latest-results-item />

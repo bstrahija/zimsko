@@ -4,14 +4,29 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\GameResource\Pages;
 use App\Filament\Resources\GameResource\RelationManagers;
+use App\Models\Event;
 use App\Models\Game;
+use App\Models\GamePlayer;
+use App\Models\Player;
+use App\Models\Team;
 use Filament\Forms;
+use Filament\Forms\Components\CheckboxList;
+use Filament\Forms\Components\Fieldset;
+use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Tabs;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Livewire\Component as Livewire;
 
 class GameResource extends Resource
 {
@@ -27,168 +42,277 @@ class GameResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('external_id')
-                    ->numeric(),
-                Forms\Components\Select::make('event_id')
-                    ->relationship('event', 'title')
-                    ->required(),
-                Forms\Components\Select::make('round_id')
-                    ->relationship('round', 'title'),
-                Forms\Components\TextInput::make('slug'),
-                Forms\Components\TextInput::make('title')
-                    ->required(),
-                Forms\Components\Textarea::make('body')
-                    ->columnSpanFull(),
-                Forms\Components\Select::make('home_team_id')
-                    ->relationship('homeTeam', 'title')
-                    ->required(),
-                Forms\Components\Select::make('away_team_id')
-                    ->relationship('awayTeam', 'title')
-                    ->required(),
-                Forms\Components\TextInput::make('home_score')
-                    ->required()
-                    ->numeric()
-                    ->default(0),
-                Forms\Components\TextInput::make('away_score')
-                    ->required()
-                    ->numeric()
-                    ->default(0),
-                Forms\Components\TextInput::make('home_score_q1')
-                    ->required()
-                    ->numeric()
-                    ->default(0),
-                Forms\Components\TextInput::make('away_score_q1')
-                    ->required()
-                    ->numeric()
-                    ->default(0),
-                Forms\Components\TextInput::make('home_score_q2')
-                    ->required()
-                    ->numeric()
-                    ->default(0),
-                Forms\Components\TextInput::make('away_score_q2')
-                    ->required()
-                    ->numeric()
-                    ->default(0),
-                Forms\Components\TextInput::make('home_score_q3')
-                    ->required()
-                    ->numeric()
-                    ->default(0),
-                Forms\Components\TextInput::make('away_score_q3')
-                    ->required()
-                    ->numeric()
-                    ->default(0),
-                Forms\Components\TextInput::make('home_score_q4')
-                    ->required()
-                    ->numeric()
-                    ->default(0),
-                Forms\Components\TextInput::make('away_score_q4')
-                    ->required()
-                    ->numeric()
-                    ->default(0),
-                Forms\Components\TextInput::make('home_score_ot1')
-                    ->numeric(),
-                Forms\Components\TextInput::make('away_score_ot1')
-                    ->numeric(),
-                Forms\Components\TextInput::make('home_score_ot2')
-                    ->numeric(),
-                Forms\Components\TextInput::make('away_score_ot2')
-                    ->numeric(),
-                Forms\Components\TextInput::make('home_score_ot3')
-                    ->numeric(),
-                Forms\Components\TextInput::make('away_score_ot3')
-                    ->numeric(),
-                Forms\Components\TextInput::make('home_score_ot4')
-                    ->numeric(),
-                Forms\Components\TextInput::make('away_score_ot4')
-                    ->numeric(),
-                Forms\Components\TextInput::make('status'),
-                Forms\Components\Textarea::make('data')
-                    ->columnSpanFull(),
-                Forms\Components\TextInput::make('type')
-                    ->required(),
+                Tabs::make('Tabs')
+                    ->columnSpanFull()
+                    ->tabs([
+                        Tabs\Tab::make('General')
+                            ->icon('heroicon-o-document-text')
+                            ->columns('12')
+                            ->schema(self::generalSchema()),
+                        Tabs\Tab::make('Score')
+                            ->icon('heroicon-o-chart-bar')
+                            ->columns('2')
+                            ->schema(self::scoreSchema()),
+                        Tabs\Tab::make('Players')
+                            ->columns('2')
+                            ->icon('heroicon-o-user-group')
+                            ->schema([
+                                self::playerRepeater('home'),
+                                self::playerRepeater('away'),
+                                Forms\Components\Actions::make([
+                                    Forms\Components\Actions\Action::make('Load players')
+                                        ->requiresConfirmation()
+                                        ->modalDescription('This action will load the players for the game and remove the current data.')
+                                        ->action(function (Forms\Get $get, Forms\Set $set) {
+                                            self::loadPlayers($get, $set);
+                                        })
+                                ]),
+                            ]),
+                        Tabs\Tab::make('Gallery')
+                            ->icon('heroicon-o-photo')
+                            ->schema([]),
+                    ]),
+
+
+
             ]);
+    }
+
+    public static function generalSchema()
+    {
+        // Get default event
+        $defaultEvent = Event::first();
+
+        return [
+            Fieldset::make('General')
+                ->columnSpan(8)
+                ->schema([
+                    Forms\Components\Select::make('home_team_id')
+                        ->relationship('homeTeam', 'title')
+                        ->searchable()
+                        ->live()
+                        ->columnSpan(1)
+                        ->preload()
+                        ->required()
+                        ->afterStateUpdated(function (Get $get, Set $set) {
+                            self::updateTitle($get, $set);
+                        }),
+                    Forms\Components\Select::make('away_team_id')
+                        ->relationship('awayTeam', 'title')
+                        ->searchable()
+                        ->live()
+                        ->columnSpan(1)
+                        ->preload()
+                        ->required()
+                        ->afterStateUpdated(function (Get $get, Set $set) {
+                            self::updateTitle($get, $set);
+                        }),
+
+                    Forms\Components\TextInput::make('title')
+                        ->columnSpanFull()
+                        ->required(),
+                    Forms\Components\TextInput::make('slug')
+                        ->hiddenOn(['create'])
+                        ->columnSpanFull(),
+                    RichEditor::make('body')
+                        ->columnSpanFull()
+                        ->columnSpanFull(),
+                ]),
+            Fieldset::make('Meta')
+                ->columnSpan(4)
+                ->schema([
+                    Forms\Components\Select::make('event_id')
+                        ->columnSpanFull()
+                        ->default($defaultEvent?->id)
+                        ->relationship('event', 'title'),
+                    Forms\Components\Select::make('status')
+                        ->default('scheduled')
+                        ->options(Game::STATUS_OPTIONS)
+                        ->columnSpanFull(),
+                    Forms\Components\Select::make('type')
+                        ->columnSpanFull()
+                        ->options(Game::TYPE_OPTIONS)
+                        ->default('regular')
+                        ->required(),
+                    // Forms\Components\Select::make('round_id')
+                    //     ->columnSpanFull()
+                    //     ->relationship('round', 'title'),
+                    Forms\Components\DateTimePicker::make('created_at')
+                        ->columnSpanFull(),
+                    Forms\Components\DateTimePicker::make('updated_at')
+                        ->columnSpanFull(),
+                ]),
+
+        ];
+    }
+
+    public static function scoreSchema()
+    {
+        return [
+            Fieldset::make('Home Score')
+                ->columnSpan(1)
+                ->label(function (Forms\Get $get) {
+                    return Team::find($get('home_team_id'))?->title ?: 'Home';
+                })
+                ->schema([
+                    Forms\Components\TextInput::make('home_score')->label('Final Score')->required()->numeric()->columnSpanFull()->default(0),
+                    Forms\Components\TextInput::make('home_score_q1')->label('Q1')->required()->numeric()->default(0),
+                    Forms\Components\TextInput::make('home_score_q2')->label('Q2')->required()->numeric()->default(0),
+                    Forms\Components\TextInput::make('home_score_q3')->label('Q3')->required()->numeric()->default(0),
+                    Forms\Components\TextInput::make('home_score_q4')->label('Q4')->required()->numeric()->default(0),
+                    Section::make('Overtime')
+                        ->columns(2)
+                        ->collapsed()
+                        ->schema([
+                            Forms\Components\TextInput::make('home_score_ot1')->label('OT1')->numeric()->default(0),
+                            Forms\Components\TextInput::make('home_score_ot2')->label('OT2')->numeric()->default(0),
+                            Forms\Components\TextInput::make('home_score_ot3')->label('OT3')->numeric()->default(0),
+                            Forms\Components\TextInput::make('home_score_ot4')->label('OT4')->numeric()->default(0),
+                        ]),
+                ]),
+            Fieldset::make('Away Score')
+                ->columnSpan(1)
+                ->label(function (Forms\Get $get) {
+                    return Team::find($get('away_team_id'))?->title ?: 'Away';
+                })
+                ->schema([
+                    Forms\Components\TextInput::make('away_score')->label('Final Score')->required()->numeric()->columnSpanFull()->default(0),
+                    Forms\Components\TextInput::make('away_score_q1')->label('Q1')->required()->numeric()->default(0),
+                    Forms\Components\TextInput::make('away_score_q2')->label('Q2')->required()->numeric()->default(0),
+                    Forms\Components\TextInput::make('away_score_q3')->label('Q3')->required()->numeric()->default(0),
+                    Forms\Components\TextInput::make('away_score_q4')->label('Q4')->required()->numeric()->default(0),
+                    Section::make('Overtime')
+                        ->columns(2)
+                        ->collapsed()
+                        ->schema([
+                            Forms\Components\TextInput::make('away_score_ot1')->label('OT1')->numeric()->default(0),
+                            Forms\Components\TextInput::make('away_score_ot2')->label('OT2')->numeric()->default(0),
+                            Forms\Components\TextInput::make('away_score_ot3')->label('OT3')->numeric()->default(0),
+                            Forms\Components\TextInput::make('away_score_ot4')->label('OT4')->numeric()->default(0),
+                        ]),
+                ]),
+
+        ];
+    }
+
+    public static function playerRepeater($location = 'home')
+    {
+        $name = $location . '_players';
+        $relationship = $location . 'GamePlayers';
+        $label = $location . ' Team';
+        $teamIdField = $location . '_team_id';
+
+        return Repeater::make($name)
+            ->columnSpan(1)
+            ->columns(6)
+            ->orderColumn('number')
+            ->addable(false)
+            ->deletable(true)
+            ->label(function (Forms\Get $get) use ($label, $teamIdField) {
+                return Team::find($get($teamIdField))?->title ?: $label;
+            })
+            ->itemLabel(function ($state) {
+                $record = GamePlayer::find($state['id']);
+                if ($record) {
+                    return $record->player->number . ' / ' . $record->player->name;
+                } else {
+                    return 'Loading...';
+                }
+            })
+            ->relationship($relationship)
+            ->schema([
+
+
+                Forms\Components\TextInput::make('points')->label('PTS')->numeric()->columnSpan(1),
+                Forms\Components\TextInput::make('three_points')->label('3PT')->numeric()->columnSpan(1),
+                Forms\Components\TextInput::make('free_throws')->label('FT')->numeric()->columnSpan(1),
+                Forms\Components\TextInput::make('assists')->label('AST')->numeric()->columnSpan(1),
+                Forms\Components\TextInput::make('rebounds')->label('REB')->numeric()->columnSpan(1),
+                Forms\Components\TextInput::make('blocks')->label('BLK')->numeric()->columnSpan(1),
+
+            ]);
+    }
+
+    public static function loadPlayers(Get $get, Set $set)
+    {
+        $gameId = $get('id');
+        $game   = Game::find($gameId);
+
+        // Get team data first
+        $teams = [
+            'home' => Team::find($get('home_team_id')),
+            'away' => Team::find($get('away_team_id')),
+        ];
+
+        foreach ($teams as $location => $team) {
+            $players = $team->players;
+
+            if ($players->count() > 0) {
+                // Generate records for each player
+                foreach ($players as $player) {
+                    // Check if player already exists
+                    $exists = GamePlayer::where('game_id', $gameId)->where('player_id', $player->id)->first();
+
+                    if (! $exists) {
+                        GamePlayer::create([
+                            'game_id'   => $gameId,
+                            'player_id' => $player->id,
+                            'team_id'   => $team->id,
+                        ]);
+                    }
+                }
+
+                // Now re-fetch all player and create records for them
+                $records = [];
+                $players = $game->{$location . 'GamePlayers'};
+                foreach ($players as $player) {
+                    if ($player && $player->toArray()) {
+                        $records['record-' . $player->id] = $player->toArray();
+                    }
+                }
+
+                $set($location . '_players', $records);
+            }
+        }
+
+        // $set('home_players', []);
+
+        return true;
+    }
+
+    public static function updateTitle(Get $get, Set $set): ?string
+    {
+        if ($get('title')) return $get('title');
+
+        // Try generating a title
+        $homeTeam = Team::find($get('home_team_id'));
+        $awayTeam = Team::find($get('away_team_id'));
+
+        if ($homeTeam && $awayTeam) {
+            $title = $homeTeam->title . ' vs ' . $awayTeam->title;
+            $set('title', $title);
+
+            return $title;
+        }
+
+        return null;
     }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('external_id')
-                    ->numeric()
-                    ->sortable(),
+                Tables\Columns\TextColumn::make('title')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('slug')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('event.title')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('round.title')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('slug')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('title')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('homeTeam.title')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('awayTeam.title')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('home_score')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('away_score')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('home_score_q1')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('away_score_q1')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('home_score_q2')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('away_score_q2')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('home_score_q3')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('away_score_q3')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('home_score_q4')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('away_score_q4')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('home_score_ot1')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('away_score_ot1')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('home_score_ot2')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('away_score_ot2')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('home_score_ot3')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('away_score_ot3')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('home_score_ot4')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('away_score_ot4')
-                    ->numeric()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('status')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('type')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
@@ -208,6 +332,7 @@ class GameResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

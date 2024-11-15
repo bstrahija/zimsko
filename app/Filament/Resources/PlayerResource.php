@@ -49,20 +49,17 @@ class PlayerResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('external_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('slug')
-                    ->searchable(),
+                // Tables\Columns\TextColumn::make('external_id')
+                //     ->numeric()
+                //     ->sortable(),
                 Tables\Columns\TextColumn::make('name')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('slug')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('position')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('number')
                     ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('birthday')
-                    ->date()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('status')
                     ->searchable(),

@@ -27,7 +27,7 @@ export default {
         },
     },
     plugins: [
-        //
+        // require('../../vendor/awcodes/filament-tiptap-editor/resources/css/plugin.css'),
     ],
 
 };

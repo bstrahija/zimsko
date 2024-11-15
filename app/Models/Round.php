@@ -16,7 +16,7 @@ class Round extends Model
     protected $casts = [
         'id'           => 'string',
         'external_id'  => 'integer',
-        'event_id'     => 'integer',
+        'event_id'     => 'string',
         'data'         => 'array',
         'scheduled_at' => 'timestamp',
     ];

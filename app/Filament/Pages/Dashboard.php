@@ -14,10 +14,11 @@ use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Pages\Dashboard\Concerns\HasFiltersAction;
 use Filament\Support\Enums\ActionSize;
+use Schmeits\FilamentUmami\Concerns\HasFilter;
 
 class Dashboard extends \Filament\Pages\Dashboard
 {
-    use HasFiltersAction;
+    use HasFilter, HasFiltersAction;
 
     public function getColumns(): int|string|array
     {
@@ -46,14 +47,15 @@ class Dashboard extends \Filament\Pages\Dashboard
     public function getWidgets(): array
     {
         return [
-            PulseServers::class,
-            PulseCache::class,
-            PulseExceptions::class,
+            \Schmeits\FilamentUmami\Widgets\UmamiWidgetStatsGrouped::class,
+            // PulseServers::class,
+            // PulseCache::class,
             PulseUsage::class,
-            PulseQueues::class,
+            PulseExceptions::class,
+            // PulseQueues::class,
             PulseSlowQueries::class,
             PulseSlowRequests::class,
-            PulseSlowOutGoingRequests::class
+            // PulseSlowOutGoingRequests::class
         ];
     }
 }

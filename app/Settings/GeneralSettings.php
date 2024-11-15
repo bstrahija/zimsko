@@ -8,6 +8,12 @@ class GeneralSettings extends Settings
 {
     public bool $site_active;
 
+    public string $copyright;
+
+    public string $facebook;
+
+    public string $instagram;
+
     public static function group(): string
     {
         return 'general';

@@ -4,6 +4,8 @@ namespace App\Filament\Pages;
 
 use App\Settings\GeneralSettings;
 use Filament\Forms;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
 use Filament\Pages\SettingsPage;
 
@@ -21,7 +23,22 @@ class Settings extends SettingsPage
     {
         return $form
             ->schema([
-                // ...
+                Toggle::make('site_active')
+                    ->columnSpanFull()
+                    ->label('Site active')
+                    ->required(),
+                TextInput::make('copyright')
+                    ->columnSpanFull()
+                    ->label('Copyright notice')
+                    ->required(),
+                TextInput::make('facebook')
+                    ->columnSpanFull()
+                    ->label('Facebook URL')
+                    ->required(),
+                TextInput::make('instagram')
+                    ->columnSpanFull()
+                    ->label('Instagram URL')
+                    ->required(),
             ]);
     }
 }
