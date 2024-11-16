@@ -53,15 +53,15 @@ class PlayerResource extends Resource
                 //     ->numeric()
                 //     ->sortable(),
                 Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('slug')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('position')
+                    ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('number')
                     ->numeric()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('teams.title')
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('status')
+                    ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()

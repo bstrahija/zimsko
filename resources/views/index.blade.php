@@ -6,13 +6,14 @@
     <div class="container">
         <livewire:live-score />
 
-        <x-basket.latest-results />
+        <x-basket.latest-results :latestGames="$latestGames" />
 
         <hr class="my-12">
 
         <div class="grid grid-cols-12 gap-12">
-            <x-basket.upcoming-games class="col-span-6" />
             <x-basket.leaderboard class="col-span-6" />
+            <x-basket.leaders class="col-span-6" />
+            <x-basket.upcoming-games class="col-span-6" />
         </div>
 
         <div class="grid grid-cols-12 gap-12">

@@ -22,6 +22,8 @@ use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -61,8 +63,14 @@ class GameResource extends Resource
                                 self::playerRepeater('away'),
                                 Forms\Components\Actions::make([
                                     Forms\Components\Actions\Action::make('Load players')
+                                        ->label(function (Forms\Get $get) {
+                                            return ! $get('id') ? 'Save as draft to enable loading players' : 'Re-load players';
+                                        })
                                         ->requiresConfirmation()
                                         ->modalDescription('This action will load the players for the game and remove the current data.')
+                                        ->disabled(function (Forms\Get $get) {
+                                            return ! $get('id');
+                                        })
                                         ->action(function (Forms\Get $get, Forms\Set $set) {
                                             self::loadPlayers($get, $set);
                                         })
@@ -137,9 +145,7 @@ class GameResource extends Resource
                     // Forms\Components\Select::make('round_id')
                     //     ->columnSpanFull()
                     //     ->relationship('round', 'title'),
-                    Forms\Components\DateTimePicker::make('created_at')
-                        ->columnSpanFull(),
-                    Forms\Components\DateTimePicker::make('updated_at')
+                    Forms\Components\DateTimePicker::make('scheduled_at')
                         ->columnSpanFull(),
                 ]),
 
@@ -197,10 +203,10 @@ class GameResource extends Resource
 
     public static function playerRepeater($location = 'home')
     {
-        $name = $location . '_players';
+        $name         = $location . '_players';
         $relationship = $location . 'GamePlayers';
-        $label = $location . ' Team';
-        $teamIdField = $location . '_team_id';
+        $label        = $location . ' Team';
+        $teamIdField  = $location . '_team_id';
 
         return Repeater::make($name)
             ->columnSpan(1)
@@ -208,11 +214,14 @@ class GameResource extends Resource
             ->orderColumn('number')
             ->addable(false)
             ->deletable(true)
+            ->hidden(function (Forms\Get $get) use ($teamIdField) {
+                return ! $get($teamIdField);
+            })
             ->label(function (Forms\Get $get) use ($label, $teamIdField) {
                 return Team::find($get($teamIdField))?->title ?: $label;
             })
             ->itemLabel(function ($state) {
-                $record = GamePlayer::find($state['id']);
+                $record = $state && isset($state['id']) ? GamePlayer::find($state['id']) : null;
                 if ($record) {
                     return $record->player->number . ' / ' . $record->player->name;
                 } else {
@@ -221,15 +230,12 @@ class GameResource extends Resource
             })
             ->relationship($relationship)
             ->schema([
-
-
                 Forms\Components\TextInput::make('points')->label('PTS')->numeric()->columnSpan(1),
                 Forms\Components\TextInput::make('three_points')->label('3PT')->numeric()->columnSpan(1),
                 Forms\Components\TextInput::make('free_throws')->label('FT')->numeric()->columnSpan(1),
                 Forms\Components\TextInput::make('assists')->label('AST')->numeric()->columnSpan(1),
                 Forms\Components\TextInput::make('rebounds')->label('REB')->numeric()->columnSpan(1),
                 Forms\Components\TextInput::make('blocks')->label('BLK')->numeric()->columnSpan(1),
-
             ]);
     }
 
@@ -301,34 +307,32 @@ class GameResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->paginated([20, 40, 100])
             ->columns([
                 Tables\Columns\TextColumn::make('title')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('slug')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('event.title')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('round.title')
-                    ->numeric()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('status')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
+                Tables\Columns\TextColumn::make('scheduled_at')
                     ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('deleted_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->sortable(),
+                // Tables\Columns\TextColumn::make('updated_at')
+                //     ->dateTime()
+                //     ->sortable()
+                //     ->toggleable(isToggledHiddenByDefault: true),
+                // Tables\Columns\TextColumn::make('deleted_at')
+                //     ->dateTime()
+                //     ->sortable()
+                //     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
-                //
+                SelectFilter::make('event')
+                    ->relationship('event', 'title'),
+                SelectFilter::make('status')
+                    ->options(Game::STATUS_OPTIONS),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

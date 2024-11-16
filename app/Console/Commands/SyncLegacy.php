@@ -3,6 +3,16 @@
 namespace App\Console\Commands;
 
 use App\Legacy\Sync;
+use App\Legacy\SyncCategories;
+use App\Legacy\SyncCoaches;
+use App\Legacy\SyncEvents;
+use App\Legacy\SyncGames;
+use App\Legacy\SyncPages;
+use App\Legacy\SyncPlayers;
+use App\Legacy\SyncPosts;
+use App\Legacy\SyncReferees;
+use App\Legacy\SyncStats;
+use App\Legacy\SyncTeams;
 use Illuminate\Console\Command;
 
 class SyncLegacy extends Command
@@ -36,30 +46,28 @@ class SyncLegacy extends Command
 
         if ($this->option('content') === 'all') {
             $this->info("Syncing categories...");
-            $sync->syncCategories($this->option('media'));
+            SyncCategories::run($this->option('media'));
             $this->info("Syncing posts...");
-            $sync->syncPosts($this->option('media'));
+            SyncPosts::run($this->option('media'));
             $this->info("Syncing pages...");
-            $sync->syncPages($this->option('media'));
+            SyncPages::run($this->option('media'));
             $this->info("Syncing events...");
-            $sync->syncEvents();
+            SyncEvents::run();
             $this->info("Syncing teams...");
-            $sync->syncTeams($this->option('media'));
+            SyncTeams::run($this->option('media'));
             $this->info("Syncing players...");
-            $sync->syncPlayers($this->option('media'));
+            SyncPlayers::run($this->option('media'));
             $this->info("Syncing coaches...");
-            $sync->syncCoaches($this->option('media'));
+            SyncCoaches::run($this->option('media'));
             $this->info("Syncing referees...");
-            $sync->syncReferees($this->option('media'));
+            SyncReferees::run($this->option('media'));
             $this->info("Syncing games...");
-            $sync->syncGames($this->option('media'));
-            $this->info("Syncing player stats...");
-            $sync->syncPlayerStats();
-            $this->info("Syncing team stats...");
-            $sync->syncTeamStats();
+            SyncGames::run($this->option('media'));
+            $this->info("Syncing stats...");
+            SyncStats::run();
         } elseif ($this->option('content') === 'teams') {
             $this->info("Syncing teams...");
-            $sync->syncTeams();
+            SyncTeams::run($this->option('media'));
         }
 
         $this->info("===============================================");

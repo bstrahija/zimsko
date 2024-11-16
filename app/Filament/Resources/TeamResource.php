@@ -6,9 +6,12 @@ use App\Filament\Resources\TeamResource\Pages;
 use App\Filament\Resources\TeamResource\RelationManagers;
 use App\Models\Team;
 use Filament\Forms;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -27,18 +30,21 @@ class TeamResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('external_id')
-                    ->numeric(),
-                Forms\Components\TextInput::make('slug'),
                 Forms\Components\TextInput::make('title')
+                    ->columnSpanFull()
                     ->required(),
+                Forms\Components\TextInput::make('slug')
+                    ->columnSpanFull(),
                 Forms\Components\Textarea::make('body')
-                    ->required()
                     ->columnSpanFull(),
                 Forms\Components\TextInput::make('status')
                     ->required(),
-                Forms\Components\Textarea::make('data')
-                    ->columnSpanFull(),
+                Forms\Components\Select::make('events')
+                    ->multiple()
+                    ->searchable()
+                    ->relationship('events', 'title'),
+                SpatieMediaLibraryFileUpload::make('logo')
+                    ->collection('logos'),
             ]);
     }
 
@@ -46,7 +52,11 @@ class TeamResource extends Resource
     {
         return $table
             ->columns([
+                SpatieMediaLibraryImageColumn::make('logo')->collection('logos'),
                 Tables\Columns\TextColumn::make('title')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('short_title')
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('slug')

@@ -9,6 +9,10 @@ class PagesController extends Controller
 {
     public function index()
     {
-        return view('index');
+        $latestGames = Game::where('status', 'completed')->limit(5)->get();
+
+        return view('index', [
+            'latestGames' => $latestGames,
+        ]);
     }
 }

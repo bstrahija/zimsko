@@ -25,6 +25,13 @@ class Team extends Model implements HasMedia
         'data'        => 'object',
     ];
 
+    protected $fillable = [
+        'external_id',
+        'title',
+        'short_title',
+        'slug',
+    ];
+
     public function events(): BelongsToMany
     {
         return $this->belongsToMany(Event::class);
@@ -38,6 +45,11 @@ class Team extends Model implements HasMedia
     public function coaches(): HasMany
     {
         return $this->hasMany(Coach::class);
+    }
+
+    public function logo($size = 'thumb')
+    {
+        return $this->getFirstMediaUrl('logos', $size);
     }
 
     public function registerMediaCollections(): void

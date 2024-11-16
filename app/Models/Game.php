@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasTimestamps;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,7 +13,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Game extends Model
 {
-    use HasFactory, HasUlids, SoftDeletes;
+    use HasFactory, HasUlids, HasTimestamps, SoftDeletes;
 
     protected $keyType = 'string';
 
@@ -60,6 +61,7 @@ class Game extends Model
         'away_score_ot2',
         'home_score_ot3',
         'away_score_ot3',
+        'scheduled_at',
     ];
 
     protected $casts = [
@@ -70,6 +72,7 @@ class Game extends Model
         'home_team_id' => 'string',
         'away_team_id' => 'string',
         'data'         => 'array',
+        'scheduled_at' => 'datetime',
     ];
 
     public function event(): BelongsTo
@@ -84,12 +87,12 @@ class Game extends Model
 
     public function homeTeam(): BelongsTo
     {
-        return $this->belongsTo(Team::class);
+        return $this->belongsTo(Team::class, 'home_team_id');
     }
 
     public function awayTeam(): BelongsTo
     {
-        return $this->belongsTo(Team::class);
+        return $this->belongsTo(Team::class, 'away_team_id');
     }
 
     public function players(): BelongsToMany

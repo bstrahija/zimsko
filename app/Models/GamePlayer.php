@@ -19,6 +19,8 @@ class GamePlayer extends Model
         'assists',
         'rebounds',
         'blocks',
+        'steals',
+        'turnovers',
     ];
 
     protected $casts = [
@@ -32,6 +34,8 @@ class GamePlayer extends Model
         'assists'      => 'integer',
         'rebounds'     => 'integer',
         'blocks'       => 'integer',
+        'steals'       => 'integer',
+        'turnovers'    => 'integer',
     ];
 
     public function game(): BelongsTo

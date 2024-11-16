@@ -44,6 +44,7 @@ return new class extends Migration
             $table->string('status', 50)->nullable()->default('pending')->index();
             $table->json('data')->nullable();
             $table->string('type', 50)->default('default')->index();
+            $table->dateTime('scheduled_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
