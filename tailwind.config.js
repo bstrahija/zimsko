@@ -13,9 +13,9 @@ export default {
         extend: {
             colors: {
                 primary: '#FF6B00',
-                secondary: '#009dbc',
+                secondary: 'rgb(1, 114, 173)',
                 accent: '#FFAD69',
-                logo: '#009dbc',
+                logo: 'rgb(1, 114, 173)',
                 burger: '#009dbc',
             },
             fontFamily: {

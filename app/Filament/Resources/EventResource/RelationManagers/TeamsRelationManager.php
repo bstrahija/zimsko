@@ -1,31 +1,24 @@
 <?php
 
-namespace App\Filament\Resources\TeamResource\RelationManagers;
+namespace App\Filament\Resources\EventResource\RelationManagers;
 
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
-use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class PlayersRelationManager extends RelationManager
+class TeamsRelationManager extends RelationManager
 {
-    protected static string $relationship = 'players';
+    protected static string $relationship = 'teams';
 
     public function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('number')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('position')
+                Forms\Components\TextInput::make('title')
                     ->required()
                     ->maxLength(255),
             ]);
@@ -34,21 +27,22 @@ class PlayersRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
-            ->paginated([25, 50, 100])
-            ->defaultSort('name', 'asc')
-            ->recordTitleAttribute('name')
+            ->recordTitleAttribute('title')
+            ->defaultSort('title', 'asc')
+            ->paginated(false)
             ->columns([
-                SpatieMediaLibraryImageColumn::make('photo')->collection('photos'),
-                Tables\Columns\TextColumn::make('number'),
-                Tables\Columns\TextColumn::make('name'),
-                Tables\Columns\TextColumn::make('position'),
+                Tables\Columns\TextColumn::make('index')
+                    ->width('10px')
+                    ->label('No. ')
+                    ->rowIndex(),
+                Tables\Columns\TextColumn::make('title'),
             ])
             ->filters([
                 //
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make(),
-                Tables\Actions\AttachAction::make()->label('Add Player'),
+                Tables\Actions\AttachAction::make()->preloadRecordSelect()->label('Add Team'),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

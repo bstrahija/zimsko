@@ -10,6 +10,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use FilamentTiptapEditor\TiptapEditor;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
@@ -30,13 +31,11 @@ class PageResource extends Resource
                 Forms\Components\TextInput::make('title')
                     ->required(),
                 Forms\Components\TextInput::make('slug'),
-                Forms\Components\Textarea::make('body')
+                TiptapEditor::make('body')
                     ->required()
                     ->columnSpanFull(),
                 Forms\Components\TextInput::make('status')
                     ->required(),
-                Forms\Components\Textarea::make('data')
-                    ->columnSpanFull(),
                 Forms\Components\DateTimePicker::make('published_at'),
             ]);
     }

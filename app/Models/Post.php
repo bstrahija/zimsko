@@ -12,6 +12,14 @@ class Post extends Model
 {
     use HasFactory, HasUlids, SoftDeletes;
 
+    protected $fillable = [
+        'title',
+        'slug',
+        'body',
+        'status',
+        'published_at',
+    ];
+
     protected $casts = [
         'id'           => 'string',
         'external_id'  => 'integer',

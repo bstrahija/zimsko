@@ -13,7 +13,7 @@
 
 </head>
 
-<body class="dark bg-gray-100">
+<body class="dark bg-slate-100">
     <x-header />
 
     @yield('content')

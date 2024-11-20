@@ -11,8 +11,9 @@
         <hr class="my-12">
 
         <div class="grid grid-cols-12 gap-12">
-            <x-basket.leaderboard class="col-span-6" />
-            <x-basket.leaders class="col-span-6" />
+            <x-basket.leaderboard :leaderboard="$leaderboard" class="col-span-4" />
+            <x-basket.leaders class="col-span-4" />
+            <x-basket.leaders-3pt class="col-span-4" />
             <x-basket.upcoming-games class="col-span-6" />
         </div>
 
@@ -20,15 +21,22 @@
             <div class="col-span-8 space-y-12">
 
                 <h1>Čakovec</h1>
-                <x-ui.button variant="primary">Primary</x-ui.button>
-                <x-ui.button variant="secondary">Secondary</x-ui.button>
-                <x-ui.button variant="accent">Accent</x-ui.button>
-                <x-ui.button variant="success">Success</x-ui.button>
-                <x-ui.button variant="error">Error</x-ui.button>
-                <x-ui.button variant="dark">Dark</x-ui.button>
-                <x-ui.button variant="info">Info</x-ui.button>
-                <x-ui.button>Default</x-ui.button>
                 <hr>
+
+                @php
+                    $variants = ['primary', 'secondary', 'accent', 'success', 'error', 'dark', 'info', null];
+                    $sizes = ['xs', 'sm', 'default', 'lg', 'xl', '2xl'];
+                @endphp
+
+                @foreach ($sizes as $size)
+                    @foreach ($variants as $variant)
+                        <x-ui.button variant="{{ $variant }}" size="{{ $size }}">
+                            {{ ucfirst($variant ?? 'Default') }} <small>({{ $size }})</small>
+                        </x-ui.button>
+                    @endforeach
+                    <hr>
+                @endforeach
+
                 <x-ui.input id="input-01" placeholder="Email" type="email" />
                 <x-ui.textarea id="textarea-01" placeholder="Leave a comment" />
             </div>

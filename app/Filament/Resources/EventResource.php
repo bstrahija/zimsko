@@ -5,13 +5,18 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\EventResource\Pages;
 use App\Filament\Resources\EventResource\RelationManagers;
 use App\Models\Event;
+use Closure;
 use Filament\Forms;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use FilamentTiptapEditor\TiptapEditor;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Str;
 
 class EventResource extends Resource
 {
@@ -28,15 +33,22 @@ class EventResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('title')
+                    ->columnSpanFull()
                     ->required(),
                 Forms\Components\TextInput::make('slug')
+                    ->columnSpanFull()
+                    ->hiddenOn(['create'])
                     ->required(),
+                TiptapEditor::make('body')
+                    ->columnSpanFull()
+                    ->profile('simple'),
             ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
+            ->defaultSort('title', 'desc')
             ->columns([
                 Tables\Columns\TextColumn::make('title')
                     ->sortable(),
@@ -48,6 +60,7 @@ class EventResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -59,7 +72,7 @@ class EventResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\TeamsRelationManager::class,
         ];
     }
 

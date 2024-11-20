@@ -19,6 +19,15 @@ class Team extends Model implements HasMedia
 
     protected $keyType = 'string';
 
+    public $statsData = [
+        'games'          => 0,
+        'wins'           => 0,
+        'losses'         => 0,
+        'score'          => 0,
+        'opponent_score' => 0,
+        'points'         => 0,
+    ];
+
     protected $casts = [
         'id'          => 'string',
         'external_id' => 'integer',

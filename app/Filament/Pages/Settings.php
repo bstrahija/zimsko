@@ -2,8 +2,10 @@
 
 namespace App\Filament\Pages;
 
+use App\Models\Event;
 use App\Settings\GeneralSettings;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form;
@@ -27,6 +29,11 @@ class Settings extends SettingsPage
                     ->columnSpanFull()
                     ->label('Site active')
                     ->required(),
+                Select::make('current_event_id')
+                    ->columnSpanFull()
+                    ->label('Current event')
+                    ->options(Event::all()->pluck('title', 'id')->toArray())
+                    ->searchable(),
                 TextInput::make('copyright')
                     ->columnSpanFull()
                     ->label('Copyright notice')

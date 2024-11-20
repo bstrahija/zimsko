@@ -129,4 +129,24 @@ class Game extends Model
     {
         return $this->hasMany(Referee::class);
     }
+
+    public function isCompleted(): bool
+    {
+        return $this->status === 'completed';
+    }
+
+    public function isDraw(): bool
+    {
+        return $this->home_score === $this->away_score;
+    }
+
+    public function winner(): ?Team
+    {
+        return $this->home_score > $this->away_score ? $this->homeTeam : $this->awayTeam;
+    }
+
+    public function loser(): ?Team
+    {
+        return $this->home_score < $this->away_score ? $this->homeTeam : $this->awayTeam;
+    }
 }

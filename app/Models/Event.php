@@ -2,15 +2,26 @@
 
 namespace App\Models;
 
+use App\Settings\GeneralSettings;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\LaravelSettings\Settings;
+use Spatie\Sluggable\HasSlug;
+use Spatie\Sluggable\SlugOptions;
 
 class Event extends Model
 {
-    use HasFactory, HasUlids, SoftDeletes;
+    use HasFactory, HasSlug, HasUlids, SoftDeletes;
+
+    protected $fillable = [
+        'title',
+        'slug',
+        'body',
+    ];
 
     protected $casts = [
         'id'           => 'string',
@@ -24,8 +35,32 @@ class Event extends Model
         return $this->hasMany(Game::class);
     }
 
-    public function teams(): HasMany
+    public function teams(): BelongsToMany
     {
-        return $this->hasMany(Team::class);
+        return $this->BelongsToMany(Team::class);
+    }
+
+    public static function current(): ?Event
+    {
+        $settingsEventId = app(GeneralSettings::class)->current_event_id ?: null;
+        $event           = $settingsEventId ? Event::find($settingsEventId) : Event::last();
+
+        return $event;
+    }
+
+    public static function last(): ?Event
+    {
+        return Event::orderBy('scheduled_at', 'desc')->first();
+    }
+
+    /**
+     * Get the options for generating the slug.
+     */
+    public function getSlugOptions(): SlugOptions
+    {
+        return SlugOptions::create()
+            ->generateSlugsFrom('title')
+            ->saveSlugsTo('slug')
+            ->doNotGenerateSlugsOnUpdate();
     }
 }
