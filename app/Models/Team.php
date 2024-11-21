@@ -12,10 +12,12 @@ use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Spatie\Sluggable\HasSlug;
+use Spatie\Sluggable\SlugOptions;
 
 class Team extends Model implements HasMedia
 {
-    use HasFactory, HasUlids, InteractsWithMedia, SoftDeletes;
+    use HasFactory, HasSlug, HasUlids, InteractsWithMedia, SoftDeletes;
 
     protected $keyType = 'string';
 
@@ -79,5 +81,16 @@ class Team extends Model implements HasMedia
             ->addMediaConversion('preview')
             ->fit(Fit::Contain, 600, 600)
             ->nonQueued();
+    }
+
+    /**
+     * Get the options for generating the slug.
+     */
+    public function getSlugOptions(): SlugOptions
+    {
+        return SlugOptions::create()
+            ->generateSlugsFrom('title')
+            ->saveSlugsTo('slug')
+            ->doNotGenerateSlugsOnUpdate();
     }
 }

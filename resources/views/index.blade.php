@@ -12,12 +12,12 @@
 
         <div class="grid grid-cols-12 gap-12">
             <x-basket.leaderboard :leaderboard="$leaderboard" class="col-span-4" />
-            <x-basket.leaders class="col-span-4" />
-            <x-basket.leaders-3pt class="col-span-4" />
-            <x-basket.upcoming-games class="col-span-6" />
+            <x-basket.leaders :leaderboard="$leaderboardPoints" class="col-span-4" />
+            <x-basket.leaders-3pt :leaderboard="$leaderboard3Point" class="col-span-4" />
+            <x-basket.upcoming-games class="col-span-6" :games="$upcomingGames" />
         </div>
 
-        <div class="grid grid-cols-12 gap-12">
+        {{-- <div class="grid grid-cols-12 gap-12">
             <div class="col-span-8 space-y-12">
 
                 <h1>Čakovec</h1>
@@ -44,6 +44,6 @@
             <div class="col-span-4">
 
             </div>
-        </div>
+        </div> --}}
     </div>
 @endsection

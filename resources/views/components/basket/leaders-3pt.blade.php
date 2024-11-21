@@ -66,16 +66,15 @@
         <table class="table-auto w-full text-sm">
             <thead>
                 <tr class="border-b border-gray-200">
-                    <th class="px-6 py-4 font-medium text-gray-500 uppercase tracking-wider">#</th>
-                    <th class="px-6 py-4 font-medium text-gray-500 uppercase tracking-wider">U</th>
-                    <th class="px-6 py-4 font-medium text-gray-500 uppercase tracking-wider">POB</th>
-                    <th class="px-6 py-4 font-medium text-gray-500 uppercase tracking-wider">POR</th>
-                    <th class="px-6 py-4 font-medium text-gray-500 uppercase tracking-wider text-right">BOD</th>
+                    <th class="px-2 py-4 text-left font-medium text-gray-500 uppercase tracking-wider">Pozicija</th>
+                    <th class="px-2 py-4 text-right font-medium text-gray-500 uppercase tracking-wider">U</th>
+                    <th class="px-2 py-4 text-right font-medium text-gray-500 uppercase tracking-wider">3PT</th>
+                    <th class="px-2 py-4 text-right font-medium text-gray-500 uppercase tracking-wider">AVG</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-200">
-                @foreach ($standings as $position => $team)
-                    <x-basket.leaders-3pt-item :position="$position" :team="$team" />
+                @foreach ($leaderboard as $position => $item)
+                    <x-basket.leaders-3pt-item :position="$position" :item="$item" />
                 @endforeach
             </tbody>
         </table>

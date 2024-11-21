@@ -11,10 +11,29 @@ use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Spatie\Sluggable\HasSlug;
+use Spatie\Sluggable\SlugOptions;
 
 class Player extends Model implements HasMedia
 {
-    use HasFactory, HasUlids, SoftDeletes, InteractsWithMedia;
+    use HasFactory, HasSlug, HasUlids, SoftDeletes, InteractsWithMedia;
+
+    const POSITION_OPTIONS = [
+        'point-guard'     => 'Point Guard',
+        'shooting-guard'  => 'Shooting Guard',
+        'small-forward'   => 'Small Forward',
+        'power-forward'   => 'Power Forward',
+        'center'          => 'Center',
+    ];
+
+    public $statsData = [
+        'games'            => 0,
+        'points'           => 0,
+        'three_points'     => 0,
+        'avg'              => 0,
+        'avg_three_points' => 0,
+        'team'             => null,
+    ];
 
     protected $fillable = [
         'name',
@@ -30,6 +49,11 @@ class Player extends Model implements HasMedia
     public function teams(): BelongsToMany
     {
         return $this->belongsToMany(Team::class);
+    }
+
+    public function photo($size = 'thumb')
+    {
+        return $this->getFirstMediaUrl('photos', $size);
     }
 
     public function registerMediaCollections(): void
@@ -48,5 +72,16 @@ class Player extends Model implements HasMedia
             ->addMediaConversion('preview')
             ->fit(Fit::Contain, 600, 600)
             ->nonQueued();
+    }
+
+    /**
+     * Get the options for generating the slug.
+     */
+    public function getSlugOptions(): SlugOptions
+    {
+        return SlugOptions::create()
+            ->generateSlugsFrom('name')
+            ->saveSlugsTo('slug')
+            ->doNotGenerateSlugsOnUpdate();
     }
 }

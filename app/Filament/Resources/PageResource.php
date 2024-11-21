@@ -30,7 +30,9 @@ class PageResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('title')
                     ->required(),
-                Forms\Components\TextInput::make('slug'),
+                Forms\Components\TextInput::make('slug')
+                    ->hiddenOn(['create'])
+                    ->required(),
                 TiptapEditor::make('body')
                     ->required()
                     ->columnSpanFull(),

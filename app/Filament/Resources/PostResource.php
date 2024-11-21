@@ -31,6 +31,7 @@ class PostResource extends Resource
                 Forms\Components\TextInput::make('title')
                     ->required(),
                 Forms\Components\TextInput::make('slug')
+                    ->hiddenOn(['create'])
                     ->required(),
                 TiptapEditor::make('body')
                     ->required()

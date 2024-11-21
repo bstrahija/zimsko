@@ -29,7 +29,9 @@ class CoachResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('external_id')
                     ->numeric(),
-                Forms\Components\TextInput::make('slug'),
+                Forms\Components\TextInput::make('slug')
+                    ->hiddenOn(['create'])
+                    ->required(),
                 Forms\Components\TextInput::make('name')
                     ->required(),
                 Forms\Components\Textarea::make('body')

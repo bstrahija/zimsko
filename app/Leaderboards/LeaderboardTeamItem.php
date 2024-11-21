@@ -4,7 +4,7 @@ namespace App\Leaderboards;
 
 use App\Models\Team;
 
-class LeaderboardItem
+class LeaderboardTeamItem
 {
     /**
      * Team title
@@ -12,6 +12,13 @@ class LeaderboardItem
      * @var string
      */
     readonly public string $title;
+
+    /**
+     * Team ID
+     *
+     * @var string
+     */
+    readonly public string $id;
 
     /**
      * Total points in standing
@@ -81,6 +88,7 @@ class LeaderboardItem
      */
     public function __construct($data)
     {
+        $this->id                = isset($data['id'])                    ? $data['id'] : '';
         $this->title             = isset($data['team']) && $data['team'] ? $data['team']->title : '';
         $this->games             = (int) isset($data['games'])           ? $data['games'] : 0;
         $this->points            = (int) isset($data['points'])          ? $data['points'] : 0;

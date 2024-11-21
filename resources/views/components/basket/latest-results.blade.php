@@ -8,6 +8,6 @@
     </div>
 
     <div class="flex justify-center mt-8">
-        <x-ui.button variant="secondary">Pogledaj sve rezultate</x-ui.btn>
+        <x-ui.button tag="a" variant="secondary" href="{{ route('results') }}">Pogledaj sve rezultate</x-ui.button>
     </div>
 </div>

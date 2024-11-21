@@ -10,10 +10,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Sluggable\HasSlug;
+use Spatie\Sluggable\SlugOptions;
 
 class Game extends Model
 {
-    use HasFactory, HasUlids, HasTimestamps, SoftDeletes;
+    use HasFactory, HasSlug, HasUlids, HasTimestamps, SoftDeletes;
 
     protected $keyType = 'string';
 
@@ -148,5 +150,16 @@ class Game extends Model
     public function loser(): ?Team
     {
         return $this->home_score < $this->away_score ? $this->homeTeam : $this->awayTeam;
+    }
+
+    /**
+     * Get the options for generating the slug.
+     */
+    public function getSlugOptions(): SlugOptions
+    {
+        return SlugOptions::create()
+            ->generateSlugsFrom('title')
+            ->saveSlugsTo('slug')
+            ->doNotGenerateSlugsOnUpdate();
     }
 }

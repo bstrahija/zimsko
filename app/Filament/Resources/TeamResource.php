@@ -34,7 +34,9 @@ class TeamResource extends Resource
                     ->columnSpanFull()
                     ->required(),
                 Forms\Components\TextInput::make('slug')
-                    ->columnSpanFull(),
+                    ->columnSpanFull()
+                    ->hiddenOn(['create'])
+                    ->required(),
                 Forms\Components\Textarea::make('body')
                     ->columnSpanFull(),
                 Forms\Components\TextInput::make('status')

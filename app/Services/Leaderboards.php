@@ -3,15 +3,17 @@
 namespace App\Services;
 
 use App\Leaderboards\Leaderboard;
-use App\Leaderboards\LeaderboardItem;
+use App\Leaderboards\LeaderboardPlayerItem;
+use App\Leaderboards\LeaderboardTeamItem;
 use App\Models\Event;
 use App\Models\Game;
+use App\Models\GamePlayer;
 use App\Models\Team;
 use Illuminate\Support\Collection;
 
 class Leaderboards
 {
-    public static function getForEvent(Event $event): Collection
+    public static function getTeamLeaderboardForEvent(Event $event, int $limit = 20): Collection
     {
         $leaderboard = new Leaderboard;
 
@@ -19,7 +21,7 @@ class Leaderboards
         $teams = $event->teams;
 
         // Get all games in tournament
-        $games = $event->games;
+        $games = $event->games()->with(['homeTeam', 'awayTeam'])->get();
 
         // Loop through games and assign points to teams
         /** @var Game $game */
@@ -41,7 +43,8 @@ class Leaderboards
 
         // Now create standings collection
         foreach ($teams as $team) {
-            $leaderboard->push(new LeaderboardItem([
+            $leaderboard->push(new LeaderboardTeamItem([
+                'id'              => $team->id,
                 'points'          => $team->statsData['points'],
                 'wins'            => $team->statsData['wins'],
                 'losses'          => $team->statsData['losses'],
@@ -57,7 +60,7 @@ class Leaderboards
         $leaderboard = $leaderboard->multiOrderBy([
             ['column' => 'points',          'order' => 'desc'],
             ['column' => 'scoreDifference', 'order' => 'desc'],
-        ]);
+        ])->values()->take($limit);
 
         return $leaderboard;
     }
@@ -98,17 +101,58 @@ class Leaderboards
         return $team;
     }
 
-    public static function getPointLeadersForEvent(): Leaderboard
+    public static function getPlayerLeaderboardForEvent(Event $event, $orderBy = 'points', $limit = 10): Leaderboard
     {
         $leaderboard = new Leaderboard;
+
+        // Get all games in tournament
+        $games = $event->games;
+
+        // All the player data is in the game_player table
+        $players = new Collection;
+        $records = GamePlayer::whereIn('game_id', $games->pluck('id'))->with(['player', 'team'])->get();
+
+        // Now loop through records and add points to player stats
+        foreach ($records as $record) {
+            // First check if we already have the player in our collection
+            if (! $players->where('id', $record->player_id)->first()) {
+                $record->player->statsData['team'] = $record->team;
+                $players->push($record->player);
+            }
+
+            // Add stats data to player
+            // @TODO: Add more data later, eg. rebounds, assists, etc.
+            $player = $players->where('id', $record->player_id)->first();
+            $player->statsData['games']++;
+            $player->statsData['points']             += $record->points;
+            $player->statsData['three_points']     += $record->three_points;
+            $player->statsData['avg']                 = round($player->statsData['points'] / $player->statsData['games'], 2);
+            $player->statsData['avg_three_points']  = round($player->statsData['three_points'] / $player->statsData['games'], 2);
+        }
+
+        // Now create standings collection
+        foreach ($players as $player) {
+            $leaderboard->push(new LeaderboardPlayerItem([
+                'id'               => $player->id,
+                'title'            => $player->name,
+                'games'            => $player->statsData['games'],
+                'points'           => $player->statsData['points'],
+                'three_points'     => $player->statsData['three_points'],
+                'avg'              => $player->statsData['avg'],
+                'avg_three_points' => $player->statsData['avg_three_points'],
+                'player'           => $player,
+                'team'             => $player->statsData['team'] ?: $player->teams->first(),
+            ]));
+        }
+
+        // Now finish the advanced ordering
+        $leaderboard = $leaderboard->sortByDesc($orderBy, SORT_NUMERIC)->values()->take($limit);
 
         return $leaderboard;
     }
 
-    public static function get3PointLeadersForEvent(): Leaderboard
+    public static function getPlayer3PointLeaderboardForEvent(Event $event, $limit = 10): Leaderboard
     {
-        $leaderboard = new Leaderboard;
-
-        return $leaderboard;
+        return self::getPlayerLeaderboardForEvent($event, 'threePointers', $limit);
     }
 }

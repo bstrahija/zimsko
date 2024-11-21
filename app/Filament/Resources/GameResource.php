@@ -121,6 +121,7 @@ class GameResource extends Resource
                         ->required(),
                     Forms\Components\TextInput::make('slug')
                         ->hiddenOn(['create'])
+                        ->required()
                         ->columnSpanFull(),
                     RichEditor::make('body')
                         ->columnSpanFull()

@@ -6,10 +6,13 @@ use App\Filament\Resources\PlayerResource\Pages;
 use App\Filament\Resources\PlayerResource\RelationManagers;
 use App\Models\Player;
 use Filament\Forms;
+use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use FilamentTiptapEditor\TiptapEditor;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
@@ -27,21 +30,37 @@ class PlayerResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('external_id')
-                    ->numeric(),
-                Forms\Components\TextInput::make('slug'),
-                Forms\Components\TextInput::make('name')
-                    ->required(),
-                Forms\Components\Textarea::make('body')
-                    ->columnSpanFull(),
-                Forms\Components\TextInput::make('position'),
-                Forms\Components\TextInput::make('number')
-                    ->numeric(),
-                Forms\Components\DatePicker::make('birthday'),
-                Forms\Components\TextInput::make('status')
-                    ->required(),
-                Forms\Components\Textarea::make('data')
-                    ->columnSpanFull(),
+                Grid::make(12)
+                    ->schema([
+                        Forms\Components\Section::make('General')
+                            ->columnSpan(8)
+                            ->schema([
+                                Forms\Components\TextInput::make('name')
+                                    ->required(),
+                                Forms\Components\TextInput::make('slug')
+                                    ->hiddenOn(['create'])
+                                    ->required(),
+                                TiptapEditor::make('body')
+                                    ->columnSpanFull(),
+                            ]),
+                        Forms\Components\Section::make('Meta')
+                            ->columnSpan(4)
+                            ->schema([
+                                Forms\Components\TextInput::make('status')
+                                    ->required(),
+                                Forms\Components\Select::make('position')
+                                    ->options(Player::POSITION_OPTIONS),
+                                Forms\Components\TextInput::make('number')
+                                    ->numeric(),
+                                SpatieMediaLibraryFileUpload::make('photo')
+                                    ->collection('photos'),
+                                Forms\Components\Select::make('team_id')
+                                    ->preload()
+                                    ->searchable()
+                                    ->multiple()
+                                    ->relationship('teams', 'title'),
+                            ]),
+                    ]),
             ]);
     }
 
