@@ -46,6 +46,14 @@ class Player extends Model implements HasMedia
         'data'        => 'array',
     ];
 
+    public static function findByTeamAndNumber($teamId, $number)
+    {
+        $team = Team::with('players')->find($teamId);
+
+
+        return $team->players()->where('number', $number)->first();
+    }
+
     public function teams(): BelongsToMany
     {
         return $this->belongsToMany(Team::class);

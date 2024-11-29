@@ -9,10 +9,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
+/** @package App\Models */
 class Game extends Model
 {
     use HasFactory, HasSlug, HasUlids, HasTimestamps, SoftDeletes;
@@ -85,6 +87,16 @@ class Game extends Model
     public function round(): BelongsTo
     {
         return $this->belongsTo(Round::class);
+    }
+
+    public function live(): HasOne
+    {
+        return $this->hasOne(GameLive::class);
+    }
+
+    public function gameLogs(): HasMany
+    {
+        return $this->hasMany(GameLog::class);
     }
 
     public function homeTeam(): BelongsTo

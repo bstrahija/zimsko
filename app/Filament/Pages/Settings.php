@@ -4,7 +4,10 @@ namespace App\Filament\Pages;
 
 use App\Models\Event;
 use App\Settings\GeneralSettings;
+use Faker\Core\File;
 use Filament\Forms;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -46,6 +49,20 @@ class Settings extends SettingsPage
                     ->columnSpanFull()
                     ->label('Instagram URL')
                     ->required(),
+                Repeater::make('sponsors')
+                    ->columnSpanFull()
+                    ->label('Sponsors')
+                    ->schema([
+                        TextInput::make('name')
+                            ->label('Name')
+                            ->required(),
+                        FileUpload::make('logo')
+                            ->label('Logo')
+                            ->required(),
+                        TextInput::make('url')
+                            ->label('URL')
+                            ->required(),
+                    ])
             ]);
     }
 }

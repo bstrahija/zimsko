@@ -1,0 +1,59 @@
+@import url(https://fonts.bunny.net/css?family=Oswald:200,300,400,500,600,700);
+
+/* @import url(https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap); */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+    min-height: 100svh;
+}
+
+.modals-container {
+    z-index: 999999 !important;
+}
+
+.vfm {
+    z-index: 99997 !important;
+
+    .modal-dialog {
+        margin-top: 55px;
+        transition: all ease-in-out 0.2s;
+    }
+
+    .modal {
+        display: block;
+        height: 100%;
+        left: 0;
+        outline: 0;
+        overflow-x: hidden;
+        overflow-y: auto;
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 999999;
+
+        .body {
+            padding: 35px 0;
+        }
+    }
+
+    .modal-dialog {
+        @apply max-w-screen-lg mx-auto;
+    }
+
+    .modal-content {
+        background-clip: padding-box;
+        background-color: #fff;
+        border: 1px solid rgba(80, 80, 80, 0.1);
+        border-radius: 8px;
+        display: flex;
+        flex-direction: column;
+        outline: 0;
+        pointer-events: auto;
+        position: relative;
+        width: 100%;
+    }
+}

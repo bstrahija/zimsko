@@ -17,6 +17,10 @@
             <x-basket.upcoming-games class="col-span-6" :games="$upcomingGames" />
         </div>
 
+        <hr class="my-12">
+
+        <x-sponsors />
+
         {{-- <div class="grid grid-cols-12 gap-12">
             <div class="col-span-8 space-y-12">
 

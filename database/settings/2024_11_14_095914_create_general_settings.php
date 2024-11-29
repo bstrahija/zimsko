@@ -11,5 +11,6 @@ return new class extends SettingsMigration
         $this->migrator->add('general.copyright', 'Copyright 2024');
         $this->migrator->add('general.facebook', 'https://facebook.com');
         $this->migrator->add('general.instagram', 'https://instagram.com');
+        $this->migrator->add('general.sponsors', null);
     }
 };

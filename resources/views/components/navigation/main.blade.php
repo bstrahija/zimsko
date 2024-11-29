@@ -1,4 +1,4 @@
-<div class="navigation fixed top-0 left-0 w-full text-nav z-30 bg-gray-100 bg-opacity-85">
+<div class="navigation absolute top-0 left-0 w-full text-nav z-30 bg-gray-100 bg-opacity-85">
     <ul class="flex flex-wrap items-center gap-8 pr-8">
         <li class="mr-auto bg-logo relative">
             <a href="{{ route('home') }}" class="block py-3">

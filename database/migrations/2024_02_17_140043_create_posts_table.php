@@ -15,6 +15,7 @@ return new class extends Migration
             $table->ulid('id')->primary();
             $table->unsignedInteger('external_id')->nullable()->index();
             $table->unsignedInteger('user_id')->nullable()->index();
+            $table->boolean('is_pinned')->default(false);
             $table->string('slug')->nullable()->index();
             $table->string('title');
             $table->longText('body');
