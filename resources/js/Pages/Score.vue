@@ -32,26 +32,30 @@ defineProps({
     <Layout>
         <Head title="Welcome" />
 
-        <div class="grid grid-cols-12 gap-4">
+        <div class="grid grid-cols-12 gap-4 p-4">
             <div class="col-span-10">
-                <div class="grid grid-cols-3 score-bar">
-                    <div class="home-team">
-                        <div><img :src="home_team.logo" alt="" /></div>
-                        <h3>{{ home_team.title }}</h3>
-                        <p>{{ home_score }}</p>
-                        <ScoreButton>SUB</ScoreButton>
-                        <FoulTimeoutIndicator />
+                <div class="grid grid-cols-2 gap-5 mb-4 score-bar">
+                    <div class="grid grid-cols-12 rounded border border-r border-gray-200 shadow home-team">
+                        <div class="flex col-span-3 justify-center items-center border-r"><img :src="home_team.logo" alt="" class="w-20 h-20 rounded-full" /></div>
+                        <h3 class="col-span-7 py-10 text-4xl font-bold text-center font-oswald">{{ home_team.title }}</h3>
+                        <p class="flex col-span-2 justify-center items-center h-full text-6xl font-bold text-center border-l font-oswald">{{ home_score }}</p>
+                        <div class="flex col-span-12 gap-6 border-t">
+                            <div class="px-5 py-3 pr-4 text-sm border-r">Prekršaja: 3</div>
+                            <div class="px-5 py-3 pr-4 text-sm border-r">Timeout: 2</div>
+                        </div>
+                        <!-- <ScoreButton>SUB</ScoreButton>
+                        <FoulTimeoutIndicator /> -->
                     </div>
-                    <div class="game-time">
-                        <p>7:32</p>
-                        <a href="#">Pauza</a>
-                    </div>
-                    <div class="away-team">
-                        <p>{{ away_score }}</p>
-                        <h3>{{ away_team.title }}</h3>
-                        <div><img :src="away_team.logo" alt="" /></div>
-                        <ScoreButton>SUB</ScoreButton>
-                        <FoulTimeoutIndicator />
+                    <div class="grid grid-cols-12 rounded border border-r border-gray-200 shadow away-team">
+                        <p class="flex col-span-2 justify-center items-center h-full text-6xl font-bold text-center border-r font-oswald">{{ away_score }}</p>
+                        <h3 class="col-span-7 py-10 text-4xl font-bold text-center font-oswald">{{ away_team.title }}</h3>
+                        <div class="flex col-span-3 justify-center items-center border-l"><img :src="away_team.logo" alt="" class="w-20 h-20 rounded-full" /></div>
+                        <div class="flex col-span-12 gap-6 border-t">
+                            <div class="px-5 py-3 pr-4 text-sm border-r">Prekršaja: 4</div>
+                            <div class="px-5 py-3 pr-4 text-sm border-r">Timeout: 1</div>
+                        </div>
+                        <!-- <ScoreButton>SUB</ScoreButton>
+                        <FoulTimeoutIndicator /> -->
                     </div>
                 </div>
 

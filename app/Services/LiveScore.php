@@ -28,6 +28,12 @@ class LiveScore
 
     protected int $currentQuarter = 1;
 
+    protected ?Collection $startingPlayers;
+
+    protected ?Collection $homeStartingPlayers;
+
+    protected ?Collection $awayStartingPlayers;
+
     protected ?Collection $playersOnCourt;
 
     protected ?Collection $homePlayersOnCourt;
@@ -58,6 +64,11 @@ class LiveScore
         $this->awayPlayers = $this->game->awayPlayers;
         $this->players     = $this->homePlayers->merge($this->awayPlayers);
 
+        // Init starting players
+        $this->startingPlayers     = new Collection();
+        $this->homeStartingPlayers = new Collection();
+        $this->awayStartingPlayers = new Collection();
+
         // Init players on court
         $this->playersOnCourt     = new Collection();
         $this->homePlayersOnCourt = new Collection();
@@ -75,8 +86,11 @@ class LiveScore
     public function initGame()
     {
         // This simply creates the game live model
-        $this->gameLive       = $this->game->live()->firstOrCreate([]);
+        $this->gameLive       = $this->game->live()->firstOrCreate([], ['quarter' => 1]);
         $this->currentQuarter = $this->gameLive->quarter;
+
+        // Setup the players
+        $this->setupPlayers();
 
         // We also need to update the log
         GameLog::updateOrCreate([
@@ -92,7 +106,42 @@ class LiveScore
         $this->updateLog();
     }
 
-    public function addStartingPlayers(string $side, array $playerIds)
+    function setupPlayers()
+    {
+        // Add players if we have any
+        $this->startingPlayers     = new Collection();
+        $this->homeStartingPlayers = new Collection();
+        $this->awayStartingPlayers = new Collection();
+        $this->playersOnCourt      = new Collection();
+        $this->homePlayersOnCourt  = new Collection();
+        $this->awayPlayersOnCourt  = new Collection();
+        if ($this->gameLive->home_starting_players) {
+            foreach ($this->gameLive->home_starting_players as $playerId) {
+                $this->startingPlayers->push($this->findPlayer($playerId));
+                $this->homeStartingPlayers->push($this->findPlayer($playerId));
+            }
+        }
+        if ($this->gameLive->away_starting_players) {
+            foreach ($this->gameLive->away_starting_players as $playerId) {
+                $this->startingPlayers->push($this->findPlayer($playerId));
+                $this->awayStartingPlayers->push($this->findPlayer($playerId));
+            }
+        }
+        if ($this->gameLive->home_players_on_court) {
+            foreach ($this->gameLive->home_players_on_court as $playerId) {
+                $this->playersOnCourt->push($this->findPlayer($playerId));
+                $this->homePlayersOnCourt->push($this->findPlayer($playerId));
+            }
+        }
+        if ($this->gameLive->away_players_on_court) {
+            foreach ($this->gameLive->away_players_on_court as $playerId) {
+                $this->playersOnCourt->push($this->findPlayer($playerId));
+                $this->awayPlayersOnCourt->push($this->findPlayer($playerId));
+            }
+        }
+    }
+
+    public function addStartingPlayers(array $homePlayerIds, array $awayPlayerIds)
     {
         $log = GameLog::updateOrCreate([
             'game_id'      => $this->game->id,
@@ -104,21 +153,28 @@ class LiveScore
             'occurred_at_q' => '00:00:00',
         ]);
 
+        // All starting players
+        $playerIds = array_merge($homePlayerIds, $awayPlayerIds);
+
         // Also update the live game model
-        $this->gameLive->update([$side . '_starting_players' => $playerIds]);
+        $this->gameLive->update(['home_starting_players' => $homePlayerIds, 'away_starting_players' => $awayPlayerIds]);
+
+        // Reset the players
+        $this->playersOnCourt     = new Collection();
+        $this->homePlayersOnCourt = new Collection();
+        $this->awayPlayersOnCourt = new Collection();
+
+        foreach ($homePlayerIds as $playerId) {
+            $this->homePlayersOnCourt->push($this->findPlayer($playerId));
+        }
+        $this->gameLive->update(['home_players_on_court' => $this->homePlayersOnCourt->pluck('id')->toArray()]);
+        foreach ($awayPlayerIds as $playerId) {
+            $this->awayPlayersOnCourt->push($this->findPlayer($playerId));
+        }
+        $this->gameLive->update(['away_players_on_court' => $this->awayPlayersOnCourt->pluck('id')->toArray()]);
 
         // And fill the props
-        foreach ($playerIds as $playerId) {
-            $this->playersOnCourt->push($this->findPlayer($playerId));
-
-            if ($side === 'home') {
-                $this->homePlayersOnCourt->push($this->findPlayer($playerId));
-                $this->gameLive->update(['home_players_on_court' => $this->homePlayersOnCourt->pluck('id')->toArray()]);
-            } else {
-                $this->awayPlayersOnCourt->push($this->findPlayer($playerId));
-                $this->gameLive->update(['away_players_on_court' => $this->awayPlayersOnCourt->pluck('id')->toArray()]);
-            }
-        }
+        $this->playersOnCourt = $this->homePlayersOnCourt->merge($this->awayPlayersOnCourt);
     }
 
     public function startGame()
@@ -138,6 +194,15 @@ class LiveScore
             'occurred_at'   => '00:00:00',
             'occurred_at_q' => '00:00:00',
         ]);
+
+        // Setup the players
+        $this->setupPlayers();
+        $this->setupPlayers();
+        $this->setupPlayers();
+        $this->setupPlayers();
+        $this->setupPlayers();
+        $this->setupPlayers();
+        $this->setupPlayers();
 
         // And update the log collection
         $this->updateLog();
@@ -194,6 +259,16 @@ class LiveScore
         $this->awayFoulsLeft    = config('live.team_fouls_per_quarter');
 
         $this->currentQuarter++;
+
+        // And add a log that the quarter has started
+        $log = $this->addLog([
+            'type'        => 'quarter_started',
+            'quarter'     => $this->currentQuarter,
+            'occurred_at' => '00:00:00',
+        ]);
+
+        // Now update the stats
+        $this->updateLiveStats(log: $log);
     }
 
     public function previousQuarter()
@@ -271,31 +346,41 @@ class LiveScore
         return $this->awayPlayersOnCourt;
     }
 
+    public function addPlayerStats()
+    {
+        // dump($this->log);
+        foreach ($this->players as $player) {
+            // First the scores
+            $scores = $this->log->where('player_id', $player->id)->filter(static function ($item, $key) {
+                return $item->type === 'player_score' || $item->type === 'player_score_with_assist';
+            });
+            $misses = $this->log->where('player_id', $player->id)->filter(static function ($item, $key) {
+                return $item->type === 'player_miss';
+            });
+            $player->setStats('points', $scores ? $scores->sum('amount') : 0);
+            $player->setStats('misses', $misses ? $misses->sum('amount') : 0);
+
+            $fouls = $this->log->where('player_id', $player->id)->filter(static function ($item, $key) {
+                return $item->type === 'player_foul';
+            });
+            $player->setStats('fouls', $fouls ? $fouls->sum('amount') : 0);
+
+            // $fouls = $this->log->where('type', 'player_foul');
+            // $player->setStats('fouls', $fouls->sum('amount'));
+        }
+        // die();
+    }
+
     public function toArray()
     {
-        $homeStartingPlayers = [];
-        $awayStartingPlayers = [];
-        foreach ($this->gameLive->home_starting_players as $playerId) {
-            $homeStartingPlayers[] = $this->findPlayer($playerId)->toArray();
-        }
-        foreach ($this->gameLive->away_starting_players as $playerId) {
-            $awayStartingPlayers[] = $this->findPlayer($playerId)->toArray();
-        }
-
-        $homePlayersOnCourt = [];
-        $awayPlayersOnCourt = [];
-        foreach ($this->gameLive->home_players_on_court as $playerId) {
-            $homePlayersOnCourt[] = $this->findPlayer($playerId)->toArray();
-        }
-        foreach ($this->gameLive->away_players_on_court as $playerId) {
-            $awayPlayersOnCourt[] = $this->findPlayer($playerId)->toArray();
-        }
-
         // Add logos
         $homeTeam = $this->homeTeam->toArray();
         $awayTeam = $this->awayTeam->toArray();
         $homeTeam['logo'] = $this->homeTeam->logo();
         $awayTeam['logo'] = $this->awayTeam->logo();
+
+        // We also need to add player and game stats
+        $this->addPlayerStats();
 
         return [
             'status'                => $this->gameLive->status,
@@ -309,14 +394,14 @@ class LiveScore
             'players'               => $this->players->toArray(),
             'home_players'          => $this->homePlayers->toArray(),
             'away_players'          => $this->awayPlayers->toArray(),
-            'players_on_court'      => array_merge($homePlayersOnCourt, $awayPlayersOnCourt),
-            'home_players_on_court' => $homePlayersOnCourt,
-            'away_players_on_court' => $awayPlayersOnCourt,
+            'players_on_court'      => array_merge($this->homePlayersOnCourt->toArray(), $this->awayPlayersOnCourt->toArray()),
+            'home_players_on_court' => $this->homePlayersOnCourt->toArray(),
+            'away_players_on_court' => $this->awayPlayersOnCourt->toArray(),
             'home_players_on_bench' => $this->homePlayers->diff($this->homePlayersOnCourt)->toArray(),
             'away_players_on_bench' => $this->awayPlayers->diff($this->awayPlayersOnCourt)->toArray(),
-            'starting_players'      => array_merge($homeStartingPlayers, $awayStartingPlayers),
-            'home_starting_players' => $homeStartingPlayers,
-            'away_starting_players' => $awayStartingPlayers,
+            'starting_players'      => array_merge($this->homeStartingPlayers->toArray(), $this->awayStartingPlayers->toArray()),
+            'home_starting_players' => $this->homeStartingPlayers->toArray(),
+            'away_starting_players' => $this->awayStartingPlayers->toArray(),
             'log'                   => $this->logStream(),
         ];
     }

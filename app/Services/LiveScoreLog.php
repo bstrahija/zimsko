@@ -35,9 +35,9 @@ trait LiveScoreLog
         $item->player_name   = $player ? $player->name : null;
         $item->player_2_name = $player2 ? $player2->name : null;
         $item->player_2_id   = $data['player_2_id'] ?? null;
-        $item->team_id       = $team ? $team->id : null;
-        $item->team_name     = $team ? $team->title : null;
-        $item->team_side     = $isInHomeTeam ? 'home' : 'away';
+        $item->team_id       = isset($team) && $team ? $team->id : null;
+        $item->team_name     = isset($team) && $team ? $team->title : null;
+        $item->team_side     = isset($isInHomeTeam) ? ($isInHomeTeam ? 'home' : 'away') : null;
         $item->amount        = $data['amount'] ?? null;
         $item->quarter       = $data['quarter'] ?? 'q1';
         $item->occurred_at   = $data['occurred_at'] ?? '00:00:00';
@@ -73,6 +73,7 @@ trait LiveScoreLog
                 if ($log->type === 'game_initialized')              $message = $this->logMessageForGameInitialized($log);
                 else if ($log->type === 'game_starting_players')    $message = $this->logMessageForStartingPlayers($log);
                 else if ($log->type === 'game_started')             $message = 'Utakmica je započela: ' . $log->created_at->format('d.m. h:i:s');
+                else if ($log->type === 'quarter_started')          $message = 'Počela je ' . $log->quarter . '. četvrtina: ' . $log->created_at->format('d.m. h:i:s');
                 else if ($log->type === 'game_ended')               $message = 'Utakmica je završena: ' . $log->created_at->format('d.m. h:i:s');
                 else if ($log->type === 'player_score')             $message = $this->logMessageForPlayerScore($log);
                 else if ($log->type === 'player_miss')              $message = $this->logMessageForPlayerMiss($log);

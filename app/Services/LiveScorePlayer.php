@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\GameLog;
 use App\Models\Player;
+use Illuminate\Support\Facades\Log;
 
 trait LiveScorePlayer
 {
@@ -15,6 +16,9 @@ trait LiveScorePlayer
 
         // Check players
         if (! $this->checkPlayer($player) || ! $this->checkPlayer($playerAssisted)) {
+            if (! $this->checkPlayer($player)) Log::error('Player not found when adding score', ['section' => 'LIVE', 'player_id' => $playerId, 'player_assist_id' => $playerAssistId]);
+            if (! $this->checkPlayer($playerAssisted)) Log::error('Player assisted not found when adding score', ['section' => 'LIVE', 'player_id' => $playerId, 'player_assist_id' => $playerAssistId]);
+            Log::debug('Player on court: ' . $this->playersOnCourt->pluck('name')->implode(', '), ['section' => 'LIVE', 'player_id' => $playerId, 'player_assist_id' => $playerAssistId]);
             return false;
         }
 
@@ -243,6 +247,7 @@ trait LiveScorePlayer
     {
         // Check if players in/out are the same number
         if (count($playersIn) !== count($playersOut)) {
+            Log::error('Players in/out are not the same number.');
             return false;
         }
 
@@ -252,6 +257,7 @@ trait LiveScorePlayer
 
             // We only continue if players in are not on court, and players out are on court
             if ($this->playersOnCourt->contains($playerIn) || ! $this->playersOnCourt->contains($playerOut)) {
+                Log::error('Players getting subbed are not on/off court.');
                 continue;
             }
 

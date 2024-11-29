@@ -29,7 +29,7 @@ return new class extends Migration
             $table->integer('away_score_q5')->nullable();
             $table->integer('home_score_q6')->nullable();
             $table->integer('away_score_q6')->nullable();
-            $table->string('quarter')->default('q1');
+            $table->integer('quarter')->default(1);
             $table->json('home_starting_players')->nullable();
             $table->json('away_starting_players')->nullable();
             $table->json('home_players_on_court')->nullable();

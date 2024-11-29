@@ -1,8 +1,14 @@
 <script setup>
 import AddAssistModal from './Modals/AddAssistModal.vue';
+import AddBlockModal from './Modals/AddBlockModal.vue';
 import AddFoulModal from './Modals/AddFoulModal.vue';
 import AddMissModal from './Modals/AddMissModal.vue';
+import AddReboundModal from './Modals/AddReboundModal.vue';
 import AddScoreModal from './Modals/AddScoreModal.vue';
+import AddStealModal from './Modals/AddStealModal.vue';
+import AddSubstitutionModal from './Modals/AddSubstitutionModal.vue';
+import AddTimeoutModal from './Modals/AddTimeoutModal.vue';
+import AddTurnoverModal from './Modals/AddTurnoverModal.vue';
 import IconAssist from './Icons/IconAssist.vue';
 import IconBlock from './Icons/IconBlock.vue';
 import IconFlagrant from './Icons/IconFlagrant.vue';
@@ -57,6 +63,31 @@ function addFoul(e) {
     $vfm.show({ component: AddFoulModal, bind: { game: game.value, team: team.value, players: players.value, playersOnCourt: playersOnCourt.value } });
     e.preventDefault();
 }
+
+function addBlock(e) {
+    $vfm.show({ component: AddBlockModal, bind: { game: game.value, team: team.value, players: players.value, playersOnCourt: playersOnCourt.value } });
+    e.preventDefault();
+}
+
+function addRebound(e) {
+    $vfm.show({ component: AddReboundModal, bind: { game: game.value, team: team.value, players: players.value, playersOnCourt: playersOnCourt.value } });
+    e.preventDefault();
+}
+
+function addSteal(e) {
+    $vfm.show({ component: AddStealModal, bind: { game: game.value, team: team.value, players: players.value, playersOnCourt: playersOnCourt.value } });
+    e.preventDefault();
+}
+
+function addTimeout(e) {
+    $vfm.show({ component: AddTimeoutModal, bind: { game: game.value, team: team.value, players: players.value, playersOnCourt: playersOnCourt.value } });
+    e.preventDefault();
+}
+
+function addTurnover(e) {
+    $vfm.show({ component: AddTurnoverModal, bind: { game: game.value, team: team.value, players: players.value, playersOnCourt: playersOnCourt.value } });
+    e.preventDefault();
+}
 </script>
 
 <template>
@@ -93,11 +124,11 @@ function addFoul(e) {
             <IconFoul />
             Timeout
         </ScoreButton>
-        <ScoreButton class="bg-red-700" @click="addTechnical">
+        <ScoreButton class="bg-red-700" @click="addFoul('tf')">
             <IconTechnical />
             Tehnička
         </ScoreButton>
-        <ScoreButton class="bg-red-700" @click="addFlagrant">
+        <ScoreButton class="bg-red-700" @click="addFoul('ff')">
             <IconFlagrant />
             Nesportska
         </ScoreButton>

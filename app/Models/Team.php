@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -61,6 +62,18 @@ class Team extends Model implements HasMedia
     public function logo($size = 'thumb')
     {
         return $this->getFirstMediaUrl('logos', $size);
+    }
+
+    public function stats(): Attribute
+    {
+        return new Attribute(
+            get: fn() => $this->statsData,
+        );
+    }
+
+    public function setStats($key, $value)
+    {
+        $this->statsData[$key] = $value;
     }
 
     public function registerMediaCollections(): void

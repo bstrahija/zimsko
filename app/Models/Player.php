@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -29,6 +30,7 @@ class Player extends Model implements HasMedia
     public $statsData = [
         'games'            => 0,
         'points'           => 0,
+        'misses'           => 0,
         'three_points'     => 0,
         'avg'              => 0,
         'avg_three_points' => 0,
@@ -37,6 +39,14 @@ class Player extends Model implements HasMedia
 
     protected $fillable = [
         'name',
+        'slug',
+        'number',
+        'position',
+        'height',
+        'weight',
+        'birthday',
+        'data',
+        'external_id',
     ];
 
     protected $casts = [
@@ -45,6 +55,8 @@ class Player extends Model implements HasMedia
         'birthday'    => 'date',
         'data'        => 'array',
     ];
+
+    protected $appends = ['stats'];
 
     public static function findByTeamAndNumber($teamId, $number)
     {
@@ -91,5 +103,17 @@ class Player extends Model implements HasMedia
             ->generateSlugsFrom('name')
             ->saveSlugsTo('slug')
             ->doNotGenerateSlugsOnUpdate();
+    }
+
+    public function stats(): Attribute
+    {
+        return new Attribute(
+            get: fn() => $this->statsData,
+        );
+    }
+
+    public function setStats($key, $value)
+    {
+        $this->statsData[$key] = $value;
     }
 }
