@@ -7,7 +7,7 @@ defineProps({
         required: true,
     },
     side: {
-        type: Object,
+        type: String,
         required: true,
     },
 });
