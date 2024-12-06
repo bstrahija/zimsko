@@ -1,5 +1,6 @@
 <script setup>
-import { reactive, ref } from 'vue';
+import { reactive, ref, toRefs } from 'vue';
+import { router } from '@inertiajs/vue3';
 import PlayerBlock from '../PlayerBlock.vue';
 import { $vfm } from 'vue-final-modal';
 
@@ -12,27 +13,64 @@ const props = defineProps({
         type: Array,
         required: true,
     },
+    opponents: {
+        type: Array,
+        required: true,
+    },
+    game: {
+        type: Object,
+        required: true,
+    },
 });
+
+const { game } = toRefs(props);
 
 const data = reactive({
     selectedPlayer: null,
+    selectedFouledPlayer: null,
     type: 'pf',
 });
 
-function addFoul() {
-    alert('Saving...');
+const save = async function () {
+    data.gameId = game.value.id;
+
+    let test = await router.post('/live/' + data.gameId + '/foul', data);
+
+    console.log('RES: ', test);
+
+    $vfm.hideAll();
+};
+
+function canBeSaved() {
+    return data.selectedPlayer && data.type;
 }
 
 function selectPlayer(player) {
     data.selectedPlayer = player;
 }
 
+function selectFouledPlayer(player) {
+    data.selectedFouledPlayer = player;
+}
+
 function isActive(player) {
     return player.id === data.selectedPlayer?.id;
 }
 
+function isActiveFouled(player) {
+    return player.id === data.selectedFouledPlayer?.id;
+}
+
+function isActiveAssist(player) {
+    return player.id === data.selectedAssistPlayer?.id;
+}
+
 function setType(type) {
     data.type = type;
+}
+
+function isFouledAssist(player) {
+    return player.id === data.selectedAssistPlayer?.id;
 }
 </script>
 
@@ -62,7 +100,25 @@ function setType(type) {
                             </div>
                         </div>
 
-                        <button>Spremi</button>
+                        <div v-if="data.selectedPlayer && data.type !== 'tf' && opponents" class="mt-8">
+                            <h3 class="mb-3 text-2xl font-bold text-center">Na</h3>
+
+                            <div class="grid mb-12">
+                                <div class="text-center">
+                                    <button v-for="player in opponents">
+                                        <p>
+                                            <small>
+                                                <pre>{{ player }}</pre>
+                                            </small>
+                                        </p>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-center p-6">
+                            <button :disabled="!canBeSaved()" :class="{ 'opacity-50': !canBeSaved(), 'pointer-events-none': !canBeSaved() }" @click="save" class="btn btn-primary">Spremi</button>
+                        </div>
                     </div>
                 </div>
             </div>

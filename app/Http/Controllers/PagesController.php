@@ -12,8 +12,8 @@ class PagesController extends Controller
     {
         $lastEvent         = Event::last()->toArray();
         $currentEvent      = Event::current();
-        $latestGames       = Game::where('status', 'completed')->limit(5)->get();
-        $upcomingGames     = Game::where('status', 'upcoming')->get();
+        $latestGames       = Game::where('status', 'completed')->with(['homeTeam', 'awayTeam'])->limit(5)->get();
+        $upcomingGames     = Game::where('status', 'upcoming')->with(['homeTeam', 'awayTeam'])->get();
         $leaderboard       = Leaderboards::getTeamLeaderboardForEvent(Event::current());
         $leaderboardPoints = Leaderboards::getPlayerLeaderboardForEvent(Event::current());
         $leaderboard3Point = Leaderboards::getPlayer3PointLeaderboardForEvent(Event::current());

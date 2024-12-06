@@ -23,12 +23,25 @@ class Team extends Model implements HasMedia
     protected $keyType = 'string';
 
     public $statsData = [
-        'games'          => 0,
-        'wins'           => 0,
-        'losses'         => 0,
-        'score'          => 0,
-        'opponent_score' => 0,
-        'points'         => 0,
+        'games'           => 0,
+        'wins'            => 0,
+        'losses'          => 0,
+        'score'           => 0,
+        'misses'          => 0,
+        'three_points'    => 0,
+        'opponent_score'  => 0,
+        'points'          => 0,
+        'efficiency'      => 0,   // (PTS + REB + AST + STL + BLK − ((FGA − FGM) + (FTA − FTM) + TO))
+        'fouls'           => 0,
+        'period_fouls'    => 0,
+        'timeouts'        => 0,
+        'period_timeouts' => 0,
+        'rebounds'        => 0,
+        'blocks'          => 0,
+        'assists'         => 0,
+        'turnovers'       => 0,
+        'blocks'          => 0,
+        'steals'          => 0,
     ];
 
     protected $casts = [
@@ -43,6 +56,8 @@ class Team extends Model implements HasMedia
         'short_title',
         'slug',
     ];
+
+    protected $appends = ['stats'];
 
     public function events(): BelongsToMany
     {

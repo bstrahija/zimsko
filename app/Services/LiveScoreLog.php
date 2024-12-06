@@ -58,6 +58,7 @@ trait LiveScoreLog
         foreach ($this->log as $log) {
             if (!in_array($log->type, ['player_assist'])) {
                 $item = [
+                    'id'            => $log->id,
                     'type'          => $log->type,
                     'subtype'       => $log->subtype,
                     'quarter'       => $log->quarter,
@@ -66,6 +67,9 @@ trait LiveScoreLog
                     'amount'        => $log->amount,
                     'home_score'    => $log->home_score,
                     'away_score'    => $log->away_score,
+                    'team_name'     => $log->team_name,
+                    'team_side'     => $log->team_side,
+                    'player_name'   => $log->player_name,
                 ];
 
                 // Let's build up a message
@@ -96,29 +100,26 @@ trait LiveScoreLog
             }
         }
 
-        // Inverse the stream
-        $stream = array_reverse($stream);
-
         return $stream;
     }
 
     public function logMessageForGameInitialized(GameLog $log): string
     {
-        $message  = 'Utakmica je spremna: ' . $log->created_at->format('d.m. h:i:s') . '<br>';
-        $message .= 'Domaća ekipa: ' . $this->homeTeam->title . ' (' . $this->homePlayers->pluck('name')->implode(', ') . ')<br>';
-        $message .= 'Gostujuća ekipa: ' . $this->awayTeam->title . ' (' . $this->awayPlayers->pluck('name')->implode(', ') . ')<br>';
+        $message  = 'Utakmica je spremna: ' . $log->created_at->format('d.m. h:i:s');
+        // $message .= 'Domaća ekipa: ' . $this->homeTeam->title . ' (' . $this->homePlayers->pluck('name')->implode(', ') . ')<br>';
+        // $message .= 'Gostujuća ekipa: ' . $this->awayTeam->title . ' (' . $this->awayPlayers->pluck('name')->implode(', ') . ')<br>';
 
         return $message;
     }
 
     public function logMessageForStartingPlayers(GameLog $log): string
     {
-        $homePlayers = $this->gameLive->home_starting_players ? Player::whereIn('id', $this->gameLive->home_starting_players)->get() : null;
-        $awayPlayers = $this->gameLive->away_starting_players ? Player::whereIn('id', $this->gameLive->away_starting_players)->get() : null;
+        // $homePlayers = $this->gameLive->home_starting_players ? Player::whereIn('id', $this->gameLive->home_starting_players)->get() : null;
+        // $awayPlayers = $this->gameLive->away_starting_players ? Player::whereIn('id', $this->gameLive->away_starting_players)->get() : null;
 
-        $message = 'Odabrane petorke<br>';
-        $message .= $this->homeTeam->title . ': ' . $homePlayers->pluck('name')->implode(', ');
-        $message .= '<br>' . $this->awayTeam->title . ': ' . $awayPlayers->pluck('name')->implode(', ');
+        $message = 'Odabrane petorke';
+        // $message .= $this->homeTeam->title . ': ' . $homePlayers->pluck('name')->implode(', ');
+        // $message .= '<br>' . $this->awayTeam->title . ': ' . $awayPlayers->pluck('name')->implode(', ');
 
         return $message;
     }
@@ -234,7 +235,8 @@ trait LiveScoreLog
     {
         $this->log = GameLog::where('game_id', $this->game->id)
             ->where('game_live_id', $this->gameLive->id)
-            ->orderBy('occurred_at', 'asc')
+            ->orderBy('created_at', 'desc')
+            ->orderBy('occurred_at', 'desc')
             ->get();
     }
 

@@ -52,7 +52,7 @@ class LiveScore
     {
         // First find the game model
         if (is_string($game)) {
-            $this->game = Game::find($game);
+            $this->game = Game::find($game)->with(['homeTeam', 'awayTeam', 'homeTeam.players', 'awayTeam.players']);
         } else {
             $this->game = $game;
         }
@@ -371,6 +371,40 @@ class LiveScore
         // die();
     }
 
+    public function addTeamStats()
+    {
+        foreach ([$this->homeTeam, $this->awayTeam] as $team) {
+            $side = $team->id === $this->homeTeam->id ? 'home' : 'away';
+            $team->setStats('score', $this->gameLive->{$side . '_score'});
+
+            // Misses
+            $misses = $this->log->where('team_id', $team->id)->filter(static function ($item, $key) {
+                return $item->type === 'player_miss';
+            });
+            $team->setStats('misses', $misses->sum('amount'));
+
+            // Fouls
+            $fouls = $this->log->where('team_id', $team->id)->filter(static function ($item, $key) {
+                return $item->type === 'player_foul';
+            });
+            $team->setStats('fouls', $fouls->sum('amount'));
+            $periodFouls = $this->log->where('team_id', $team->id)->where('quarter', $this->currentQuarter)->filter(static function ($item, $key) {
+                return $item->type === 'player_foul';
+            });
+            $team->setStats('period_fouls', $periodFouls->sum('amount'));
+
+            // Timeouts
+            $timeouts = $this->log->where('team_id', $team->id)->filter(static function ($item, $key) {
+                return $item->type === 'timeout';
+            });
+            $team->setStats('timeouts', $timeouts->sum('amount'));
+            $periodTimeouts = $this->log->where('team_id', $team->id)->where('quarter', $this->currentQuarter)->filter(static function ($item, $key) {
+                return $item->type === 'timeout';
+            });
+            $team->setStats('period_timeouts', $periodTimeouts->sum('amount'));
+        }
+    }
+
     public function toArray()
     {
         // Add logos
@@ -404,6 +438,53 @@ class LiveScore
             'away_starting_players' => $this->awayStartingPlayers->toArray(),
             'log'                   => $this->logStream(),
         ];
+    }
+
+    /**
+     * Optimized data for frontend JSON
+     *
+     * @return array
+     */
+    public function toData(): array
+    {
+        // We also need to add player and team stats
+        $this->addPlayerStats();
+        $this->addTeamStats();
+
+        // Prepare the data
+        $data = [
+            'game' => $this->game->toArray(),
+            'live' => $this->gameLive->toArray(),
+            'log'  => $this->logStream(),
+        ];
+
+        // We need to adjust some data
+        foreach (['home_starting_players', 'away_starting_players', 'home_players_on_court', 'away_players_on_court'] as $type) {
+            if ($data['live'][$type]) {
+                $players = [];
+                foreach ($data['live'][$type] as $key => $playerId) {
+                    $player = $this->findPlayer($playerId);
+                    $players[$key] = $player->toArray();
+                }
+                $data['live'][$type] = $players;
+            }
+        }
+
+        // Add some team data
+        $data['live']['home_players']          = $this->homePlayers->toArray();
+        $data['live']['away_players']          = $this->awayPlayers->toArray();
+        $data['live']['home_team']             = $this->homeTeam->toArray();
+        $data['live']['away_team']             = $this->awayTeam->toArray();
+        $data['game']['home_team']['logo']     = $this->homeTeam->logo();
+        $data['game']['away_team']['logo']     = $this->awayTeam->logo();
+        $data['live']['home_team']['logo']     = $data['game']['home_team']['logo'];
+        $data['live']['away_team']['logo']     = $data['game']['away_team']['logo'];
+        $data['live']['home_players_on_bench'] = $this->homePlayers->diff($this->homePlayersOnCourt)->toArray();
+        $data['live']['away_players_on_bench'] = $this->awayPlayers->diff($this->awayPlayersOnCourt)->toArray();
+        unset($data['live']['home_team']['players']);
+        unset($data['live']['away_team']['players']);
+
+        return $data;
     }
 
     public function toJson($options = 0)

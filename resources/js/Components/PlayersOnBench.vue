@@ -10,7 +10,7 @@ defineProps({
 </script>
 
 <template>
-    <div class="grid grid-cols-2 gap-2">
-        <PlayerBlock v-for="player in players" :key="player.id" :player="player" class="bg-slate-400" />
+    <div class="grid grid-cols-2 auto-rows-min gap-2 grid-min-rows players-on-bench">
+        <PlayerBlock v-for="player in players" :key="player.id" :player="player" />
     </div>
 </template>

@@ -34,6 +34,7 @@ class GameLog extends Model
         'subtype',
         'amount',
         'summary',
+        'data',
         'occurred_at',
         'occurred_at_q',
     ];
@@ -43,7 +44,7 @@ class GameLog extends Model
         'away_score'  => 'integer',
         'amount'      => 'integer',
         'quarter'     => 'integer',
-
+        'data'        => 'array'
     ];
 
     public function game(): BelongsTo

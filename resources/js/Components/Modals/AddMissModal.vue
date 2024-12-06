@@ -1,5 +1,6 @@
 <script setup>
-import { reactive, ref } from 'vue';
+import { reactive, ref, toRefs } from 'vue';
+import { router } from '@inertiajs/vue3';
 import PlayerBlock from '../PlayerBlock.vue';
 import { $vfm } from 'vue-final-modal';
 
@@ -12,15 +13,32 @@ const props = defineProps({
         type: Array,
         required: true,
     },
+    game: {
+        type: Object,
+        required: true,
+    },
 });
+
+const { game } = toRefs(props);
 
 const data = reactive({
     selectedPlayer: null,
     score: 2,
+    gameId: null,
 });
 
-function addMiss() {
-    alert('Saving...');
+const save = async function () {
+    data.gameId = game.value.id;
+
+    let test = await router.post('/live/' + data.gameId + '/miss', data);
+
+    console.log('RES: ', test);
+
+    $vfm.hideAll();
+};
+
+function canBeSaved() {
+    return data.selectedPlayer && data.score;
 }
 
 function selectPlayer(player) {
@@ -61,7 +79,9 @@ function setScore(score) {
                             </div>
                         </div>
 
-                        <button>Spremi</button>
+                        <div class="flex justify-center p-6">
+                            <button :disabled="!canBeSaved()" :class="{ 'opacity-50': !canBeSaved(), 'pointer-events-none': !canBeSaved() }" @click="save" class="btn btn-primary">Spremi</button>
+                        </div>
                     </div>
                 </div>
             </div>

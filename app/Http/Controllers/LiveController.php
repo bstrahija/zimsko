@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Game;
+use App\Models\GameLog;
 use App\Models\Player;
 use App\Services\LiveScore;
 use Illuminate\Http\Request;
@@ -13,21 +14,33 @@ use Inertia\Inertia;
 
 class LiveController extends Controller
 {
+    protected ?LiveScore $live = null;
+
     public function index()
     {
         // Let's get a game (latest)
         // $game = Game::orderBy('scheduled_at', 'desc')->first();
-        $game = Game::where('id', '01jdvw62am6vt5evs48dn4qq8f')->first();
-        $this->runSim($game);
+
+        /** @var Game $game */
+        $game = Game::where('id', '01je1krqjrfafqe8ywf1htcawh')->with(['homeTeam', 'awayTeam', 'homeTeam.players', 'awayTeam.players'])->first();
+        // $this->runSim($game);
+        // Log::debug("Simulating game. Game: {$game->id}", ['section' => 'LIVE', 'game_id' => $game->id]);
+
 
 
         // die();
 
-        $live = new LiveScore($game);
+        $live = $this->live($game);
         // dd($live);
 
+
+
         // We need to convert all the data to an array
-        $data = $live->toArray();
+        $data = $this->live($game)->toData();
+
+        // dump($data);
+        // die();
+
 
 
 
@@ -44,21 +57,42 @@ class LiveController extends Controller
 
     function addScore(Game $game, Request $request)
     {
-        $live = new LiveScore($game);
-
-        // Find the player
-        $playerId = $request->input('selectedPlayer') ?  $request->input('selectedPlayer')['id'] : null;
-        // $player   = $playerId ? Player::where('id', $playerId)->first() : null;
+        // Prepare data
+        $playerId       = $request->input('selectedPlayer') ?  $request->input('selectedPlayer')['id'] : null;
         $assistPlayerId = $request->input('selectedAssistPlayer') ?  $request->input('selectedAssistPlayer')['id'] : null;
-        // $assistPlayer   = $assistPlayerId ? Player::where('id', $assistPlayerId)->first() : null;
-        $score    = $request->input('score');
-
+        $score          = $request->input('score');
         Log::debug("Adding score. Game: {$game->id}, Player: {$playerId}, Assist: {$assistPlayerId}, Score: {$score}", ['section' => 'LIVE', 'game_id' => $game->id, 'player_id' => $playerId]);
 
+        // Write the score
+        if ($assistPlayerId) $this->live($game)->playerScore(playerId: $playerId, points: $score, playerAssistId: $assistPlayerId);
+        else                 $this->live($game)->playerScore(playerId: $playerId, points: $score);
+    }
+
+    function addMiss(Game $game, Request $request)
+    {
+        // Find the player
+        $playerId = $request->input('selectedPlayer') ?  $request->input('selectedPlayer')['id'] : null;
+        $score    = $request->input('score');
+        Log::debug("Adding miss. Game: {$game->id}, Player: {$playerId}, Points: {$score}", ['section' => 'LIVE', 'game_id' => $game->id, 'player_id' => $playerId]);
 
         // Write the score
-        if ($assistPlayerId) $live->playerScore(playerId: $playerId, points: $score, playerAssistId: $assistPlayerId);
-        else                 $live->playerScore(playerId: $playerId, points: $score);
+        $this->live($game)->playerMiss(playerId: $playerId, points: $score);
+    }
+
+    public function addFoul(Game $game, Request $request)
+    {
+        // Find the player
+        $playerId = $request->input('selectedPlayer') ?  $request->input('selectedPlayer')['id'] : null;
+        $type     = request('subtype') ?: 'pf';
+        Log::debug("Adding foul. Game: {$game->id}, Player: {$playerId}", ['section' => 'LIVE', 'game_id' => $game->id, 'player_id' => $playerId]);
+
+        $this->live($game)->playerFoul(playerId: $playerId, subtype: $type);
+    }
+
+    public function deleteLog(GameLog $log)
+    {
+        $log->delete();
+        $this->live($log->game)->updateLiveStats();
     }
 
     public function update(Game $game)
@@ -71,7 +105,13 @@ class LiveController extends Controller
         ]);
     }
 
-    protected function runSim(Game $game)
+    /**
+     * Simulate a game
+     *
+     * @param  Game $game
+     * @return LiveScore
+     */
+    protected function runSim(Game $game): LiveScore
     {
         // We need the service (this initializes the game, we'll see if this if good like this)
         $live = new LiveScore($game);
@@ -267,5 +307,16 @@ class LiveController extends Controller
         //     echo '<li>' . $log['quarter'] . ' [' . $log['occurred_at_q']  . '] (' . $log['home_score'] . ' : ' . $log['away_score'] . '): ' . $log['message'] . '</li>';
         // }
         // echo '</ul>';
+
+        return $live;
+    }
+
+    protected function live(Game $game): LiveScore
+    {
+        if (! $this->live) {
+            $this->live = new LiveScore($game);
+        }
+
+        return $this->live;
     }
 }

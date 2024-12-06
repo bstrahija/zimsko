@@ -88,11 +88,6 @@ function checkScore() {
                         <button @click="close" class="absolute top-4 right-4 text-2xl">X</button>
                     </div>
 
-                    <p>
-                        <small>{{ canBeSaved() }}</small>
-                        <small>{{ data }}</small>
-                    </p>
-
                     <div class="modal-body">
                         <div class="grid">
                             <div class="text-center">
@@ -123,7 +118,7 @@ function checkScore() {
                         </div>
 
                         <div class="flex justify-center p-6">
-                            <button :disabled="!canBeSaved()" :class="{ 'opacity-50': !canBeSaved(), 'pointer-events-none': !canBeSaved() }" @click="save" class="px-4 py-2 text-white bg-blue-500 rounded-md shadow-md transition-colors duration-200 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50">Spremi</button>
+                            <button :disabled="!canBeSaved()" :class="{ 'opacity-50': !canBeSaved(), 'pointer-events-none': !canBeSaved() }" @click="save" class="btn btn-primary">Spremi</button>
                         </div>
                     </div>
                 </div>

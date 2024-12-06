@@ -18,6 +18,7 @@ import IconRebound from './Icons/IconRebound.vue';
 import IconScore from './Icons/IconScore.vue';
 import IconSubstitution from './Icons/IconSubstitution.vue';
 import IconTechnical from './Icons/IconTechnical.vue';
+import IconTimeout from './Icons/IconTimeout.vue';
 import IconTurnover from './Icons/IconTurnover.vue';
 import ScoreButton from './ScoreButton.vue';
 import { $vfm } from 'vue-final-modal';
@@ -40,12 +41,16 @@ const props = defineProps({
         type: Array,
         required: true,
     },
+    opponents: {
+        type: Array,
+        required: true,
+    },
 });
 
-const { game, team, players, playersOnCourt } = toRefs(props);
+const { game, team, players, playersOnCourt, opponents } = toRefs(props);
 
 function addScore(e) {
-    $vfm.show({ component: AddScoreModal, bind: { game: game.value, team: team.value, players: players.value, playersOnCourt: playersOnCourt.value } });
+    $vfm.show({ component: AddScoreModal, bind: { game: game.value, team: team.value, players: players.value, playersOnCourt: playersOnCourt.value, opponents: opponents.value } });
     e.preventDefault();
 }
 
@@ -60,7 +65,7 @@ function addAssist(e) {
 }
 
 function addFoul(e) {
-    $vfm.show({ component: AddFoulModal, bind: { game: game.value, team: team.value, players: players.value, playersOnCourt: playersOnCourt.value } });
+    $vfm.show({ component: AddFoulModal, bind: { game: game.value, team: team.value, players: players.value, playersOnCourt: playersOnCourt.value, opponents } });
     e.preventDefault();
 }
 
@@ -91,50 +96,54 @@ function addTurnover(e) {
 </script>
 
 <template>
-    <div class="grid grid-cols-2 gap-2">
-        <ScoreButton class="bg-green-600" @click="addScore">
+    <div class="grid grid-cols-2 gap-2 score-button-group">
+        <ScoreButton class="add-score" @click="addScore">
             <IconScore />
             Pogodak
         </ScoreButton>
-        <ScoreButton class="bg-rose-600" @click="addMiss">
+        <ScoreButton class="add-miss" @click="addMiss">
             <IconMiss />
             Promašaj
         </ScoreButton>
-        <ScoreButton class="bg-slate-600" @click="addAssist">
+        <!-- <ScoreButton class="add-assist" @click="addAssist">
             <IconAssist />
             Asistencija
-        </ScoreButton>
-        <ScoreButton class="bg-slate-600" @click="addRebound">
+        </ScoreButton> -->
+        <ScoreButton class="add-rebound" @click="addRebound">
             <IconRebound />
             Skok
         </ScoreButton>
-        <ScoreButton class="bg-amber-600" @click="addBlock">
+        <ScoreButton class="add-steal" @click="addAssist">
+            <IconAssist />
+            Ukradena
+        </ScoreButton>
+        <ScoreButton class="add-block" @click="addBlock">
             <IconBlock />
             Blokada
         </ScoreButton>
-        <ScoreButton class="bg-amber-600" @click="addTurnover">
+        <ScoreButton class="add-turnover" @click="addTurnover">
             <IconTurnover />
             Izgubljena
         </ScoreButton>
-        <ScoreButton class="bg-rose-600" @click="addFoul">
+        <ScoreButton class="add-foul" @click="addFoul">
             <IconFoul />
             Prekršaj
         </ScoreButton>
-        <ScoreButton class="bg-sky-600" @click="addTimeout">
-            <IconFoul />
-            Timeout
-        </ScoreButton>
-        <ScoreButton class="bg-red-700" @click="addFoul('tf')">
+        <ScoreButton class="add-technical" @click="addFoul('tf')">
             <IconTechnical />
             Tehnička
         </ScoreButton>
-        <ScoreButton class="bg-red-700" @click="addFoul('ff')">
+        <!-- <ScoreButton class="add-flagrant" @click="addFoul('ff')">
             <IconFlagrant />
             Nesportska
-        </ScoreButton>
-        <ScoreButton class="col-span-2 bg-slate-600">
+        </ScoreButton> -->
+        <ScoreButton class="col-span-2 add-substitution">
             <IconSubstitution />
             Izmjena
+        </ScoreButton>
+        <ScoreButton class="col-span-2 add-timeout" @click="addTimeout">
+            <IconTimeout />
+            Timeout
         </ScoreButton>
     </div>
 </template>

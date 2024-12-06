@@ -2,43 +2,109 @@
 // import Layout from './Layout';
 import { Head } from '@inertiajs/vue3';
 import Layout from './Layout.vue';
-import FoulTimeoutIndicator from '../Components/FoulTimeoutIndicator.vue';
+import FoulsTimeouts from '../Components/FoulsTimeouts.vue';
 import Log from '../Components/Log.vue';
 import PlayerBlock from '../Components/PlayerBlock.vue';
 import PlayersOnBench from '../Components/PlayersOnBench.vue';
 import PlayersOnCourt from '../Components/PlayersOnCourt.vue';
+import ScoreBar from '../Components/ScoreBar.vue';
 import ScoreButton from '../Components/ScoreButton.vue';
 import ScoreButtonGroup from '../Components/ScoreButtonGroup.vue';
+import PeriodIndicator from '../Components/PeriodIndicator.vue';
+import Pretty from '../Components/Pretty.vue';
 
 defineProps({
     log: Array,
-    status: String,
     game: Object,
-    game_live: Object,
-    home_score: Number,
-    away_score: Number,
-    home_team: Object,
-    away_team: Object,
-    home_players: Array,
-    away_players: Array,
-    home_players_on_court: Array,
-    away_players_on_court: Array,
-    home_players_on_bench: Array,
-    away_players_on_bench: Array,
+    live: Object,
 });
 </script>
 
 <template>
     <Layout>
-        <Head title="Welcome" />
+
+        <Head title="Zimsko Live Score" />
+
+        <div class="flex relative justify-center items-center min-h-screen">
+            <div class="w-full space-y-2 max-w-[1920px]">
+                <div
+                    class="bg-slate-900/95 p-6 rounded-lg border-5 border-cyan-400/50 shadow-[0_0_15px_rgba(6,182,212,0.5)] grid-bg">
+                    <div class="grid gap-4 mb-4 score-top" style="grid-template-columns: 1fr 12% 1fr">
+                        <div class="space-y-4 home-team-top">
+                            <ScoreBar :score="live.home_score" :team="live.home_team" :side="'home'" />
+
+                            <FoulsTimeouts :side="'home'" :team="live.home_team" />
+                        </div>
+
+                        <div class="grid text-center rounded bg-slate-800/40">
+                            <Pretty />
+
+                            <PeriodIndicator :live="live" />
+                        </div>
+
+                        <div class="space-y-4 away-team-top">
+                            <ScoreBar :score="live.away_score" :team="live.away_team" :side="'away'" />
+
+                            <FoulsTimeouts :side="'away'" :team="live.away_team" />
+                        </div>
+                    </div>
+
+                    <div class="grid gap-12 mb-4 score-court" style="grid-template-columns: 1fr 8% 1fr">
+                        <div class="grid sub-bar-home">
+                            <PlayersOnCourt :players="live.home_players_on_court" />
+                        </div>
+
+                        <div class="flex justify-center items-center text-sm text-center uppercase">
+                            Na terenu
+                        </div>
+
+                        <div class="grid sub-bar-away">
+                            <PlayersOnCourt :players="live.away_players_on_court" />
+                        </div>
+                    </div>
+
+                    <div class="grid gap-6 score-controls" style="grid-template-columns: 1fr 25% 1fr">
+                        <div class="grid gap-6 home-controls" style="grid-template-columns: 1fr 1fr">
+                            <PlayersOnBench :players="live.home_players_on_bench" />
+
+                            <ScoreButtonGroup :team="live.home_team" :players="live.home_players"
+                                :playersOnCourt="live.home_players_on_court" :game="game"
+                                :opponents="live.away_players_on_court" />
+                        </div>
+
+                        <div class="overflow-auto h-full max-h-[50svh]">
+                            <Log :log="log" :game="game" :live="live" />
+                        </div>
+
+                        <div class="grid gap-6 away-controls" style="grid-template-columns: 1fr 1fr">
+                            <ScoreButtonGroup :team="live.away_team" :players="live.away_players"
+                                :playersOnCourt="live.away_players_on_court" :game="game"
+                                :opponents="live.away_players_on_court" />
+
+                            <PlayersOnBench :players="live.away_players_on_bench" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
 
         <div class="grid grid-cols-12 gap-4 p-4">
             <div class="col-span-10">
                 <div class="grid grid-cols-2 gap-5 mb-4 score-bar">
                     <div class="grid grid-cols-12 rounded border border-r border-gray-200 shadow home-team">
-                        <div class="flex col-span-3 justify-center items-center border-r"><img :src="home_team.logo" alt="" class="w-20 h-20 rounded-full" /></div>
-                        <h3 class="col-span-7 py-10 text-4xl font-bold text-center font-oswald">{{ home_team.title }}</h3>
-                        <p class="flex col-span-2 justify-center items-center h-full text-6xl font-bold text-center border-l font-oswald">{{ home_score }}</p>
+                        <div class="flex col-span-3 justify-center items-center border-r"><img
+                                :src="live.home_team.logo" alt="" class="w-20 h-20 rounded-full" /></div>
+                        <h3 class="col-span-7 py-10 text-4xl font-bold text-center font-oswald">{{
+                            live.home_team.title
+                            }}</h3>
+                        <p
+                            class="flex col-span-2 justify-center items-center h-full text-6xl font-bold text-center border-l font-oswald">
+                            {{ live.home_score }}</p>
                         <div class="flex col-span-12 gap-6 border-t">
                             <div class="px-5 py-3 pr-4 text-sm border-r">Prekršaja: 3</div>
                             <div class="px-5 py-3 pr-4 text-sm border-r">Timeout: 2</div>
@@ -47,9 +113,14 @@ defineProps({
                         <FoulTimeoutIndicator /> -->
                     </div>
                     <div class="grid grid-cols-12 rounded border border-r border-gray-200 shadow away-team">
-                        <p class="flex col-span-2 justify-center items-center h-full text-6xl font-bold text-center border-r font-oswald">{{ away_score }}</p>
-                        <h3 class="col-span-7 py-10 text-4xl font-bold text-center font-oswald">{{ away_team.title }}</h3>
-                        <div class="flex col-span-3 justify-center items-center border-l"><img :src="away_team.logo" alt="" class="w-20 h-20 rounded-full" /></div>
+                        <p
+                            class="flex col-span-2 justify-center items-center h-full text-6xl font-bold text-center border-r font-oswald">
+                            {{ live.away_score }}</p>
+                        <h3 class="col-span-7 py-10 text-4xl font-bold text-center font-oswald">{{
+                            live.away_team.title
+                            }}</h3>
+                        <div class="flex col-span-3 justify-center items-center border-l"><img
+                                :src="live.away_team.logo" alt="" class="w-20 h-20 rounded-full" /></div>
                         <div class="flex col-span-12 gap-6 border-t">
                             <div class="px-5 py-3 pr-4 text-sm border-r">Prekršaja: 4</div>
                             <div class="px-5 py-3 pr-4 text-sm border-r">Timeout: 1</div>
@@ -61,32 +132,42 @@ defineProps({
 
                 <div class="grid grid-cols-2 gap-5 mb-2 sub-bar">
                     <div class="grid sub-bar-home">
-                        <PlayersOnCourt :players="home_players_on_court" />
+                        <PlayersOnCourt :players="live.home_players_on_court" />
                     </div>
 
                     <div class="grid sub-bar-home">
-                        <PlayersOnCourt :players="away_players_on_court" />
+                        <PlayersOnCourt :players="live.away_players_on_court" />
                     </div>
                 </div>
 
                 <div class="grid grid-cols-2 gap-6 activity-bar">
                     <div class="grid grid-cols-2 gap-2 activity-bar-home">
-                        <PlayersOnBench :players="home_players_on_bench" />
+                        <PlayersOnBench :players="live.home_players_on_bench" />
 
-                        <ScoreButtonGroup :team="home_team" :players="home_players" :playersOnCourt="home_players_on_court" :game="game" />
+                        <ScoreButtonGroup :team="live.home_team" :players="live.home_players"
+                            :playersOnCourt="live.home_players_on_court" :game="game"
+                            :opponents="live.away_players_on_court" />
                     </div>
 
                     <div class="grid grid-cols-2 gap-2 activity-bar-away">
-                        <ScoreButtonGroup :team="away_team" :players="away_players" :playersOnCourt="away_players_on_court" :game="game" />
+                        <ScoreButtonGroup :team="live.away_team" :players="live.away_players"
+                            :playersOnCourt="live.away_players_on_court" :game="game"
+                            :opponents="live.home_players_on_court" />
 
-                        <PlayersOnBench :players="away_players_on_bench" />
+                        <PlayersOnBench :players="live.away_players_on_bench" />
                     </div>
                 </div>
             </div>
-
-            <div class="col-span-2">
-                <Log :log="log" />
-            </div>
         </div>
+
+        <!-- <div class="col-span-2">
+                <Log :log="log" :game="game" :live="live" />
+            </div> -->
+
+        <!-- <div>
+            <small>
+                <pre>{{ live }}</pre>
+            </small>
+        </div> -->
     </Layout>
 </template>

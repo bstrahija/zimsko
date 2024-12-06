@@ -32,6 +32,7 @@ return new class extends Migration
             $table->foreignUlid('referee_id')->nullable()->constrained('referees');
             $table->foreignUlid('official_id')->nullable()->constrained('officials');
             $table->string('location')->nullable(); // Coordinates on the court, displayed as percentages
+            $table->json('data')->nullable();
             $table->text('summary')->nullable();
             $table->string('occurred_at')->default('00:00:00')->nullable();
             $table->string('occurred_at_q')->default('00:00:00')->nullable(); // This will be the elapsed time in second since the start of the game

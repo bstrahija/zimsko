@@ -284,7 +284,7 @@ trait LiveScorePlayer
                 $this->awayPlayersOnCourt->push($playerIn);
             }
             $this->gameLive->update([
-                'players_on_court'      => $this->playersOnCourt->pluck('id')->toArray(),
+                // 'players_on_court'      => $this->playersOnCourt->pluck('id')->toArray(),
                 'home_players_on_court' => $this->homePlayersOnCourt->pluck('id')->toArray(),
                 'away_players_on_court' => $this->awayPlayersOnCourt->pluck('id')->toArray(),
             ]);
@@ -328,22 +328,25 @@ trait LiveScorePlayer
         return true;
     }
 
-    public function updateLiveStats(GameLog $log)
+    public function updateLiveStats(?GameLog $log = null): void
     {
         // Only events with a score update
-        $homeScore = GameLog::where('game_id', $log->game_id)
-            ->where('game_live_id', $log->game_live_id)
+        $homeScore = GameLog::where('game_id', $this->game->id)
+            ->where('game_live_id', $this->gameLive->id)
             ->where('team_side', 'home')
             ->whereIn('type', ['player_score', 'player_score_with_assist'])->sum('amount');
-        $awayScore = GameLog::where('game_id', $log->game_id)
-            ->where('game_live_id', $log->game_live_id)
+        $awayScore = GameLog::where('game_id', $this->game->id)
+            ->where('game_live_id', $this->gameLive->id)
             ->where('team_side', 'away')
             ->whereIn('type', ['player_score', 'player_score_with_assist'])->sum('amount');
 
-        $log->update([
-            'home_score' => $homeScore,
-            'away_score' => $awayScore,
-        ]);
+        // Update the log item if needed
+        if ($log) {
+            $log->update([
+                'home_score' => $homeScore,
+                'away_score' => $awayScore,
+            ]);
+        }
 
         // Also update live game stats
         $this->gameLive->update([

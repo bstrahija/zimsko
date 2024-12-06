@@ -6,12 +6,19 @@ defineProps({
         type: Array,
         required: true,
     },
+    game: {
+        type: Object,
+        required: true,
+    },
+    live: {
+        type: Object,
+        required: true,
+    },
 });
 </script>
 
 <template>
-    <div class="overflow-y-scroll space-y-3 h-[100svh]">
-        <h2 class="text-xl font-bold uppercase text-secondary font-oswald">TIJEK UTAKMICE</h2>
-        <LogItem v-for="item in log" :key="item.id" :log="item" />
+    <div class="pr-2 space-y-3">
+        <LogItem v-for="item in log" :key="item.id" :log="item" :game="game" :live="live" />
     </div>
 </template>

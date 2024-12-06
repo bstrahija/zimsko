@@ -8,8 +8,17 @@
     @inertiaHead
 </head>
 
-<body>
-    @inertia
+<body class="min-h-screen text-white bg-black dark">
+    <!-- Main container with perspective and gradient background -->
+    <div class="relative min-h-screen bg-fixed bg-center bg-cover"
+        style="background-image: url('{{ asset('img/live-001.jpg') }}');">
+        <div
+            class="absolute inset-0 bg-gradient-to-br mix-blend-overlay via-sky-600/40 from-cyan-600/40 to-fuchsia-600/40">
+        </div>
+        <div class="flex relative justify-center items-center p-6 min-h-screen">
+            @inertia
+        </div>
+    </div>
 </body>
 
 </html>

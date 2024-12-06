@@ -34,7 +34,16 @@ class Player extends Model implements HasMedia
         'three_points'     => 0,
         'avg'              => 0,
         'avg_three_points' => 0,
+        'efficiency'       => 0,      // (PTS + REB + AST + STL + BLK − ((FGA − FGM) + (FTA − FTM) + TO))
+        'fouls'            => 0,
         'team'             => null,
+        'timeouts'         => 0,
+        'rebounds'         => 0,
+        'blocks'           => 0,
+        'assists'          => 0,
+        'turnovers'        => 0,
+        'blocks'           => 0,
+        'steals'           => 0,
     ];
 
     protected $fillable = [
