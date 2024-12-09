@@ -5,32 +5,15 @@ import PlayerBlock from '../PlayerBlock.vue';
 import { $vfm } from 'vue-final-modal';
 
 const props = defineProps({
-    team: {
+    game: {
         type: Object,
         required: true,
     },
-    players: {
+    log: {
         type: Array,
         required: true,
     },
-    live: {
-        type: Object,
-        required: true,
-    },
 });
-
-const { live } = toRefs(props);
-
-const data = reactive({
-    gameId: null,
-});
-
-const save = async function () {
-    data.gameId = live.value.game_id;
-    await router.post('/live/' + data.gameId + '/timeout', data);
-
-    $vfm.hideAll();
-};
 </script>
 
 <template>
@@ -39,18 +22,16 @@ const save = async function () {
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h3 class="mb-3 text-2xl font-bold text-center">Timeout</h3>
+                        <h3 class="mb-3 text-2xl font-bold text-center">Statistika</h3>
                         <button @click="close" class="absolute top-4 right-4 text-2xl">X</button>
                     </div>
 
                     <div class="modal-body">
-
-                        <p>Zovi timeout?</p>
-                        <div class="flex justify-center p-6">
-                            <button :disabled="!canBeSaved()"
-                                :class="{ 'opacity-50': !canBeSaved(), 'pointer-events-none': !canBeSaved() }"
-                                @click="save" class="btn btn-primary">Timeout</button>
+                        <div class="grid">
+                            Stats
                         </div>
+
+
                     </div>
                 </div>
             </div>

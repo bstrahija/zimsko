@@ -65,6 +65,8 @@ class Game extends Model
         'away_score_ot2',
         'home_score_ot3',
         'away_score_ot3',
+        'home_score_ot4',
+        'away_score_ot4',
         'scheduled_at',
     ];
 

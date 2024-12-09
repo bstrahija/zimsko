@@ -13,14 +13,14 @@ return new class extends Migration
     {
         Schema::create('games_log', function (Blueprint $table) {
             $table->ulid('id')->primary();
-            $table->foreignUlid('game_id')->constrained('games');
-            $table->foreignUlid('game_live_id')->constrained('games_live');
+            $table->foreignUlid('game_id')->constrained('games')->onDelete('cascade');
+            $table->foreignUlid('game_live_id')->constrained('games_live')->onDelete('cascade');
             $table->string('type')->nullable();
             $table->string('subtype')->nullable();
             $table->integer('amount')->default(0)->nullable();
             $table->integer('home_score')->default(0);
             $table->integer('away_score')->default(0);
-            $table->integer('quarter')->default(1);
+            $table->integer('period')->default(1);
             $table->string('player_name')->nullable();
             $table->string('player_2_name')->nullable();
             $table->string('team_name')->nullable();
@@ -35,7 +35,7 @@ return new class extends Migration
             $table->json('data')->nullable();
             $table->text('summary')->nullable();
             $table->string('occurred_at')->default('00:00:00')->nullable();
-            $table->string('occurred_at_q')->default('00:00:00')->nullable(); // This will be the elapsed time in second since the start of the game
+            $table->string('occurred_at_p')->default('00:00:00')->nullable(); // This will be the elapsed time in second since the start of the game
             $table->timestamps();
         });
     }

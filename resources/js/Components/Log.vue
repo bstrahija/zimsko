@@ -10,15 +10,11 @@ defineProps({
         type: Object,
         required: true,
     },
-    live: {
-        type: Object,
-        required: true,
-    },
 });
 </script>
 
 <template>
     <div class="pr-2 space-y-3">
-        <LogItem v-for="item in log" :key="item.id" :log="item" :game="game" :live="live" />
+        <LogItem v-for="item in log" :key="item.id" :log="item" :game="game" />
     </div>
 </template>

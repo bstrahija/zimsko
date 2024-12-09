@@ -26,7 +26,7 @@ class LiveScore
 
     protected ?Collection $awayPlayers;
 
-    protected int $currentQuarter = 1;
+    protected int $currentPeriod = 1;
 
     protected ?Collection $startingPlayers;
 
@@ -75,10 +75,10 @@ class LiveScore
         $this->awayPlayersOnCourt = new Collection();
 
         // Init timeouts and fouls
-        $this->homeTimeoutsLeft = config('live.team_timeouts_per_quarter');
-        $this->awayTimeoutsLeft = config('live.team_timeouts_per_quarter');
-        $this->homeFoulsLeft    = config('live.team_fouls_per_quarter');
-        $this->awayFoulsLeft    = config('live.team_fouls_per_quarter');
+        $this->homeTimeoutsLeft = config('live.team_timeouts_per_period');
+        $this->awayTimeoutsLeft = config('live.team_timeouts_per_period');
+        $this->homeFoulsLeft    = config('live.team_fouls_per_period');
+        $this->awayFoulsLeft    = config('live.team_fouls_per_period');
 
         $this->initGame();
     }
@@ -86,8 +86,8 @@ class LiveScore
     public function initGame()
     {
         // This simply creates the game live model
-        $this->gameLive       = $this->game->live()->firstOrCreate([], ['quarter' => 1]);
-        $this->currentQuarter = $this->gameLive->quarter;
+        $this->gameLive       = $this->game->live()->firstOrCreate([], ['period' => 1]);
+        $this->currentPeriod  = $this->gameLive->period;
 
         // Setup the players
         $this->setupPlayers();
@@ -98,7 +98,7 @@ class LiveScore
             'game_live_id' => $this->gameLive->id,
             'type'         => 'game_initialized',
         ], [
-            'quarter'     => 1,
+            'period'      => 1,
             'occurred_at' => '00:00:00',
         ]);
 
@@ -148,9 +148,9 @@ class LiveScore
             'game_live_id' => $this->gameLive->id,
             'type'         => 'game_starting_players',
         ], [
-            'quarter'       => 1,
+            'period'        => 1,
             'occurred_at'   => '00:00:00',
-            'occurred_at_q' => '00:00:00',
+            'occurred_at_p' => '00:00:00',
         ]);
 
         // All starting players
@@ -179,7 +179,7 @@ class LiveScore
 
     public function startGame()
     {
-        $this->currentQuarter = 1;
+        $this->currentPeriod = 1;
         $this->gameLive->update([
             'status' => 'started',
         ]);
@@ -190,9 +190,9 @@ class LiveScore
             'game_live_id' => $this->gameLive->id,
             'type'         => 'game_started',
         ], [
-            'quarter'       => 1,
+            'period'        => 1,
             'occurred_at'   => '00:00:00',
-            'occurred_at_q' => '00:00:00',
+            'occurred_at_p' => '00:00:00',
         ]);
 
         // Setup the players
@@ -227,7 +227,7 @@ class LiveScore
             'type'        => 'timeout',
             'subtype'     => 'team_timeout',
             'team_id'     => $team->id,
-            'quarter'     => $this->currentQuarter,
+            'period'      => $this->currentPeriod,
             'occurred_at' => $occurredAt,
         ]);
 
@@ -240,30 +240,35 @@ class LiveScore
         // This will write the data to the DB
     }
 
-    public function currentQuarter()
+    public function currentPeriod()
     {
-        return $this->currentQuarter;
+        return $this->currentPeriod;
     }
 
-    public function setQuarter($quarter)
+    public function setPeriod($period)
     {
-        $this->currentQuarter = $quarter;
+        $this->currentPeriod = $period;
     }
 
-    public function nextQuarter()
+    public function nextPeriod()
     {
-        // We need to rest the timeouts and fouls
-        $this->homeTimeoutsLeft = config('live.team_timeouts_per_quarter');
-        $this->awayTimeoutsLeft = config('live.team_timeouts_per_quarter');
-        $this->homeFoulsLeft    = config('live.team_fouls_per_quarter');
-        $this->awayFoulsLeft    = config('live.team_fouls_per_quarter');
+        // We need to reset the timeouts and fouls
+        $this->homeTimeoutsLeft = config('live.team_timeouts_per_period');
+        $this->awayTimeoutsLeft = config('live.team_timeouts_per_period');
+        $this->homeFoulsLeft    = config('live.team_fouls_per_period');
+        $this->awayFoulsLeft    = config('live.team_fouls_per_period');
 
-        $this->currentQuarter++;
+        $this->currentPeriod++;
 
-        // And add a log that the quarter has started
+        // Update the game live model
+        $this->gameLive->update([
+            'period' => $this->currentPeriod,
+        ]);
+
+        // And add a log that the period has started
         $log = $this->addLog([
-            'type'        => 'quarter_started',
-            'quarter'     => $this->currentQuarter,
+            'type'        => 'period_started',
+            'period'      => $this->currentPeriod,
             'occurred_at' => '00:00:00',
         ]);
 
@@ -271,18 +276,18 @@ class LiveScore
         $this->updateLiveStats(log: $log);
     }
 
-    public function previousQuarter()
+    public function previousPeriod()
     {
-        $this->currentQuarter--;
+        $this->currentPeriod--;
     }
 
     public function endGame()
     {
-        $lastQuarter = 4; // Check if this is correct (could be overtime, or game suspended before)
+        $lastPeriod = 4; // Check if this is correct (could be overtime, or game suspended before)
 
         $this->gameLive->update([
             'status' => 'ended',
-            'quarter' => $lastQuarter,
+            'period' => $lastPeriod,
         ]);
 
         // We also need to update the log
@@ -291,9 +296,9 @@ class LiveScore
             'game_live_id' => $this->gameLive->id,
             'type'         => 'game_ended',
         ], [
-            'quarter'       => $lastQuarter,
+            'period'        => $lastPeriod,
             'occurred_at'   => '00:32:00',
-            'occurred_at_q' => '00:08:00',
+            'occurred_at_p' => '00:08:00',
         ]);
 
         // Update the stats
@@ -388,7 +393,7 @@ class LiveScore
                 return $item->type === 'player_foul';
             });
             $team->setStats('fouls', $fouls->sum('amount'));
-            $periodFouls = $this->log->where('team_id', $team->id)->where('quarter', $this->currentQuarter)->filter(static function ($item, $key) {
+            $periodFouls = $this->log->where('team_id', $team->id)->where('period', $this->currentPeriod)->filter(static function ($item, $key) {
                 return $item->type === 'player_foul';
             });
             $team->setStats('period_fouls', $periodFouls->sum('amount'));
@@ -398,7 +403,7 @@ class LiveScore
                 return $item->type === 'timeout';
             });
             $team->setStats('timeouts', $timeouts->sum('amount'));
-            $periodTimeouts = $this->log->where('team_id', $team->id)->where('quarter', $this->currentQuarter)->filter(static function ($item, $key) {
+            $periodTimeouts = $this->log->where('team_id', $team->id)->where('period', $this->currentPeriod)->filter(static function ($item, $key) {
                 return $item->type === 'timeout';
             });
             $team->setStats('period_timeouts', $periodTimeouts->sum('amount'));
@@ -418,7 +423,7 @@ class LiveScore
 
         return [
             'status'                => $this->gameLive->status,
-            'quarter'               => $this->currentQuarter(),
+            'period'               => $this->currentPeriod(),
             'game'                  => $this->game->toArray(),
             'game_live'             => $this->gameLive->toArray(),
             'home_team'             => $homeTeam,
@@ -453,36 +458,33 @@ class LiveScore
 
         // Prepare the data
         $data = [
-            'game' => $this->game->toArray(),
-            'live' => $this->gameLive->toArray(),
+            'game' => $this->gameLive->toArray(),
             'log'  => $this->logStream(),
         ];
 
         // We need to adjust some data
         foreach (['home_starting_players', 'away_starting_players', 'home_players_on_court', 'away_players_on_court'] as $type) {
-            if ($data['live'][$type]) {
+            if ($data['game'][$type]) {
                 $players = [];
-                foreach ($data['live'][$type] as $key => $playerId) {
+                foreach ($data['game'][$type] as $key => $playerId) {
                     $player = $this->findPlayer($playerId);
                     $players[$key] = $player->toArray();
                 }
-                $data['live'][$type] = $players;
+                $data['game'][$type] = $players;
             }
         }
 
         // Add some team data
-        $data['live']['home_players']          = $this->homePlayers->toArray();
-        $data['live']['away_players']          = $this->awayPlayers->toArray();
-        $data['live']['home_team']             = $this->homeTeam->toArray();
-        $data['live']['away_team']             = $this->awayTeam->toArray();
+        $data['game']['home_players']          = $this->homePlayers->toArray();
+        $data['game']['away_players']          = $this->awayPlayers->toArray();
+        $data['game']['home_team']             = $this->homeTeam->toArray();
+        $data['game']['away_team']             = $this->awayTeam->toArray();
         $data['game']['home_team']['logo']     = $this->homeTeam->logo();
         $data['game']['away_team']['logo']     = $this->awayTeam->logo();
-        $data['live']['home_team']['logo']     = $data['game']['home_team']['logo'];
-        $data['live']['away_team']['logo']     = $data['game']['away_team']['logo'];
-        $data['live']['home_players_on_bench'] = $this->homePlayers->diff($this->homePlayersOnCourt)->toArray();
-        $data['live']['away_players_on_bench'] = $this->awayPlayers->diff($this->awayPlayersOnCourt)->toArray();
-        unset($data['live']['home_team']['players']);
-        unset($data['live']['away_team']['players']);
+        $data['game']['home_players_on_bench'] = $this->homePlayers->diff($this->homePlayersOnCourt)->toArray();
+        $data['game']['away_players_on_bench'] = $this->awayPlayers->diff($this->awayPlayersOnCourt)->toArray();
+        unset($data['game']['home_team']['players']);
+        unset($data['game']['away_team']['players']);
 
         return $data;
     }

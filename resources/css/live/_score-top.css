@@ -1,0 +1,65 @@
+.home-team-top,
+.sub-bar-home {
+    .score-bar {
+        @apply bg-gradient-to-br from-cyan-900/60 via-cyan-800/50 to-cyan-500/60 border-cyan-400/30 shadow-lg shadow-cyan-500/10;
+    }
+    .team {
+        @apply text-cyan-300/80;
+    }
+    .score {
+        @apply text-cyan-400;
+    }
+    .foul-timeout-btn {
+        @apply bg-gradient-to-br from-cyan-900/60 via-cyan-800/50 to-sky-900/90  shadow-lg shadow-cyan-500/10 transition-all duration-100 ease-in-out;
+    }
+    button.foul-timeout-btn {
+        @apply border-cyan-400/80 shadow-lg shadow-cyan-500/10 transition-all duration-100 ease-in-out;
+
+        &:hover {
+            @apply shadow-cyan-500/70;
+        }
+    }
+    .players-on-court .player-block {
+        @apply bg-gradient-to-br border-cyan-400/30 from-cyan-900/60 via-cyan-800/50 to-emerald-700/50 shadow-lg shadow-cyan-500/20;
+
+        &:hover {
+            @apply shadow-cyan-500/70;
+        }
+
+        .points {
+            @apply bg-emerald-500/70;
+        }
+        .fouls {
+            @apply bg-rose-500/70;
+        }
+    }
+}
+
+.away-team-top,
+.sub-bar-away {
+    .score-bar {
+        @apply bg-gradient-to-bl from-fuchsia-900/60 via-fuchsia-800/50 to-sky-900/60 border-fuchsia-400/30 shadow-lg shadow-fuchsia-500/10;
+    }
+    .team {
+        @apply text-fuchsia-300/80;
+    }
+    .score {
+        @apply text-fuchsia-400;
+    }
+    .foul-timeout-btn {
+        @apply bg-gradient-to-bl from-fuchsia-900/60 via-fuchsia-800/50 to-fuchsia-600/50;
+    }
+    .players-on-court .player-block {
+        @apply bg-gradient-to-bl border-fuchsia-400/30 from-fuchsia-900/60 via-fuchsia-800/50 to-emerald-700/50 shadow-lg shadow-fuchsia-500/20;
+        &:hover {
+            @apply shadow-fuchsia-500/70;
+        }
+
+        .points {
+            @apply bg-emerald-500/70;
+        }
+        .fouls {
+            @apply bg-rose-500/70;
+        }
+    }
+}

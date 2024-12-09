@@ -4,6 +4,7 @@ import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/vue3';
 import Toaster from '@meforma/vue-toaster';
 import { vfmPlugin } from 'vue-final-modal';
+import LiveHelpers from './helpers/live';
 
 createInertiaApp({
     resolve: (name) => {
@@ -11,7 +12,7 @@ createInertiaApp({
         return pages[`./Pages/${name}.vue`];
     },
     setup({ el, App, props, plugin }) {
-        createApp({ render: () => h(App, props) })
+        const app = createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(
                 vfmPlugin({
@@ -20,7 +21,10 @@ createInertiaApp({
                     dynamicContainerName: 'ModalsContainer',
                 }),
             )
-            .use(Toaster)
-            .mount(el);
+            .use(Toaster);
+
+        app.config.globalProperties.$live = LiveHelpers;
+
+        app.mount(el);
     },
 });

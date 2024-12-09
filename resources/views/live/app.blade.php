@@ -15,7 +15,7 @@
         <div
             class="absolute inset-0 bg-gradient-to-br mix-blend-overlay via-sky-600/40 from-cyan-600/40 to-fuchsia-600/40">
         </div>
-        <div class="flex relative justify-center items-center p-6 min-h-screen">
+        <div class="flex relative justify-center items-center min-h-screen">
             @inertia
         </div>
     </div>

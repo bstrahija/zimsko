@@ -1,0 +1,51 @@
+.home-controls {
+    .players-on-bench {
+        .player-block {
+            @apply bg-gradient-to-bl border-cyan-400/10 from-cyan-900/10 via-cyan-800/20 to-emerald-700/20 shadow-lg shadow-cyan-500/10 opacity-60;
+            &:hover {
+                @apply shadow-cyan-500/70 opacity-90;
+            }
+
+            .points {
+                @apply bg-emerald-500/70;
+            }
+            .fouls {
+                @apply bg-rose-500/70;
+            }
+        }
+    }
+
+    .score-button {
+        @apply bg-gradient-to-br from-cyan-900/30 via-cyan-800/30 to-cyan-500/40 border-cyan-400/30 shadow shadow-cyan-500/10;
+
+        &:hover {
+            @apply shadow-cyan-500/70;
+        }
+    }
+}
+
+.away-controls {
+    .players-on-bench {
+        .player-block {
+            @apply bg-gradient-to-bl border-fuchsia-400/10 from-fuchsia-900/10 via-fuchsia-800/20 to-emerald-700/20 shadow-lg shadow-fuchsia-500/20 opacity-60;
+            &:hover {
+                @apply shadow-fuchsia-500/70 opacity-90;
+            }
+
+            .points {
+                @apply bg-emerald-500/70;
+            }
+            .fouls {
+                @apply bg-rose-500/70;
+            }
+        }
+    }
+
+    .score-button {
+        @apply bg-gradient-to-br from-fuchsia-900/30 via-fuchsia-800/30 to-fuchsia-500/40 border-fuchsia-100/50 shadow shadow-fuchsia-500/10;
+
+        &:hover {
+            @apply shadow-fuchsia-500/70;
+        }
+    }
+}

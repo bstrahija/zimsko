@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Game;
+use App\Models\GameLive;
 use App\Models\GameLog;
 use App\Models\Player;
 use App\Services\LiveScore;
@@ -23,7 +24,7 @@ class LiveController extends Controller
 
         /** @var Game $game */
         $game = Game::where('id', '01je1krqjrfafqe8ywf1htcawh')->with(['homeTeam', 'awayTeam', 'homeTeam.players', 'awayTeam.players'])->first();
-        // $this->runSim($game);
+        // $this->runSim($game, true);
         // Log::debug("Simulating game. Game: {$game->id}", ['section' => 'LIVE', 'game_id' => $game->id]);
 
 
@@ -31,7 +32,8 @@ class LiveController extends Controller
         // die();
 
         $live = $this->live($game);
-        // dd($live);
+        // dump($live);
+        // die();
 
 
 
@@ -55,7 +57,7 @@ class LiveController extends Controller
         ]);
     }
 
-    function addScore(Game $game, Request $request)
+    public function addScore(Game $game, Request $request)
     {
         // Prepare data
         $playerId       = $request->input('selectedPlayer') ?  $request->input('selectedPlayer')['id'] : null;
@@ -68,7 +70,7 @@ class LiveController extends Controller
         else                 $this->live($game)->playerScore(playerId: $playerId, points: $score);
     }
 
-    function addMiss(Game $game, Request $request)
+    public function addMiss(Game $game, Request $request)
     {
         // Find the player
         $playerId = $request->input('selectedPlayer') ?  $request->input('selectedPlayer')['id'] : null;
@@ -79,14 +81,106 @@ class LiveController extends Controller
         $this->live($game)->playerMiss(playerId: $playerId, points: $score);
     }
 
-    public function addFoul(Game $game, Request $request)
+    public function addRebound(Game $game, Request $request)
     {
         // Find the player
         $playerId = $request->input('selectedPlayer') ?  $request->input('selectedPlayer')['id'] : null;
-        $type     = request('subtype') ?: 'pf';
-        Log::debug("Adding foul. Game: {$game->id}, Player: {$playerId}", ['section' => 'LIVE', 'game_id' => $game->id, 'player_id' => $playerId]);
+        $score    = $request->input('score');
+        $subtype  = $request->input('subtype') ?: 'reb';
+        Log::debug("Adding rebound. Game: {$game->id}, Player: {$playerId}, Points: {$score}", ['section' => 'LIVE', 'game_id' => $game->id, 'player_id' => $playerId]);
 
-        $this->live($game)->playerFoul(playerId: $playerId, subtype: $type);
+        // Write the score
+        $this->live($game)->playerRebound(playerId: $playerId, subtype: $subtype);
+    }
+
+    public function addSteal(Game $game, Request $request)
+    {
+        // Find the player
+        $playerId      = $request->input('selectedPlayer')      ?  $request->input('selectedPlayer')['id'] : null;
+        $stealPlayerId = $request->input('selectedStealPlayer') ?  $request->input('selectedStealPlayer')['id'] : null;
+        Log::debug("Adding steal. Game: {$game->id}, Player: {$playerId}, Player stolen: {$stealPlayerId}", ['section' => 'LIVE', 'game_id' => $game->id, 'player_id' => $playerId]);
+
+        // Write the score
+        $this->live($game)->playerSteal(playerId: $playerId, playerStolenId: $stealPlayerId);
+    }
+
+    public function addBlock(Game $game, Request $request)
+    {
+        // Find the player
+        $playerId        = $request->input('selectedPlayer')        ?  $request->input('selectedPlayer')['id'] : null;
+        $blockedPlayerId = $request->input('selectedBlockedPlayer') ?  $request->input('selectedBlockedPlayer')['id'] : null;
+        Log::debug("Adding steal. Game: {$game->id}, Player: {$playerId}, Player blocked: {$blockedPlayerId}", ['section' => 'LIVE', 'game_id' => $game->id, 'player_id' => $playerId]);
+
+        // Write the score
+        $this->live($game)->playerBlock(playerId: $playerId, playerBlockedId: $blockedPlayerId);
+    }
+
+    public function addTurnover(Game $game, Request $request)
+    {
+        // Find the player
+        $playerId = $request->input('selectedPlayer') ?  $request->input('selectedPlayer')['id'] : null;
+        Log::debug("Adding turnover. Game: {$game->id}, Player: {$playerId}", ['section' => 'LIVE', 'game_id' => $game->id, 'player_id' => $playerId]);
+
+        // Write the score
+        $this->live($game)->playerTurnover(playerId: $playerId);
+    }
+
+    public function addFoul(Game $game, Request $request)
+    {
+        // Find the player
+        $playerId       = $request->input('selectedPlayer') ?  $request->input('selectedPlayer')['id'] : null;
+        $fouledPlayerId = $request->input('selectedFouledPlayer') ?  $request->input('selectedFouledPlayer')['id'] : null;
+        $type           = request('subtype') ?: 'pf';
+        Log::debug("Adding foul. Game: {$game->id}, Player: {$playerId}, Player fouled: {$fouledPlayerId}, Type: {$type}", ['section' => 'LIVE', 'game_id' => $game->id, 'player_id' => $playerId]);
+
+        $this->live($game)->playerFoul(playerId: $playerId, subtype: $type, playerFouledId: $fouledPlayerId);
+    }
+
+    public function substitution(Game $game, Request $request)
+    {
+        // Find the player
+        $playersIn     = (array) ($request->input('selectedPlayersIn') ?  $request->input('selectedPlayersIn') : null);
+        $playersOut    = (array) ($request->input('selectedPlayersOut') ?  $request->input('selectedPlayersOut') : null);
+        $playersInIds  = array_column($playersIn, 'id');
+        $playersOutIds = array_column($playersOut, 'id');
+
+        if (count($playersInIds) && count($playersInIds) && (count($playersInIds) === count($playersOutIds))) {
+            Log::debug("Substitution. Game: {$game->id}, Players in: " . @json_encode($playersInIds) . ", Players out: " . @json_encode($playersOutIds) . ", ", ['section' => 'LIVE', 'game_id' => $game->id]);
+            $this->live($game)->substitution(playersIn: $playersInIds, playersOut: $playersOutIds);
+        } else {
+            Log::error("Cant make substitution. Game: {$game->id}, Players in: " . @json_encode($playersInIds) . ", Players out: " . @json_encode($playersOutIds) . ", ", ['section' => 'LIVE', 'game_id' => $game->id]);
+        }
+
+        // $type           = request('subtype') ?: 'pf';
+
+
+        //
+    }
+
+
+
+    public function startGame(Game $game, Request $request)
+    {
+        // Find the player
+        Log::debug("Starting game. Game: {$game->id}", ['section' => 'LIVE', 'game_id' => $game->id]);
+
+        $this->live($game)->startGame();
+    }
+
+    public function nextPeriod(Game $game, Request $request)
+    {
+        // Find the player
+        Log::debug("Next period. Game: {$game->id}", ['section' => 'LIVE', 'game_id' => $game->id]);
+
+        $this->live($game)->nextPeriod();
+    }
+
+    public function endGame(Game $game, Request $request)
+    {
+        // Find the player
+        Log::debug("Ending game. Game: {$game->id}", ['section' => 'LIVE', 'game_id' => $game->id]);
+
+        $this->live($game)->endGame();
     }
 
     public function deleteLog(GameLog $log)
@@ -111,8 +205,14 @@ class LiveController extends Controller
      * @param  Game $game
      * @return LiveScore
      */
-    protected function runSim(Game $game): LiveScore
+    protected function runSim(Game $game, bool $fresh = false): LiveScore
     {
+        // Delete live game entry
+        if ($fresh) {
+            GameLog::where('game_id', $game->id)->delete();
+            GameLive::where('game_id', $game->id)->delete();
+        }
+
         // We need the service (this initializes the game, we'll see if this if good like this)
         $live = new LiveScore($game);
 
@@ -212,7 +312,7 @@ class LiveController extends Controller
         // $live->playerScore(playerId: $players['danc']->id, playerAssistId: $players['alex']->id, points: 2);
         // $live->playerRebound(playerId: $players['danc']->id, subtype: 'dreb');
         // dump($live);
-        // $live->nextQuarter();
+        // $live->nextPeriod();
 
         // Q2 Sim
         // $live->playerScore(playerId: $players['markec']->id, playerAssistId: $players['srdjan']->id, points: 3);
@@ -240,7 +340,7 @@ class LiveController extends Controller
         // $live->playerRebound(playerId: $players['danc']->id, subtype: 'dreb');
         // $live->playerScore(playerId: $players['srdjan']->id, points: 2, playerAssistId: $players['vedran']->id);
         // dump($live);
-        // $live->nextQuarter();
+        // $live->nextPeriod();
 
         // Q3 Sim
         // $live->playerScore(playerId: $players['bis']->id, points: 2);
@@ -268,7 +368,7 @@ class LiveController extends Controller
         // $live->playerScore(playerId: $players['danc']->id, points: 1);
         // $live->playerScore(playerId: $players['vedran']->id, points: 2);
         // dump($live);
-        // $live->nextQuarter();
+        // $live->nextPeriod();
 
         // Q4 Sim
         // $live->playerScore(playerId: $players['markec']->id, playerAssistId: $players['srdjan']->id, points: 3);
@@ -304,7 +404,7 @@ class LiveController extends Controller
 
         // echo '<hr><ul>';
         // foreach ($live->logStream() as $log) {
-        //     echo '<li>' . $log['quarter'] . ' [' . $log['occurred_at_q']  . '] (' . $log['home_score'] . ' : ' . $log['away_score'] . '): ' . $log['message'] . '</li>';
+        //     echo '<li>' . $log['period'] . ' [' . $log['occurred_at_p']  . '] (' . $log['home_score'] . ' : ' . $log['away_score'] . '): ' . $log['message'] . '</li>';
         // }
         // echo '</ul>';
 

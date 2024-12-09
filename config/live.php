@@ -2,7 +2,7 @@
 
 return [
 
-    'quarter_length' => 8,
+    'period_length' => 8,
 
     'overtime_length' => 5,
 
@@ -10,9 +10,9 @@ return [
 
     'max_technical_fouls' => 2,
 
-    'team_timeouts_per_quarter' => 3,
+    'team_timeouts_per_period' => 3,
 
-    'team_fouls_per_quarter' => 5,
+    'team_fouls_per_period' => 5,
 
     'game_log_types' => [
         '2pt'            => '2 Points',

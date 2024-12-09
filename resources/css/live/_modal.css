@@ -1,0 +1,40 @@
+.modals-container {
+    z-index: 999999 !important;
+}
+
+.vfm {
+    z-index: 99997 !important;
+    @apply text-gray-700;
+
+    .modal-dialog {
+        transition: all ease-in-out 0.2s;
+    }
+
+    .modal {
+        @apply bg-cyan-900/60 flex justify-center items-center h-full absolute inset-0 z-[999999];
+
+        .body {
+            padding: 35px 0;
+        }
+    }
+
+    .modal-dialog {
+        @apply max-w-screen-xl mx-auto text-gray-200;
+        min-width: 80%;
+        max-width: 80%;
+    }
+
+    .modal-content {
+        @apply bg-black/70 border border-cyan-500/40 rounded-lg shadow-lg shadow-cyan-500/20 grid outline-none pointer-events-auto relative;
+        /* background-clip: padding-box;
+        background-color: #fff;
+        border: 1px solid rgba(80, 80, 80, 0.1);
+        border-radius: 8px;
+        display: flex;
+        flex-direction: column;
+        outline: 0;
+        pointer-events: auto;
+        position: relative;
+        width: 100%; */
+    }
+}

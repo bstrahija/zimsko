@@ -1,0 +1,11 @@
+.log-item {
+    @apply opacity-60 transition-all duration-300 ease-in-out;
+
+    &:hover {
+        @apply opacity-100;
+    }
+}
+
+.log-item:first-child {
+    @apply opacity-100 shadow-xl shadow-emerald-500/20;
+}

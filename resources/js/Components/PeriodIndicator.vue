@@ -1,6 +1,6 @@
 <script setup>
 defineProps({
-    live: {
+    game: {
         type: Object,
         required: true,
     },
@@ -8,10 +8,12 @@ defineProps({
 </script>
 
 <template>
-    <div class="flex justify-center items-center p-2 h-full text-center rounded quarter-indicator">
+    <div class="flex justify-center items-center p-2 h-full text-center rounded period-indicator">
         <div class="">
-            <div class="text-xs text-fuchsia-400">ČETVRTINA</div>
-            <div class="text-3xl font-bold text-fuchsia-300">{{ live.quarter }}</div>
-        </div>
-    </div>
+            <div class="text-xs text-fuchsia-400 uppercase">
+                {{ (game.period <= 4) ? 'Četvrtina' : 'Produžetak' }} </div>
+                    <div class="text-3xl font-bold text-fuchsia-300">
+                        {{ game.period <= 4 ? game.period : game.period - 4 }} </div>
+                    </div>
+            </div>
 </template>

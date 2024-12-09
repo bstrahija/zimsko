@@ -1,0 +1,33 @@
+.home-controls,
+.away-controls {
+    .add-score svg {
+        @apply text-emerald-500;
+    }
+
+    .add-miss svg,
+    .add-turnover svg {
+        @apply text-rose-400;
+    }
+
+    .add-foul svg,
+    .add-technical svg {
+        @apply text-red-500;
+    }
+
+    .add-block svg,
+    .add-steal svg {
+        @apply text-amber-600;
+    }
+    .add-rebound svg,
+    .add-assist svg {
+        @apply text-amber-500;
+    }
+
+    .add-substitution svg {
+        @apply text-sky-400;
+    }
+
+    .add-timeout svg {
+        @apply text-pink-600;
+    }
+}

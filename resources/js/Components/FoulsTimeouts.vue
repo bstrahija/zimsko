@@ -1,7 +1,14 @@
 <script setup>
-import LogItem from './LogItem.vue';
+import { toRefs } from 'vue';
+import { $vfm } from 'vue-final-modal';
+import AddFoulModal from './Modals/AddFoulModal.vue';
+import AddTimeoutModal from './Modals/AddTimeoutModal.vue';
 
-defineProps({
+const props = defineProps({
+    game: {
+        type: Object,
+        required: true,
+    },
     team: {
         type: Object,
         required: true,
@@ -11,18 +18,28 @@ defineProps({
         required: true,
     },
 });
+
+const { team, side } = toRefs(props);
+
+const timeout = () => {
+    $vfm.show({ component: AddTimeoutModal, bind: { team: team, players: players, game: game } });
+};
+
+const foul = () => {
+    $vfm.show({ component: AddFoulModal, bind: { team: team, players: players, game: game } });
+};
 </script>
 
 <template>
     <div class="grid grid-cols-3 gap-4">
-        <div class="px-2 py-2 space-y-1 text-center rounded foul-timeout-btn">
+        <button @click="$live.addFoul(game, team)" class="px-2 py-2 space-y-1 text-center rounded foul-timeout-btn">
             <div class="text-xs">PREKRŠAJI</div>
             <div class="text-2xl font-bold">{{ team.stats.fouls }}</div>
-        </div>
-        <div class="px-2 py-2 space-y-1 text-center rounded foul-timeout-btn">
+        </button>
+        <button @click="$live.addTimeout(game, team)" class="px-2 py-2 space-y-1 text-center rounded foul-timeout-btn">
             <div class="text-xs">TIMEOUT</div>
             <div class="text-2xl font-bold">{{ team.stats.timeouts }}</div>
-        </div>
+        </button>
         <div class="px-2 py-2 space-y-1 text-center rounded foul-timeout-btn">
             <div class="text-xs">BONUS</div>
             <div class="text-2xl font-bold text-pink-500" v-if="team.stats.fouls >= 5">✓</div>

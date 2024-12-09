@@ -17,7 +17,7 @@ class GameLog extends Model
     protected $fillable = [
         'game_id',
         'game_live_id',
-        'quarter',
+        'period',
         'player_id',
         'player_2_id',
         'player_name',
@@ -36,14 +36,20 @@ class GameLog extends Model
         'summary',
         'data',
         'occurred_at',
-        'occurred_at_q',
+        'occurred_at_p',
     ];
 
     protected $casts = [
+        'player_id'   => 'integer',
+        'player_2_id' => 'integer',
+        'team_id'     => 'integer',
+        'coach_id'    => 'integer',
+        'referee_id'  => 'integer',
+        'official_id' => 'integer',
         'home_score'  => 'integer',
         'away_score'  => 'integer',
         'amount'      => 'integer',
-        'quarter'     => 'integer',
+        'period'      => 'integer',
         'data'        => 'array'
     ];
 

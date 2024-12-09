@@ -39,7 +39,7 @@ trait LiveScoreLog
         $item->team_name     = isset($team) && $team ? $team->title : null;
         $item->team_side     = isset($isInHomeTeam) ? ($isInHomeTeam ? 'home' : 'away') : null;
         $item->amount        = $data['amount'] ?? null;
-        $item->quarter       = $data['quarter'] ?? 'q1';
+        $item->period        = $data['period'] ?? 'q1';
         $item->occurred_at   = $data['occurred_at'] ?? '00:00:00';
         $item->save();
 
@@ -61,9 +61,9 @@ trait LiveScoreLog
                     'id'            => $log->id,
                     'type'          => $log->type,
                     'subtype'       => $log->subtype,
-                    'quarter'       => $log->quarter,
+                    'period'        => $log->period,
                     'occurred_at'   => $log->occurred_at,
-                    'occurred_at_q' => $log->occurred_at_q,
+                    'occurred_at_p' => $log->occurred_at_p,
                     'amount'        => $log->amount,
                     'home_score'    => $log->home_score,
                     'away_score'    => $log->away_score,
@@ -77,7 +77,8 @@ trait LiveScoreLog
                 if ($log->type === 'game_initialized')              $message = $this->logMessageForGameInitialized($log);
                 else if ($log->type === 'game_starting_players')    $message = $this->logMessageForStartingPlayers($log);
                 else if ($log->type === 'game_started')             $message = 'Utakmica je započela: ' . $log->created_at->format('d.m. h:i:s');
-                else if ($log->type === 'quarter_started')          $message = 'Počela je ' . $log->quarter . '. četvrtina: ' . $log->created_at->format('d.m. h:i:s');
+                else if ($log->type === 'period_started')           $message = $this->logMessageForPeriod($log, 'start');
+                else if ($log->type === 'period_ended')             $message = $this->logMessageForPeriod($log, 'end');
                 else if ($log->type === 'game_ended')               $message = 'Utakmica je završena: ' . $log->created_at->format('d.m. h:i:s');
                 else if ($log->type === 'player_score')             $message = $this->logMessageForPlayerScore($log);
                 else if ($log->type === 'player_miss')              $message = $this->logMessageForPlayerMiss($log);
@@ -101,6 +102,15 @@ trait LiveScoreLog
         }
 
         return $stream;
+    }
+
+    public function logMessageForPeriod(GameLog $log, $type = 'start'): string
+    {
+        $message = ($type === 'start' ? 'Počela je ' : 'Završila je') . ' ' . $log->period;
+        $message .= ($log->period <= 4 ? ' četvrtina: ' : ' produžetak: ');
+        $message .= $log->created_at->format('d.m. h:i:s');
+
+        return $message;
     }
 
     public function logMessageForGameInitialized(GameLog $log): string
@@ -235,6 +245,7 @@ trait LiveScoreLog
     {
         $this->log = GameLog::where('game_id', $this->game->id)
             ->where('game_live_id', $this->gameLive->id)
+            ->orderBy('period', 'desc')
             ->orderBy('created_at', 'desc')
             ->orderBy('occurred_at', 'desc')
             ->get();

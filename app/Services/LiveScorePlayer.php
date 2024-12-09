@@ -29,7 +29,7 @@ trait LiveScorePlayer
                 'player_id'   => $player->id,
                 'player_2_id' => $playerAssisted ? $playerAssisted->id : null,
                 'amount'      => $points,
-                'quarter'     => $this->currentQuarter,
+                'period'      => $this->currentPeriod,
                 'location'    => $location,
                 'occurred_at' => $occurredAt,
             ]);
@@ -60,7 +60,7 @@ trait LiveScorePlayer
                 'subtype'     => ($points === 3) ? '3pt' : ($points === 1 ? '1pt' : '2pt'),
                 'player_id'   => $player->id,
                 'amount'      => $points,
-                'quarter'     => $this->currentQuarter,
+                'period'     => $this->currentPeriod,
                 'location'    => $location,
                 'occurred_at' => $occurredAt,
             ]);
@@ -88,7 +88,7 @@ trait LiveScorePlayer
                 'player_id'   => $player->id,
                 'player_2_id' => $playerAssistedTo ? $playerAssistedTo->id : null,
                 'amount'      => 1,
-                'quarter'     => $this->currentQuarter,
+                'period'     => $this->currentPeriod,
                 'location'    => $location,
                 'occurred_at' => $occurredAt,
             ]);
@@ -120,7 +120,7 @@ trait LiveScorePlayer
                 'player_id'       => $player->id,
                 'player_2_id'     => $playerBlocked ? $playerBlocked->id : null,
                 'amount'          => 1,
-                'quarter'         => $this->currentQuarter,
+                'period'         => $this->currentPeriod,
                 'location'        => $location,
                 'occurred_at'     => $occurredAt,
             ]);
@@ -130,7 +130,7 @@ trait LiveScorePlayer
         }
     }
 
-    public function playerFoul(string $playerId, string $subtype = 'pf', ?Player $playerBlocked = null, int $points = 2, ?string $playerFouledId = null, ?array $location = null, ?string $occurredAt = '00:00:00')
+    public function playerFoul(string $playerId, string $subtype = 'pf', ?string $playerFouledId = null, ?array $location = null, ?string $occurredAt = '00:00:00')
     {
         // Find players
         $player        = $this->findPlayer($playerId);
@@ -153,7 +153,7 @@ trait LiveScorePlayer
                 'player_id'       => $player->id,
                 'player_2_id'     => $playerFouled ? $playerFouled->id : null,
                 'amount'          => 1,
-                'quarter'         => $this->currentQuarter,
+                'period'         => $this->currentPeriod,
                 'location'        => $location,
                 'occurred_at'     => $occurredAt,
             ]);
@@ -179,7 +179,7 @@ trait LiveScorePlayer
                 'subtype'         => $subtype, // can be reb, oreb or dreb
                 'player_id'       => $player->id,
                 'amount'          => 1,
-                'quarter'         => $this->currentQuarter,
+                'period'         => $this->currentPeriod,
                 'location'        => $location,
                 'occurred_at'     => $occurredAt,
             ]);
@@ -207,7 +207,7 @@ trait LiveScorePlayer
                 'player_id'       => $player->id,
                 'player_2_id'     => $playerStolen ? $playerStolen->id : null,
                 'amount'          => 1,
-                'quarter'         => $this->currentQuarter,
+                'period'         => $this->currentPeriod,
                 'location'        => $location,
                 'occurred_at'     => $occurredAt,
             ]);
@@ -233,7 +233,7 @@ trait LiveScorePlayer
                 'subtype'         => 'to',
                 'player_id'       => $player->id,
                 'amount'          => 1,
-                'quarter'         => $this->currentQuarter,
+                'period'         => $this->currentPeriod,
                 'location'        => $location,
                 'occurred_at'     => $occurredAt,
             ]);
@@ -295,7 +295,7 @@ trait LiveScorePlayer
                 'player_id'       => $playerIn->id,
                 'player_2_id'     => $playerOut->id,
                 'amount'          => 1,
-                'quarter'         => $this->currentQuarter,
+                'period'         => $this->currentPeriod,
                 'location'        => $location,
                 'occurred_at'     => $occurredAt,
             ]);
