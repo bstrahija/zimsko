@@ -24,7 +24,7 @@ const { game } = toRefs(props);
 const data = reactive({
     selectedPlayer: null,
     gameId: null,
-    type: 'dr',
+    type: 'def',
 });
 
 const save = async function () {
@@ -63,7 +63,6 @@ function setType(type) {
                     <div class="modal-body">
                         <div class="grid">
                             <div class="text-center">
-                                <p><small>{{ players }}</small></p>
                                 <button @click="selectPlayer(player)" v-for="player in players" :key="player.id"
                                     :class="{ 'bg-emerald-600': isActive(player), 'bg-slate-500': !isActive(player) }"
                                     class="px-4 py-2 m-1 text-white rounded-md shadow-md transition-colors duration-200 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-opacity-50">
@@ -73,11 +72,11 @@ function setType(type) {
                             </div>
 
                             <div class="grid grid-cols-2 text-center max-w-[360px] mt-4 mb-6 mx-auto">
-                                <button @click="setType('dr')" :class="{ 'opacity-50': data.type !== 'dr' }"
+                                <button @click="setType('def')" :class="{ 'opacity-50': data.type !== 'def' }"
                                     class="overflow-hidden px-4 py-2 m-1 text-white bg-blue-500 rounded-md shadow-md transition-colors duration-200 aspect-square hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50">
                                     Defenzivni
                                 </button>
-                                <button @click="setType('or')" :class="{ 'opacity-50': data.type !== 'or' }"
+                                <button @click="setType('off')" :class="{ 'opacity-50': data.type !== 'off' }"
                                     class="overflow-hidden px-4 py-2 m-1 text-white bg-blue-500 rounded-md shadow-md transition-colors duration-200 aspect-square hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50">
                                     Ofenzivni
                                 </button>

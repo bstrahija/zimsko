@@ -110,7 +110,7 @@ class LiveController extends Controller
         // Find the player
         $playerId = $request->input('selectedPlayer') ?  $request->input('selectedPlayer')['id'] : null;
         $score    = $request->input('score');
-        $subtype  = $request->input('subtype') ?: 'reb';
+        $subtype  = $request->input('type') ?: 'reb';
         Log::debug("Adding rebound. Game: {$game->id}, Player: {$playerId}, Points: {$score}", ['section' => 'LIVE', 'game_id' => $game->id, 'player_id' => $playerId]);
 
         // Write the score

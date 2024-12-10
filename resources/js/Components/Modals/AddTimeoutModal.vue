@@ -13,24 +13,27 @@ const props = defineProps({
         type: Array,
         required: true,
     },
-    live: {
+    game: {
         type: Object,
         required: true,
     },
 });
 
-const { live } = toRefs(props);
+const { game } = toRefs(props);
 
 const data = reactive({
     gameId: null,
 });
 
 const save = async function () {
-    data.gameId = live.value.game_id;
     await router.post('/live/' + data.gameId + '/timeout', data);
 
     $vfm.hideAll();
 };
+
+const canBeSaved = function () {
+    return true;
+}
 </script>
 
 <template>
@@ -45,7 +48,7 @@ const save = async function () {
 
                     <div class="modal-body">
 
-                        <p>Zovi timeout?</p>
+                        <p class="text-center">Zovi timeout?</p>
                         <div class="flex justify-center p-6">
                             <button :disabled="!canBeSaved()"
                                 :class="{ 'opacity-50': !canBeSaved(), 'pointer-events-none': !canBeSaved() }"

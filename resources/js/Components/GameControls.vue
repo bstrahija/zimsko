@@ -43,7 +43,7 @@ const endGame = async function () {
 }
 
 const showStats = function () {
-    $vfm.show({ component: StatsModal, bind: { game: game } });
+    $vfm.show({ component: StatsModal, bind: { game: game.value } });
 }
 </script>
 

@@ -77,10 +77,7 @@ function isActiveIn(player) {
     return data.selectedPlayersIn.includes(player);
 }
 
-function canBeSaved() {
-    console.log(data.selectedPlayersIn.length);
-    console.log(data.selectedPlayersOut.length);
-
+const canBeSaved = function () {
     return (data.selectedPlayersOut.length > 0 && data.selectedPlayersIn.length > 0)
         && (data.selectedPlayersOut.length === data.selectedPlayersIn.length);
 }
