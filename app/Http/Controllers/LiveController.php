@@ -3,58 +3,66 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Event;
 use App\Models\Game;
 use App\Models\GameLive;
 use App\Models\GameLog;
 use App\Models\Player;
+use App\Models\Team;
 use App\Services\LiveScore;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class LiveController extends Controller
 {
     protected ?LiveScore $live = null;
 
-    public function index()
+    public function index(Request $request): Response
     {
-        // Let's get a game (latest)
-        // $game = Game::orderBy('scheduled_at', 'desc')->first();
+        $currentEvent = Event::current();
+        $keyword      = trim($request->get('query'));
+        $eventId      = $request->get('event') ?: $currentEvent->id;
+        $team         = $request->get('team');
+        $events       = Event::orderBy('created_at', 'desc')->get();
+        $teams        = Team::orderBy('title', 'desc')->get();
+        $event        = Event::find($eventId);
 
-        /** @var Game $game */
-        $game = Game::where('id', '01je1krqjrfafqe8ywf1htcawh')->with(['homeTeam', 'awayTeam', 'homeTeam.players', 'awayTeam.players'])->first();
-        // $this->runSim($game, true);
-        // Log::debug("Simulating game. Game: {$game->id}", ['section' => 'LIVE', 'game_id' => $game->id]);
+        // Start the query
+        $query = Game::orderBy('scheduled_at', 'desc')->where('event_id', $eventId)->with(['event', 'homeTeam', 'awayTeam']);
+
+        // Add keyword
+        if ($keyword) {
+            $query->where(function ($q) use ($keyword) {
+                $q->where('title', 'like', '%' . $keyword . '%');
+            });
+        }
+
+        // Add team
+        if ($team) {
+            $query->where(function ($q) use ($team) {
+                $q->where('home_team_id', $team)
+                    ->orWhere('away_team_id', $team)
+                ;
+            });
+        }
+
+        // And get results
+        $games  = $query->limit(50)->get();
 
 
+        return Inertia::render('Index', ['games' => $games, 'events' => $events, 'teams' => $teams, 'event' => $event]);
+    }
 
-        // die();
-
-        $live = $this->live($game);
-        // dump($live);
-        // die();
-
-
-
+    public function game(Game $game): Response
+    {
         // We need to convert all the data to an array
         $data = $this->live($game)->toData();
 
-        // dump($data);
-        // die();
-
-
-
-
-
         return Inertia::render('Score', $data);
-    }
-
-    public function show(Game $game)
-    {
-        return Inertia::render('Score', [
-            'game' => $game,
-        ]);
     }
 
     public function addScore(Game $game, Request $request)
@@ -161,10 +169,24 @@ class LiveController extends Controller
 
     public function startGame(Game $game, Request $request)
     {
-        // Find the player
-        Log::debug("Starting game. Game: {$game->id}", ['section' => 'LIVE', 'game_id' => $game->id]);
+        // Get the request data
+        $homePlayers = $request->input('homeStartingPlayers');
+        $awayPlayers = $request->input('awayStartingPlayers');
 
-        $this->live($game)->startGame();
+        if (count($homePlayers) === 5 && count($awayPlayers) === 5) {
+            $homePlayerIds = array_column($homePlayers, 'id');
+            $awayPlayerIds = array_column($awayPlayers, 'id');
+            Log::debug("Home starting five. Game: {$game->id}, Players: " . @json_encode($homePlayers), ['section' => 'LIVE', 'game_id' => $game->id]);
+            Log::debug("Away starting five. Game: {$game->id}, Players: " . @json_encode($awayPlayers), ['section' => 'LIVE', 'game_id' => $game->id]);
+            $this->live($game)->addStartingPlayers(
+                homePlayerIds: $homePlayerIds,
+                awayPlayerIds: $awayPlayerIds
+            );
+            sleep(1);
+
+            Log::debug("Starting game. Game: {$game->id}", ['section' => 'LIVE', 'game_id' => $game->id]);
+            $this->live($game)->startGame();
+        }
     }
 
     public function nextPeriod(Game $game, Request $request)
@@ -185,6 +207,12 @@ class LiveController extends Controller
 
     public function deleteLog(GameLog $log)
     {
+        if ($log->type === 'game_ended') {
+            $log->game->live->update(['status' => 'started']);
+        } elseif ($log->type === 'period_started') {
+            $log->game->live->update(['period' => $log->period - 1]);
+        }
+
         $log->delete();
         $this->live($log->game)->updateLiveStats();
     }
@@ -250,7 +278,7 @@ class LiveController extends Controller
         );
 
         // Start the game
-        // $live->startGame();
+        $live->startGame();
 
         // Q1 Sim
         $live->playerScore(playerId: $players['vedran']->id, points: 2, occurredAt: '00:00:44');

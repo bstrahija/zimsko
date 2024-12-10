@@ -118,12 +118,16 @@ class Game extends Model
 
     public function homePlayers(): BelongsToMany
     {
-        return $this->belongsToMany(Player::class)->where('team_id', $this->home_team_id)->withPivot(['points', 'three_points', 'two_points', 'free_throws', 'free_throws_attempted', 'two_points_attempted', 'three_points_attempted']);
+        return $this->belongsToMany(Player::class)->where('team_id', $this->home_team_id)
+            ->with('media')
+            ->withPivot(['points', 'three_points', 'two_points', 'free_throws', 'free_throws_attempted', 'two_points_attempted', 'three_points_attempted']);
     }
 
     public function awayPlayers(): BelongsToMany
     {
-        return $this->belongsToMany(Player::class)->where('team_id', $this->away_team_id)->withPivot(['points', 'three_points', 'two_points', 'free_throws', 'free_throws_attempted', 'two_points_attempted', 'three_points_attempted']);
+        return $this->belongsToMany(Player::class)->where('team_id', $this->away_team_id)
+            ->with('media')
+            ->withPivot(['points', 'three_points', 'two_points', 'free_throws', 'free_throws_attempted', 'two_points_attempted', 'three_points_attempted']);
     }
 
     public function gamePlayers(): HasMany

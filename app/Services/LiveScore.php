@@ -52,14 +52,15 @@ class LiveScore
     {
         // First find the game model
         if (is_string($game)) {
-            $this->game = Game::find($game)->with(['homeTeam', 'awayTeam', 'homeTeam.players', 'awayTeam.players']);
+            $this->game = Game::find($game)->with(['homeTeam', 'awayTeam', 'homeTeam.players', 'awayTeam.players', 'homeTeam.players.media', 'awayTeam.players.media'])->first();
         } else {
             $this->game = $game;
         }
 
         // We need to preload the teams and players to avoid N+1
-        $this->homeTeam    = $this->game->homeTeam()->with(['players'])->first();
-        $this->awayTeam    = $this->game->awayTeam()->with(['players'])->first();
+        $this->homeTeam    = $this->game->homeTeam()->with(['players', 'players.media'])->first();
+        $this->awayTeam    = $this->game->awayTeam()->with(['players', 'players.media'])->first();
+
         $this->homePlayers = $this->game->homePlayers;
         $this->awayPlayers = $this->game->awayPlayers;
         $this->players     = $this->homePlayers->merge($this->awayPlayers);
@@ -86,7 +87,7 @@ class LiveScore
     public function initGame()
     {
         // This simply creates the game live model
-        $this->gameLive       = $this->game->live()->firstOrCreate([], ['period' => 1]);
+        $this->gameLive       = $this->game->live()->firstOrCreate([], ['period' => 1, 'home_starting_players' => [], 'away_starting_players' => [], 'home_players_on_court' => [], 'away_players_on_court' => []]);
         $this->currentPeriod  = $this->gameLive->period;
 
         // Setup the players
@@ -283,11 +284,11 @@ class LiveScore
 
     public function endGame()
     {
-        $lastPeriod = 4; // Check if this is correct (could be overtime, or game suspended before)
+        // $lastPeriod = 4; // Check if this is correct (could be overtime, or game suspended before)
 
         $this->gameLive->update([
             'status' => 'ended',
-            'period' => $lastPeriod,
+            // 'period' => $lastPeriod,
         ]);
 
         // We also need to update the log
@@ -296,7 +297,7 @@ class LiveScore
             'game_live_id' => $this->gameLive->id,
             'type'         => 'game_ended',
         ], [
-            'period'        => $lastPeriod,
+            'period'        => $this->gameLive->period,
             'occurred_at'   => '00:32:00',
             'occurred_at_p' => '00:08:00',
         ]);
@@ -464,13 +465,15 @@ class LiveScore
 
         // We need to adjust some data
         foreach (['home_starting_players', 'away_starting_players', 'home_players_on_court', 'away_players_on_court'] as $type) {
-            if ($data['game'][$type]) {
+            if (isset($data['game'][$type]) && $data['game'][$type]) {
                 $players = [];
                 foreach ($data['game'][$type] as $key => $playerId) {
                     $player = $this->findPlayer($playerId);
                     $players[$key] = $player->toArray();
                 }
                 $data['game'][$type] = $players;
+            } else {
+                $data['game'][$type] = [];
             }
         }
 

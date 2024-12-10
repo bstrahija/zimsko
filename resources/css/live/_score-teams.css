@@ -49,3 +49,12 @@
         }
     }
 }
+
+.home-controls,
+.away-controls {
+    .starting-players-on-bench {
+        .player-block {
+            @apply opacity-100;
+        }
+    }
+}

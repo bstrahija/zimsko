@@ -31,7 +31,7 @@ const remove = () => {
 
     if (!confirm('Da li ste sigurni?')) return;
 
-    router.delete('live/log/' + log.value.id);
+    router.delete('/live/log/' + log.value.id);
 };
 </script>
 
