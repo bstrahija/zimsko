@@ -153,7 +153,7 @@ trait LiveScorePlayer
                 'player_id'       => $player->id,
                 'player_2_id'     => $playerFouled ? $playerFouled->id : null,
                 'amount'          => 1,
-                'period'         => $this->currentPeriod,
+                'period'          => $this->currentPeriod,
                 'location'        => $location,
                 'occurred_at'     => $occurredAt,
             ]);

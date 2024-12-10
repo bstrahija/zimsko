@@ -40,12 +40,12 @@ class GameLog extends Model
     ];
 
     protected $casts = [
-        'player_id'   => 'integer',
-        'player_2_id' => 'integer',
-        'team_id'     => 'integer',
-        'coach_id'    => 'integer',
-        'referee_id'  => 'integer',
-        'official_id' => 'integer',
+        'player_id'   => 'string',
+        'player_2_id' => 'string',
+        'team_id'     => 'string',
+        'coach_id'    => 'string',
+        'referee_id'  => 'string',
+        'official_id' => 'string',
         'home_score'  => 'integer',
         'away_score'  => 'integer',
         'amount'      => 'integer',

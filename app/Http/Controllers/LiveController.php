@@ -62,6 +62,22 @@ class LiveController extends Controller
         // We need to convert all the data to an array
         $data = $this->live($game)->toData();
 
+        // // Lets show home team stats
+        // echo '<h1>Home: ' . $game->homeTeam->title . '</h1><ul>';
+        // foreach ($game->homeTeam->stats as $key => $stat) {
+        //     echo '<li>' . $key . ': <strong>' . $stat . '</strong></li>';
+        // }
+        // echo '</ul><hr>';
+
+        // // Lets show away team stats
+        // echo '<h1>Away: ' . $game->awayTeam->title . '</h1>';
+        // foreach ($game->awayTeam->stats as $key => $stat) {
+        //     echo '<li>' . $key . ': <strong>' . $stat . '</strong></li>';
+        // }
+        // echo '</ul><hr>';
+
+
+
         return Inertia::render('Score', $data);
     }
 
@@ -227,6 +243,15 @@ class LiveController extends Controller
         ]);
     }
 
+    public function sim()
+    {
+        // 4. kolo Park's - BC Nording
+        $game = Game::find('01je1krqjrfafqe8ywf1htcawh');
+        $live = $this->runSim($game, true);
+
+        dd($live->toData());
+    }
+
     /**
      * Simulate a game
      *
@@ -285,10 +310,12 @@ class LiveController extends Controller
         $live->playerScore(playerId: $players['medica']->id, playerAssistId: $players['milic']->id, points: 2, occurredAt: '00:01:08');
         $live->playerSteal(playerId: $players['volf']->id, playerStolenId: $players['bis']->id, occurredAt: '00:01:12');
         $live->playerMiss(playerId: $players['milic']->id, points: 2, occurredAt: '00:01:30');
-        $live->playerFoul(playerId: $players['bis']->id, playerFouledId: $players['medica']->id, points: 2, occurredAt: '00:01:51');
+        $live->playerFoul(playerId: $players['bis']->id, playerFouledId: $players['medica']->id, occurredAt: '00:01:51');
         $live->playerScore(playerId: $players['medica']->id, points: 1, occurredAt: '00:01:51');
         $live->playerMiss(playerId: $players['medica']->id, points: 1, occurredAt: '00:01:51');
-        $live->playerFoul(playerId: $players['medica']->id, playerFouledId: $players['medo']->id, points: 2, occurredAt: '00:01:59');
+        $live->playerRebound(playerId: $players['medica']->id, subtype: 'off', occurredAt: '00:01:53');
+        $live->playerRebound(playerId: $players['volf']->id, subtype: 'off', occurredAt: '00:01:53');
+        $live->playerFoul(playerId: $players['medica']->id, playerFouledId: $players['medo']->id, occurredAt: '00:01:59');
         $live->substitution(playersIn: [$players['megla']->id], playersOut: [$players['ivano']->id], occurredAt: '00:02:00');
         $live->playerScore(playerId: $players['megla']->id, playerAssistId: $players['vurac']->id, points: 3, occurredAt: '00:02:08');
         $live->playerSteal(playerId: $players['bis']->id, playerStolenId: $players['kraja']->id, occurredAt: '00:02:31');
@@ -300,6 +327,7 @@ class LiveController extends Controller
         $live->playerScore(playerId: $players['bis']->id, playerAssistId: $players['medo']->id, points: 2, occurredAt: '00:03:33');
         $live->playerScore(playerId: $players['bis']->id, points: 3, occurredAt: '00:03:55');
         $live->playerScore(playerId: $players['marek']->id, points: 3, occurredAt: '00:03:59');
+        $live->playerBlock(playerId: $players['bis']->id, playerBlockedId: $players['marek']->id, occurredAt: '00:04:03');
         $live->playerScore(playerId: $players['marek']->id, playerAssistId: $players['kraja']->id, points: 3, occurredAt: '00:04:15');
         $live->playerFoul(playerId: $players['vedran']->id, playerFouledId: $players['kraja']->id, occurredAt: '00:04:33');
         $live->playerScore(playerId: $players['kraja']->id, points: 1, occurredAt: '00:04:33');
@@ -307,66 +335,72 @@ class LiveController extends Controller
         $live->playerScore(playerId: $players['megla']->id, points: 3, occurredAt: '00:04:44');
         $live->substitution(playersIn: [$players['gomzi']->id], playersOut: [$players['bis']->id], occurredAt: '00:02:00');
         $live->playerScore(playerId: $players['gomzi']->id, playerAssistId: $players['megla']->id, points: 2, occurredAt: '00:04:44');
+        $live->substitution(playersIn: [$players['gomzi']->id], playersOut: [$players['bis']->id], occurredAt: '00:02:00');
+        $live->nextPeriod();
 
 
-        // $live->playerScore(playerId: $players['markec']->id, playerAssistId: $players['srdjan']->id, points: 3);
-        // $live->playerScore(playerId: $players['vedran']->id, points: 2);
-        // $live->playerScore(playerId: $players['bis']->id, points: 2);
-        // $live->substitution(playersOut: [$players['bis']->id, $players['vedran']->id], playersIn: [$players['medo']->id, $players['davorin']->id]);
-        // $live->substitution(playersOut: [$players['lesar']->id], playersIn: [$players['nevco']->id]);
-        // $live->playerRebound(playerId: $players['srdjan']->id, subtype: 'dreb');
-        // $live->playerScore(playerId: $players['vedran']->id, points: 2, playerAssistId: $players['bis']->id);
-        // $live->playerScore(playerId: $players['gego']->id, points: 2);
-        // $live->playerBlock(playerId: $players['bis']->id, playerBlockedId: $players['gego']->id);
-        // $live->playerScore(playerId: $players['alex']->id, points: 3);
-        // $live->timeout(teamId: $live->awayTeam()->id);
-        // $live->playerScore(playerId: $players['danc']->id, points: 2);
-        // $live->playerRebound(playerId: $players['bis']->id, subtype: 'dreb');
-        // $live->playerScore(playerId: $players['bis']->id, points: 2);
-        // $live->timeout(teamId: $live->homeTeam()->id);
-        // $live->playerFoul(playerId: $players['danc']->id, playerFouledId: $players['bis']->id, points: 2);
-        // $live->playerFoul(playerId: $players['gego']->id, playerFouledId: $players['bis']->id, points: 2);
-        // $live->playerScore(playerId: $players['bis']->id, points: 1);
-        // $live->playerSteal(playerId: $players['gomzi']->id, playerStolenId: $players['alex']->id);
-        // $live->playerBlock(playerId: $players['danc']->id, playerBlockedId: $players['bis']->id);
-        // $live->playerMiss(playerId: $players['bis']->id, points: 1);
-        // $live->timeout(teamId: $live->homeTeam()->id);
-        // $live->playerRebound(playerId: $players['bis']->id, subtype: 'oreb');
-        // $live->playerScore(playerId: $players['danc']->id, points: 1);
-        // $live->playerMiss(playerId: $players['danc']->id, points: 1);
-        // $live->playerFoul(playerId: $players['medo']->id, subtype: 'tf');
-        // $live->playerRebound(playerId: $players['danc']->id, subtype: 'dreb');
-        // $live->playerScore(playerId: $players['srdjan']->id, points: 2, playerAssistId: $players['vedran']->id);
-        // $live->playerScore(playerId: $players['danc']->id, playerAssistId: $players['alex']->id, points: 2);
-        // $live->playerRebound(playerId: $players['danc']->id, subtype: 'dreb');
+        $live->playerScore(playerId: $players['vedran']->id, points: 2, occurredAt: '00:00:44');
+        $live->playerScore(playerId: $players['medica']->id, playerAssistId: $players['milic']->id, points: 2, occurredAt: '00:01:08');
+        $live->playerSteal(playerId: $players['volf']->id, playerStolenId: $players['bis']->id, occurredAt: '00:01:12');
+        $live->playerMiss(playerId: $players['milic']->id, points: 2, occurredAt: '00:01:30');
+        $live->playerFoul(playerId: $players['bis']->id, playerFouledId: $players['medica']->id, occurredAt: '00:01:51');
+        $live->playerScore(playerId: $players['medica']->id, points: 1, occurredAt: '00:01:51');
+        $live->playerMiss(playerId: $players['medica']->id, points: 1, occurredAt: '00:01:51');
+        $live->playerRebound(playerId: $players['medica']->id, subtype: 'off', occurredAt: '00:01:53');
+        $live->playerRebound(playerId: $players['volf']->id, subtype: 'off', occurredAt: '00:01:53');
+        $live->playerFoul(playerId: $players['medica']->id, playerFouledId: $players['medo']->id, occurredAt: '00:01:59');
+        $live->substitution(playersIn: [$players['megla']->id], playersOut: [$players['ivano']->id], occurredAt: '00:02:00');
+        $live->playerScore(playerId: $players['megla']->id, playerAssistId: $players['vurac']->id, points: 3, occurredAt: '00:02:08');
+        $live->playerSteal(playerId: $players['bis']->id, playerStolenId: $players['kraja']->id, occurredAt: '00:02:31');
+        $live->playerScore(playerId: $players['medo']->id, playerAssistId: $players['bis']->id, points: 3, occurredAt: '00:02:33');
+        $live->playerFoul(playerId: $players['bis']->id, playerFouledId: $players['medo']->id, occurredAt: '00:02:51');
+        $live->playerScore(playerId: $players['medica']->id, points: 1, occurredAt: '00:02:51');
+        $live->playerScore(playerId: $players['medica']->id, points: 1, occurredAt: '00:02:51');
+        $live->timeout(teamId: $live->awayTeam()->id, occurredAt: '00:03:12');
+        $live->playerScore(playerId: $players['bis']->id, playerAssistId: $players['medo']->id, points: 2, occurredAt: '00:03:33');
+        $live->playerScore(playerId: $players['bis']->id, points: 3, occurredAt: '00:03:55');
+        $live->playerScore(playerId: $players['marek']->id, points: 3, occurredAt: '00:03:59');
+        $live->playerBlock(playerId: $players['bis']->id, playerBlockedId: $players['marek']->id, occurredAt: '00:04:03');
+        $live->playerScore(playerId: $players['marek']->id, playerAssistId: $players['kraja']->id, points: 3, occurredAt: '00:04:15');
+        $live->playerFoul(playerId: $players['vedran']->id, playerFouledId: $players['kraja']->id, occurredAt: '00:04:33');
+        $live->playerScore(playerId: $players['kraja']->id, points: 1, occurredAt: '00:04:33');
+        $live->playerScore(playerId: $players['kraja']->id, points: 1, occurredAt: '00:04:33');
+        $live->playerScore(playerId: $players['megla']->id, points: 3, occurredAt: '00:04:44');
+        $live->substitution(playersIn: [$players['gomzi']->id], playersOut: [$players['bis']->id], occurredAt: '00:02:00');
+        $live->playerScore(playerId: $players['gomzi']->id, playerAssistId: $players['megla']->id, points: 2, occurredAt: '00:04:44');
         // dump($live);
-        // $live->nextPeriod();
+        $live->nextPeriod();
 
-        // Q2 Sim
-        // $live->playerScore(playerId: $players['markec']->id, playerAssistId: $players['srdjan']->id, points: 3);
-        // $live->playerRebound(playerId: $players['bis']->id, subtype: 'dreb');
-        // $live->playerScore(playerId: $players['bis']->id, points: 2);
-        // $live->playerScore(playerId: $players['bis']->id, points: 2);
-        // $live->playerRebound(playerId: $players['srdjan']->id, subtype: 'dreb');
-        // $live->playerScore(playerId: $players['vedran']->id, points: 2, playerAssistId: $players['bis']->id);
-        // $live->playerScore(playerId: $players['gego']->id, points: 2);
-        // $live->playerSteal(playerId: $players['gomzi']->id, playerStolenId: $players['alex']->id);
-        // $live->playerBlock(playerId: $players['danc']->id, playerBlockedId: $players['bis']->id);
-        // $live->playerMiss(playerId: $players['bis']->id, points: 1);
-        // $live->playerBlock(playerId: $players['bis']->id, playerBlockedId: $players['gego']->id);
-        // $live->playerFoul(playerId: $players['danc']->id, playerFouledId: $players['bis']->id, points: 2);
-        // $live->playerScore(playerId: $players['bis']->id, points: 1);
-        // $live->playerRebound(playerId: $players['bis']->id, subtype: 'oreb');
-        // $live->playerScore(playerId: $players['danc']->id, points: 1);
-        // $live->playerScore(playerId: $players['danc']->id, points: 1);
-        // $live->playerScore(playerId: $players['vedran']->id, points: 2);
-        // $live->playerScore(playerId: $players['alex']->id, points: 3);
-        // $live->playerScore(playerId: $players['danc']->id, points: 2);
-        // $live->playerScore(playerId: $players['danc']->id, playerAssistId: $players['alex']->id, points: 2);
-        // $live->playerRebound(playerId: $players['danc']->id, subtype: 'dreb');
-        // $live->playerFoul(playerId: $players['medo']->id, subtype: 'tf');
-        // $live->playerRebound(playerId: $players['danc']->id, subtype: 'dreb');
-        // $live->playerScore(playerId: $players['srdjan']->id, points: 2, playerAssistId: $players['vedran']->id);
+        // Q3 Sim
+        $live->playerScore(playerId: $players['vedran']->id, points: 2, occurredAt: '00:00:44');
+        $live->playerScore(playerId: $players['medica']->id, playerAssistId: $players['milic']->id, points: 2, occurredAt: '00:01:08');
+        $live->playerSteal(playerId: $players['volf']->id, playerStolenId: $players['bis']->id, occurredAt: '00:01:12');
+        $live->playerMiss(playerId: $players['milic']->id, points: 2, occurredAt: '00:01:30');
+        $live->playerFoul(playerId: $players['bis']->id, playerFouledId: $players['medica']->id, occurredAt: '00:01:51');
+        $live->playerScore(playerId: $players['medica']->id, points: 1, occurredAt: '00:01:51');
+        $live->playerMiss(playerId: $players['medica']->id, points: 1, occurredAt: '00:01:51');
+        $live->playerRebound(playerId: $players['medica']->id, subtype: 'off', occurredAt: '00:01:53');
+        $live->playerRebound(playerId: $players['volf']->id, subtype: 'off', occurredAt: '00:01:53');
+        $live->playerFoul(playerId: $players['medica']->id, playerFouledId: $players['medo']->id, occurredAt: '00:01:59');
+        $live->substitution(playersIn: [$players['megla']->id], playersOut: [$players['ivano']->id], occurredAt: '00:02:00');
+        $live->playerScore(playerId: $players['megla']->id, playerAssistId: $players['vurac']->id, points: 3, occurredAt: '00:02:08');
+        $live->playerSteal(playerId: $players['bis']->id, playerStolenId: $players['kraja']->id, occurredAt: '00:02:31');
+        $live->playerScore(playerId: $players['medo']->id, playerAssistId: $players['bis']->id, points: 3, occurredAt: '00:02:33');
+        $live->playerFoul(playerId: $players['bis']->id, playerFouledId: $players['medo']->id, occurredAt: '00:02:51');
+        $live->playerScore(playerId: $players['medica']->id, points: 1, occurredAt: '00:02:51');
+        $live->playerScore(playerId: $players['medica']->id, points: 1, occurredAt: '00:02:51');
+        $live->timeout(teamId: $live->awayTeam()->id, occurredAt: '00:03:12');
+        $live->playerScore(playerId: $players['bis']->id, playerAssistId: $players['medo']->id, points: 2, occurredAt: '00:03:33');
+        $live->playerScore(playerId: $players['bis']->id, points: 3, occurredAt: '00:03:55');
+        $live->playerScore(playerId: $players['marek']->id, points: 3, occurredAt: '00:03:59');
+        $live->playerBlock(playerId: $players['bis']->id, playerBlockedId: $players['marek']->id, occurredAt: '00:04:03');
+        $live->playerScore(playerId: $players['marek']->id, playerAssistId: $players['kraja']->id, points: 3, occurredAt: '00:04:15');
+        $live->playerFoul(playerId: $players['vedran']->id, playerFouledId: $players['kraja']->id, occurredAt: '00:04:33');
+        $live->playerScore(playerId: $players['kraja']->id, points: 1, occurredAt: '00:04:33');
+        $live->playerScore(playerId: $players['kraja']->id, points: 1, occurredAt: '00:04:33');
+        $live->playerScore(playerId: $players['megla']->id, points: 3, occurredAt: '00:04:44');
+        $live->substitution(playersIn: [$players['gomzi']->id], playersOut: [$players['bis']->id], occurredAt: '00:02:00');
+        $live->playerScore(playerId: $players['gomzi']->id, playerAssistId: $players['megla']->id, points: 2, occurredAt: '00:04:44');
         // dump($live);
         // $live->nextPeriod();
 

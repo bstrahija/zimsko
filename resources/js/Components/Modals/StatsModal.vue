@@ -9,10 +9,6 @@ const props = defineProps({
         type: Object,
         required: true,
     },
-    log: {
-        type: Array,
-        required: true,
-    },
 });
 </script>
 
@@ -28,10 +24,22 @@ const props = defineProps({
 
                     <div class="modal-body">
                         <div class="grid">
-                            Stats
+                            <div class="grid grid-cols-2 gap-4">
+                                <!-- <div v-for="team in [game.home_team, game.away_team]" :key="team.id"
+                                    class="p-4 bg-gray-100 rounded-lg">
+                                    <h4 class="mb-2 text-lg font-semibold">{{ team.title }}</h4>
+                                    <ul class="space-y-1">
+                                        <li>Points: {{ team.stats.points }}</li>
+                                        <li>Three Pointers: {{ team.stats.three_pointers }}</li>
+                                        <li>Free Throws: {{ team.stats.free_throws }}</li>
+                                        <li>Steals: {{ team.stats.steals }}</li>
+                                        <li>Rebounds: {{ team.stats.rebounds }}</li>
+                                        <li>Turnovers: {{ team.stats.turnovers }}</li>
+                                    </ul>
+                                </div> -->
+                            </div>
+
                         </div>
-
-
                     </div>
                 </div>
             </div>

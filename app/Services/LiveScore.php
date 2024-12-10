@@ -10,7 +10,7 @@ use Illuminate\Support\Collection;
 
 class LiveScore
 {
-    use LiveScoreLog, LiveScorePlayer;
+    use LiveScoreLog, LiveScorePlayer, LiveScoreStats;
 
     protected Game $game;
 
@@ -375,40 +375,6 @@ class LiveScore
             // $player->setStats('fouls', $fouls->sum('amount'));
         }
         // die();
-    }
-
-    public function addTeamStats()
-    {
-        foreach ([$this->homeTeam, $this->awayTeam] as $team) {
-            $side = $team->id === $this->homeTeam->id ? 'home' : 'away';
-            $team->setStats('score', $this->gameLive->{$side . '_score'});
-
-            // Misses
-            $misses = $this->log->where('team_id', $team->id)->filter(static function ($item, $key) {
-                return $item->type === 'player_miss';
-            });
-            $team->setStats('misses', $misses->sum('amount'));
-
-            // Fouls
-            $fouls = $this->log->where('team_id', $team->id)->filter(static function ($item, $key) {
-                return $item->type === 'player_foul';
-            });
-            $team->setStats('fouls', $fouls->sum('amount'));
-            $periodFouls = $this->log->where('team_id', $team->id)->where('period', $this->currentPeriod)->filter(static function ($item, $key) {
-                return $item->type === 'player_foul';
-            });
-            $team->setStats('period_fouls', $periodFouls->sum('amount'));
-
-            // Timeouts
-            $timeouts = $this->log->where('team_id', $team->id)->filter(static function ($item, $key) {
-                return $item->type === 'timeout';
-            });
-            $team->setStats('timeouts', $timeouts->sum('amount'));
-            $periodTimeouts = $this->log->where('team_id', $team->id)->where('period', $this->currentPeriod)->filter(static function ($item, $key) {
-                return $item->type === 'timeout';
-            });
-            $team->setStats('period_timeouts', $periodTimeouts->sum('amount'));
-        }
     }
 
     public function toArray()

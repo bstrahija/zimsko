@@ -24,7 +24,7 @@ Route::get('galerije/{gallery}', [GalleriesController::class, 'show'])->name('ga
 
 
 Route::get('live', [LiveController::class, 'index'])->name('live')->middleware('auth');
-Route::get('live/sim', [LiveController::class, 'game'])->name('live.sim')->middleware('auth');
+Route::get('live/sim', [LiveController::class, 'sim'])->name('live.sim')->middleware('auth');
 Route::view('live/concept', 'live.concept')->name('live.concept')->middleware('auth');
 Route::view('live/concept01', 'live.concept01')->name('live.concept1')->middleware('auth');
 Route::get('live/{game}',               [LiveController::class, 'game'])->name('live.game')->middleware('auth');
