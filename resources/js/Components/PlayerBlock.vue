@@ -9,7 +9,7 @@ defineProps({
 
 <template>
     <button
-        class="flex relative justify-center items-start pt-6 h-full text-center text-white rounded border shadow-sm transition-all pointer-events-auto hover:opacity-90 hover:shadow-lg player-block aspect-square">
+        class="flex relative justify-center items-start pt-6 h-full text-center text-white rounded border shadow-sm transition-all pointer-events-auto min-h-40 hover:opacity-90 hover:shadow-lg player-block">
         <div class="text-xl font-bold">
             {{ player.number }}
 
