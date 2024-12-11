@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, toRefs } from 'vue';
-import { Head } from '@inertiajs/vue3';
+import { Head, router } from '@inertiajs/vue3';
 import Layout from './Layout.vue';
 import FoulsTimeouts from '../Components/FoulsTimeouts.vue';
 import GameControls from '../Components/GameControls.vue';
@@ -19,6 +19,19 @@ import SelectStartingPlayers from '../Components/SelectStartingPlayers.vue';
 let props = defineProps({
     log: Array,
     game: Object,
+});
+
+let { log, game } = toRefs(props);
+
+onMounted(() => {
+    const channel = window.Echo.channel(`live-score`)
+        .listen('LiveScoreUpdated', (e) => {
+            router.visit('/live/' + game.value.game_id, {
+                only: ['game', 'log'],
+                preserveState: true,
+                preserveScroll: true,
+            });
+        });
 });
 </script>
 

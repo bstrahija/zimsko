@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\LiveScoreUpdated;
 use App\Http\Controllers\Controller;
 use App\Models\Event;
 use App\Models\Game;
@@ -92,6 +93,8 @@ class LiveController extends Controller
         // Write the score
         if ($assistPlayerId) $this->live($game)->playerScore(playerId: $playerId, points: $score, playerAssistId: $assistPlayerId);
         else                 $this->live($game)->playerScore(playerId: $playerId, points: $score);
+
+        LiveScoreUpdated::dispatch('addScore');
     }
 
     public function addMiss(Game $game, Request $request)
@@ -103,6 +106,8 @@ class LiveController extends Controller
 
         // Write the score
         $this->live($game)->playerMiss(playerId: $playerId, points: $score);
+
+        LiveScoreUpdated::dispatch('addMiss');
     }
 
     public function addRebound(Game $game, Request $request)
@@ -115,6 +120,8 @@ class LiveController extends Controller
 
         // Write the score
         $this->live($game)->playerRebound(playerId: $playerId, subtype: $subtype);
+
+        LiveScoreUpdated::dispatch('addRebound');
     }
 
     public function addSteal(Game $game, Request $request)
@@ -126,6 +133,8 @@ class LiveController extends Controller
 
         // Write the score
         $this->live($game)->playerSteal(playerId: $playerId, playerStolenId: $stealPlayerId);
+
+        LiveScoreUpdated::dispatch('addSteal');
     }
 
     public function addBlock(Game $game, Request $request)
@@ -137,6 +146,8 @@ class LiveController extends Controller
 
         // Write the score
         $this->live($game)->playerBlock(playerId: $playerId, playerBlockedId: $blockedPlayerId);
+
+        LiveScoreUpdated::dispatch('addBlock');
     }
 
     public function addTurnover(Game $game, Request $request)
@@ -147,6 +158,8 @@ class LiveController extends Controller
 
         // Write the score
         $this->live($game)->playerTurnover(playerId: $playerId);
+
+        LiveScoreUpdated::dispatch('addTurnover');
     }
 
     public function addFoul(Game $game, Request $request)
@@ -158,6 +171,8 @@ class LiveController extends Controller
         Log::debug("Adding foul. Game: {$game->id}, Player: {$playerId}, Player fouled: {$fouledPlayerId}, Type: {$type}", ['section' => 'LIVE', 'game_id' => $game->id, 'player_id' => $playerId]);
 
         $this->live($game)->playerFoul(playerId: $playerId, subtype: $type, playerFouledId: $fouledPlayerId);
+
+        LiveScoreUpdated::dispatch('addFoul');
     }
 
     public function substitution(Game $game, Request $request)
@@ -178,7 +193,7 @@ class LiveController extends Controller
         // $type           = request('subtype') ?: 'pf';
 
 
-        //
+        LiveScoreUpdated::dispatch('substitution');
     }
 
 
@@ -203,6 +218,8 @@ class LiveController extends Controller
             Log::debug("Starting game. Game: {$game->id}", ['section' => 'LIVE', 'game_id' => $game->id]);
             $this->live($game)->startGame();
         }
+
+        LiveScoreUpdated::dispatch('startGame');
     }
 
     public function nextPeriod(Game $game, Request $request)
@@ -211,6 +228,8 @@ class LiveController extends Controller
         Log::debug("Next period. Game: {$game->id}", ['section' => 'LIVE', 'game_id' => $game->id]);
 
         $this->live($game)->nextPeriod();
+
+        LiveScoreUpdated::dispatch('nextPeriod');
     }
 
     public function endGame(Game $game, Request $request)
@@ -219,6 +238,8 @@ class LiveController extends Controller
         Log::debug("Ending game. Game: {$game->id}", ['section' => 'LIVE', 'game_id' => $game->id]);
 
         $this->live($game)->endGame();
+
+        LiveScoreUpdated::dispatch('endGame');
     }
 
     public function deleteLog(GameLog $log)

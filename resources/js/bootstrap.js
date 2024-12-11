@@ -10,4 +10,4 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
  */
 
 // Disable Echo for now
-// import './echo';
+import './echo';
