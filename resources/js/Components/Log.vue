@@ -15,6 +15,7 @@ defineProps({
 
 <template>
     <div class="pr-2 space-y-3">
-        <LogItem v-for="item in log" :key="item.id" :log="item" :game="game" />
+        <LogItem v-for="item in log" :key="item.id" :log="item" :game="game"
+            :class="{ hidden: item.subtype === 'to_by_stl' }" />
     </div>
 </template>

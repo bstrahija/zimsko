@@ -16,7 +16,7 @@ trait LiveScoreStats
             $team->setStats('fouls',                $this->getTeamStat($team, ['player_foul']), 'count');
             $team->setStats('rebounds',             $this->getTeamStat($team, ['player_rebound']), 'count');
             $team->setStats('offensive_rebounds',   $this->getTeamStat($team, ['player_rebound'], ['off']), 'count');
-            $team->setStats('defensive_rebounds',   $this->getTeamStat($team, ['player_rebound'], ['reb']), 'count');
+            $team->setStats('defensive_rebounds',   $this->getTeamStat($team, ['player_rebound'], ['reb', 'def']), 'count');
             $team->setStats('steals',               $this->getTeamStat($team, ['player_steal']), 'count');
             $team->setStats('blocks',               $this->getTeamStat($team, ['player_block']), 'count');
             $team->setStats('turnovers',            $this->getTeamStat($team, ['player_turnover']), 'count');
@@ -34,6 +34,7 @@ trait LiveScoreStats
             $team->setStats('three_points',         $team->statsData['three_points_made'] + $team->statsData['three_points_missed']);
             $team->setStats('three_points_percent', $team->statsData['three_points'] ? round(($team->statsData['three_points_made'] / $team->statsData['three_points']) * 100, 2) : 0);
             $team->setStats('timeouts',             $this->getTeamStat($team, ['timeout'], [], 'count'));
+            $team->setStats('fouls',               $this->getTeamStat($team, ['player_foul'], [], 'count'));
             // dump($team->statsData);
             // dump((int) $team->statsData['score']);
             // echo '<pre>';
@@ -50,6 +51,13 @@ trait LiveScoreStats
             $team->setStats('current_period_timeouts', $this->log->where('team_id', $team->id)->where('period', $this->currentPeriod)->filter(function ($item) {
                 return $item->type === 'timeout';
             })->count());
+
+            // dd((int) $team->stats['score']);
+
+            // Calculate the efficiency
+            $efficiency = 0; // ($team->stats['score'] + $team->stats['rebounds'] + $team->stats['assists'] + $team->stats['steals'] + $team->stats['blocks'] − (($team->stats['field_goals'] − $team->stats['field_goals_missed']) + ($team->stats['free_throws'] − $team->stats['free_throws_missed']) + $team->stats['turnovers']));
+            $efficiency = $team->stats['score'] + $team->stats['rebounds'] + $team->stats['assists'] + $team->stats['steals'] + $team->stats['blocks'] - $team->stats['field_goals_missed'] - $team->stats['free_throws_missed'] - $team->stats['turnovers'] - $team->stats['fouls'];
+            $team->setStats('efficiency', $efficiency);
         }
     }
 

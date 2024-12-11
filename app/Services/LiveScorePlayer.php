@@ -212,12 +212,17 @@ trait LiveScorePlayer
                 'occurred_at'     => $occurredAt,
             ]);
 
+            // Add a turnover to the player stolen
+            if ($playerStolen) {
+                $this->playerTurnover(playerId: $playerStolen->id, subtype: 'to_by_stl', occurredAt: $occurredAt);
+            }
+
             // Now update the score
             $this->updateLiveStats(log: $log);
         }
     }
 
-    public function playerTurnover(string $playerId, ?array $location = null, ?string $occurredAt = '00:00:00')
+    public function playerTurnover(string $playerId, ?array $location = null, $subtype = 'to', ?string $occurredAt = '00:00:00')
     {
         // Find players
         $player = $this->findPlayer($playerId);
@@ -230,7 +235,7 @@ trait LiveScorePlayer
         if ($player) {
             $log = $this->addLog([
                 'type'            => 'player_turnover',
-                'subtype'         => 'to',
+                'subtype'         => $subtype ?: 'to',
                 'player_id'       => $player->id,
                 'amount'          => 1,
                 'period'         => $this->currentPeriod,

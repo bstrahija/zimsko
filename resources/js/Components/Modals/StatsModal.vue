@@ -162,11 +162,31 @@ const props = defineProps({
                                         <tr
                                             class="border-t transition-colors duration-200 border-slate-700/50 hover:bg-slate-700/30">
                                             <td class="px-4 py-4">
+                                                {{ game.home_team.stats.fouls }}
+                                            </td>
+                                            <td class="px-4 py-4 text-center text-cyan-300">FOUL</td>
+                                            <td class="px-4 py-4 text-right">
+                                                {{ game.away_team.stats.fouls }}
+                                            </td>
+                                        </tr>
+                                        <tr
+                                            class="border-t transition-colors duration-200 border-slate-700/50 hover:bg-slate-700/30">
+                                            <td class="px-4 py-4">
                                                 {{ game.home_team.stats.turnovers }}
                                             </td>
                                             <td class="px-4 py-4 text-center text-cyan-300">TO</td>
                                             <td class="px-4 py-4 text-right">
                                                 {{ game.away_team.stats.turnovers }}
+                                            </td>
+                                        </tr>
+                                        <tr
+                                            class="border-t transition-colors duration-200 border-slate-700/50 hover:bg-slate-700/30">
+                                            <td class="px-4 py-4">
+                                                {{ game.home_team.stats.efficiency }}
+                                            </td>
+                                            <td class="px-4 py-4 text-center text-cyan-300">EFF</td>
+                                            <td class="px-4 py-4 text-right">
+                                                {{ game.away_team.stats.efficiency }}
                                             </td>
                                         </tr>
                                     </tbody>

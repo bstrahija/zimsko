@@ -32,10 +32,6 @@ class AppServiceProvider extends ServiceProvider
             Debugbar::disable();
         }
 
-        Livewire::setScriptRoute(function ($handle) {
-            return Route::get('/vendor/livewire/livewire.js', $handle);
-        });
-
         Model::shouldBeStrict();
         Model::unguard();
 

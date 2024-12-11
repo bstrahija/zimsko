@@ -40,6 +40,10 @@ class Team extends Model implements HasMedia
         'three_points_made'       => 0,
         'three_points_missed'     => 0,
         'three_points_percent'    => 0,
+        'field_goals'             => 0,
+        'field_goals_made'        => 0,
+        'field_goals_missed'      => 0,
+        'field_goals_percent'     => 0,
         'opponent_score'          => 0,
         'efficiency'              => 0,   // (PTS + REB + AST + STL + BLK − ((FGA − FGM) + (FTA − FTM) + TO))
         'fouls'                   => 0,
@@ -53,6 +57,7 @@ class Team extends Model implements HasMedia
         'turnovers'               => 0,
         'blocks'                  => 0,
         'steals'                  => 0,
+        'fouls'                   => 0,
     ];
 
     protected $casts = [
