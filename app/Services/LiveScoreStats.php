@@ -59,6 +59,11 @@ trait LiveScoreStats
             $efficiency = 0; // ($team->stats['score'] + $team->stats['rebounds'] + $team->stats['assists'] + $team->stats['steals'] + $team->stats['blocks'] − (($team->stats['field_goals'] − $team->stats['field_goals_missed']) + ($team->stats['free_throws'] − $team->stats['free_throws_missed']) + $team->stats['turnovers']));
             $efficiency = $team->stats['score'] + $team->stats['rebounds'] + $team->stats['assists'] + $team->stats['steals'] + $team->stats['blocks'] - $team->stats['field_goals_missed'] - $team->stats['free_throws_missed'] - $team->stats['turnovers'] - $team->stats['fouls'];
             $team->setStats('efficiency', $efficiency);
+
+            // Add period scores
+            foreach (range(1, 10) as $period) {
+                $team->setStats('score_p' . $period, $this->getTeamStat(team: $team, types: ['player_score', 'player_score_with_assist'], period: $period));
+            }
         }
     }
 
@@ -74,6 +79,11 @@ trait LiveScoreStats
             $filtered = $filtered->filter(function ($item) use ($subtypes) {
                 return in_array($item->subtype, $subtypes);
             });
+        }
+
+        // And by period
+        if ($period) {
+            $filtered = $filtered->where('period', $period);
         }
 
         if ($method === 'count') {

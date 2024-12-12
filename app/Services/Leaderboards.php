@@ -124,10 +124,10 @@ class Leaderboards
             // @TODO: Add more data later, eg. rebounds, assists, etc.
             $player = $players->where('id', $record->player_id)->first();
             $player->statsData['games']++;
-            $player->statsData['points']             += $record->points;
+            $player->statsData['score']             += $record->points;
             $player->statsData['three_points']     += $record->three_points;
-            $player->statsData['avg']                 = round($player->statsData['points'] / $player->statsData['games'], 2);
-            $player->statsData['avg_three_points']  = round($player->statsData['three_points'] / $player->statsData['games'], 2);
+            $player->statsData['fields_goals_percent']                 = round($player->statsData['score'] / $player->statsData['games'], 2);
+            $player->statsData['three_points_percent']  = round($player->statsData['three_points'] / $player->statsData['games'], 2);
         }
 
         // Now create standings collection
@@ -136,10 +136,10 @@ class Leaderboards
                 'id'               => $player->id,
                 'title'            => $player->name,
                 'games'            => $player->statsData['games'],
-                'points'           => $player->statsData['points'],
+                'points'           => $player->statsData['score'],
                 'three_points'     => $player->statsData['three_points'],
-                'avg'              => $player->statsData['avg'],
-                'avg_three_points' => $player->statsData['avg_three_points'],
+                'fields_goals_percent' => $player->statsData['fields_goals_percent'],
+                'three_points_percent' => $player->statsData['three_points_percent'],
                 'player'           => $player,
                 'team'             => $player->statsData['team'] ?: $player->teams->first(),
             ]));
