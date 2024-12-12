@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, toRefs } from 'vue';
+import { inject, onMounted, toRefs } from 'vue';
 import { Head, router } from '@inertiajs/vue3';
 import Layout from './Layout.vue';
 import FoulsTimeouts from '../Components/FoulsTimeouts.vue';
@@ -15,6 +15,8 @@ import PeriodIndicator from '../Components/PeriodIndicator.vue';
 import Pretty from '../Components/Pretty.vue';
 import LiveScoreApp from '../Components/LiveScoreApp.vue';
 import SelectStartingPlayers from '../Components/SelectStartingPlayers.vue';
+
+const helpers = inject('helpers');
 
 let props = defineProps({
     log: Array,
@@ -32,7 +34,13 @@ onMounted(() => {
                 preserveScroll: true,
             });
         });
+
+    helpers.checkPlayersForFouls(game.value);
 });
+
+router.on('success', (event) => {
+    helpers.checkPlayersForFouls(game.value);
+})
 </script>
 
 <template>

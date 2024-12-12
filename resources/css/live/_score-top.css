@@ -22,6 +22,10 @@
     .players-on-court .player-block {
         @apply bg-gradient-to-br border-cyan-400/30 from-cyan-900/60 via-cyan-800/50 to-emerald-700/50 shadow-lg shadow-cyan-500/20;
 
+        &.fouledOut {
+            @apply bg-gradient-to-br border-rose-800/30 from-red-900/60 via-rose-800/50 to-red-700/50;
+        }
+
         &:hover {
             @apply shadow-cyan-500/70;
         }
@@ -51,6 +55,11 @@
     }
     .players-on-court .player-block {
         @apply bg-gradient-to-bl border-fuchsia-400/30 from-fuchsia-900/60 via-fuchsia-800/50 to-emerald-700/50 shadow-lg shadow-fuchsia-500/20;
+
+        &.fouledOut {
+            @apply bg-gradient-to-br border-rose-800/30 from-red-900/60 via-rose-800/50 to-red-700/50;
+        }
+
         &:hover {
             @apply shadow-fuchsia-500/70;
         }

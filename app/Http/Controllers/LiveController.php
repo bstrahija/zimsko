@@ -54,7 +54,6 @@ class LiveController extends Controller
         // And get results
         $games  = $query->limit(50)->get();
 
-
         return Inertia::render('Index', ['games' => $games, 'events' => $events, 'teams' => $teams, 'event' => $event]);
     }
 
@@ -62,22 +61,6 @@ class LiveController extends Controller
     {
         // We need to convert all the data to an array
         $data = $this->live($game)->toData();
-
-        // // Lets show home team stats
-        // echo '<h1>Home: ' . $game->homeTeam->title . '</h1><ul>';
-        // foreach ($game->homeTeam->stats as $key => $stat) {
-        //     echo '<li>' . $key . ': <strong>' . $stat . '</strong></li>';
-        // }
-        // echo '</ul><hr>';
-
-        // // Lets show away team stats
-        // echo '<h1>Away: ' . $game->awayTeam->title . '</h1>';
-        // foreach ($game->awayTeam->stats as $key => $stat) {
-        //     echo '<li>' . $key . ': <strong>' . $stat . '</strong></li>';
-        // }
-        // echo '</ul><hr>';
-
-
 
         return Inertia::render('Score', $data);
     }
@@ -167,7 +150,7 @@ class LiveController extends Controller
         // Find the player
         $playerId       = $request->input('selectedPlayer') ?  $request->input('selectedPlayer')['id'] : null;
         $fouledPlayerId = $request->input('selectedFouledPlayer') ?  $request->input('selectedFouledPlayer')['id'] : null;
-        $type           = request('subtype') ?: 'pf';
+        $type           = request('type') ?: 'pf';
         Log::debug("Adding foul. Game: {$game->id}, Player: {$playerId}, Player fouled: {$fouledPlayerId}, Type: {$type}", ['section' => 'LIVE', 'game_id' => $game->id, 'player_id' => $playerId]);
 
         $this->live($game)->playerFoul(playerId: $playerId, subtype: $type, playerFouledId: $fouledPlayerId);
@@ -248,6 +231,9 @@ class LiveController extends Controller
             $log->game->live->update(['status' => 'started']);
         } elseif ($log->type === 'period_started') {
             $log->game->live->update(['period' => $log->period - 1]);
+        } elseif ($log->type === 'substitution') {
+            // We need to revert the substitution
+            $this->live($log->game)->substitution(playersIn: [$log->player_2_id], playersOut: [$log->player_id], addLog: false);
         }
 
         $log->delete();

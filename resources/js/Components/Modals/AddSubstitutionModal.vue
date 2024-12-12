@@ -31,11 +31,12 @@ const props = defineProps({
     },
 });
 
-const { game, playerIn, playerOut } = toRefs(props);
+const { game, players, playerIn, playerOut } = toRefs(props);
 
 const data = reactive({
     selectedPlayersOut: [],
     selectedPlayersIn: [],
+    playerFouledOut: null,
     gameId: null,
 });
 
@@ -43,14 +44,18 @@ onMounted(() => {
     console.log("===");
     if (playerIn && playerIn.value) data.selectedPlayersIn.push(playerIn.value);
     if (playerOut && playerOut.value) data.selectedPlayersOut.push(playerOut.value);
-    //  console.log("IN: ", );
-    // if (playerIn && playerIn.value) console.log("IN: ", playerIn.id.value);
-    // if (playerOut && playerIn.value) console.log("OUT: ", playerOut.id.value);
-    // if (playerOut) data.selectedPlayersOut.push(playerOut.value);
-    // if (playerIn) data.selectedPlayersIn.push(playerIn.value);
-    // console.log(data.selectedPlayersOut);
-    // console.log(data.selectedPlayersIn);
-    console.log("===");
+
+    // Check if any player fouled out
+    players.value.forEach(player => {
+        if (player.stats.fouls >= 5) {
+            data.playerFouledOut = player;
+
+            // Always to "Out" list
+            if (data.playerFouledOut) {
+                data.selectedPlayersOut.push(data.playerFouledOut);
+            }
+        }
+    });
 });
 
 function selectPlayerOut(player) {
@@ -102,6 +107,15 @@ async function save() {
 
                     <div class="modal-body">
                         <div class="grid">
+                            <div v-if="data.playerFouledOut"
+                                class="flex justify-center items-center p-4 mx-auto mb-4 text-red-300 rounded-md border border-red-700 shadow-sm bg-red-900/50 max-w-[800px]">
+                                <svg class="mr-2 w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636L5.636 18.364M5.636 5.636l12.728 12.728"></path>
+                                </svg>
+                                <span>{{ data.playerFouledOut.name }} ima 5 prekršaja.</span>
+                            </div>
+
+
                             <!-- <p><small>IN: {{ playerIn }}</small></p>
                             <p><small>OUT: {{ playerOut }}</small></p>
                             ---
@@ -123,9 +137,8 @@ async function save() {
 
                             <div class="grid mb-12">
                                 <div class="text-center">
-                                    <button @click="selectPlayerIn(player)" v-for="player in playersOnBench"
-                                        :key="player.id"
-                                        :class="{ 'bg-emerald-600': isActiveIn(player), 'bg-slate-500': !isActiveIn(player) }"
+                                    <button @click="selectPlayerIn(player)" v-for="player in playersOnBench" :key="player.id"
+                                        :class="{ hidden: player.stats.fouls >= 5, 'bg-emerald-600': isActiveIn(player), 'bg-slate-500': !isActiveIn(player) }"
                                         class="px-4 py-2 m-1 text-white rounded-md shadow-md transition-colors duration-200 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-opacity-50">
                                         <p class="text-2xl font-bold">{{ player.number }}</p>
                                         {{ player.name }}
@@ -135,9 +148,8 @@ async function save() {
                         </div>
 
                         <div class="flex justify-center p-6">
-                            <button :disabled="!canBeSaved()"
-                                :class="{ 'opacity-50': !canBeSaved(), 'pointer-events-none': !canBeSaved() }"
-                                @click="save" class="btn btn-primary">Spremi</button>
+                            <button :disabled="!canBeSaved()" :class="{ 'opacity-50': !canBeSaved(), 'pointer-events-none': !canBeSaved() }" @click="save"
+                                class="btn btn-primary">Spremi</button>
                         </div>
                     </div>
                 </div>

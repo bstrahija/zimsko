@@ -2,6 +2,11 @@
     .players-on-bench {
         .player-block {
             @apply bg-gradient-to-bl border-cyan-400/10 from-cyan-900/10 via-cyan-800/20 to-emerald-700/20 shadow-lg shadow-cyan-500/10 opacity-60;
+
+            &.fouledOut {
+                @apply bg-gradient-to-br border-rose-800/30 from-red-900/60 via-rose-800/50 to-red-700/50;
+            }
+
             &:hover {
                 @apply shadow-cyan-500/70 opacity-90;
             }
@@ -28,6 +33,11 @@
     .players-on-bench {
         .player-block {
             @apply bg-gradient-to-bl border-fuchsia-400/10 from-fuchsia-900/10 via-fuchsia-800/20 to-emerald-700/20 shadow-lg shadow-fuchsia-500/20 opacity-60;
+
+            &.fouledOut {
+                @apply bg-gradient-to-br border-rose-800/30 from-red-900/60 via-rose-800/50 to-red-700/50;
+            }
+
             &:hover {
                 @apply shadow-fuchsia-500/70 opacity-90;
             }

@@ -45,6 +45,11 @@ export default {
     },
 
     addSubstitution: function (game, team, playerIn = null, playerOut = null) {
+        if (playerIn && playerIn.stats.fouls >= 5) {
+            alert('Ovaj igrač ima 5 prekršaja');
+            return;
+        }
+
         if (this.checkIfCanUpdateStats(game)) {
             if (playerIn) $vfm.show({ component: AddSubstitutionModal, bind: { game: game, team: team, players: this.playersOnCourt(game, team), playersOnBench: this.playersOnBench(game, team), playerIn: playerIn } });
             else if (playerOut) $vfm.show({ component: AddSubstitutionModal, bind: { game: game, team: team, players: this.playersOnCourt(game, team), playersOnBench: this.playersOnBench(game, team), playerOut: playerOut } });
@@ -132,6 +137,22 @@ export default {
         } else {
             return game.away_players_on_bench;
         }
+    },
+
+    checkPlayersForFouls: function (game) {
+        let allPlayersOnCourt = this.playersOnCourt(game, game.home_team).concat(this.playersOnCourt(game, game.away_team));
+
+        this.playersOnCourt(game, game.home_team).forEach((player) => {
+            if (player.stats.fouls >= 5) {
+                this.addSubstitution(game, game.home_team, null, player);
+            }
+        });
+
+        this.playersOnCourt(game, game.away_team).forEach((player) => {
+            if (player.stats.fouls >= 5) {
+                this.addSubstitution(game, game.away_team, null, player);
+            }
+        });
     },
 
     __: function (str) {

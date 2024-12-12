@@ -248,7 +248,7 @@ trait LiveScorePlayer
         }
     }
 
-    public function substitution(array $playersIn, array $playersOut, ?array $location = null, ?string $occurredAt = '00:00:00')
+    public function substitution(array $playersIn, array $playersOut, ?array $location = null, ?string $occurredAt = '00:00:00', $addLog = true)
     {
         // Check if players in/out are the same number
         if (count($playersIn) !== count($playersOut)) {
@@ -293,6 +293,10 @@ trait LiveScorePlayer
                 'home_players_on_court' => $this->homePlayersOnCourt->pluck('id')->toArray(),
                 'away_players_on_court' => $this->awayPlayersOnCourt->pluck('id')->toArray(),
             ]);
+
+            if (! $addLog) {
+                return;
+            }
 
             $log = $this->addLog([
                 'type'            => 'substitution',

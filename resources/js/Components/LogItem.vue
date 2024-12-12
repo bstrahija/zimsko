@@ -12,6 +12,7 @@ import IconSubstitution from './Icons/IconSubstitution.vue';
 import IconTimeout from './Icons/IconTimeout.vue';
 import IconTurnover from './Icons/IconTurnover.vue';
 import IconArrow from './Icons/IconArrow.vue';
+import IconTechnical from './Icons/IconTechnical.vue';
 
 const props = defineProps({
     log: {
@@ -36,12 +37,10 @@ const remove = () => {
 </script>
 
 <template>
-    <div
-        class="relative p-3 text-gray-200 rounded border shadow scroll-p-3 bg-emerald-800/30 border-emerald-500/50 log-item">
+    <div class="relative p-3 text-gray-200 rounded border shadow scroll-p-3 bg-emerald-800/30 border-emerald-500/50 log-item">
         <div class="absolute right-1 top-3 text-xs text-slate-400">
             <button @click="remove">
-                <IconMiss
-                    class="inline mr-1 w-5 h-5 text-gray-300 opacity-30 transition-all duration-200 hover:text-rose-500 hover:opacity-100" />
+                <IconMiss class="inline mr-1 w-5 h-5 text-gray-300 opacity-30 transition-all duration-200 hover:text-rose-500 hover:opacity-100" />
             </button>
         </div>
 
@@ -50,8 +49,7 @@ const remove = () => {
             <IconArrow class="inline mr-1 h-6 text-emerald-500" v-if="log.type === 'game_starting_players'" />
             <IconArrow class="inline mr-1 h-6 text-emerald-500" v-if="log.type === 'game_started'" />
             <IconArrow class="inline mr-1 h-6 text-emerald-500" v-if="log.type === 'period_started'" />
-            <IconScore class="inline mr-1 h-6 text-emerald-500"
-                v-if="log.type === 'player_score' || log.type === 'player_score_with_assist'" />
+            <IconScore class="inline mr-1 h-6 text-emerald-500" v-if="log.type === 'player_score' || log.type === 'player_score_with_assist'" />
             <IconMiss class="inline mr-1 h-6 text-rose-500" v-if="log.type === 'player_miss'" />
             <IconAssist class="inline mr-1 h-6 text-slate-600" v-if="log.type === 'player_assist'" />
             <IconSubstitution class="inline mr-1 h-6 text-sky-600" v-if="log.type === 'substitution'" />
@@ -59,11 +57,11 @@ const remove = () => {
             <IconBlock class="inline mr-1 h-6 text-amber-600" v-if="log.type === 'player_block'" />
             <IconTurnover class="inline mr-1 h-6 text-rose-600" v-if="log.type === 'player_turnover'" />
             <IconFoul class="inline mr-1 h-6 text-red-600" v-if="log.type === 'player_foul' && log.subtype === 'pf'" />
+            <IconTechnical class="inline mr-1 h-6 text-red-600" v-if="log.type === 'player_foul' && log.subtype === 'tf'" />
             <IconSteal class="inline mr-1 h-6" v-if="log.type === 'player_steal'" />
             <IconRebound class="inline mr-1 h-6" v-if="log.type === 'player_rebound'" />
             {{ log.period }}.
-            {{ (log.period <= 4 ? 'Četvrtina' : 'Produžetak') }} &mdash; {{ log.home_score }}:{{ log.away_score }}
-                </h3>
+            {{ (log.period <= 4 ? 'Četvrtina' : 'Produžetak') }} &mdash; {{ log.home_score }}:{{ log.away_score }} </h3>
 
                 <div class="text-xs text-gray-300">
                     <div v-if="log.type === 'game_starting_players'">
@@ -72,9 +70,8 @@ const remove = () => {
                         <strong>{{ game.home_team.title }}:</strong>
                         <ul>
                             <li v-for="player in game.home_starting_players" class="my-1">
-                                <span
-                                    class="inline-block px-1 mr-1 w-7 font-bold text-center text-white rounded bg-slate-400">{{
-                                        player.number }}</span>
+                                <span class="inline-block px-1 mr-1 w-7 font-bold text-center text-white rounded bg-slate-400">{{
+                                    player.number }}</span>
                                 {{ player.name }}
                             </li>
                         </ul>
@@ -82,9 +79,8 @@ const remove = () => {
                         <strong>{{ game.away_team.title }}:</strong>
                         <ul>
                             <li v-for="player in game.away_starting_players" class="my-1">
-                                <span
-                                    class="inline-block px-1 mr-1 w-7 font-bold text-center text-white rounded bg-slate-400">{{
-                                        player.number }}</span>
+                                <span class="inline-block px-1 mr-1 w-7 font-bold text-center text-white rounded bg-slate-400">{{
+                                    player.number }}</span>
                                 {{ player.name }}
                             </li>
                         </ul>

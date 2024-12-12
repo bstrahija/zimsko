@@ -12,7 +12,12 @@ createInertiaApp({
         return pages[`./Pages/${name}.vue`];
     },
     setup({ el, App, props, plugin }) {
-        const app = createApp({ render: () => h(App, props) })
+        const app = createApp({
+            render: () => h(App, props),
+            provide: {
+                helpers: LiveHelpers,
+            },
+        })
             .use(plugin)
             .use(
                 vfmPlugin({

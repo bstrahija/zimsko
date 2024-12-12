@@ -47,7 +47,10 @@ class Team extends Model implements HasMedia
         'opponent_score'          => 0,
         'efficiency'              => 0,   // (PTS + REB + AST + STL + BLK − ((FGA − FGM) + (FTA − FTM) + TO))
         'fouls'                   => 0,
+        'personal_fouls'          => 0,
+        'flagrant_fouls'          => 0,
         'current_period_fouls'    => 0,
+        'technical_fouls'         => 0,
         'timeouts'                => 0,
         'current_period_timeouts' => 0,
         'rebounds'                => 0,
@@ -57,7 +60,16 @@ class Team extends Model implements HasMedia
         'turnovers'               => 0,
         'blocks'                  => 0,
         'steals'                  => 0,
-        'fouls'                   => 0,
+        'score_p1'                => 0,
+        'score_p2'                => 0,
+        'score_p3'                => 0,
+        'score_p4'                => 0,
+        'score_p5'                => 0,
+        'score_p6'                => 0,
+        'score_p7'                => 0,
+        'score_p8'                => 0,
+        'score_p9'                => 0,
+        'score_p10'               => 0,
     ];
 
     protected $casts = [

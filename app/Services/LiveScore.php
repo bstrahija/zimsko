@@ -352,31 +352,6 @@ class LiveScore
         return $this->awayPlayersOnCourt;
     }
 
-    public function addPlayerStats()
-    {
-        // dump($this->log);
-        foreach ($this->players as $player) {
-            // First the scores
-            $scores = $this->log->where('player_id', $player->id)->filter(static function ($item, $key) {
-                return $item->type === 'player_score' || $item->type === 'player_score_with_assist';
-            });
-            $misses = $this->log->where('player_id', $player->id)->filter(static function ($item, $key) {
-                return $item->type === 'player_miss';
-            });
-            $player->setStats('points', $scores ? $scores->sum('amount') : 0);
-            $player->setStats('misses', $misses ? $misses->sum('amount') : 0);
-
-            $fouls = $this->log->where('player_id', $player->id)->filter(static function ($item, $key) {
-                return $item->type === 'player_foul';
-            });
-            $player->setStats('fouls', $fouls ? $fouls->sum('amount') : 0);
-
-            // $fouls = $this->log->where('type', 'player_foul');
-            // $player->setStats('fouls', $fouls->sum('amount'));
-        }
-        // die();
-    }
-
     public function toArray()
     {
         // Add logos
@@ -417,11 +392,11 @@ class LiveScore
      *
      * @return array
      */
-    public function toData(): array
+    public function toData($addTeamStats = true, $addPlayerStats = true): array
     {
         // We also need to add player and team stats
-        $this->addPlayerStats();
-        $this->addTeamStats();
+        if ($addPlayerStats) $this->addPlayerStats();
+        if ($addTeamStats)   $this->addTeamStats();
 
         // Prepare the data
         $data = [
