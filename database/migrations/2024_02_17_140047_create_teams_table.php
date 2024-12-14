@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('slug')->nullable()->index();
             $table->string('title');
             $table->string('short_title')->nullable();
-            $table->longText('body');
+            $table->longText('body')->nullable();
             $table->string('status', 50)->default('active')->index();
             $table->json('data')->nullable();
             $table->timestamps();

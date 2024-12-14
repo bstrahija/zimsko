@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Concerns\HasTimestamps;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class GameLive extends Model
 {
@@ -80,4 +81,14 @@ class GameLive extends Model
         'away_score_p10'        => 'integer',
         'data'                  => 'array',
     ];
+
+    public function game()
+    {
+        return $this->belongsTo(Game::class);
+    }
+
+    public function stats(): HasMany
+    {
+        return $this->hasMany(Stat::class, 'game_id');
+    }
 }

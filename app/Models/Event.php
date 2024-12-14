@@ -40,6 +40,11 @@ class Event extends Model
         return $this->BelongsToMany(Team::class);
     }
 
+    public function stats(): HasMany
+    {
+        return $this->hasMany(Stat::class);
+    }
+
     public static function current(): ?Event
     {
         $settingsEventId = app(GeneralSettings::class)->current_event_id ?: null;

@@ -44,22 +44,18 @@ class SyncGames
                 $newGame->away_team_id   = $awayTeam?->id;
                 $newGame->home_score     = $game->home_team_score;
                 $newGame->away_score     = $game->away_team_score;
-                $newGame->home_score_q1  = $game->home_team_score_q1;
-                $newGame->away_score_q1  = $game->away_team_score_q1;
-                $newGame->home_score_q2  = $game->home_team_score_q2;
-                $newGame->away_score_q2  = $game->away_team_score_q2;
-                $newGame->home_score_q3  = $game->home_team_score_q3;
-                $newGame->away_score_q3  = $game->away_team_score_q3;
-                $newGame->home_score_q4  = $game->home_team_score_q4;
-                $newGame->away_score_q4  = $game->away_team_score_q4;
-                $newGame->home_score_ot1 = $game->home_team_score_ot1;
-                $newGame->away_score_ot1 = $game->away_team_score_ot1;
-                $newGame->home_score_ot2 = $game->home_team_score_ot2;
-                $newGame->away_score_ot2 = $game->away_team_score_ot2;
-                $newGame->home_score_ot3 = $game->home_team_score_ot3;
-                $newGame->away_score_ot3 = $game->away_team_score_ot3;
-                $newGame->home_score_ot4 = $game->home_team_score_ot4;
-                $newGame->away_score_ot4 = $game->away_team_score_ot4;
+                $newGame->home_score_p1  = $game->home_team_score_q1;
+                $newGame->away_score_p1  = $game->away_team_score_q1;
+                $newGame->home_score_p2  = $game->home_team_score_q2;
+                $newGame->away_score_p2  = $game->away_team_score_q2;
+                $newGame->home_score_p3  = $game->home_team_score_q3;
+                $newGame->away_score_p3  = $game->away_team_score_q3;
+                $newGame->home_score_p4  = $game->home_team_score_q4;
+                $newGame->away_score_p4  = $game->away_team_score_q4;
+                $newGame->home_score_p5  = $game->home_team_score_ot1;
+                $newGame->away_score_p5  = $game->away_team_score_ot1;
+                $newGame->home_score_p6  = $game->home_team_score_ot2;
+                $newGame->away_score_p6  = $game->away_team_score_ot2;
                 $newGame->status         = $status;
                 $newGame->scheduled_at   = $game->scheduled_at;
                 $newGame->created_at     = $game->created_at;
@@ -91,16 +87,18 @@ class SyncGames
                 }
 
                 // Create new stats
-                $gamePlayer               = new GamePlayer();
-                $gamePlayer->game_id      = $game->id;
-                $gamePlayer->player_id    = $player->id;
-                $gamePlayer->team_id      = $team->id;
-                $gamePlayer->points       = $legacyPlayerStats->points;
-                $gamePlayer->three_points = $legacyPlayerStats->three_pointers;
-                $gamePlayer->rebounds     = $legacyPlayerStats->rebounds;
-                $gamePlayer->assists      = $legacyPlayerStats->assists;
-                $gamePlayer->blocks       = $legacyPlayerStats->blocks;
-                $gamePlayer->turnovers    = $legacyPlayerStats->turnovers;
+                $gamePlayer                       = new GamePlayer();
+                $gamePlayer->game_id              = $game->id;
+                $gamePlayer->player_id            = $player->id;
+                $gamePlayer->team_id              = $team->id;
+                $gamePlayer->score                = $legacyPlayerStats->points;
+                $gamePlayer->three_points         = $legacyPlayerStats->three_pointers;
+                $gamePlayer->three_points_made    = $legacyPlayerStats->three_pointers;
+                $gamePlayer->three_points_percent = '100';
+                $gamePlayer->rebounds             = $legacyPlayerStats->rebounds;
+                $gamePlayer->assists              = $legacyPlayerStats->assists;
+                $gamePlayer->blocks               = $legacyPlayerStats->blocks;
+                $gamePlayer->turnovers            = $legacyPlayerStats->turnovers;
                 $gamePlayer->save();
             }
         }

@@ -11,6 +11,7 @@ use App\Models\GameLog;
 use App\Models\Player;
 use App\Models\Team;
 use App\Services\LiveScore;
+use App\Services\Stats;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 
@@ -61,6 +62,22 @@ class LiveController extends Controller
     {
         // We need to convert all the data to an array
         $data = $this->live($game)->toData();
+
+        // First we need to check if there's a live game
+
+        Stats::generateFromGameForTeams($game);
+        Stats::generateFromGameForPlayers($game);
+
+        // Stats::generateFromLiveGameForTeams($game->live);
+        // Stats::generateFromLiveGameForPlayers($game->live);
+
+        // dump($game->live);
+
+
+
+
+
+        die();
 
         return Inertia::render('Score', $data);
     }

@@ -2,6 +2,7 @@
 
 namespace App\Legacy;
 
+use App\Models\Team;
 use Illuminate\Support\Facades\DB;
 
 class SyncTeams
@@ -10,6 +11,9 @@ class SyncTeams
     {
         DB::connection('mysql_legacy')->table('wp_zmsk_teams')->get()
             ->each(function ($team) use ($media) {
+                // Check if team already exists
+                if (Team::where('external_id', $team->wp_id)->first()) return;
+
                 // We also need to generate a short title
                 $shortTitle = 'KK';
                 if ($team->slug === 'agrow-basket')         $shortTitle = 'AGWB';

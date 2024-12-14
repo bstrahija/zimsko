@@ -2,6 +2,7 @@
 
 namespace App\Legacy;
 
+use App\Models\Player;
 use Illuminate\Support\Facades\DB;
 
 class SyncPlayers
@@ -10,6 +11,9 @@ class SyncPlayers
     {
         DB::connection('mysql_legacy')->table('wp_zmsk_players')->get()
             ->each(function ($player) use ($media) {
+                // Check if player already exists
+                if (Player::where('external_id', $player->wp_id)->first()) return;
+
                 $newPlayer              = new \App\Models\Player();
                 $newPlayer->external_id = $player->wp_id;
                 $newPlayer->name        = $player->name;

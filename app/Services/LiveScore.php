@@ -446,9 +446,9 @@ class LiveScore
      */
     public function updateMainStats(GameLog $log)
     {
-        // $this->game->update([
-        //     'home_score' => $log->home_score,
-        //     'away_score' => $log->away_score,
-        // ]);
+        $this->game->update([
+            'home_score' => $log->home_score,
+            'away_score' => $log->away_score,
+        ]);
     }
 }

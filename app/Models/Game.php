@@ -53,20 +53,26 @@ class Game extends Model
         'updated_at',
         'home_score',
         'away_score',
-        'home_score_q1',
-        'away_score_q1',
-        'home_score_q2',
-        'away_score_q2',
-        'home_score_q3',
-        'away_score_q3',
-        'home_score_ot1',
-        'away_score_ot1',
-        'home_score_ot2',
-        'away_score_ot2',
-        'home_score_ot3',
-        'away_score_ot3',
-        'home_score_ot4',
-        'away_score_ot4',
+        'home_score_p1',
+        'away_score_p1',
+        'home_score_p2',
+        'away_score_p2',
+        'home_score_p3',
+        'away_score_p3',
+        'home_score_p4',
+        'away_score_p4',
+        'home_score_p5',
+        'away_score_p5',
+        'home_score_p6',
+        'away_score_p6',
+        'home_score_p7',
+        'away_score_p7',
+        'home_score_p8',
+        'away_score_p8',
+        'home_score_p9',
+        'away_score_p9',
+        'home_score_p10',
+        'away_score_p10',
         'scheduled_at',
     ];
 
@@ -168,6 +174,11 @@ class Game extends Model
     public function loser(): ?Team
     {
         return $this->home_score < $this->away_score ? $this->homeTeam : $this->awayTeam;
+    }
+
+    public function stats(): HasMany
+    {
+        return $this->hasMany(Stat::class);
     }
 
     /**

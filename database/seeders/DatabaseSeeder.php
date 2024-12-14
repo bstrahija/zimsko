@@ -15,6 +15,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // Delete all media files
+
         Role::create(['name' => 'superadmin']);
         Role::create(['name' => 'admin']);
         Role::create(['name' => 'user']);
@@ -22,10 +24,14 @@ class DatabaseSeeder extends Seeder
         $user = User::factory()->create([
             'name' => 'Boris Strahija',
             'email' => 'bstrahija@gmail.com',
-            'password' => Hash::make('password'),
+            'password' => Hash::make(env('ADMIN_PASSWORD')),
         ]);
 
         $user->assignRole('superadmin');
         $user->assignRole('admin');
+
+        $this->call([
+            GlobetkaSeeder::class,
+        ]);
     }
 }
