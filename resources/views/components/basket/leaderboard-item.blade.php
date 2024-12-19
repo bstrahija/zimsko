@@ -2,7 +2,7 @@
     <td class="px-2 py-5">
         <a href="#" class="flex gap-2 items-center text-xs">
             <small class="mr-3 text-gray-500">{{ $position + 1 }}</small>
-            <img src="{{ $item->team->logo() }}" alt="{{ $item->team->name }}" class="w-8 h-8 rounded-full">
+            <img src="{{ $item->team->logo() }}" alt="{{ $item->team->title }}" class="w-8 h-8 rounded-full">
             <span class="text-gray-800 whitespace-nowrap">{{ $item->title }}</span>
         </a>
     </td>

@@ -26,6 +26,7 @@ class Team extends Model implements HasMedia
         'games'                   => 0,
         'wins'                    => 0,
         'losses'                  => 0,
+        'points'                  => 0, // This is not the score, it's leaderboard points
         'score'                   => 0,
         'misses'                  => 0,
         'free_throws'             => 0,
@@ -94,7 +95,7 @@ class Team extends Model implements HasMedia
 
     public function players(): BelongsToMany
     {
-        return $this->BelongsToMany(Player::class);
+        return $this->BelongsToMany(Player::class)->withPivot(['number', 'position']);
     }
 
     public function coaches(): HasMany
@@ -112,6 +113,16 @@ class Team extends Model implements HasMedia
         return new Attribute(
             get: fn() => $this->statsData,
         );
+    }
+
+    public function homeGames(): HasMany
+    {
+        return $this->hasMany(Game::class, 'home_team_id');
+    }
+
+    public function awayGames(): HasMany
+    {
+        return $this->hasMany(Game::class, 'away_team_id');
     }
 
     public function setStats($key, $value)

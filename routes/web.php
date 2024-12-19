@@ -22,6 +22,9 @@ Route::get('ekipe/{team}', [TeamsController::class, 'show'])->name('teams.show')
 Route::get('galerije', [GalleriesController::class, 'index'])->name('galleries');
 Route::get('galerije/{gallery}', [GalleriesController::class, 'show'])->name('galleries.show');
 
+Route::get('/concept/001', function () {
+    return view('concept.001');
+});
 
 Route::get('live', [LiveController::class, 'index'])->name('live')->middleware('auth');
 Route::get('live/sim', [LiveController::class, 'sim'])->name('live.sim')->middleware('auth');

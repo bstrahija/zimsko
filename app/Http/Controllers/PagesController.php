@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Event;
 use App\Models\Game;
 use App\Services\Leaderboards;
+use App\Services\Settings;
 
 class PagesController extends Controller
 {

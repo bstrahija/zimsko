@@ -2,18 +2,8 @@
 import { inject, onMounted, toRefs } from 'vue';
 import { Head, router } from '@inertiajs/vue3';
 import Layout from './Layout.vue';
-import FoulsTimeouts from '../Components/FoulsTimeouts.vue';
-import GameControls from '../Components/GameControls.vue';
-import Log from '../Components/Log.vue';
-import PlayerBlock from '../Components/PlayerBlock.vue';
-import PlayersOnBench from '../Components/PlayersOnBench.vue';
-import PlayersOnCourt from '../Components/PlayersOnCourt.vue';
-import ScoreBar from '../Components/ScoreBar.vue';
-import ScoreButton from '../Components/ScoreButton.vue';
-import ScoreButtonGroup from '../Components/ScoreButtonGroup.vue';
-import PeriodIndicator from '../Components/PeriodIndicator.vue';
-import Pretty from '../Components/Pretty.vue';
 import LiveScoreApp from '../Components/LiveScoreApp.vue';
+import SelectPlayers from '../Components/SelectPlayers.vue';
 import SelectStartingPlayers from '../Components/SelectStartingPlayers.vue';
 
 const helpers = inject('helpers');
@@ -50,6 +40,8 @@ router.on('success', (event) => {
 
         <div class="flex relative justify-center min-h-[98svh]">
             <div class="w-full space-y-2 max-w-[1920px]">
+                <SelectPlayers :game="game" v-if="!game.home_players || !game.away_players || game.home_players.length < 5 || game.away_players.length < 5" />
+
                 <SelectStartingPlayers :game="game"
                     v-if="!game.home_starting_players || !game.away_starting_players || game.home_starting_players.length < 5 || game.away_starting_players.length < 5" />
 

@@ -31,6 +31,7 @@ class Player extends Model implements HasMedia
         'games'                   => 0,
         'wins'                    => 0,
         'losses'                  => 0,
+        'points'                  => 0, // This is not the score, it's leaderboard points
         'score'                   => 0,
         'misses'                  => 0,
         'free_throws'             => 0,
@@ -78,10 +79,9 @@ class Player extends Model implements HasMedia
     ];
 
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
         'slug',
-        'number',
-        'position',
         'height',
         'weight',
         'birthday',
@@ -96,7 +96,30 @@ class Player extends Model implements HasMedia
         'data'        => 'array',
     ];
 
-    protected $appends = ['stats'];
+    protected $appends = ['stats', 'name', 'number', 'position'];
+
+    public function getNameAttribute()
+    {
+        return $this->first_name . ' ' . $this->last_name;
+    }
+
+    public function getNumberAttribute()
+    {
+        if (isset($this->pivot) && $this->pivot->number) {
+            return $this->pivot->number;
+        }
+
+        return null;
+    }
+
+    public function getPositionAttribute()
+    {
+        if (isset($this->pivot) && $this->pivot->position) {
+            return $this->pivot->position;
+        }
+
+        return null;
+    }
 
     public static function findByTeamAndNumber($teamId, $number)
     {

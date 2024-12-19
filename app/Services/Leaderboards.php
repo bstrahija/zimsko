@@ -101,7 +101,7 @@ class Leaderboards
         return $team;
     }
 
-    public static function getPlayerLeaderboardForEvent(Event $event, $orderBy = 'points', $limit = 10): Leaderboard
+    public static function getPlayerLeaderboardForEvent(Event $event, $orderBy = 'score', $limit = 10): Leaderboard
     {
         $leaderboard = new Leaderboard;
 
@@ -112,7 +112,7 @@ class Leaderboards
         $players = new Collection;
         $records = GamePlayer::whereIn('game_id', $games->pluck('id'))->with(['player', 'team'])->get();
 
-        // Now loop through records and add points to player stats
+        // Now loop through records and add score to player stats
         foreach ($records as $record) {
             // First check if we already have the player in our collection
             if (! $players->where('id', $record->player_id)->first()) {
@@ -124,24 +124,25 @@ class Leaderboards
             // @TODO: Add more data later, eg. rebounds, assists, etc.
             $player = $players->where('id', $record->player_id)->first();
             $player->statsData['games']++;
-            $player->statsData['score']             += $record->points;
-            $player->statsData['three_points']     += $record->three_points;
-            $player->statsData['fields_goals_percent']                 = round($player->statsData['score'] / $player->statsData['games'], 2);
+            $player->statsData['score']                += $record->score;
+            $player->statsData['three_points']         += $record->three_points;
+            $player->statsData['fields_goals_percent']  = round($player->statsData['score'] / $player->statsData['games'], 2);
             $player->statsData['three_points_percent']  = round($player->statsData['three_points'] / $player->statsData['games'], 2);
         }
 
         // Now create standings collection
         foreach ($players as $player) {
             $leaderboard->push(new LeaderboardPlayerItem([
-                'id'               => $player->id,
-                'title'            => $player->name,
-                'games'            => $player->statsData['games'],
-                'points'           => $player->statsData['score'],
-                'three_points'     => $player->statsData['three_points'],
-                'fields_goals_percent' => $player->statsData['fields_goals_percent'],
+                'id'                   => $player->id,
+                'title'                => $player->name,
+                'games'                => $player->statsData['games'],
+                'score'                => $player->statsData['score'],
+                'three_points'         => $player->statsData['three_points'],
                 'three_points_percent' => $player->statsData['three_points_percent'],
-                'player'           => $player,
-                'team'             => $player->statsData['team'] ?: $player->teams->first(),
+                'field_goals'         => $player->statsData['field_goals'],
+                'fields_goals_percent' => $player->statsData['fields_goals_percent'],
+                'player'               => $player,
+                'team'                 => $player->statsData['team'] ?: $player->teams->first(),
             ]));
         }
 

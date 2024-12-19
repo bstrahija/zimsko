@@ -61,7 +61,7 @@ class Stats
         Stat::where('game_id', $game->id)->where('for', 'player')->delete();
 
         foreach ($game->players as $player) {
-            dump($player->pivot->points);
+            dump($player->pivot->score);
         }
 
         // Insert it into the DB

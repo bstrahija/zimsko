@@ -26,6 +26,10 @@ class LiveScore
 
     protected ?Collection $awayPlayers;
 
+    protected ?Collection $availableHomePlayers;
+
+    protected ?Collection $availableAwayPlayers;
+
     protected int $currentPeriod = 1;
 
     protected ?Collection $startingPlayers;
@@ -60,6 +64,9 @@ class LiveScore
         // We need to preload the teams and players to avoid N+1
         $this->homeTeam    = $this->game->homeTeam()->with(['players', 'players.media'])->first();
         $this->awayTeam    = $this->game->awayTeam()->with(['players', 'players.media'])->first();
+
+        $this->availableHomePlayers = $this->homeTeam->players;
+        $this->availableAwayPlayers = $this->awayTeam->players;
 
         $this->homePlayers = $this->game->homePlayers;
         $this->awayPlayers = $this->game->awayPlayers;
@@ -419,6 +426,8 @@ class LiveScore
         }
 
         // Add some team data
+        $data['game']['available_home_players'] = $this->availableHomePlayers->toArray();
+        $data['game']['available_away_players'] = $this->availableAwayPlayers->toArray();
         $data['game']['home_players']          = $this->homePlayers->toArray();
         $data['game']['away_players']          = $this->awayPlayers->toArray();
         $data['game']['home_team']             = $this->homeTeam->toArray();

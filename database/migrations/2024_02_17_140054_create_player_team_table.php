@@ -16,6 +16,8 @@ return new class extends Migration
         Schema::create('player_team', function (Blueprint $table) {
             $table->foreignId('player_id');
             $table->foreignId('team_id');
+            $table->string('position')->nullable()->index();
+            $table->string('number')->nullable()->index();
         });
 
         Schema::enableForeignKeyConstraints();

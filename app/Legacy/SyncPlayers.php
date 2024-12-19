@@ -14,13 +14,16 @@ class SyncPlayers
                 // Check if player already exists
                 if (Player::where('external_id', $player->wp_id)->first()) return;
 
+                $names      = explode(' ', $player->name);
+                $firstName  = $names[0];
+                $lastName   = isset($names[1]) ? $names[1] : '';
+
                 $newPlayer              = new \App\Models\Player();
                 $newPlayer->external_id = $player->wp_id;
-                $newPlayer->name        = $player->name;
+                $newPlayer->first_name  = $firstName;
+                $newPlayer->last_name   = $lastName;
                 $newPlayer->slug        = $player->slug;
                 $newPlayer->body        = $player->body;
-                $newPlayer->position    = $player->position;
-                $newPlayer->number      = $player->number;
                 $newPlayer->birthday    = $player->birthday;
                 $newPlayer->status      = $player->status;
                 $newPlayer->data        = @json_decode($player->data);
@@ -31,9 +34,12 @@ class SyncPlayers
                 // We also need to assign the team
                 $legacyTeams = DB::connection('mysql_legacy')->table('wp_zmsk_player_team')->where('player_id', $newPlayer->external_id)->get();
 
-                $legacyTeams->each(function ($legacyTeam) use ($newPlayer) {
+                $legacyTeams->each(function ($legacyTeam) use ($newPlayer, $player) {
                     $team = \App\Models\Team::where('external_id', $legacyTeam->team_id)->first();
-                    $newPlayer->teams()->attach($team);
+                    $newPlayer->teams()->attach($team, [
+                        'position' => $player->position,
+                        'number' => $player->number,
+                    ]);
                 });
 
 

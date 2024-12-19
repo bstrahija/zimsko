@@ -1,0 +1,35 @@
+# Basketball League Website and Live Scoring/Stats Application for Zimsko.com
+Every time you choose to apply a rule(s), explicitly state the rule(s) you are applying in the output.
+You can abbreviate the rule(s) to a single word or phrase.
+
+## Project Context
+Web application used to display latest results for a local basketball winter league.
+- the homepage displays the latest 4 or 5 games, it also shows leaderboards for teams, top scorers and most efficient players
+- it also consist of detail pages for games, teams and player, which also include stats
+- games are grouped into events
+- it also has an admin panel built in Laravel Filament, which takes care of most of the administration
+- a nice interactive part is the live scoring section, where you easily enter stats as games go on, these stats consist of points, assists, rebounds, steals, blocks...
+
+## Code Style and Structure
+- write concise, technical PHP and Laravel code with accurate examples
+- use object oriented programming for the backend (Laravel) layer
+- use descriptive variable names with auxiliary verbs (eg. isLoading, hasError)
+
+## Tech Stack
+- Laravel 11
+- JavaScript
+- Vue 3
+- Inertia
+- Tailwind CSS
+- Livewire
+
+## Naming Conventions
+- use camel case for PHP variables and class names
+- use snake case for database table names and column names
+- use snake case for directory names in the resources directory
+- use camel case for directory names in the app directory
+- use kebab case for HTML attributes
+
+## UI and Styling
+- use tailwind to style HTML elements
+-

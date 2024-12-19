@@ -35,7 +35,9 @@ class PlayerResource extends Resource
                         Forms\Components\Section::make('General')
                             ->columnSpan(8)
                             ->schema([
-                                Forms\Components\TextInput::make('name')
+                                Forms\Components\TextInput::make('first_name')
+                                    ->required(),
+                                Forms\Components\TextInput::make('last_name')
                                     ->required(),
                                 Forms\Components\TextInput::make('slug')
                                     ->hiddenOn(['create'])
@@ -71,7 +73,10 @@ class PlayerResource extends Resource
                 // Tables\Columns\TextColumn::make('external_id')
                 //     ->numeric()
                 //     ->sortable(),
-                Tables\Columns\TextColumn::make('name')
+                Tables\Columns\TextColumn::make('first_name')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('last_name')
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('number')

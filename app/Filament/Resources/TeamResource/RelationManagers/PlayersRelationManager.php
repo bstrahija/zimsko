@@ -19,7 +19,10 @@ class PlayersRelationManager extends RelationManager
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
+                Forms\Components\TextInput::make('first_name')
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('last_name')
                     ->required()
                     ->maxLength(255),
                 Forms\Components\TextInput::make('number')
@@ -40,7 +43,8 @@ class PlayersRelationManager extends RelationManager
             ->columns([
                 SpatieMediaLibraryImageColumn::make('photo')->collection('photos'),
                 Tables\Columns\TextColumn::make('number'),
-                Tables\Columns\TextColumn::make('name'),
+                Tables\Columns\TextColumn::make('first_name'),
+                Tables\Columns\TextColumn::make('last_name'),
                 Tables\Columns\TextColumn::make('position'),
             ])
             ->filters([

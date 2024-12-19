@@ -2,14 +2,13 @@
 
 namespace App\Models;
 
-use App\Settings\GeneralSettings;
+use App\Services\Settings;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Spatie\LaravelSettings\Settings;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
@@ -47,7 +46,7 @@ class Event extends Model
 
     public static function current(): ?Event
     {
-        $settingsEventId = app(GeneralSettings::class)->current_event_id ?: null;
+        $settingsEventId = Settings::get('general.current_event_id', null);
         $event           = $settingsEventId ? Event::find($settingsEventId) : Event::last();
 
         return $event;

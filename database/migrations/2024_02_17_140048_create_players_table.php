@@ -17,10 +17,10 @@ return new class extends Migration
             $table->ulid('id')->primary();
             $table->unsignedInteger('external_id')->nullable()->index();
             $table->string('slug')->nullable()->index();
-            $table->string('name');
+            $table->string('first_name');
+            $table->string('last_name')->nullable();
+            $table->string('nickname')->nullable();
             $table->text('body')->nullable();
-            $table->string('position')->nullable()->index();
-            $table->integer('number')->nullable();
             $table->date('birthday')->nullable();
             $table->string('status', 50)->default('active')->index();
             $table->json('data')->nullable();

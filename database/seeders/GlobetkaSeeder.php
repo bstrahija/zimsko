@@ -31,16 +31,16 @@ class GlobetkaSeeder extends Seeder
         ]);
 
         // Now we also need some players
-        $globetka->players()->create(['name' => 'Neven Levačić',      'slug' => 'neven-levacic-glo',      'number' => 3,  'position' => 'pg', 'status' => 'active']);
-        $globetka->players()->create(['name' => 'Vedran Vurušić',     'slug' => 'vedran-vurusic-glo',     'number' => 45, 'position' => 'pf', 'status' => 'active']);
-        $globetka->players()->create(['name' => 'Manuel Novak',       'slug' => 'manuel-novak-glo',       'number' => 13, 'position' => 'pf', 'status' => 'active']);
-        $globetka->players()->create(['name' => 'Matija Novak',       'slug' => 'matija-novak-glo',       'number' => 12, 'position' => 'c',  'status' => 'active']);
-        $globetka->players()->create(['name' => 'Danijel Podvezanec', 'slug' => 'danijel-podvezanec-glo', 'number' => 16, 'position' => 'sf', 'status' => 'active']);
-        $globetka->players()->create(['name' => 'Matija Terek',       'slug' => 'matija-terek-glo',       'number' => 3,  'position' => 'sg', 'status' => 'active']);
-        $globetka->players()->create(['name' => 'Daniel Radek',       'slug' => 'daniel-radek-glo',       'number' => 69, 'position' => 'pg', 'status' => 'active']);
-        $globetka->players()->create(['name' => 'Igor Šopar',         'slug' => 'igor-sopar-glo',         'number' => 6,  'position' => 'sg', 'status' => 'active']);
-        $globetka->players()->create(['name' => 'Tomislav Volf',      'slug' => 'tomislav-volf-glo',      'number' => 4,  'position' => 'pf', 'status' => 'active']);
-        $globetka->players()->create(['name' => 'Davor Novak',        'slug' => 'davor-novak-glo',        'number' => 2,  'position' => 'sg', 'status' => 'active']);
+        $globetka->players()->create(['first_name' => 'Neven',    'last_name' => 'Levačić',    'slug' => 'neven-levacic-glo',      'status' => 'active'], ['number' => 3,  'position' => 'pg']);
+        $globetka->players()->create(['first_name' => 'Vedran',   'last_name' => 'Vurušić',    'slug' => 'vedran-vurusic-glo',     'status' => 'active'], ['number' => 45, 'position' => 'pf']);
+        $globetka->players()->create(['first_name' => 'Manuel',   'last_name' => 'Novak',      'slug' => 'manuel-novak-glo',       'status' => 'active'], ['number' => 13, 'position' => 'pf']);
+        $globetka->players()->create(['first_name' => 'Matija',   'last_name' => 'Novak',      'slug' => 'matija-novak-glo',       'status' => 'active'], ['number' => 12, 'position' => 'c']);
+        $globetka->players()->create(['first_name' => 'Danijel',  'last_name' => 'Podvezanec', 'slug' => 'danijel-podvezanec-glo', 'status' => 'active'], ['number' => 16, 'position' => 'sf']);
+        $globetka->players()->create(['first_name' => 'Matija',   'last_name' => 'Terek',      'slug' => 'matija-terek-glo',       'status' => 'active'], ['number' => 3,  'position' => 'sg']);
+        $globetka->players()->create(['first_name' => 'Daniel',   'last_name' => 'Radek',      'slug' => 'daniel-radek-glo',       'status' => 'active'], ['number' => 69, 'position' => 'pg']);
+        $globetka->players()->create(['first_name' => 'Igor',     'last_name' => 'Šopar',      'slug' => 'igor-sopar-glo',         'status' => 'active'], ['number' => 6,  'position' => 'sg']);
+        $globetka->players()->create(['first_name' => 'Tomislav', 'last_name' => 'Volf',       'slug' => 'tomislav-volf-glo',      'status' => 'active'], ['number' => 4,  'position' => 'pf']);
+        $globetka->players()->create(['first_name' => 'Davor',    'last_name' => 'Novak',      'slug' => 'davor-novak-glo',        'status' => 'active'], ['number' => 2,  'position' => 'sg']);
 
         // Add more teams
         $varteks = $event->teams()->create([
@@ -49,6 +49,14 @@ class GlobetkaSeeder extends Seeder
             'short_title' => 'VART',
             'status'      => 'active',
         ]);
+        $varteks->players()->create(['first_name' => 'J.',    'last_name' => 'Ostojić', 'slug' => 'j-ostojic-glo',    'status' => 'active'], ['number' => 1,  'position' => 'pg']);
+        $varteks->players()->create(['first_name' => 'M.',    'last_name' => 'Cesarec', 'slug' => 'm-cesarec-glo',    'status' => 'active'], ['number' => 2,  'position' => 'sg']);
+        $varteks->players()->create(['first_name' => 'N.',    'last_name' => 'Kos',     'slug' => 'n-kos-glo',        'status' => 'active'], ['number' => 3,  'position' => 'pf']);
+        $varteks->players()->create(['first_name' => 'M.',    'last_name' => 'Bađun',   'slug' => 'm-badjun-glo',     'status' => 'active'], ['number' => 4,  'position' => 'sg']);
+        $varteks->players()->create(['first_name' => 'D.',    'last_name' => 'Cesarec', 'slug' => 'd-cesarec-glo',    'status' => 'active'], ['number' => 5,  'position' => 'sg']);
+        $varteks->players()->create(['first_name' => 'Davor', 'last_name' => 'Ostoja',  'slug' => 'davor-ostoja-glo', 'status' => 'active'], ['number' => 6,  'position' => 'sg']);
+        $varteks->players()->create(['first_name' => 'K.',    'last_name' => 'Rakonić', 'slug' => 'k-rakonic-glo',    'status' => 'active'], ['number' => 7,  'position' => 'sg']);
+        $varteks->players()->create(['first_name' => 'I.',    'last_name' => 'Marić',   'slug' => 'i-maric-glo',      'status' => 'active'], ['number' => 8,  'position' => 'sg']);
 
         $nedelisce = $event->teams()->create([
             'title'       => 'KK Nedelisce',
@@ -90,6 +98,14 @@ class GlobetkaSeeder extends Seeder
             'slug'        => 'dubravcan',
             'short_title' => 'KKDB',
             'status'      => 'active',
+        ]);
+
+        // Now we add some games
+        $globetka->homeGames()->create([
+            'event_id'     => $event->id,
+            'title'        => '5. kolo - Globetka Čakovec - KK Varteks',
+            'away_team_id' => $varteks->id,
+            'scheduled_at' => '2024-12-15 19:00:00',
         ]);
     }
 }

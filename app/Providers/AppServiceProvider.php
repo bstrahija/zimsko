@@ -26,12 +26,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        if (Auth::check()) {
-            Debugbar::enable();
-        } else {
-            Debugbar::disable();
-        }
-
         Model::shouldBeStrict();
         Model::unguard();
 

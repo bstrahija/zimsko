@@ -82,7 +82,7 @@ class SyncGames
                 $legacyPlayerStats = DB::connection('mysql_legacy')->table('wp_zmsk_player_stats')->where('match_id', $legacyGame->id)->where('player_id', $player->external_id)->first();
 
                 // Only continue if the player has stats for this game (sometime players don't play)
-                if (!$legacyPlayerStats) {
+                if (! $legacyPlayerStats) {
                     continue;
                 }
 
@@ -94,7 +94,6 @@ class SyncGames
                 $gamePlayer->score                = $legacyPlayerStats->points;
                 $gamePlayer->three_points         = $legacyPlayerStats->three_pointers;
                 $gamePlayer->three_points_made    = $legacyPlayerStats->three_pointers;
-                $gamePlayer->three_points_percent = '100';
                 $gamePlayer->rebounds             = $legacyPlayerStats->rebounds;
                 $gamePlayer->assists              = $legacyPlayerStats->assists;
                 $gamePlayer->blocks               = $legacyPlayerStats->blocks;

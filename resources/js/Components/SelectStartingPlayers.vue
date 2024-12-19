@@ -2,12 +2,8 @@
 import { defineProps, reactive, toRefs } from 'vue';
 import { router } from '@inertiajs/vue3';
 import ScoreBar from './ScoreBar.vue';
-import FoulsTimeouts from './FoulsTimeouts.vue';
-import PeriodIndicator from './PeriodIndicator.vue';
-import PlayerBlock from './PlayerBlock.vue';
 import PlayerEmptyBlock from './PlayerEmptyBlock.vue';
 import PlayerSelectBlock from './PlayerSelectBlock.vue';
-import PlayersOnCourt from './PlayersOnCourt.vue';
 import Pretty from './Pretty.vue';
 
 const props = defineProps({
@@ -63,8 +59,7 @@ const startGame = async () => {
 </script>
 
 <template>
-    <div
-        class="bg-slate-900/95 p-6 rounded-lg border-5 border-cyan-400/50 shadow-[0_0_15px_rgba(6,182,212,0.5)] h-full grid-bg">
+    <div class="bg-slate-900/95 p-6 rounded-lg border-5 border-cyan-400/50 shadow-[0_0_15px_rgba(6,182,212,0.5)] h-full grid-bg">
         <div class="grid gap-4 mb-4 score-top" style="grid-template-columns: 1fr 160px 1fr">
             <div class="space-y-4 home-team-top">
                 <ScoreBar :score="0" :team="game.home_team" :side="'home'" />
@@ -82,8 +77,7 @@ const startGame = async () => {
         <div class="grid gap-12 mb-4 score-court" style="grid-template-columns: 1fr 8% 1fr">
             <div class="grid sub-bar-home">
                 <div class="grid grid-cols-5 gap-2 text-3xl font-bold text-white players-on-court min-h-20">
-                    <PlayerSelectBlock v-for="player in data.homeStartingPlayers" :key="player.id" :player="player"
-                        @click="removeHomePlayer(player)" />
+                    <PlayerSelectBlock v-for="player in data.homeStartingPlayers" :key="player.id" :player="player" @click="removeHomePlayer(player)" />
 
                     <PlayerEmptyBlock v-for="player in missingHomePlayerNumber()" class="opacity-50" />
                 </div>
@@ -91,18 +85,15 @@ const startGame = async () => {
 
             <div class="grid justify-center items-center text-sm text-center uppercase">
                 <p class="text-sm text-white">ODABERITE POČETNE PETORKE</p>
-                <button class="btn btn-secondary" @click="startGame"
-                    v-if="game.status !== 'started' && game.status !== 'ended'"
-                    :class="{ 'opacity-50': !canBeSaved(), 'pointer-events-none': !canBeSaved() }"
-                    :disabled="!canBeSaved()">
+                <button class="btn btn-secondary" @click="startGame" v-if="game.status !== 'started' && game.status !== 'ended'"
+                    :class="{ 'opacity-50': !canBeSaved(), 'pointer-events-none': !canBeSaved() }" :disabled="!canBeSaved()">
                     Započni utakmicu
                 </button>
             </div>
 
             <div class="grid sub-bar-away">
                 <div class="grid grid-cols-5 gap-2 text-3xl font-bold text-white players-on-court min-h-20">
-                    <PlayerSelectBlock v-for="player in data.awayStartingPlayers" :key="player.id" :player="player"
-                        @click="removeAwayPlayer(player)" />
+                    <PlayerSelectBlock v-for="player in data.awayStartingPlayers" :key="player.id" :player="player" @click="removeAwayPlayer(player)" />
 
                     <PlayerEmptyBlock v-for="player in missingAwayPlayerNumber()" class="opacity-50" />
                 </div>
@@ -111,20 +102,18 @@ const startGame = async () => {
 
         <div class="grid gap-12 mt-8 score-controls" style="grid-template-columns: 1fr 8% 1fr">
             <div class="grid gap-4 home-controls">
-                <div
-                    class="grid grid-cols-4 auto-rows-min gap-2 grid-min-rows players-on-bench starting-players-on-bench">
-                    <PlayerSelectBlock v-for="player in game.home_players" :key="player.id" :player="player"
-                        @click="addHomePlayer(player)" :class="{ hidden: data.homeStartingPlayers.includes(player) }" />
+                <div class="grid grid-cols-4 auto-rows-min gap-2 grid-min-rows players-on-bench starting-players-on-bench">
+                    <PlayerSelectBlock v-for="player in game.home_players" :key="player.id" :player="player" @click="addHomePlayer(player)"
+                        :class="{ hidden: data.homeStartingPlayers.includes(player) }" />
                 </div>
             </div>
 
             <div></div>
 
             <div class="grid gap-4 away-controls">
-                <div
-                    class="grid grid-cols-4 auto-rows-min gap-2 grid-min-rows players-on-bench starting-players-on-bench">
-                    <PlayerSelectBlock v-for="player in game.away_players" :key="player.id" :player="player"
-                        @click="addAwayPlayer(player)" :class="{ hidden: data.awayStartingPlayers.includes(player) }" />
+                <div class="grid grid-cols-4 auto-rows-min gap-2 grid-min-rows players-on-bench starting-players-on-bench">
+                    <PlayerSelectBlock v-for="player in game.away_players" :key="player.id" :player="player" @click="addAwayPlayer(player)"
+                        :class="{ hidden: data.awayStartingPlayers.includes(player) }" />
                 </div>
             </div>
         </div>

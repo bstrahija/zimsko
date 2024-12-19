@@ -63,21 +63,19 @@ class LiveController extends Controller
         // We need to convert all the data to an array
         $data = $this->live($game)->toData();
 
+        // dd($data);
+
         // First we need to check if there's a live game
 
-        Stats::generateFromGameForTeams($game);
-        Stats::generateFromGameForPlayers($game);
+        // Stats::generateFromGameForTeams($game);
+        // Stats::generateFromGameForPlayers($game);
 
         // Stats::generateFromLiveGameForTeams($game->live);
         // Stats::generateFromLiveGameForPlayers($game->live);
 
         // dump($game->live);
 
-
-
-
-
-        die();
+        // die();
 
         return Inertia::render('Score', $data);
     }
