@@ -31,21 +31,19 @@ class Stats
                 'event_id'  => $game->event_id,
                 'game_id'   => $game->id,
                 'team_id'   => $team->id,
-                'score'     => $game->{$side . '_score'},
-                'score_p1'  => $game->{$side . '_score_p1'},
-                'score_p2'  => $game->{$side . '_score_p2'},
-                'score_p3'  => $game->{$side . '_score_p3'},
-                'score_p4'  => $game->{$side . '_score_p4'},
-                'score_p5'  => $game->{$side . '_score_p5'},
-                'score_p6'  => $game->{$side . '_score_p6'},
-                'score_p7'  => $game->{$side . '_score_p7'},
-                'score_p8'  => $game->{$side . '_score_p8'},
             ];
+
+            // Prepare the data (legacy data has no detailed stats like assists, rebounds, etc.)
+            foreach (config('stats.columns') as $column) {
+                $statData[$column] = isset($game->{$side . '_' . $column}) ? $game->{$side . '_' . $column} : 0;
+            }
 
             // Insert it into the DB
             Stat::create($statData);
         }
     }
+
+
 
     /**
      * Generate DB data from a game
@@ -60,12 +58,26 @@ class Stats
         // Clean up any existing stats for player in this game
         Stat::where('game_id', $game->id)->where('for', 'player')->delete();
 
-        foreach ($game->players as $player) {
-            dump($player->pivot->score);
-        }
+        foreach (['home' => $game->homePlayers, 'away' => $game->awayPlayers] as $side => $players) {
+            foreach ($players as $player) {
+                $statData = [
+                    'type'      => 'game',
+                    'for'       => 'player',
+                    'event_id'  => $game->event_id,
+                    'game_id'   => $game->id,
+                    'player_id' => $player->id,
+                    'team_id'   => $side === 'home' ? $game->homeTeam->id : $game->awayTeam->id,
+                ];
 
-        // Insert it into the DB
-        // Stat::create($statData);
+                // Prepare the data (legacy data has no detailed stats like assists, rebounds, etc.)
+                foreach (config('stats.columns') as $column) {
+                    $statData[$column] = $player->pivot->{$column};
+                }
+
+                // Create the record
+                Stat::create($statData);
+            }
+        }
     }
 
     /**
@@ -152,6 +164,36 @@ class Stats
     }
 
     /**
+     * Generate stats for all games in specific event
+     *
+     * @param  Event $event
+     * @return void
+     */
+    public static function generateFromEventForTeams(Event $event)
+    {
+        $games = $event->games;
+
+        foreach ($games as $game) {
+            self::generateFromGameForTeams($game);
+        }
+    }
+
+    /**
+     * Generate stats for all games in specific event
+     *
+     * @param  Event $event
+     * @return void
+     */
+    public static function generateFromEventForPlayers(Event $event)
+    {
+        $games = $event->games;
+
+        foreach ($games as $game) {
+            self::generateFromGameForPlayers($game);
+        }
+    }
+
+    /**
      * This takes the existing stats for all games in the stats table, and updates stats for the given event
      *
      * @param  Event $event
@@ -173,5 +215,28 @@ class Stats
     {
         // Keep in mind this will use already existing data in the stats table
         // To re-generate the stats, you need to generate data for events first
+    }
+
+    public static function calculateEfficiency(array $data)
+    {
+        // Check for missing data
+        if (!isset($data['field_goals_missed'])) {
+            $data['field_goals_missed'] = $data['field_goals'] - $data['field_goals_made'];
+        }
+        if (!isset($data['free_throws_missed'])) {
+            $data['free_throws_missed'] = $data['free_throws'] - $data['free_throws_made'];
+        }
+
+        $efficiency = $data['score']
+            + $data['rebounds']
+            + $data['assists']
+            + $data['steals']
+            + $data['blocks']
+            - $data['field_goals_missed']
+            - $data['free_throws_missed']
+            - $data['turnovers']
+            - $data['fouls'];
+
+        return $efficiency;
     }
 }

@@ -34,11 +34,20 @@ class SyncPlayers
                 // We also need to assign the team
                 $legacyTeams = DB::connection('mysql_legacy')->table('wp_zmsk_player_team')->where('player_id', $newPlayer->external_id)->get();
 
-                $legacyTeams->each(function ($legacyTeam) use ($newPlayer, $player) {
+                // Parse the position
+                $position = match ($player->position) {
+                    'point-guard'    => 'pg',
+                    'shooting-guard' => 'sf',
+                    'small-forward'  => 'sf',
+                    'power-forward'  => 'pf',
+                    'center'         => 'c',
+                };
+
+                $legacyTeams->each(function ($legacyTeam) use ($newPlayer, $player, $position) {
                     $team = \App\Models\Team::where('external_id', $legacyTeam->team_id)->first();
                     $newPlayer->teams()->attach($team, [
-                        'position' => $player->position,
-                        'number' => $player->number,
+                        'position' => $position,
+                        'number'   => $player->number,
                     ]);
                 });
 

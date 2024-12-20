@@ -106,48 +106,44 @@ class Leaderboards
         $leaderboard = new Leaderboard;
 
         // Get all games in tournament
-        $games = $event->games;
+        $games   = $event->games;
+        $gameIds = $games->pluck('id');
 
         // All the player data is in the game_player table
         $players = new Collection;
-        $records = GamePlayer::whereIn('game_id', $games->pluck('id'))->with(['player', 'team'])->get();
+        $records = GamePlayer::whereIn('game_id', $gameIds)->with(['player', 'team'])->get();
 
         // Now loop through records and add score to player stats
         foreach ($records as $record) {
-            // First check if we already have the player in our collection
-            if (! $players->where('id', $record->player_id)->first()) {
-                $record->player->statsData['team'] = $record->team;
-                $players->push($record->player);
+            if (! $leaderboard->where('id', $record->player_id)->first()) {
+                $player = new LeaderboardPlayerItem([
+                    'id'     => $record->player->id,
+                    'title'  => $record->player->name,
+                    'player' => $record->player,
+                    'team'   => $record->team,
+                ]);
+                $leaderboard->push($player);
             }
 
-            // Add stats data to player
-            // @TODO: Add more data later, eg. rebounds, assists, etc.
-            $player = $players->where('id', $record->player_id)->first();
-            $player->statsData['games']++;
-            $player->statsData['score']                += $record->score;
-            $player->statsData['three_points']         += $record->three_points;
-            $player->statsData['fields_goals_percent']  = round($player->statsData['score'] / $player->statsData['games'], 2);
-            $player->statsData['three_points_percent']  = round($player->statsData['three_points'] / $player->statsData['games'], 2);
+            // Get the player
+            $player = $leaderboard->where('id', $record->player_id)->first();
+
+            // Increment games
+            $player->addGames();
+
+            // And add stats
+            $player->addStats($record->toArray());
         }
 
-        // Now create standings collection
-        foreach ($players as $player) {
-            $leaderboard->push(new LeaderboardPlayerItem([
-                'id'                   => $player->id,
-                'title'                => $player->name,
-                'games'                => $player->statsData['games'],
-                'score'                => $player->statsData['score'],
-                'three_points'         => $player->statsData['three_points'],
-                'three_points_percent' => $player->statsData['three_points_percent'],
-                'field_goals'         => $player->statsData['field_goals'],
-                'fields_goals_percent' => $player->statsData['fields_goals_percent'],
-                'player'               => $player,
-                'team'                 => $player->statsData['team'] ?: $player->teams->first(),
-            ]));
+        // Now we calculate other columns
+        foreach ($leaderboard as $player) {
+            $player->calculate();
         }
 
-        // Now finish the advanced ordering
-        $leaderboard = $leaderboard->sortByDesc($orderBy, SORT_NUMERIC)->values()->take($limit);
+
+        $leaderboard = $leaderboard->sortByDesc(function ($player) use ($orderBy) {
+            return $player->{$orderBy};
+        }, SORT_NUMERIC)->values()->take($limit);
 
         return $leaderboard;
     }

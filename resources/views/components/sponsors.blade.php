@@ -1,13 +1,17 @@
 <div class="{{ $class ?? '' }}">
-    <x-ui.h2-double sub="Hvala">Sponzori</x-ui.h2-double>
+    <x-ui.h2-double sub="Hvala">Sponzori!</x-ui.h2-double>
 
     <x-ui.card class="overflow-x-auto">
-        <div class="flex gap-12 justify-center items-center py-12">
-            <a href="#"><img src="{{ asset('img/sponsors/1.png') }}" alt="Sponsor 1" class="h-12"></a>
-            <a href="#"><img src="{{ asset('img/sponsors/2.png') }}" alt="Sponsor 2" class="h-12"></a>
-            <a href="#"><img src="{{ asset('img/sponsors/3.png') }}" alt="Sponsor 3" class="h-12"></a>
-            <a href="#"><img src="{{ asset('img/sponsors/4.png') }}" alt="Sponsor 4" class="h-12"></a>
-            <a href="#"><img src="{{ asset('img/sponsors/5.png') }}" alt="Sponsor 5" class="h-12"></a>
+        <div class="flex flex-wrap gap-12 justify-center items-center">
+            <a href="#"><img src="{{ asset('img/sponsors/sponsor_burger.png') }}" alt="Burger Weekend" class="h-40"></a>
+            <a href="#"><img src="{{ asset('img/sponsors/sponsor_medjimurje.jpg') }}" alt="Međimurska Županija" class="h-16"></a>
+            <a href="#"><img src="{{ asset('img/sponsors/sponsor_globetka.png') }}" alt="KK Globetka Čakovec" class="h-16"></a>
+            <a href="#"><img src="{{ asset('img/sponsors/sponsor_radost.png') }}" alt="ŽKK Radost" class="h-12"></a>
+            <a href="#"><img src="{{ asset('img/sponsors/sponsor_creo.png') }}" alt="Creo" class="h-12"></a>
+            <a href="#"><img src="{{ asset('img/sponsors/sponsor_dot.jpg') }}" alt="Dot Studio" class="h-12"></a>
+            <a href="#"><img src="{{ asset('img/sponsors/sponsor_grad.png') }}" alt="Grad Čakovec" class="h-12"></a>
+            <a href="#"><img src="{{ asset('img/sponsors/sponsor_hespo.webp') }}" alt="Hespo" class="h-12"></a>
+            <a href="#"><img src="{{ asset('img/sponsors/sponsor_geoplan.png') }}" alt="Geoplan" class="h-12"></a>
         </div>
     </x-ui.card>
 </div>

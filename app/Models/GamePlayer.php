@@ -45,7 +45,7 @@ class GamePlayer extends Model
 
     public function player(): BelongsTo
     {
-        return $this->belongsTo(Player::class)->orderBy('number');
+        return $this->belongsTo(Player::class)->orderBy('first_name');
     }
 
     public function team(): BelongsTo

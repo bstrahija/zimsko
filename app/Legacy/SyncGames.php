@@ -42,25 +42,50 @@ class SyncGames
                 $newGame->body           = $game->body;
                 $newGame->home_team_id   = $homeTeam?->id;
                 $newGame->away_team_id   = $awayTeam?->id;
-                $newGame->home_score     = $game->home_team_score;
-                $newGame->away_score     = $game->away_team_score;
-                $newGame->home_score_p1  = $game->home_team_score_q1;
-                $newGame->away_score_p1  = $game->away_team_score_q1;
-                $newGame->home_score_p2  = $game->home_team_score_q2;
-                $newGame->away_score_p2  = $game->away_team_score_q2;
-                $newGame->home_score_p3  = $game->home_team_score_q3;
-                $newGame->away_score_p3  = $game->away_team_score_q3;
-                $newGame->home_score_p4  = $game->home_team_score_q4;
-                $newGame->away_score_p4  = $game->away_team_score_q4;
-                $newGame->home_score_p5  = $game->home_team_score_ot1;
-                $newGame->away_score_p5  = $game->away_team_score_ot1;
-                $newGame->home_score_p6  = $game->home_team_score_ot2;
-                $newGame->away_score_p6  = $game->away_team_score_ot2;
+                // $newGame->home_score     = $game->home_team_score;
+                // $newGame->away_score     = $game->away_team_score;
+                // $newGame->home_score_p1  = $game->home_team_score_q1;
+                // $newGame->away_score_p1  = $game->away_team_score_q1;
+                // $newGame->home_score_p2  = $game->home_team_score_q2;
+                // $newGame->away_score_p2  = $game->away_team_score_q2;
+                // $newGame->home_score_p3  = $game->home_team_score_q3;
+                // $newGame->away_score_p3  = $game->away_team_score_q3;
+                // $newGame->home_score_p4  = $game->home_team_score_q4;
+                // $newGame->away_score_p4  = $game->away_team_score_q4;
+                // $newGame->home_score_p5  = $game->home_team_score_ot1;
+                // $newGame->away_score_p5  = $game->away_team_score_ot1;
+                // $newGame->home_score_p6  = $game->home_team_score_ot2;
+                // $newGame->away_score_p6  = $game->away_team_score_ot2;
                 $newGame->status         = $status;
                 $newGame->scheduled_at   = $game->scheduled_at;
                 $newGame->created_at     = $game->created_at;
                 $newGame->updated_at     = $game->updated_at;
                 $newGame->save();
+
+                // Also add more numbers to the team game table
+                $newGame->homeTeamNumbers()->create([
+                    'game_id'  => $newGame->id,
+                    'team_id'  => $newGame->home_team_id,
+                    'score'    => $game->home_team_score,
+                    'score_p1' => $game->home_team_score_q1,
+                    'score_p2' => $game->home_team_score_q2,
+                    'score_p3' => $game->home_team_score_q3,
+                    'score_p4' => $game->home_team_score_q4,
+                    'score_p5' => $game->home_team_score_ot1,
+                    'score_p6' => $game->home_team_score_ot2,
+                ]);
+
+                $newGame->awayTeamNumbers()->create([
+                    'game_id'  => $newGame->id,
+                    'team_id'  => $newGame->away_team_id,
+                    'score'    => $game->away_team_score,
+                    'score_p1' => $game->away_team_score_q1,
+                    'score_p2' => $game->away_team_score_q2,
+                    'score_p3' => $game->away_team_score_q3,
+                    'score_p4' => $game->away_team_score_q4,
+                    'score_p5' => $game->away_team_score_ot1,
+                    'score_p6' => $game->away_team_score_ot2,
+                ]);
 
                 // After this we need to sync the player scores for this game
                 self::syncPlayerScores($newGame, $game);

@@ -4,50 +4,15 @@ namespace App\Leaderboards;
 
 use App\Models\Player;
 use App\Models\Team;
+use App\Services\Stats;
 
 class LeaderboardPlayerItem
 {
-    /**
-     * Team title
-     *
-     * @var string
-     */
+    readonly public string $id;
+
     readonly public string $title;
 
-    /**
-     * Total points in standing
-     *
-     * @var int
-     */
-    readonly public int $points;
-
-    /**
-     * Total 3-pointers in standing
-     *
-     * @var int
-     */
-    readonly public int $threePointers;
-
-    /**
-     * Number of games played
-     *
-     * @var int
-     */
-    readonly public int $games;
-
-    /**
-     * Average points per game
-     *
-     * @var int
-     */
-    readonly public float $avg;
-
-    /**
-     * Average 3-pointers per game
-     *
-     * @var int
-     */
-    readonly public float $avgThreePointers;
+    protected array $data;
 
     /**
      * @var Player
@@ -66,43 +31,77 @@ class LeaderboardPlayerItem
      */
     public function __construct($data)
     {
-        $this->title             = isset($data['title'])                  ? $data['title'] : '';
-        $this->games             = (int) isset($data['games'])            ? $data['games'] : 0;
-        $this->points            = (int) isset($data['points'])           ? $data['points'] : 0;
-        $this->threePointers     = (int) isset($data['three_points'])     ? $data['three_points'] : 0;
-        $this->avg               = (int) isset($data['avg'])              ? $data['avg'] : 0;
-        $this->avgThreePointers  = (int) isset($data['avg_three_points']) ? $data['avg_three_points'] : 0;
-        $this->player            = isset($data['player'])                 ? $data['player'] : null;
-        $this->team              = isset($data['team'])                   ? $data['team'] : null;
+        $this->id            = isset($data['id'])     ? $data['id']     : '';
+        $this->title         = isset($data['title'])  ? $data['title']  : '';
+        $this->player        = isset($data['player']) ? $data['player'] : null;
+        $this->team          = isset($data['team'])   ? $data['team']   : null;
+        $this->data['games'] = isset($data['games'])  ? $data['games']   : 0;
+
+        foreach (config('stats.columns') as $column) {
+            $this->data[$column['id']] = isset($data[$column['id']]) ? $data[$column['id']] : 0;
+        }
+
+        foreach (config('stats.calculated_columns') as $column) {
+            $this->data[$column['id']] = isset($data[$column['id']]) ? $data[$column['id']] : 0;
+        }
     }
 
-    public function player()
+    public function addStats($data)
     {
-        return $this->player;
+        foreach (config('stats.columns') as $column) {
+            if (isset($data[$column['id']])) {
+                $this->data[$column['id']] += $data[$column['id']];
+            }
+        }
     }
 
-    public function points()
+    public function calculate()
     {
-        return $this->points;
-    }
-
-    public function games()
-    {
-        return $this->games;
-    }
-
-    public function avg()
-    {
-        return $this->avg;
+        // Here we calculations for all the calculated columns
+        foreach (config('stats.calculated_columns') as $column) {
+            if ($column['method'] === 'avg') {
+                $this->data[$column['id']] = $this->data['games'] ? round($this->data[str_replace('_avg', '', $column['id'])] / $this->data['games'], 2) : 0;
+            } elseif ($column['method'] === 'percent') {
+                $attemptColumn = str_replace('_percent', '', $column['id']);
+                $madeColumn    = $attemptColumn . '_made';
+                $attempted     = $this->data[$attemptColumn];
+                $made          = $this->data[$madeColumn];
+                $this->data[$column['id']] = $attempted ? round($made / $attempted * 100, 2) : 0;
+            } elseif ($column['method'] === 'efficiency') {
+                $this->data[$column['id']] = Stats::calculateEfficiency($this->data);
+            }
+        }
     }
 
     public function addGames($games = 1)
     {
-        $this->games += $games;
+        $this->data['games'] += $games;
     }
 
-    public function addPoints($points = 1)
+    public function addScore($score = 1)
     {
-        $this->points += $points;
+        $this->data['score'] += $score;
+    }
+
+    public function __get($key)
+    {
+        if (isset($this->$key)) {
+            return $this->key;
+        }
+
+        if (isset($this->data[$key])) {
+            return $this->data[$key];
+        }
+
+        return null;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'id'    => $this->id,
+            'title' => $this->title,
+            'data' => $this->data,
+        ];
     }
 }

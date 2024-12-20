@@ -11,10 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('game_player', function (Blueprint $table) {
+        /**
+         * Creates the game_team table.
+         *
+         * This table stores the stats for a team in a game.
+         *
+         * @param Blueprint $table
+         */
+        Schema::create('game_team', function (Blueprint $table) {
             $table->id();
             $table->string('game_id')->constrained('games')->cascadeOnDelete()->index();
-            $table->string('player_id')->constrained('players')->cascadeOnDelete()->index();
             $table->string('team_id')->nullable()->constrained('teams')->cascadeOnDelete()->index();
 
             // Get number columns
@@ -32,6 +38,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('game_player');
+        Schema::dropIfExists('game_team');
     }
 };

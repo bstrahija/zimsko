@@ -55,10 +55,16 @@ class GameResource extends Resource
                         Tabs\Tab::make('Score')
                             ->icon('heroicon-o-chart-bar')
                             ->columns('2')
-                            ->schema(self::scoreSchema()),
+                            ->schema(self::scoreSchema())
+                            ->disabled(function (Forms\Get $get) {
+                                return ! $get('id');
+                            }),
                         Tabs\Tab::make('Players')
                             ->columns('2')
                             ->icon('heroicon-o-user-group')
+                            ->disabled(function (Forms\Get $get) {
+                                return ! $get('id');
+                            })
                             ->schema([
                                 self::playerRepeater('home'),
                                 self::playerRepeater('away'),
@@ -159,44 +165,54 @@ class GameResource extends Resource
         return [
             Fieldset::make('Home Score')
                 ->columnSpan(1)
+                ->relationship('homeTeamNumbers')
                 ->label(function (Forms\Get $get) {
                     return Team::find($get('home_team_id'))?->title ?: 'Home';
                 })
                 ->schema([
-                    Forms\Components\TextInput::make('home_score')->label('Final Score')->required()->numeric()->columnSpanFull()->default(0),
-                    Forms\Components\TextInput::make('home_score_q1')->label('Q1')->required()->numeric()->default(0),
-                    Forms\Components\TextInput::make('home_score_q2')->label('Q2')->required()->numeric()->default(0),
-                    Forms\Components\TextInput::make('home_score_q3')->label('Q3')->required()->numeric()->default(0),
-                    Forms\Components\TextInput::make('home_score_q4')->label('Q4')->required()->numeric()->default(0),
+                    Forms\Components\TextInput::make('score')->label('Final Score')->required()->numeric()->columnSpanFull()->default(0),
+                    Fieldset::make('Quarters')
+                        ->columns(4)
+                        ->schema([
+                            Forms\Components\TextInput::make('score_p1')->label('Q1')->numeric()->default(0),
+                            Forms\Components\TextInput::make('score_p2')->label('Q2')->numeric()->default(0),
+                            Forms\Components\TextInput::make('score_p3')->label('Q3')->numeric()->default(0),
+                            Forms\Components\TextInput::make('score_p4')->label('Q4')->numeric()->default(0),
+                        ]),
                     Section::make('Overtime')
-                        ->columns(2)
+                        ->columns(4)
                         ->collapsed()
                         ->schema([
-                            Forms\Components\TextInput::make('home_score_ot1')->label('OT1')->numeric()->default(0),
-                            Forms\Components\TextInput::make('home_score_ot2')->label('OT2')->numeric()->default(0),
-                            Forms\Components\TextInput::make('home_score_ot3')->label('OT3')->numeric()->default(0),
-                            Forms\Components\TextInput::make('home_score_ot4')->label('OT4')->numeric()->default(0),
+                            Forms\Components\TextInput::make('score_p5')->label('OT1')->numeric()->default(0),
+                            Forms\Components\TextInput::make('score_p6')->label('OT2')->numeric()->default(0),
+                            Forms\Components\TextInput::make('score_p7')->label('OT3')->numeric()->default(0),
+                            Forms\Components\TextInput::make('score_p8')->label('OT4')->numeric()->default(0),
                         ]),
                 ]),
             Fieldset::make('Away Score')
                 ->columnSpan(1)
+                ->relationship('awayTeamNumbers')
                 ->label(function (Forms\Get $get) {
                     return Team::find($get('away_team_id'))?->title ?: 'Away';
                 })
                 ->schema([
-                    Forms\Components\TextInput::make('away_score')->label('Final Score')->required()->numeric()->columnSpanFull()->default(0),
-                    Forms\Components\TextInput::make('away_score_q1')->label('Q1')->required()->numeric()->default(0),
-                    Forms\Components\TextInput::make('away_score_q2')->label('Q2')->required()->numeric()->default(0),
-                    Forms\Components\TextInput::make('away_score_q3')->label('Q3')->required()->numeric()->default(0),
-                    Forms\Components\TextInput::make('away_score_q4')->label('Q4')->required()->numeric()->default(0),
+                    Forms\Components\TextInput::make('score')->label('Final Score')->required()->numeric()->columnSpanFull()->default(0),
+                    Fieldset::make('Quarters')
+                        ->columns(4)
+                        ->schema([
+                            Forms\Components\TextInput::make('score_p1')->label('Q1')->numeric()->default(0),
+                            Forms\Components\TextInput::make('score_p2')->label('Q2')->numeric()->default(0),
+                            Forms\Components\TextInput::make('score_p3')->label('Q3')->numeric()->default(0),
+                            Forms\Components\TextInput::make('score_p4')->label('Q4')->numeric()->default(0),
+                        ]),
                     Section::make('Overtime')
-                        ->columns(2)
+                        ->columns(4)
                         ->collapsed()
                         ->schema([
-                            Forms\Components\TextInput::make('away_score_ot1')->label('OT1')->numeric()->default(0),
-                            Forms\Components\TextInput::make('away_score_ot2')->label('OT2')->numeric()->default(0),
-                            Forms\Components\TextInput::make('away_score_ot3')->label('OT3')->numeric()->default(0),
-                            Forms\Components\TextInput::make('away_score_ot4')->label('OT4')->numeric()->default(0),
+                            Forms\Components\TextInput::make('score_p5')->label('OT1')->numeric()->default(0),
+                            Forms\Components\TextInput::make('score_p6')->label('OT2')->numeric()->default(0),
+                            Forms\Components\TextInput::make('score_p7')->label('OT3')->numeric()->default(0),
+                            Forms\Components\TextInput::make('score_p8')->label('OT4')->numeric()->default(0),
                         ]),
                 ]),
 
@@ -213,7 +229,7 @@ class GameResource extends Resource
         return Repeater::make($name)
             ->columnSpan(1)
             ->columns(6)
-            ->orderColumn('number')
+            ->orderColumn('score')
             ->addable(false)
             ->deletable(true)
             ->hidden(function (Forms\Get $get) use ($teamIdField) {
@@ -225,19 +241,19 @@ class GameResource extends Resource
             ->itemLabel(function ($state) {
                 $record = $state && isset($state['id']) ? GamePlayer::find($state['id']) : null;
                 if ($record) {
-                    return $record->player->number . ' / ' . $record->player->name;
+                    return $record->player->name;
                 } else {
                     return 'Loading...';
                 }
             })
             ->relationship($relationship)
             ->schema([
-                Forms\Components\TextInput::make('points')->label('PTS')->numeric()->columnSpan(1),
+                Forms\Components\TextInput::make('score')->label('PTS')->numeric()->columnSpan(1),
                 Forms\Components\TextInput::make('three_points')->label('3PT')->numeric()->columnSpan(1),
-                Forms\Components\TextInput::make('free_throws')->label('FT')->numeric()->columnSpan(1),
                 Forms\Components\TextInput::make('assists')->label('AST')->numeric()->columnSpan(1),
                 Forms\Components\TextInput::make('rebounds')->label('REB')->numeric()->columnSpan(1),
                 Forms\Components\TextInput::make('blocks')->label('BLK')->numeric()->columnSpan(1),
+                Forms\Components\TextInput::make('steals')->label('STL')->numeric()->columnSpan(1),
             ]);
     }
 
@@ -313,12 +329,17 @@ class GameResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('title')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('slug')
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('event.title')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('status')
+                    ->color(fn($state) => match ($state) {
+                        'scheduled' => 'blue',
+                        'in_progress' => 'orange',
+                        'finished' => 'green',
+                        'cancelled' => 'red',
+                        'completed' => '#0f0',
+                    })
                     ->searchable(),
                 Tables\Columns\TextColumn::make('scheduled_at')
                     ->dateTime()
@@ -332,6 +353,7 @@ class GameResource extends Resource
                 //     ->sortable()
                 //     ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->defaultSort('scheduled_at', 'desc')
             ->filters([
                 SelectFilter::make('event')
                     ->relationship('event', 'title'),

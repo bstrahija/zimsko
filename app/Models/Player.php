@@ -105,8 +105,10 @@ class Player extends Model implements HasMedia
 
     public function getNumberAttribute()
     {
-        if (isset($this->pivot) && $this->pivot->number) {
+        if (isset($this->pivot) && isset($this->pivot->number) && $this->pivot->number) {
             return $this->pivot->number;
+        } else {
+            return PlayerTeam::where('player_id', $this->id)->first()?->number;
         }
 
         return null;
@@ -114,8 +116,10 @@ class Player extends Model implements HasMedia
 
     public function getPositionAttribute()
     {
-        if (isset($this->pivot) && $this->pivot->position) {
+        if (isset($this->pivot) && isset($this->pivot->position) && $this->pivot->position) {
             return $this->pivot->position;
+        } else {
+            return PlayerTeam::where('player_id', $this->id)->first()?->position;
         }
 
         return null;
@@ -131,7 +135,7 @@ class Player extends Model implements HasMedia
 
     public function teams(): BelongsToMany
     {
-        return $this->belongsToMany(Team::class);
+        return $this->belongsToMany(Team::class)->withPivot(['number', 'position']);
     }
 
     public function photo($size = 'thumb')

@@ -34,19 +34,19 @@
         <div class="grid grid-cols-4 gap-2 pt-4 text-sm text-gray-600 border-t">
             <div class="period">
                 <div class="font-bold">Q1</div>
-                {{ $game->home_score_p1 }}:{{ $game->away_score_p1 }}
+                {{ $game->home_score }}:{{ $game->away_score }}
             </div>
             <div class="period">
                 <div class="font-bold">Q2</div>
-                {{ $game->home_score_p2 }}:{{ $game->away_score_p2 }}
+                {{ $game->home_score }}:{{ $game->away_score }}
             </div>
             <div class="period">
                 <div class="font-bold">Q3</div>
-                {{ $game->home_score_p3 }}:{{ $game->away_score_p3 }}
+                {{ $game->home_score }}:{{ $game->away_score }}
             </div>
             <div class="period">
                 <div class="font-bold">Q4</div>
-                {{ $game->home_score_p4 }}:{{ $game->away_score_p4 }}
+                {{ $game->home_score }}:{{ $game->away_score }}
             </div>
         </div>
     </a>

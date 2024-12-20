@@ -9,7 +9,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
@@ -87,6 +89,23 @@ class Game extends Model
         'scheduled_at' => 'datetime',
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        self::updating(function ($model) {
+            GameTeam::updateOrCreate(['game_id' => $model->id, 'team_id' => $model->home_team_id]);
+            GameTeam::updateOrCreate(['game_id' => $model->id, 'team_id' => $model->away_team_id]);
+            GameTeam::whereNotIn('team_id', [$model->home_team_id, $model->away_team_id])->where('game_id', $model->id)->delete();
+        });
+
+        self::saved(function ($model) {
+            GameTeam::updateOrCreate(['game_id' => $model->id, 'team_id' => $model->home_team_id]);
+            GameTeam::updateOrCreate(['game_id' => $model->id, 'team_id' => $model->away_team_id]);
+            GameTeam::whereNotIn('team_id', [$model->home_team_id, $model->away_team_id])->where('game_id', $model->id)->delete();
+        });
+    }
+
     public function event(): BelongsTo
     {
         return $this->belongsTo(Event::class);
@@ -112,9 +131,19 @@ class Game extends Model
         return $this->belongsTo(Team::class, 'home_team_id');
     }
 
+    public function homeTeamNumbers(): HasOne
+    {
+        return $this->hasOne(GameTeam::class, 'team_id', 'home_team_id')->where('game_id', $this->id);
+    }
+
     public function awayTeam(): BelongsTo
     {
         return $this->belongsTo(Team::class, 'away_team_id');
+    }
+
+    public function awayTeamNumbers(): HasOne
+    {
+        return $this->hasOne(GameTeam::class, 'team_id', 'away_team_id')->where('game_id', $this->id);
     }
 
     public function players(): BelongsToMany
@@ -154,6 +183,16 @@ class Game extends Model
     public function referees(): HasMany
     {
         return $this->hasMany(Referee::class);
+    }
+
+    public function getHomeScoreAttribute(): int
+    {
+        return 69;
+    }
+
+    public function getAwayScoreAttribute(): int
+    {
+        return 69;
     }
 
     public function isCompleted(): bool

@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Event;
+use App\Models\GameTeam;
 use App\Models\Team;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -100,12 +101,30 @@ class GlobetkaSeeder extends Seeder
             'status'      => 'active',
         ]);
 
-        // Now we add some games
-        $globetka->homeGames()->create([
-            'event_id'     => $event->id,
-            'title'        => '5. kolo - Globetka Čakovec - KK Varteks',
-            'away_team_id' => $varteks->id,
-            'scheduled_at' => '2024-12-15 19:00:00',
-        ]);
+        // // Now we add some games
+        // $game = $globetka->homeGames()->create([
+        //     'event_id'     => $event->id,
+        //     'title'        => '5. kolo - Globetka Čakovec - KK Varteks',
+        //     'away_team_id' => $varteks->id,
+        //     'scheduled_at' => '2024-12-15 19:00:00',
+        // ]);
+        // GameTeam::create(['team_id' => $game->home_team_id, 'game_id' => $game->id, 'score' => 43, 'score_p1' => 1, 'score_p2' => 2]);
+        // GameTeam::create(['team_id' => $game->away_team_id, 'game_id' => $game->id, 'score' => 66, 'score_p1' => 3, 'score_p2' => 4]);
+        // // $game = $varteks->homeGames()->create([
+        // //     'event_id'     => $event->id,
+        // //     'title'        => '10. kolo - KK Varteks - Globetka Čakovec',
+        // //     'away_team_id' => $globetka->id,
+        // //     'scheduled_at' => '2025-03-15 19:00:00',
+        // // ]);
+        // // GameTeam::create(['team_id' => $game->home_team_id, 'game_id' => $game->id, 'score' => 23, 'score_p1' => 5, 'score_p2' => 6]);
+        // // GameTeam::create(['team_id' => $game->away_team_id, 'game_id' => $game->id, 'score' => 46, 'score_p1' => 7, 'score_p2' => 8]);
+        // // $game = $nedelisce->homeGames()->create([
+        // //     'event_id'     => $event->id,
+        // //     'title'        => '4. kolo - KK Varteks - Globetka Čakovec',
+        // //     'away_team_id' => $globetka->id,
+        // //     'scheduled_at' => '2025-02-15 19:00:00',
+        // // ]);
+        // // GameTeam::create(['team_id' => $game->home_team_id, 'game_id' => $game->id, 'score' => 123, 'score_p1' => 25, 'score_p2' => 26]);
+        // // GameTeam::create(['team_id' => $game->away_team_id, 'game_id' => $game->id, 'score' => 146, 'score_p1' => 27, 'score_p2' => 28]);
     }
 }
