@@ -8,6 +8,7 @@ use App\Leaderboards\LeaderboardTeamItem;
 use App\Models\Event;
 use App\Models\Game;
 use App\Models\GamePlayer;
+use App\Models\Stat;
 use App\Models\Team;
 use Illuminate\Support\Collection;
 
@@ -105,51 +106,31 @@ class Leaderboards
     {
         $leaderboard = new Leaderboard;
 
-        // Get all games in tournament
-        $games   = $event->games;
-        $gameIds = $games->pluck('id');
+        // Get all stat rows
+        $rows = Stat::where('event_id', $event->id)
+            ->with(['player', 'team'])
+            ->where('for', 'player')
+            ->where('type', 'event')
+            ->orderBy($orderBy, 'desc')
+            ->take($limit)
+            ->get();
 
-        // All the player data is in the game_player table
-        $players = new Collection;
-        $records = GamePlayer::whereIn('game_id', $gameIds)->with(['player', 'team'])->get();
+        foreach ($rows as $row) {
+            $data = array_merge($row->toArray(), [
+                'title'  => $row->player->name,
+                'player' => $row->player,
+                'team'   => $row->team,
+            ]);
 
-        // Now loop through records and add score to player stats
-        foreach ($records as $record) {
-            if (! $leaderboard->where('id', $record->player_id)->first()) {
-                $player = new LeaderboardPlayerItem([
-                    'id'     => $record->player->id,
-                    'title'  => $record->player->name,
-                    'player' => $record->player,
-                    'team'   => $record->team,
-                ]);
-                $leaderboard->push($player);
-            }
-
-            // Get the player
-            $player = $leaderboard->where('id', $record->player_id)->first();
-
-            // Increment games
-            $player->addGames();
-
-            // And add stats
-            $player->addStats($record->toArray());
+            $player = new LeaderboardPlayerItem($data);
+            $leaderboard->push($player);
         }
-
-        // Now we calculate other columns
-        foreach ($leaderboard as $player) {
-            $player->calculate();
-        }
-
-
-        $leaderboard = $leaderboard->sortByDesc(function ($player) use ($orderBy) {
-            return $player->{$orderBy};
-        }, SORT_NUMERIC)->values()->take($limit);
 
         return $leaderboard;
     }
 
     public static function getPlayer3PointLeaderboardForEvent(Event $event, $limit = 10): Leaderboard
     {
-        return self::getPlayerLeaderboardForEvent($event, 'threePointers', $limit);
+        return self::getPlayerLeaderboardForEvent($event, 'three_points', $limit);
     }
 }

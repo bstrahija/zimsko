@@ -46,43 +46,6 @@ class LeaderboardPlayerItem
         }
     }
 
-    public function addStats($data)
-    {
-        foreach (config('stats.columns') as $column) {
-            if (isset($data[$column['id']])) {
-                $this->data[$column['id']] += $data[$column['id']];
-            }
-        }
-    }
-
-    public function calculate()
-    {
-        // Here we calculations for all the calculated columns
-        foreach (config('stats.calculated_columns') as $column) {
-            if ($column['method'] === 'avg') {
-                $this->data[$column['id']] = $this->data['games'] ? round($this->data[str_replace('_avg', '', $column['id'])] / $this->data['games'], 2) : 0;
-            } elseif ($column['method'] === 'percent') {
-                $attemptColumn = str_replace('_percent', '', $column['id']);
-                $madeColumn    = $attemptColumn . '_made';
-                $attempted     = $this->data[$attemptColumn];
-                $made          = $this->data[$madeColumn];
-                $this->data[$column['id']] = $attempted ? round($made / $attempted * 100, 2) : 0;
-            } elseif ($column['method'] === 'efficiency') {
-                $this->data[$column['id']] = Stats::calculateEfficiency($this->data);
-            }
-        }
-    }
-
-    public function addGames($games = 1)
-    {
-        $this->data['games'] += $games;
-    }
-
-    public function addScore($score = 1)
-    {
-        $this->data['score'] += $score;
-    }
-
     public function __get($key)
     {
         if (isset($this->$key)) {

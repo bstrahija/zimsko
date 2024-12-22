@@ -14,6 +14,15 @@ class SyncGames
     {
         DB::connection('mysql_legacy')->table('wp_zmsk_matches')->get()
             ->each(function ($game) {
+                // Check if game already exists
+                $exists = Game::where('external_id', $game->wp_id)->first();
+
+                if ($exists) {
+                    $newGame = $exists;
+                } else {
+                    $newGame = new \App\Models\Game();
+                }
+
                 // Get the event for linking
                 $legacyEvent = DB::connection('mysql_legacy')->table('wp_zmsk_events')->where('id', $game->event_id)->first();
                 $event       = Event::where('external_id', $legacyEvent->wp_id)->first();
@@ -33,7 +42,6 @@ class SyncGames
                     $status = 'draft';
                 }
 
-                $newGame                 = new \App\Models\Game();
                 $newGame->external_id    = $game->wp_id;
                 $newGame->event_id       = $event?->id;
                 $newGame->data           = @json_decode($game->data);
@@ -42,56 +50,34 @@ class SyncGames
                 $newGame->body           = $game->body;
                 $newGame->home_team_id   = $homeTeam?->id;
                 $newGame->away_team_id   = $awayTeam?->id;
-                // $newGame->home_score     = $game->home_team_score;
-                // $newGame->away_score     = $game->away_team_score;
-                // $newGame->home_score_p1  = $game->home_team_score_q1;
-                // $newGame->away_score_p1  = $game->away_team_score_q1;
-                // $newGame->home_score_p2  = $game->home_team_score_q2;
-                // $newGame->away_score_p2  = $game->away_team_score_q2;
-                // $newGame->home_score_p3  = $game->home_team_score_q3;
-                // $newGame->away_score_p3  = $game->away_team_score_q3;
-                // $newGame->home_score_p4  = $game->home_team_score_q4;
-                // $newGame->away_score_p4  = $game->away_team_score_q4;
-                // $newGame->home_score_p5  = $game->home_team_score_ot1;
-                // $newGame->away_score_p5  = $game->away_team_score_ot1;
-                // $newGame->home_score_p6  = $game->home_team_score_ot2;
-                // $newGame->away_score_p6  = $game->away_team_score_ot2;
                 $newGame->status         = $status;
                 $newGame->scheduled_at   = $game->scheduled_at;
                 $newGame->created_at     = $game->created_at;
                 $newGame->updated_at     = $game->updated_at;
+                foreach (['home', 'away'] as $side) {
+                    $newGame->{$side . '_score'}    = $game->{$side . '_team_score'};
+                    $newGame->{$side . '_score_p1'} = $game->{$side . '_team_score_q1'};
+                    $newGame->{$side . '_score_p2'} = $game->{$side . '_team_score_q2'};
+                    $newGame->{$side . '_score_p3'} = $game->{$side . '_team_score_q3'};
+                    $newGame->{$side . '_score_p4'} = $game->{$side . '_team_score_q4'};
+                    $newGame->{$side . '_score_p5'} = $game->{$side . '_team_score_ot1'};
+                    $newGame->{$side . '_score_p6'} = $game->{$side . '_team_score_ot2'};
+                }
                 $newGame->save();
-
-                // Also add more numbers to the team game table
-                $newGame->homeTeamNumbers()->create([
-                    'game_id'  => $newGame->id,
-                    'team_id'  => $newGame->home_team_id,
-                    'score'    => $game->home_team_score,
-                    'score_p1' => $game->home_team_score_q1,
-                    'score_p2' => $game->home_team_score_q2,
-                    'score_p3' => $game->home_team_score_q3,
-                    'score_p4' => $game->home_team_score_q4,
-                    'score_p5' => $game->home_team_score_ot1,
-                    'score_p6' => $game->home_team_score_ot2,
-                ]);
-
-                $newGame->awayTeamNumbers()->create([
-                    'game_id'  => $newGame->id,
-                    'team_id'  => $newGame->away_team_id,
-                    'score'    => $game->away_team_score,
-                    'score_p1' => $game->away_team_score_q1,
-                    'score_p2' => $game->away_team_score_q2,
-                    'score_p3' => $game->away_team_score_q3,
-                    'score_p4' => $game->away_team_score_q4,
-                    'score_p5' => $game->away_team_score_ot1,
-                    'score_p6' => $game->away_team_score_ot2,
-                ]);
 
                 // After this we need to sync the player scores for this game
                 self::syncPlayerScores($newGame, $game);
-                // dump($newGame->toArray());
             });
+
+
+
+        // TODO: We need to simulate three pointers from the last event
+        $event = Event::where('slug', 'zimsko-2024')->first();
+        if ($event) {
+        }
     }
+
+    public function syncTeamScores(Game $game, $legacyGame) {}
 
     public static function syncPlayerScores(Game $game, $legacyGame)
     {
@@ -113,6 +99,7 @@ class SyncGames
 
                 // Create new stats
                 $gamePlayer                       = new GamePlayer();
+                $gamePlayer->event_id             = $game->event_id;
                 $gamePlayer->game_id              = $game->id;
                 $gamePlayer->player_id            = $player->id;
                 $gamePlayer->team_id              = $team->id;
@@ -123,6 +110,7 @@ class SyncGames
                 $gamePlayer->assists              = $legacyPlayerStats->assists;
                 $gamePlayer->blocks               = $legacyPlayerStats->blocks;
                 $gamePlayer->turnovers            = $legacyPlayerStats->turnovers;
+
                 $gamePlayer->save();
             }
         }

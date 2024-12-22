@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('game_player', function (Blueprint $table) {
             $table->id();
+            $table->string('event_id')->constrained('events')->cascadeOnDelete()->index();
             $table->string('game_id')->constrained('games')->cascadeOnDelete()->index();
             $table->string('player_id')->constrained('players')->cascadeOnDelete()->index();
             $table->string('team_id')->nullable()->constrained('teams')->cascadeOnDelete()->index();

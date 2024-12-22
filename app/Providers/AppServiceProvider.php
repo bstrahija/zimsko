@@ -26,7 +26,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Model::shouldBeStrict();
+        // Model::shouldBeStrict();
         Model::unguard();
 
         Url::forceScheme('https');

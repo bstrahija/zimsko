@@ -95,7 +95,9 @@ class TeamResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RelationManagers\PlayersRelationManager::class
+            RelationManagers\PlayersRelationManager::class,
+            RelationManagers\HomeGamesRelationManager::class,
+            RelationManagers\AwayGamesRelationManager::class,
         ];
     }
 

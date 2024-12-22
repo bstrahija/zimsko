@@ -9,6 +9,8 @@ use App\Models\Game;
 use App\Models\GamePlayer;
 use App\Models\Player;
 use App\Models\Team;
+use App\Validation\CheckGameScores;
+use Closure;
 use Filament\Forms;
 use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Fieldset;
@@ -170,7 +172,15 @@ class GameResource extends Resource
                     return Team::find($get('home_team_id'))?->title ?: 'Home';
                 })
                 ->schema([
-                    Forms\Components\TextInput::make('score')->label('Final Score')->required()->numeric()->columnSpanFull()->default(0),
+                    Forms\Components\TextInput::make('score')->label('Final Score')->required()->numeric()->columnSpanFull()->default(0)->rules([
+                        fn(Get $get): Closure => function (string $attribute, $value, Closure $fail) use ($get) {
+                            $quarterScores = $get('score_p1') + $get('score_p2') + $get('score_p3') + $get('score_p4') + $get('score_p5') + $get('score_p6') + $get('score_p7') + $get('score_p8');
+
+                            if ($quarterScores !== $value) {
+                                $fail("The quarter scores do not match the total score.");
+                            }
+                        },
+                    ]),
                     Fieldset::make('Quarters')
                         ->columns(4)
                         ->schema([
@@ -196,7 +206,15 @@ class GameResource extends Resource
                     return Team::find($get('away_team_id'))?->title ?: 'Away';
                 })
                 ->schema([
-                    Forms\Components\TextInput::make('score')->label('Final Score')->required()->numeric()->columnSpanFull()->default(0),
+                    Forms\Components\TextInput::make('score')->label('Final Score')->required()->numeric()->columnSpanFull()->default(0)->rules([
+                        fn(Get $get): Closure => function (string $attribute, $value, Closure $fail) use ($get) {
+                            $quarterScores = $get('score_p1') + $get('score_p2') + $get('score_p3') + $get('score_p4') + $get('score_p5') + $get('score_p6') + $get('score_p7') + $get('score_p8');
+
+                            if ($quarterScores !== $value) {
+                                $fail("The quarter scores do not match the total score.");
+                            }
+                        },
+                    ]),
                     Fieldset::make('Quarters')
                         ->columns(4)
                         ->schema([
@@ -279,6 +297,7 @@ class GameResource extends Resource
 
                     if (! $exists) {
                         GamePlayer::create([
+                            'event_id'  => $game->event_id,
                             'game_id'   => $gameId,
                             'player_id' => $player->id,
                             'team_id'   => $team->id,

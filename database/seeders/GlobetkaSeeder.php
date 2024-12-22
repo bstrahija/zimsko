@@ -15,6 +15,7 @@ class GlobetkaSeeder extends Seeder
      */
     public function run(): void
     {
+        return;
         // Add the event
         $event = Event::create([
             'title'        => '3. Liga Sjever 2024/2025',

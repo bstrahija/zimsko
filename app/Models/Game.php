@@ -39,44 +39,7 @@ class Game extends Model
         'exhibition'    => 'Exhibition',
     ];
 
-    protected $fillable = [
-        'title',
-        'slug',
-        'body',
-        'event_id',
-        'round_id',
-        'home_team_id',
-        'away_team_id',
-        'data',
-        'status',
-        'type',
-        'external_id',
-        'created_at',
-        'updated_at',
-        'home_score',
-        'away_score',
-        'home_score_p1',
-        'away_score_p1',
-        'home_score_p2',
-        'away_score_p2',
-        'home_score_p3',
-        'away_score_p3',
-        'home_score_p4',
-        'away_score_p4',
-        'home_score_p5',
-        'away_score_p5',
-        'home_score_p6',
-        'away_score_p6',
-        'home_score_p7',
-        'away_score_p7',
-        'home_score_p8',
-        'away_score_p8',
-        'home_score_p9',
-        'away_score_p9',
-        'home_score_p10',
-        'away_score_p10',
-        'scheduled_at',
-    ];
+    protected $guarded = [];
 
     protected $casts = [
         'id'           => 'string',
@@ -89,22 +52,22 @@ class Game extends Model
         'scheduled_at' => 'datetime',
     ];
 
-    protected static function boot()
-    {
-        parent::boot();
+    // protected static function boot()
+    // {
+    //     parent::boot();
 
-        self::updating(function ($model) {
-            GameTeam::updateOrCreate(['game_id' => $model->id, 'team_id' => $model->home_team_id]);
-            GameTeam::updateOrCreate(['game_id' => $model->id, 'team_id' => $model->away_team_id]);
-            GameTeam::whereNotIn('team_id', [$model->home_team_id, $model->away_team_id])->where('game_id', $model->id)->delete();
-        });
+    //     self::updating(function ($model) {
+    //         GameTeam::updateOrCreate(['event_id' => $model->event_id, 'game_id' => $model->id, 'team_id' => $model->home_team_id]);
+    //         GameTeam::updateOrCreate(['event_id' => $model->event_id, 'game_id' => $model->id, 'team_id' => $model->away_team_id]);
+    //         GameTeam::whereNotIn('team_id', [$model->home_team_id, $model->away_team_id])->where('game_id', $model->id)->delete();
+    //     });
 
-        self::saved(function ($model) {
-            GameTeam::updateOrCreate(['game_id' => $model->id, 'team_id' => $model->home_team_id]);
-            GameTeam::updateOrCreate(['game_id' => $model->id, 'team_id' => $model->away_team_id]);
-            GameTeam::whereNotIn('team_id', [$model->home_team_id, $model->away_team_id])->where('game_id', $model->id)->delete();
-        });
-    }
+    //     self::saved(function ($model) {
+    //         GameTeam::updateOrCreate(['event_id' => $model->event_id, 'game_id' => $model->id, 'team_id' => $model->home_team_id]);
+    //         GameTeam::updateOrCreate(['event_id' => $model->event_id, 'game_id' => $model->id, 'team_id' => $model->away_team_id]);
+    //         GameTeam::whereNotIn('team_id', [$model->home_team_id, $model->away_team_id])->where('game_id', $model->id)->delete();
+    //     });
+    // }
 
     public function event(): BelongsTo
     {
@@ -131,19 +94,9 @@ class Game extends Model
         return $this->belongsTo(Team::class, 'home_team_id');
     }
 
-    public function homeTeamNumbers(): HasOne
-    {
-        return $this->hasOne(GameTeam::class, 'team_id', 'home_team_id')->where('game_id', $this->id);
-    }
-
     public function awayTeam(): BelongsTo
     {
         return $this->belongsTo(Team::class, 'away_team_id');
-    }
-
-    public function awayTeamNumbers(): HasOne
-    {
-        return $this->hasOne(GameTeam::class, 'team_id', 'away_team_id')->where('game_id', $this->id);
     }
 
     public function players(): BelongsToMany
@@ -155,14 +108,14 @@ class Game extends Model
     {
         return $this->belongsToMany(Player::class)->where('team_id', $this->home_team_id)
             ->with('media')
-            ->withPivot(config('stats.columns'));
+            ->withPivot(array_column(config('stats.columns'), 'id'));
     }
 
     public function awayPlayers(): BelongsToMany
     {
         return $this->belongsToMany(Player::class)->where('team_id', $this->away_team_id)
             ->with('media')
-            ->withPivot(config('stats.columns'));
+            ->withPivot(array_column(config('stats.columns'), 'id'));
     }
 
     public function gamePlayers(): HasMany
@@ -183,16 +136,6 @@ class Game extends Model
     public function referees(): HasMany
     {
         return $this->hasMany(Referee::class);
-    }
-
-    public function getHomeScoreAttribute(): int
-    {
-        return 69;
-    }
-
-    public function getAwayScoreAttribute(): int
-    {
-        return 69;
     }
 
     public function isCompleted(): bool

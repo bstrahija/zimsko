@@ -24,6 +24,12 @@ return new class extends Migration
             $table->foreignId('home_team_id')->constrained('teams');
             $table->foreignId('away_team_id')->constrained('teams');
 
+            foreach (config('stats.columns') as $column) {
+                foreach (['home', 'away'] as $side) {
+                    $table->{$column['type'] ?? 'integer'}($side . '_' . $column['id'])->nullable()->default(0);
+                }
+            }
+
             $table->string('status', 50)->nullable()->default('pending')->index();
             $table->json('data')->nullable();
             $table->string('type', 50)->default('default')->index();
