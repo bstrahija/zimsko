@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Legacy\Sync;
+use App\Legacy\Sync3pts;
 use App\Legacy\SyncCategories;
 use App\Legacy\SyncCoaches;
 use App\Legacy\SyncEvents;
@@ -63,6 +64,8 @@ class SyncLegacy extends Command
             SyncReferees::run($this->option('media'));
             $this->info("Syncing games...");
             SyncGames::run($this->option('media'));
+            $this->info("Syncing 3pts...");
+            Sync3pts::run();
             $this->info("Syncing team stats...");
             SyncStats::syncTeamStats();
             $this->info("Syncing player stats...");

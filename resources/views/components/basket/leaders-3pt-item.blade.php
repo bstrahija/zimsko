@@ -7,6 +7,6 @@
         </a>
     </td>
     <td class="px-2 py-5 text-xs text-right">{{ $item->games }}</td>
-    <td class="px-2 py-5 text-xs text-right">{{ $item->three_points }}</td>
-    <td class="px-2 py-5 text-xs font-bold text-right">{{ round($item->three_points_avg, 1) }}</td>
+    <td class="px-2 py-5 text-xs text-right">{{ $item->three_points_made }}</td>
+    <td class="px-2 py-5 text-xs font-bold text-right">{{ round($item->three_points_made_avg, 1) }}</td>
 </tr>

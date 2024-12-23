@@ -322,7 +322,6 @@ class Stats
         foreach ($playerEventStats as $playerId => $stats) {
             $teamId = $stats['team_id'];
             unset($stats['team_id']);
-            dump($teamId);
 
             Stat::query()->updateOrCreate([
                 'type'      => 'event',

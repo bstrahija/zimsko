@@ -64,6 +64,9 @@ class Leaderboards
         ])->values()->take($limit);
 
         return $leaderboard;
+
+
+        // Code from old site is below:
     }
 
     public static function addTeamGameStatsData(Team $team, Game $game): Team

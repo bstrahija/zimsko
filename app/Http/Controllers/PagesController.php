@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Legacy\Sync3pts;
 use App\Models\Event;
 use App\Models\Game;
 use App\Models\GameTeam;
@@ -16,6 +17,15 @@ class PagesController extends Controller
 {
     public function index()
     {
+        // Try syncing three pointers
+        // Sync3pts::run();
+
+
+        // die();
+
+
+
+
         // Stats::generateTotalForTeams(generateForEvents: true, generateForGames: true);
         // Stats::generateTotalForPlayers(generateForEvents: true, generateForGames: true);
         // die();

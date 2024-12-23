@@ -6,6 +6,5 @@ use Illuminate\Support\Facades\DB;
 
 class SyncCategories
 {
-    public
-    static function run() {}
+    public static function run() {}
 }
