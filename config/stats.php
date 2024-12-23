@@ -2,6 +2,12 @@
 
 return [
 
+    'points_for_win' => 2,
+
+    'points_for_loss' => 1,
+
+    'points_for_draw' => 0,
+
     'columns' => [
         ['id' => 'wins',               'label' => 'Score',                'type' => 'integer'],
         ['id' => 'losses',             'label' => 'Score',                'type' => 'integer'],

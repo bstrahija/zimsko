@@ -10,7 +10,9 @@ return [
 
     'max_technical_fouls' => 2,
 
-    'team_timeouts_per_period' => 3,
+    'team_timeouts_per_period' => 0,
+
+    'team_timeouts_per_half' => 2,
 
     'team_fouls_per_period' => 5,
 

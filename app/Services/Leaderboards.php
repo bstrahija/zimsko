@@ -18,55 +18,34 @@ class Leaderboards
     {
         $leaderboard = new Leaderboard;
 
-        // Get all teams in tournament
-        $teams = $event->teams;
+        // First get the stats
+        $stats = Stat::where(['event_id' => $event->id, 'for' => 'team', 'type' => 'event'])->with(['team'])->get();
 
-        // Get all games in tournament
-        $games = $event->games()->with(['homeTeam', 'awayTeam'])->get();
+        // The add to leaderboard
+        foreach ($stats as $stat) {
+            // Calculate the points based on the config
+            $points = (config('stats.points_for_win') * $stat->wins) + (config('stats.points_for_loss') * $stat->losses);
 
-        // Loop through games and assign points to teams
-        /** @var Game $game */
-        foreach ($games as $game) {
-            /** @var Team $team */
-            foreach ($teams as &$team) {
-                // dump($game->isCompleted());
-                if ($game->isCompleted() && ($team->id === $game->homeTeam->id || $team->id === $game->awayTeam->id)) {
-                    $team = self::addTeamGameStatsData($team, $game);
-                }
-            }
-        }
-
-        // Order teams by points and add required attributes
-        $teams = $teams->sortByDesc(function ($team) {
-            /** @var Team $team */
-            return $team->statsData['points'];
-        });
-
-        // Now create standings collection
-        foreach ($teams as $team) {
-            $leaderboard->push(new LeaderboardTeamItem([
-                'id'              => $team->id,
-                'points'          => $team->statsData['points'],
-                'wins'            => $team->statsData['wins'],
-                'losses'          => $team->statsData['losses'],
-                'games'           => $team->statsData['games'],
-                'score'           => $team->statsData['score'],
-                'opponentScore'   => $team->statsData['opponent_score'],
-                'scoreDifference' => $team->statsData['score'] - $team->statsData['opponent_score'],
-                'team'            => $team,
+            $leaderboard->add(new LeaderboardTeamItem([
+                'id'              => $stat->team_id,
+                'title'           => $stat->team->title,
+                'points'          => $points,
+                'wins'            => $stat->wins,
+                'losses'          => $stat->losses,
+                'games'           => $stat->games,
+                'score'           => $stat->score,
+                'opponentScore'   => $stat->opponent_score,
+                'scoreDifference' => $stat->score - $stat->opponent_score,
+                'team'            => $stat->team,
             ]));
         }
 
-        // Now finish the advanced ordering
         $leaderboard = $leaderboard->multiOrderBy([
             ['column' => 'points',          'order' => 'desc'],
             ['column' => 'scoreDifference', 'order' => 'desc'],
         ])->values()->take($limit);
 
         return $leaderboard;
-
-
-        // Code from old site is below:
     }
 
     public static function addTeamGameStatsData(Team $team, Game $game): Team
