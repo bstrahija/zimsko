@@ -12,6 +12,7 @@ use App\Legacy\SyncPages;
 use App\Legacy\SyncPlayers;
 use App\Legacy\SyncPosts;
 use App\Legacy\SyncReferees;
+use App\Legacy\SyncRounds;
 use App\Legacy\SyncStats;
 use App\Legacy\SyncTeams;
 use Illuminate\Console\Command;
@@ -64,6 +65,8 @@ class SyncLegacy extends Command
             SyncReferees::run($this->option('media'));
             $this->info("Syncing games...");
             SyncGames::run($this->option('media'));
+            $this->info("Syncing rounds...");
+            SyncRounds::run();
             $this->info("Syncing 3pts...");
             Sync3pts::run();
             $this->info("Syncing team stats...");

@@ -1,20 +1,20 @@
-import '../css/app.css'
+import '../css/app.css';
 import './bootstrap';
 
 let HeroVideo = {
-    scriptTag   : null,
-    player      : null,
-    videoId     : null,
-    thumbnailEl : null,
-    el          : null,
-    elContainer          : null,
+    scriptTag: null,
+    player: null,
+    videoId: null,
+    thumbnailEl: null,
+    el: null,
+    elContainer: null,
     loadInterval: false,
 
     render() {
-        this.el          = document.getElementById('hero-player');
+        this.el = document.getElementById('hero-player');
         this.elContainer = document.getElementById('hero-player-container');
         this.thumbnailEl = document.getElementById('play-hero-video');
-        this.videoId     = this.el ? this.el.getAttribute('data-video-id') : null;
+        this.videoId = this.el ? this.el.getAttribute('data-video-id') : null;
 
         // Run everything only if element exists
         if (this.el && this.videoId) {
@@ -43,8 +43,8 @@ let HeroVideo = {
                 autoplay: false,
                 rel: false,
                 events: {
-                    'onReady': this.onPlayerReady,
-                }
+                    onReady: this.onPlayerReady,
+                },
             });
         }
 
@@ -54,7 +54,7 @@ let HeroVideo = {
     },
 
     onPlayerReady(event) {
-        console.log("PLAYER READY", event);
+        console.log('PLAYER READY', event);
         // event.target.playVideo();
         // this.player.loadVideoById(this.videoId, "large")
     },
@@ -69,11 +69,11 @@ let HeroVideo = {
     },
 
     addScriptTag() {
-        let head = document.getElementsByTagName("head")[0]
+        let head = document.getElementsByTagName('head')[0];
         this.scriptTag = document.createElement('script');
-        this.scriptTag.src = "https://www.youtube.com/iframe_api";
+        this.scriptTag.src = 'https://www.youtube.com/iframe_api';
         document.head.appendChild(this.scriptTag);
-    }
-}
+    },
+};
 
 HeroVideo.render();

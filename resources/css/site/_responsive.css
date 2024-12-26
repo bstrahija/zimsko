@@ -1,0 +1,27 @@
+@media (min-width: 640px) {
+    .latest-results .item:nth-child(7),
+    .latest-results .item:nth-child(8) {
+        display: none;
+    }
+}
+
+@media (min-width: 1024px) {
+    .latest-results .item:nth-child(7),
+    .latest-results .item:nth-child(8) {
+        display: block;
+    }
+}
+
+@media (min-width: 1280px) {
+    .latest-results .item:nth-child(6),
+    .latest-results .item:nth-child(7),
+    .latest-results .item:nth-child(8) {
+        display: none;
+    }
+}
+
+@media (min-width: 1920px) {
+    .latest-results .item:nth-child(6) {
+        display: block;
+    }
+}

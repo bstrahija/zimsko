@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Legacy\Sync3pts;
+use App\Legacy\SyncRounds;
 use App\Models\Event;
 use App\Models\Game;
 use App\Models\GameTeam;
@@ -19,6 +20,7 @@ class PagesController extends Controller
     {
         // Try syncing three pointers
         // Sync3pts::run();
+        // SyncRounds::run();
 
 
         // die();
@@ -40,7 +42,7 @@ class PagesController extends Controller
         // Get data for home page
         $lastEvent         = Event::last()->toArray();
         $currentEvent      = Event::current();
-        $latestGames       = Game::where('status', 'completed')->with(['homeTeam', 'awayTeam'])->limit(5)->get();
+        $latestGames       = Game::where('status', 'completed')->with(['homeTeam', 'awayTeam'])->limit(8)->get();
         $upcomingGames     = Game::where('status', 'upcoming')->with(['homeTeam', 'awayTeam'])->get();
         $leaderboard       = Leaderboards::getTeamLeaderboardForEvent($currentEvent);
         $leaderboardPoints = Leaderboards::getPlayerLeaderboardForEvent($currentEvent);

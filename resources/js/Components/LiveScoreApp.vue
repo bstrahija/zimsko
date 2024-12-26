@@ -16,8 +16,7 @@ let props = defineProps({
 </script>
 
 <template>
-    <div
-        class="bg-slate-900/95 p-6 rounded-lg border-5 border-cyan-400/50 shadow-[0_0_15px_rgba(6,182,212,0.5)] grid-bg">
+    <div class="bg-slate-900/95 p-6 rounded-lg border-5 border-cyan-400/50 shadow-[0_0_15px_rgba(6,182,212,0.5)] grid-bg">
         <div class="grid gap-4 mb-4 score-top" style="grid-template-columns: 1fr 160px 1fr">
             <div class="space-y-4 home-team-top">
                 <ScoreBar :score="game.home_score" :team="game.home_team" :side="'home'" />
@@ -53,17 +52,17 @@ let props = defineProps({
         </div>
 
         <div class="grid gap-4 score-controls" style="grid-template-columns: 1fr 25% 1fr">
-            <div class="grid gap-4 home-controls" style="grid-template-columns: 1fr 1fr">
+            <div class="grid flex-row grid-cols-1 gap-4 md:grid-cols-2 home-controls sm:flex sm:flex-row-reverse">
                 <PlayersOnBench :players="game.home_players_on_bench" :game="game" :team="game.home_team" />
 
                 <ScoreButtonGroup :team="game.home_team" :game="game" />
             </div>
 
-            <div class="overflow-auto h-full max-h-[50svh]">
+            <div class="overflow-auto h-full max-h-[50svh] hidden sm:block">
                 <Log :log="log" :game="game" />
             </div>
 
-            <div class="grid gap-4 away-controls" style="grid-template-columns: 1fr 1fr">
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-2 away-controls">
                 <ScoreButtonGroup :team="game.away_team" :game="game" />
 
                 <PlayersOnBench :players="game.away_players_on_bench" :game="game" :team="game.away_team" />

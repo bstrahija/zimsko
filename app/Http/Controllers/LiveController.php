@@ -13,6 +13,7 @@ use App\Models\Team;
 use App\Services\LiveScore;
 use App\Services\Stats;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Log;
@@ -23,6 +24,12 @@ class LiveController extends Controller
 {
     protected ?LiveScore $live = null;
 
+    /**
+     * List of live games
+     *
+     * @param  Request  $request
+     * @return Response
+     */
     public function index(Request $request): Response
     {
         $currentEvent = Event::current();
@@ -58,24 +65,64 @@ class LiveController extends Controller
         return Inertia::render('Index', ['games' => $games, 'events' => $events, 'teams' => $teams, 'event' => $event]);
     }
 
-    public function game(Game $game): Response
+    /**
+     * Create new game
+     *
+     * @param  Request  $request
+     * @return Response
+     */
+    public function create()
+    {
+        $game = new Game;
+
+        // We create a tmp game and live game
+
+        return Inertia::render('Create', ['game' => $game]);
+    }
+
+    /**
+     * Store a new game
+     *
+     * @param  Request $request
+     * @return RedirectResponse
+     */
+    public function update(Game $game): RedirectResponse
+    {
+        return redirect()->route('live.players');
+    }
+
+    /**
+     * Edit game details (title, teams, event, status etc.)
+     *
+     * @param  Game $game
+     * @return Response
+     */
+    public function details(Game $game): Response
+    {
+        return Inertia::render('Details', ['game' => $game]);
+    }
+
+    /**
+     * Edit players  for teams, set starting players
+     *
+     * @param  Game $game
+     * @return Response
+     */
+    public function players(Game $game): Response
+    {
+        return Inertia::render('Players', ['game' => $game]);
+    }
+
+    /**
+     * The interface for keeping live score
+     *
+     * @param  Game $game
+     * @return Response
+     */
+    public function score(Game $game): Response
     {
         // We need to convert all the data to an array
         $data = $this->live($game)->toData();
-
-        // dd($data);
-
-        // First we need to check if there's a live game
-
-        // Stats::generateFromGameForTeams($game);
-        // Stats::generateFromGameForPlayers($game);
-
-        // Stats::generateFromLiveGameForTeams($game->live);
-        // Stats::generateFromLiveGameForPlayers($game->live);
-
-        // dump($game->live);
-
-        // die();
 
         return Inertia::render('Score', $data);
     }
@@ -255,15 +302,15 @@ class LiveController extends Controller
         $this->live($log->game)->updateLiveStats();
     }
 
-    public function update(Game $game)
-    {
-        // We need to update the game, and also write a log entry what happened
+    // public function update(Game $game)
+    // {
+    //     // We need to update the game, and also write a log entry what happened
 
 
-        $game->update([
-            'score' => request('score'),
-        ]);
-    }
+    //     $game->update([
+    //         'score' => request('score'),
+    //     ]);
+    // }
 
     public function sim()
     {

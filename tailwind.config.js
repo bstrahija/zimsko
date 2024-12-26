@@ -21,8 +21,8 @@ export default {
                 body: ['"Open Sans"'],
             },
             fontSize: {
-                '3xs': '9rem',
-                '2xs': '10rem',
+                '3xs': '9px',
+                '2xs': '10px',
                 xs: '12px',
                 sm: '14px',
                 base: '16px',
@@ -73,8 +73,17 @@ export default {
                 96: '384px',
             },
         },
+        screens: {
+            sm: '640px',
+            md: '768px',
+            lg: '1024px',
+            xl: '1280px',
+            '2xl': '1536px',
+            '3xl': '1920px',
+        },
     },
     plugins: [
+        // require('tailwindcss-motion'),
         // require('../../vendor/awcodes/filament-tiptap-editor/resources/css/plugin.css'),
     ],
 };

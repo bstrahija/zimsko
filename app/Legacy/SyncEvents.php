@@ -26,6 +26,16 @@ class SyncEvents
                 $newEvent->save();
             });
 
+        // Add latest event
+        Event::query()->create([
+            'external_id' => 1,
+            'slug'        => 'zimsko-2025',
+            'title'       => 'Zimsko 2025',
+            'status'      => 'active',
+            'created_at'  => now(),
+            'updated_at'  => now(),
+        ]);
+
 
         // We also need to set the active event
         Settings::set('general.current_event_id', Event::where('slug', 'zimsko-2024')->first()?->id);

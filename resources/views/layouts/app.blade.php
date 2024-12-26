@@ -14,7 +14,7 @@
 </head>
 
 <body class="dark bg-slate-100">
-    <div class="app relative z-10">
+    <div class="relative z-10 app" id="app">
         <x-header />
 
         @yield('content')
@@ -22,7 +22,7 @@
         <x-footer />
     </div>
 
-    {{-- <div class="bg fixed inset-0 z-0 opacity-20"></div>
+    {{-- <div class="fixed inset-0 z-0 opacity-20 bg"></div>
  --}}
     @livewireScripts
 </body>

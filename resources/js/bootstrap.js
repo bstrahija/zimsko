@@ -1,11 +1,12 @@
 import axios from 'axios';
 import Alpine from 'alpinejs';
-Alpine.start();
 
 window.Alpine = Alpine;
 window.axios = axios;
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+
+console.log('ALPINE: ', window.Alpine);
 
 /**
  * Echo exposes an expressive API for subscribing to channels and listening

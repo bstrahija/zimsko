@@ -167,14 +167,13 @@ class GameResource extends Resource
         return [
             Fieldset::make('Home Score')
                 ->columnSpan(1)
-                ->relationship('homeTeamNumbers')
                 ->label(function (Forms\Get $get) {
                     return Team::find($get('home_team_id'))?->title ?: 'Home';
                 })
                 ->schema([
-                    Forms\Components\TextInput::make('score')->label('Final Score')->required()->numeric()->columnSpanFull()->default(0)->rules([
+                    Forms\Components\TextInput::make('home_score')->label('Final Score')->required()->numeric()->columnSpanFull()->default(0)->rules([
                         fn(Get $get): Closure => function (string $attribute, $value, Closure $fail) use ($get) {
-                            $quarterScores = $get('score_p1') + $get('score_p2') + $get('score_p3') + $get('score_p4') + $get('score_p5') + $get('score_p6') + $get('score_p7') + $get('score_p8');
+                            $quarterScores = $get('home_score_p1') + $get('home_score_p2') + $get('home_score_p3') + $get('home_score_p4') + $get('home_score_p5') + $get('home_score_p6') + $get('home_score_p7') + $get('home_score_p8');
 
                             if ($quarterScores !== $value) {
                                 $fail("The quarter scores do not match the total score.");
@@ -184,31 +183,30 @@ class GameResource extends Resource
                     Fieldset::make('Quarters')
                         ->columns(4)
                         ->schema([
-                            Forms\Components\TextInput::make('score_p1')->label('Q1')->numeric()->default(0),
-                            Forms\Components\TextInput::make('score_p2')->label('Q2')->numeric()->default(0),
-                            Forms\Components\TextInput::make('score_p3')->label('Q3')->numeric()->default(0),
-                            Forms\Components\TextInput::make('score_p4')->label('Q4')->numeric()->default(0),
+                            Forms\Components\TextInput::make('home_score_p1')->label('Q1')->numeric()->default(0),
+                            Forms\Components\TextInput::make('home_score_p2')->label('Q2')->numeric()->default(0),
+                            Forms\Components\TextInput::make('home_score_p3')->label('Q3')->numeric()->default(0),
+                            Forms\Components\TextInput::make('home_score_p4')->label('Q4')->numeric()->default(0),
                         ]),
                     Section::make('Overtime')
                         ->columns(4)
                         ->collapsed()
                         ->schema([
-                            Forms\Components\TextInput::make('score_p5')->label('OT1')->numeric()->default(0),
-                            Forms\Components\TextInput::make('score_p6')->label('OT2')->numeric()->default(0),
-                            Forms\Components\TextInput::make('score_p7')->label('OT3')->numeric()->default(0),
-                            Forms\Components\TextInput::make('score_p8')->label('OT4')->numeric()->default(0),
+                            Forms\Components\TextInput::make('home_score_p5')->label('OT1')->numeric()->default(0),
+                            Forms\Components\TextInput::make('home_score_p6')->label('OT2')->numeric()->default(0),
+                            Forms\Components\TextInput::make('home_score_p7')->label('OT3')->numeric()->default(0),
+                            Forms\Components\TextInput::make('home_score_p8')->label('OT4')->numeric()->default(0),
                         ]),
                 ]),
             Fieldset::make('Away Score')
                 ->columnSpan(1)
-                ->relationship('awayTeamNumbers')
                 ->label(function (Forms\Get $get) {
                     return Team::find($get('away_team_id'))?->title ?: 'Away';
                 })
                 ->schema([
-                    Forms\Components\TextInput::make('score')->label('Final Score')->required()->numeric()->columnSpanFull()->default(0)->rules([
+                    Forms\Components\TextInput::make('away_score')->label('Final Score')->required()->numeric()->columnSpanFull()->default(0)->rules([
                         fn(Get $get): Closure => function (string $attribute, $value, Closure $fail) use ($get) {
-                            $quarterScores = $get('score_p1') + $get('score_p2') + $get('score_p3') + $get('score_p4') + $get('score_p5') + $get('score_p6') + $get('score_p7') + $get('score_p8');
+                            $quarterScores = $get('away_score_p1') + $get('away_score_p2') + $get('away_score_p3') + $get('away_score_p4') + $get('away_score_p5') + $get('away_score_p6') + $get('away_score_p7') + $get('away_score_p8');
 
                             if ($quarterScores !== $value) {
                                 $fail("The quarter scores do not match the total score.");
@@ -218,19 +216,19 @@ class GameResource extends Resource
                     Fieldset::make('Quarters')
                         ->columns(4)
                         ->schema([
-                            Forms\Components\TextInput::make('score_p1')->label('Q1')->numeric()->default(0),
-                            Forms\Components\TextInput::make('score_p2')->label('Q2')->numeric()->default(0),
-                            Forms\Components\TextInput::make('score_p3')->label('Q3')->numeric()->default(0),
-                            Forms\Components\TextInput::make('score_p4')->label('Q4')->numeric()->default(0),
+                            Forms\Components\TextInput::make('away_score_p1')->label('Q1')->numeric()->default(0),
+                            Forms\Components\TextInput::make('away_score_p2')->label('Q2')->numeric()->default(0),
+                            Forms\Components\TextInput::make('away_score_p3')->label('Q3')->numeric()->default(0),
+                            Forms\Components\TextInput::make('away_score_p4')->label('Q4')->numeric()->default(0),
                         ]),
                     Section::make('Overtime')
                         ->columns(4)
                         ->collapsed()
                         ->schema([
-                            Forms\Components\TextInput::make('score_p5')->label('OT1')->numeric()->default(0),
-                            Forms\Components\TextInput::make('score_p6')->label('OT2')->numeric()->default(0),
-                            Forms\Components\TextInput::make('score_p7')->label('OT3')->numeric()->default(0),
-                            Forms\Components\TextInput::make('score_p8')->label('OT4')->numeric()->default(0),
+                            Forms\Components\TextInput::make('away_score_p5')->label('OT1')->numeric()->default(0),
+                            Forms\Components\TextInput::make('away_score_p6')->label('OT2')->numeric()->default(0),
+                            Forms\Components\TextInput::make('away_score_p7')->label('OT3')->numeric()->default(0),
+                            Forms\Components\TextInput::make('away_score_p8')->label('OT4')->numeric()->default(0),
                         ]),
                 ]),
 

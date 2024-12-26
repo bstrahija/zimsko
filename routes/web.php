@@ -26,11 +26,19 @@ Route::get('/concept/001', function () {
     return view('concept.001');
 });
 
+// Manage games
 Route::get('live', [LiveController::class, 'index'])->name('live')->middleware('auth');
 Route::get('live/sim', [LiveController::class, 'sim'])->name('live.sim')->middleware('auth');
 Route::view('live/concept', 'live.concept')->name('live.concept')->middleware('auth');
 Route::view('live/concept01', 'live.concept01')->name('live.concept1')->middleware('auth');
-Route::get('live/{game}',               [LiveController::class, 'game'])->name('live.game')->middleware('auth');
+
+// Create/Edit a game
+Route::get('live/create',               [LiveController::class, 'create'])->name('live.create')->middleware('auth');
+Route::get('live/{game}',               [LiveController::class, 'details'])->name('live.details')->middleware('auth');
+Route::get('live/{game}/players',       [LiveController::class, 'players'])->name('live.players')->middleware('auth');
+Route::get('live/{game}/score',         [LiveController::class, 'score'])->name('live.score')->middleware('auth');
+
+// Keep the score
 Route::post('live/{game}/score',        [LiveController::class, 'addScore'])->name('live.score')->middleware('auth');
 Route::post('live/{game}/miss',         [LiveController::class, 'addMiss'])->name('live.miss')->middleware('auth');
 Route::post('live/{game}/foul',         [LiveController::class, 'addFoul'])->name('live.foul')->middleware('auth');

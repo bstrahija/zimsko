@@ -10,12 +10,13 @@
 
         <hr class="my-12">
 
-        <div class="grid grid-cols-12 gap-12">
-            <x-basket.leaderboard :leaderboard="$leaderboard" class="col-span-4" />
-            <x-basket.leaders :leaderboard="$leaderboardPoints" class="col-span-4" />
-            <x-basket.leaders-3pt :leaderboard="$leaderboard3Point" class="col-span-4" />
-            <x-basket.upcoming-games class="col-span-6" :games="$upcomingGames" />
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <x-basket.leaderboard :leaderboard="$leaderboard" />
+            <x-basket.leaders :leaderboard="$leaderboardPoints" />
+            <x-basket.leaders-3pt :leaderboard="$leaderboard3Point" />
         </div>
+
+        <x-basket.upcoming-games class="col-span-6" :games="$upcomingGames" />
 
         <hr class="my-12">
 

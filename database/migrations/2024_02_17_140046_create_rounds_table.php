@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('rounds', function (Blueprint $table) {
             $table->ulid('id')->primary();
             $table->unsignedInteger('external_id')->nullable()->index();
-            $table->foreignId('event_id')->constrained();
+            $table->string('event_id')->constrained('events')->cascadeOnDelete()->index();
             $table->string('slug')->nullable()->index();
             $table->string('title');
             $table->longText('body')->nullable();

@@ -1,8 +1,7 @@
-<x-ui.card class="text-center {{ $class ?? '' }}">
+<x-ui.card class="text-center {{ $class ?? '' }} item">
     <a href="#" class="block">
         <div class="p-2 -mx-6 -mt-6 mb-4 text-sm text-white bg-gradient-to-br rounded-t from-secondary/95 to-secondary/70">
             {{ $game->scheduled_at->format('d.m.Y') }}
-
         </div>
 
         <div class="flex justify-between items-center mb-6">
@@ -14,7 +13,7 @@
                     <img src="{{ $game->homeTeam->logo() }}" alt="{{ $game->homeTeam->short_title }}" class="w-12 h-12">
                 </figure>
                 <h3 class="font-bold">{{ $game->homeTeam->short_title }}</h3>
-                <p class="mt-1 text-3xl font-bold text-primary">{{ $game->home_score }}</p>
+                <p class="mt-1 text-3xl font-bold {{ $game->home_score > $game->away_score ? 'text-primary' : 'text-gray-400' }}">{{ $game->home_score }}</p>
             </div>
 
             <div class="mx-4 font-bold text-gray-400">VS</div>
@@ -27,7 +26,7 @@
                     <img src="{{ $game->awayTeam->logo() }}" alt="{{ $game->awayTeam->short_title }}" class="w-12 h-12">
                 </figure>
                 <h3 class="font-bold">{{ $game->awayTeam->short_title }}</h3>
-                <p class="mt-1 text-3xl font-bold text-primary">{{ $game->away_score }}</p>
+                <p class="mt-1 text-3xl font-bold {{ $game->away_score > $game->home_score ? 'text-primary' : 'text-gray-400' }}">{{ $game->away_score }}</p>
             </div>
         </div>
 
