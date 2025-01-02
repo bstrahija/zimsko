@@ -3,7 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -12,10 +15,11 @@ use Spatie\Sluggable\SlugOptions;
 
 class Official extends Model
 {
-    use HasSlug, HasUlids, InteractsWithMedia;
+    use HasFactory, HasSlug, HasUlids, SoftDeletes, InteractsWithMedia;
 
-    protected const POSITION_OPTIONS = [
+    protected const TYPE_OPTIONS = [
         'organizer',
+        'referee',
         'developer',
         'photographer',
         'official',
@@ -25,7 +29,21 @@ class Official extends Model
         'name',
         'slug',
         'body',
+        'type',
+        'birthday',
+        'status',
+        'data',
     ];
+
+    public function games(): BelongsToMany
+    {
+        return $this->belongsToMany(Game::class);
+    }
+
+    public function events(): BelongsToMany
+    {
+        return $this->belongsToMany(Event::class);
+    }
 
     public function registerMediaCollections(): void
     {
@@ -51,7 +69,7 @@ class Official extends Model
     public function getSlugOptions(): SlugOptions
     {
         return SlugOptions::create()
-            ->generateSlugsFrom('name')
+            ->generateSlugsFrom(['first_name', 'last_name'])
             ->saveSlugsTo('slug')
             ->doNotGenerateSlugsOnUpdate();
     }

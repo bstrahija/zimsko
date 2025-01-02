@@ -35,20 +35,22 @@ const filterResults = () => {
 <template>
     <Layout>
 
-        <Head title="Zimsko Live Score" />
+        <Head title="Zimsko Live Score - Utakmice" />
 
         <div class="flex relative min-h-screen">
             <div class="space-y-2 w-full max-w-[1920px] mx-auto">
                 <div class="bg-slate-900/95 p-6 rounded-lg border-5 border-cyan-400/50 shadow-[0_0_15px_rgba(6,182,212,0.5)] grid-bg w-full">
-
-                    <div class="flex justify-between items-center mb-4">
-                        <div class="relative w-64">
-                            <input type="text" placeholder="Search games..." v-model="data.query" @change="filterResults()"
+                    <div class="flex gap-8 justify-between items-center mb-4">
+                        <div class="flex relative w-64">
+                            <input type="text" placeholder="Pretraži utakmice..." v-model="data.query" @change="filterResults()"
                                 class="px-4 py-2 w-full text-gray-300 rounded-lg bg-slate-700 focus:outline-none focus:ring-2 focus:ring-cyan-400">
                             <svg class="absolute top-2.5 right-3 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                             </svg>
                         </div>
+                        <Link href="/live/create" class="px-4 py-2 w-48 text-gray-200 rounded-lg hover:bg-slate-600 bg-slate-700">
+                        Nova Utakmica
+                        </Link>
                         <div class="flex space-x-4">
                             <div class="relative">
                                 <select v-model="data.event" @change="filterResults()"

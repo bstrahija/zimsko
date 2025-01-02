@@ -13,10 +13,12 @@ return new class extends Migration
     {
         Schema::create('officials', function (Blueprint $table) {
             $table->ulid('id')->primary();
+            $table->unsignedInteger('external_id')->nullable()->index();
             $table->string('slug')->nullable()->index();
-            $table->string('name');
+            $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
             $table->text('body')->nullable();
-            $table->string('position')->default('organizer')->nullable();
+            $table->string('type')->default('organizer')->index()->nullable();
             $table->date('birthday')->nullable();
             $table->string('status', 50)->nullable()->default('active')->index();
             $table->json('data')->nullable();

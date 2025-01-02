@@ -9,56 +9,58 @@ trait LiveScoreStats
 {
     public function addTeamStats()
     {
-        foreach ([$this->homeTeam, $this->awayTeam] as $team) {
-            $side = $team->id === $this->homeTeam->id ? 'home' : 'away';
+        if ($this->homeTeam && $this->awayTeam) {
+            foreach ([$this->homeTeam, $this->awayTeam] as $team) {
+                $side = $team->id === $this->homeTeam->id ? 'home' : 'away';
 
-            $team->setStats('score',                $this->gameLive->{$side . '_score'});
-            $team->setStats('misses',               $this->getTeamStat(team: $team, types: ['player_miss'], method: 'count'));
-            $team->setStats('rebounds',             $this->getTeamStat(team: $team, types: ['player_rebound'], method: 'count'));
-            $team->setStats('offensive_rebounds',   $this->getTeamStat(team: $team, types: ['player_rebound'], subtypes: ['off'], method: 'count'));
-            $team->setStats('defensive_rebounds',   $this->getTeamStat(team: $team, types: ['player_rebound'], subtypes: ['reb', 'def'], method: 'count'));
-            $team->setStats('steals',               $this->getTeamStat(team: $team, types: ['player_steal'], method: 'count'));
-            $team->setStats('blocks',               $this->getTeamStat(team: $team, types: ['player_block'], method: 'count'));
-            $team->setStats('turnovers',            $this->getTeamStat(team: $team, types: ['player_turnover'], method: 'count'));
-            $team->setStats('assists',              $this->getTeamStat(team: $team, types: ['player_assist'], method: 'count'));
-            $team->setStats('free_throws_made',     $this->getTeamStat(team: $team, types: ['player_score', 'player_score_with_assist'], subtypes: ['1pt'], method: 'count'));
-            $team->setStats('free_throws_missed',   $this->getTeamStat(team: $team, types: ['player_miss'], subtypes: ['1pt'], method: 'count'));
-            $team->setStats('free_throws',          $team->statsData['free_throws_made'] + $team->statsData['free_throws_missed']);
-            $team->setStats('two_points_made',      $this->getTeamStat(team: $team, types: ['player_score', 'player_score_with_assist'], subtypes: ['2pt'], method: 'count'));
-            $team->setStats('two_points_missed',    $this->getTeamStat(team: $team, types: ['player_miss'], subtypes: ['2pt'], method: 'count'));
-            $team->setStats('two_points',           $team->statsData['two_points_made'] + $team->statsData['two_points_missed']);
-            $team->setStats('three_points_made',    $this->getTeamStat(team: $team, types: ['player_score', 'player_score_with_assist'], subtypes: ['3pt'], method: 'count'));
-            $team->setStats('three_points_missed',  $this->getTeamStat(team: $team, types: ['player_miss'], subtypes: ['3pt'], method: 'count'));
-            $team->setStats('three_points',         $team->statsData['three_points_made'] + $team->statsData['three_points_missed']);
-            $team->setStats('field_goals',          $team->statsData['two_points'] + $team->statsData['three_points']);
-            $team->setStats('field_goals_made',     $team->statsData['two_points_made'] + $team->statsData['three_points_made']);
-            $team->setStats('field_goals_missed',   $team->statsData['two_points_missed'] + $team->statsData['three_points_missed']);
-            $team->setStats('timeouts',             $this->getTeamStat(team: $team, types: ['timeout'], subtypes: [], method: 'count'));
-            $team->setStats('fouls',                $this->getTeamStat(team: $team, types: ['player_foul'], subtypes: [], method: 'count'));
-            $team->setStats('personal_fouls',       $this->getTeamStat(team: $team, types: ['player_foul'], subtypes: ['pf'], method: 'count'));
-            $team->setStats('technical_fouls',      $this->getTeamStat(team: $team, types: ['player_foul'], subtypes: ['tf'], method: 'count'));
-            $team->setStats('flagrant_fouls',       $this->getTeamStat(team: $team, types: ['player_foul'], subtypes: ['ff'], method: 'count'));
+                $team->setStats('score',                $this->gameLive->{$side . '_score'});
+                $team->setStats('misses',               $this->getTeamStat(team: $team, types: ['player_miss'], method: 'count'));
+                $team->setStats('rebounds',             $this->getTeamStat(team: $team, types: ['player_rebound'], method: 'count'));
+                $team->setStats('offensive_rebounds',   $this->getTeamStat(team: $team, types: ['player_rebound'], subtypes: ['off'], method: 'count'));
+                $team->setStats('defensive_rebounds',   $this->getTeamStat(team: $team, types: ['player_rebound'], subtypes: ['reb', 'def'], method: 'count'));
+                $team->setStats('steals',               $this->getTeamStat(team: $team, types: ['player_steal'], method: 'count'));
+                $team->setStats('blocks',               $this->getTeamStat(team: $team, types: ['player_block'], method: 'count'));
+                $team->setStats('turnovers',            $this->getTeamStat(team: $team, types: ['player_turnover'], method: 'count'));
+                $team->setStats('assists',              $this->getTeamStat(team: $team, types: ['player_assist'], method: 'count'));
+                $team->setStats('free_throws_made',     $this->getTeamStat(team: $team, types: ['player_score', 'player_score_with_assist'], subtypes: ['1pt'], method: 'count'));
+                $team->setStats('free_throws_missed',   $this->getTeamStat(team: $team, types: ['player_miss'], subtypes: ['1pt'], method: 'count'));
+                $team->setStats('free_throws',          $team->statsData['free_throws_made'] + $team->statsData['free_throws_missed']);
+                $team->setStats('two_points_made',      $this->getTeamStat(team: $team, types: ['player_score', 'player_score_with_assist'], subtypes: ['2pt'], method: 'count'));
+                $team->setStats('two_points_missed',    $this->getTeamStat(team: $team, types: ['player_miss'], subtypes: ['2pt'], method: 'count'));
+                $team->setStats('two_points',           $team->statsData['two_points_made'] + $team->statsData['two_points_missed']);
+                $team->setStats('three_points_made',    $this->getTeamStat(team: $team, types: ['player_score', 'player_score_with_assist'], subtypes: ['3pt'], method: 'count'));
+                $team->setStats('three_points_missed',  $this->getTeamStat(team: $team, types: ['player_miss'], subtypes: ['3pt'], method: 'count'));
+                $team->setStats('three_points',         $team->statsData['three_points_made'] + $team->statsData['three_points_missed']);
+                $team->setStats('field_goals',          $team->statsData['two_points'] + $team->statsData['three_points']);
+                $team->setStats('field_goals_made',     $team->statsData['two_points_made'] + $team->statsData['three_points_made']);
+                $team->setStats('field_goals_missed',   $team->statsData['two_points_missed'] + $team->statsData['three_points_missed']);
+                $team->setStats('timeouts',             $this->getTeamStat(team: $team, types: ['timeout'], subtypes: [], method: 'count'));
+                $team->setStats('fouls',                $this->getTeamStat(team: $team, types: ['player_foul'], subtypes: [], method: 'count'));
+                $team->setStats('personal_fouls',       $this->getTeamStat(team: $team, types: ['player_foul'], subtypes: ['pf'], method: 'count'));
+                $team->setStats('technical_fouls',      $this->getTeamStat(team: $team, types: ['player_foul'], subtypes: ['tf'], method: 'count'));
+                $team->setStats('flagrant_fouls',       $this->getTeamStat(team: $team, types: ['player_foul'], subtypes: ['ff'], method: 'count'));
 
-            // TODO: Add fouls for current quarter
-            $team->setStats('current_period_fouls', $this->log->where('team_id', $team->id)->where('period', $this->currentPeriod)->filter(function ($item) {
-                return $item->type === 'player_foul';
-            })->count());
+                // TODO: Add fouls for current quarter
+                $team->setStats('current_period_fouls', $this->log->where('team_id', $team->id)->where('period', $this->currentPeriod)->filter(function ($item) {
+                    return $item->type === 'player_foul';
+                })->count());
 
-            // TODO: Also add timeouts for current quarter
-            $team->setStats('current_period_timeouts', $this->log->where('team_id', $team->id)->where('period', $this->currentPeriod)->filter(function ($item) {
-                return $item->type === 'timeout';
-            })->count());
+                // TODO: Also add timeouts for current quarter
+                $team->setStats('current_period_timeouts', $this->log->where('team_id', $team->id)->where('period', $this->currentPeriod)->filter(function ($item) {
+                    return $item->type === 'timeout';
+                })->count());
 
-            // dd((int) $team->stats['score']);
+                // dd((int) $team->stats['score']);
 
-            // Calculate the efficiency
-            $efficiency = 0; // ($team->stats['score'] + $team->stats['rebounds'] + $team->stats['assists'] + $team->stats['steals'] + $team->stats['blocks'] − (($team->stats['field_goals'] − $team->stats['field_goals_missed']) + ($team->stats['free_throws'] − $team->stats['free_throws_missed']) + $team->stats['turnovers']));
-            $efficiency = $team->stats['score'] + $team->stats['rebounds'] + $team->stats['assists'] + $team->stats['steals'] + $team->stats['blocks'] - $team->stats['field_goals_missed'] - $team->stats['free_throws_missed'] - $team->stats['turnovers'] - $team->stats['fouls'];
-            $team->setStats('efficiency', $efficiency);
+                // Calculate the efficiency
+                $efficiency = 0; // ($team->stats['score'] + $team->stats['rebounds'] + $team->stats['assists'] + $team->stats['steals'] + $team->stats['blocks'] − (($team->stats['field_goals'] − $team->stats['field_goals_missed']) + ($team->stats['free_throws'] − $team->stats['free_throws_missed']) + $team->stats['turnovers']));
+                $efficiency = $team->stats['score'] + $team->stats['rebounds'] + $team->stats['assists'] + $team->stats['steals'] + $team->stats['blocks'] - $team->stats['field_goals_missed'] - $team->stats['free_throws_missed'] - $team->stats['turnovers'] - $team->stats['fouls'];
+                $team->setStats('efficiency', $efficiency);
 
-            // Add period scores
-            foreach (range(1, 10) as $period) {
-                $team->setStats('score_p' . $period, $this->getTeamStat(team: $team, types: ['player_score', 'player_score_with_assist'], period: $period));
+                // Add period scores
+                foreach (range(1, 10) as $period) {
+                    $team->setStats('score_p' . $period, $this->getTeamStat(team: $team, types: ['player_score', 'player_score_with_assist'], period: $period));
+                }
             }
         }
     }

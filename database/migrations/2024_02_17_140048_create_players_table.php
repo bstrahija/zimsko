@@ -17,7 +17,7 @@ return new class extends Migration
             $table->ulid('id')->primary();
             $table->unsignedInteger('external_id')->nullable()->index();
             $table->string('slug')->nullable()->index();
-            $table->string('first_name');
+            $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
             $table->string('nickname')->nullable();
             $table->text('body')->nullable();

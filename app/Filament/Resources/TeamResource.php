@@ -14,6 +14,7 @@ use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class TeamResource extends Resource
@@ -45,6 +46,14 @@ class TeamResource extends Resource
                     ->multiple()
                     ->searchable()
                     ->relationship('events', 'title'),
+                Forms\Components\Select::make('coaches')
+                    ->multiple()
+                    ->relationship(
+                        name: 'coaches',
+                        modifyQueryUsing: fn(Builder $query) => $query->orderBy('first_name')->orderBy('last_name'),
+                    )
+                    ->getOptionLabelFromRecordUsing(fn(Model $record) => "{$record->first_name} {$record->last_name}")
+                    ->searchable(['first_name', 'last_name']),
                 SpatieMediaLibraryFileUpload::make('logo')
                     ->collection('logos'),
             ]);

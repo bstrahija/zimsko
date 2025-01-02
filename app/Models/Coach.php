@@ -11,10 +11,12 @@ use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Spatie\Sluggable\HasSlug;
+use Spatie\Sluggable\SlugOptions;
 
 class Coach extends Model implements HasMedia
 {
-    use HasFactory, HasUlids, SoftDeletes, InteractsWithMedia;
+    use HasFactory, HasSlug, HasUlids, SoftDeletes, InteractsWithMedia;
 
     protected $casts = [
         'id'          => 'string',
@@ -46,5 +48,16 @@ class Coach extends Model implements HasMedia
             ->addMediaConversion('preview')
             ->fit(Fit::Contain, 600, 600)
             ->nonQueued();
+    }
+
+    /**
+     * Get the options for generating the slug.
+     */
+    public function getSlugOptions(): SlugOptions
+    {
+        return SlugOptions::create()
+            ->generateSlugsFrom(['first_name', 'last_name'])
+            ->saveSlugsTo('slug')
+            ->doNotGenerateSlugsOnUpdate();
     }
 }

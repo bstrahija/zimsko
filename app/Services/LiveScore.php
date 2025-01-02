@@ -65,8 +65,8 @@ class LiveScore
         $this->homeTeam    = $this->game->homeTeam()->with(['players', 'players.media'])->first();
         $this->awayTeam    = $this->game->awayTeam()->with(['players', 'players.media'])->first();
 
-        $this->availableHomePlayers = $this->homeTeam->players;
-        $this->availableAwayPlayers = $this->awayTeam->players;
+        $this->availableHomePlayers = $this->homeTeam ? $this->homeTeam->players : null;
+        $this->availableAwayPlayers = $this->awayTeam ? $this->awayTeam->players : null;
 
         $this->homePlayers = $this->game->homePlayers;
         $this->awayPlayers = $this->game->awayPlayers;
@@ -101,7 +101,7 @@ class LiveScore
         $this->setupPlayers();
 
         // We also need to update the log
-        GameLog::updateOrCreate([
+        GameLog::query()->updateOrCreate([
             'game_id'      => $this->game->id,
             'game_live_id' => $this->gameLive->id,
             'type'         => 'game_initialized',
@@ -151,7 +151,7 @@ class LiveScore
 
     public function addStartingPlayers(array $homePlayerIds, array $awayPlayerIds)
     {
-        $log = GameLog::updateOrCreate([
+        $log = GameLog::query()->updateOrCreate([
             'game_id'      => $this->game->id,
             'game_live_id' => $this->gameLive->id,
             'type'         => 'game_starting_players',
@@ -193,7 +193,7 @@ class LiveScore
         ]);
 
         // We also need to update the log
-        GameLog::updateOrCreate([
+        GameLog::query()->updateOrCreate([
             'game_id'      => $this->game->id,
             'game_live_id' => $this->gameLive->id,
             'type'         => 'game_started',
@@ -204,12 +204,6 @@ class LiveScore
         ]);
 
         // Setup the players
-        $this->setupPlayers();
-        $this->setupPlayers();
-        $this->setupPlayers();
-        $this->setupPlayers();
-        $this->setupPlayers();
-        $this->setupPlayers();
         $this->setupPlayers();
 
         // And update the log collection
@@ -299,7 +293,7 @@ class LiveScore
         ]);
 
         // We also need to update the log
-        $log = GameLog::updateOrCreate([
+        $log = GameLog::query()->updateOrCreate([
             'game_id'      => $this->game->id,
             'game_live_id' => $this->gameLive->id,
             'type'         => 'game_ended',
@@ -372,7 +366,7 @@ class LiveScore
 
         return [
             'status'                => $this->gameLive->status,
-            'period'               => $this->currentPeriod(),
+            'period'                => $this->currentPeriod(),
             'game'                  => $this->game->toArray(),
             'game_live'             => $this->gameLive->toArray(),
             'home_team'             => $homeTeam,
@@ -380,8 +374,8 @@ class LiveScore
             'home_score'            => $this->gameLive->home_score,
             'away_score'            => $this->gameLive->away_score,
             'players'               => $this->players->toArray(),
-            'home_players'          => $this->homePlayers->toArray(),
-            'away_players'          => $this->awayPlayers->toArray(),
+            'home_players'          => $this->homePlayers ? $this->homePlayers->toArray() : null,
+            'away_players'          => $this->awayPlayers ? $this->awayPlayers->toArray() : null,
             'players_on_court'      => array_merge($this->homePlayersOnCourt->toArray(), $this->awayPlayersOnCourt->toArray()),
             'home_players_on_court' => $this->homePlayersOnCourt->toArray(),
             'away_players_on_court' => $this->awayPlayersOnCourt->toArray(),
@@ -426,16 +420,16 @@ class LiveScore
         }
 
         // Add some team data
-        $data['game']['available_home_players'] = $this->availableHomePlayers->toArray();
-        $data['game']['available_away_players'] = $this->availableAwayPlayers->toArray();
-        $data['game']['home_players']          = $this->homePlayers->toArray();
-        $data['game']['away_players']          = $this->awayPlayers->toArray();
-        $data['game']['home_team']             = $this->homeTeam->toArray();
-        $data['game']['away_team']             = $this->awayTeam->toArray();
-        $data['game']['home_team']['logo']     = $this->homeTeam->logo();
-        $data['game']['away_team']['logo']     = $this->awayTeam->logo();
-        $data['game']['home_players_on_bench'] = $this->homePlayers->diff($this->homePlayersOnCourt)->toArray();
-        $data['game']['away_players_on_bench'] = $this->awayPlayers->diff($this->awayPlayersOnCourt)->toArray();
+        $data['game']['available_home_players'] = $this->availableHomePlayers?->toArray();
+        $data['game']['available_away_players'] = $this->availableAwayPlayers?->toArray();
+        $data['game']['home_players']          = $this->homePlayers?->toArray();
+        $data['game']['away_players']          = $this->awayPlayers?->toArray();
+        $data['game']['home_team']             = $this->homeTeam?->toArray();
+        $data['game']['away_team']             = $this->awayTeam?->toArray();
+        $data['game']['home_team']['logo']     = $this->homeTeam?->logo();
+        $data['game']['away_team']['logo']     = $this->awayTeam?->logo();
+        $data['game']['home_players_on_bench'] = $this->homePlayers?->diff($this->homePlayersOnCourt)->toArray();
+        $data['game']['away_players_on_bench'] = $this->awayPlayers?->diff($this->awayPlayersOnCourt)->toArray();
         unset($data['game']['home_team']['players']);
         unset($data['game']['away_team']['players']);
 

@@ -167,7 +167,7 @@ class Player extends Model implements HasMedia
     public function getSlugOptions(): SlugOptions
     {
         return SlugOptions::create()
-            ->generateSlugsFrom('name')
+            ->generateSlugsFrom(['first_name', 'last_name'])
             ->saveSlugsTo('slug')
             ->doNotGenerateSlugsOnUpdate();
     }

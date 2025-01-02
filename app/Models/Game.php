@@ -133,9 +133,9 @@ class Game extends Model
         return $this->hasMany(GamePlayer::class)->where('team_id', $this->away_team_id);
     }
 
-    public function referees(): HasMany
+    public function referees(): BelongsToMany
     {
-        return $this->hasMany(Referee::class);
+        return $this->belongsToMany(Official::class)->where('type', 'referee');
     }
 
     public function isCompleted(): bool

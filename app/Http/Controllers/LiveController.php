@@ -41,7 +41,7 @@ class LiveController extends Controller
         $event        = Event::find($eventId);
 
         // Start the query
-        $query = Game::orderBy('scheduled_at', 'desc')->where('event_id', $eventId)->with(['event', 'homeTeam', 'awayTeam']);
+        $query = Game::orderBy('scheduled_at', 'desc')->where('event_id', $eventId)->whereNot('status', 'tmp')->with(['event', 'homeTeam', 'awayTeam']);
 
         // Add keyword
         if ($keyword) {
@@ -73,11 +73,17 @@ class LiveController extends Controller
      */
     public function create()
     {
-        $game = new Game;
+        $currentEvent = Event::current();
+        $eventId      = $currentEvent->id;
+        $event        = Event::find($eventId);
+        $game = Game::query()->create([
+            'status'   => 'tmp',
+            'title'    => 'Nova utakmica',
+            'event_id' => $event->id,
+        ]);
 
-        // We create a tmp game and live game
-
-        return Inertia::render('Create', ['game' => $game]);
+        // Redirect to the game
+        return redirect()->route('live.details', ['game' => $game]);
     }
 
     /**
@@ -99,7 +105,10 @@ class LiveController extends Controller
      */
     public function details(Game $game): Response
     {
-        return Inertia::render('Details', ['game' => $game]);
+        // We need to convert all the data to an array
+        $data = $this->live($game)->toData();
+
+        return Inertia::render('Details', $data);
     }
 
     /**
@@ -110,7 +119,10 @@ class LiveController extends Controller
      */
     public function players(Game $game): Response
     {
-        return Inertia::render('Players', ['game' => $game]);
+        // We need to convert all the data to an array
+        $data = $this->live($game)->toData();
+
+        return Inertia::render('Players', $data);
     }
 
     /**

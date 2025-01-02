@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('stats', function (Blueprint $table) {
             $table->id();
-            $table->string('type')->default('game')->nullable();
-            $table->string('for')->default('team')->nullable();
+            $table->string('type')->default('game')->nullable()->index();
+            $table->string('for')->default('team')->nullable()->index();
             $table->foreignUlid('event_id')->nullable()->constrained('events')->onDelete('cascade');
             $table->foreignUlid('game_id')->nullable()->constrained('games')->onDelete('cascade');
             $table->foreignUlid('team_id')->nullable()->constrained('teams')->onDelete('cascade');

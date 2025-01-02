@@ -19,10 +19,10 @@ return new class extends Migration
             $table->foreignId('event_id')->constrained();
             $table->foreignId('round_id')->nullable()->index();
             $table->string('slug')->nullable()->index();
-            $table->string('title');
+            $table->string('title')->nullable();
             $table->text('body')->nullable();
-            $table->foreignId('home_team_id')->constrained('teams');
-            $table->foreignId('away_team_id')->constrained('teams');
+            $table->foreignId('home_team_id')->nullable()->constrained('teams');
+            $table->foreignId('away_team_id')->nullable()->constrained('teams');
 
             foreach (config('stats.columns') as $column) {
                 foreach (['home', 'away'] as $side) {

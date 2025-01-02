@@ -95,12 +95,12 @@ class Team extends Model implements HasMedia
 
     public function players(): BelongsToMany
     {
-        return $this->BelongsToMany(Player::class)->withPivot(['number', 'position']);
+        return $this->belongsToMany(Player::class)->withPivot(['number', 'position']);
     }
 
-    public function coaches(): HasMany
+    public function coaches(): BelongsToMany
     {
-        return $this->hasMany(Coach::class);
+        return $this->belongsToMany(Coach::class);
     }
 
     public function logo($size = 'thumb')

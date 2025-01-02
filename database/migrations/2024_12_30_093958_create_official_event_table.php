@@ -11,14 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::disableForeignKeyConstraints();
-
-        Schema::create('game_referee', function (Blueprint $table) {
-            $table->foreignId('game_id');
-            $table->foreignId('referee_id');
+        Schema::create('event_official', function (Blueprint $table) {
+            $table->id();
+            $table->string('official_id')->constrained('officials')->cascadeOnDelete()->index();
+            $table->string('event_id')->constrained('events')->cascadeOnDelete()->index();
+            $table->timestamps();
         });
-
-        Schema::enableForeignKeyConstraints();
     }
 
     /**
@@ -26,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('game_referee');
+        Schema::dropIfExists('offical_event');
     }
 };

@@ -85,6 +85,22 @@ class GameResource extends Resource
                                         })
                                 ]),
                             ]),
+                        Tabs\Tab::make('Referees')
+                            ->icon('heroicon-o-user')
+                            ->columns('2')
+                            ->schema([
+                                Forms\Components\Select::make('referees')
+                                    ->multiple()
+                                    ->relationship(
+                                        name: 'referees',
+                                        modifyQueryUsing: fn(Builder $query) => $query->orderBy('first_name')->orderBy('last_name'),
+                                    )
+                                    ->getOptionLabelFromRecordUsing(fn(Model $record) => "{$record->first_name} {$record->last_name}")
+                                    ->searchable(['first_name', 'last_name']),
+                            ])
+                            ->disabled(function (Forms\Get $get) {
+                                return ! $get('id');
+                            }),
                         Tabs\Tab::make('Gallery')
                             ->icon('heroicon-o-photo')
                             ->schema([]),

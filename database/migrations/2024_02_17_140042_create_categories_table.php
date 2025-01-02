@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedInteger('external_id')->nullable()->index();
             $table->string('slug')->nullable()->index();
             $table->string('title');
-            $table->longText('body');
+            $table->longText('body')->nullable();
             $table->string('status', 50)->default('active')->index();
             $table->json('data')->nullable();
             $table->timestamps();
