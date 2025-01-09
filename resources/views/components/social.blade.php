@@ -1,5 +1,5 @@
 <div class="grid gap-4 my-10">
-    <a href="https://www.facebook.com/ZimskoPrvenstvoCK/" target="_blank"
+    <a href="{{ \App\Services\Settings::get('general.facebook') }}" target="_blank"
         class="flex justify-between items-center w-full p-3 bg-[#1877F2] text-white rounded-lg transition-colors duration-200 hover:bg-[#1564c0] group">
         <div class="flex gap-3 items-center">
             <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -12,7 +12,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
         </svg>
     </a>
-    <a href="https://www.instagram.com/zimsko.prvenstvo.cakovec/" target="_blank"
+    <a href="{{ \App\Services\Settings::get('general.instagram') }}" target="_blank"
         class="flex justify-between items-center w-full p-3 bg-[#E1306C] text-white rounded-lg transition-colors duration-200 hover:bg-[#c13584] group">
         <div class="flex gap-3 items-center">
             <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -25,7 +25,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
         </svg>
     </a>
-    <a href="https://www.youtube.com/@zimskokosarkaskoprvenstvoc827" target="_blank"
+    <a href="{{ \App\Services\Settings::get('general.youtube') }}" target="_blank"
         class="flex justify-between items-center w-full p-3 bg-[#FF0000] text-white rounded-lg transition-colors duration-200 hover:bg-[#CC0000] group">
         <div class="flex gap-3 items-center">
             <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
