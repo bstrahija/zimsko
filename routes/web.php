@@ -4,6 +4,7 @@ use App\Http\Controllers\GalleriesController;
 use App\Http\Controllers\GamesController;
 use App\Http\Controllers\LiveController;
 use App\Http\Controllers\PagesController;
+use App\Http\Controllers\PlayersController;
 use App\Http\Controllers\PostsController;
 use App\Http\Controllers\TeamsController;
 use Illuminate\Support\Facades\Route;
@@ -37,7 +38,7 @@ Route::view('live/concept01', 'live.concept01')->name('live.concept1')->middlewa
 Route::get('live/create',               [LiveController::class, 'create'])->name('live.create')->middleware('auth');
 Route::get('live/{game}',               [LiveController::class, 'details'])->name('live.details')->middleware('auth');
 Route::get('live/{game}/players',       [LiveController::class, 'players'])->name('live.players')->middleware('auth');
-Route::get('live/{game}/score',         [LiveController::class, 'score'])->name('live.score')->middleware('auth');
+Route::get('live/{game}/score',         [LiveController::class, 'score'])->name('live.score.show')->middleware('auth');
 
 // Keep the score
 Route::post('live/{game}/score',        [LiveController::class, 'addScore'])->name('live.score')->middleware('auth');
