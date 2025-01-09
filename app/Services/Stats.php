@@ -264,7 +264,6 @@ class Stats
     {
         // Clean out everything
         // Stat::where(['event_id' => $event->id, 'for' => 'player', 'type' => 'event'])->delete();
-        dump($event->games->count());
 
         if ($generateForGames) {
             foreach ($event->games as $game) {
