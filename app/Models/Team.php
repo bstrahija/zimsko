@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -18,7 +17,7 @@ use Spatie\Sluggable\SlugOptions;
 
 class Team extends Model implements HasMedia
 {
-    use HasFactory, HasSlug, HasUlids, InteractsWithMedia, SoftDeletes;
+    use HasFactory, HasSlug, InteractsWithMedia, SoftDeletes;
 
     protected $keyType = 'string';
 
@@ -74,7 +73,6 @@ class Team extends Model implements HasMedia
     ];
 
     protected $casts = [
-        'id'          => 'string',
         'external_id' => 'integer',
         'data'        => 'object',
     ];
@@ -132,9 +130,9 @@ class Team extends Model implements HasMedia
 
     public function registerMediaCollections(): void
     {
-        $this->addMediaCollection('logos');
-        $this->addMediaCollection('photos');
-        $this->addMediaCollection('backgrounds');
+        $this->addMediaCollection('logos')->singleFile();
+        $this->addMediaCollection('photos')->singleFile();
+        $this->addMediaCollection('backgrounds')->singleFile();
     }
 
     public function registerMediaConversions(?Media $media = null): void

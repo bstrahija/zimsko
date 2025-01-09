@@ -21,13 +21,8 @@
     <div x-cloak :class="[isOpen ? 'translate-x-0 opacity-100 ' : 'opacity-0 -translate-x-full']"
         class="bg-opacity-85 absolute inset-x-0 top-[62px] z-20 flex-1 px-6 py-4 w-full bg-gray-100 transition-all duration-300 ease-in-out lg:mt-0 lg:p-0 lg:top-0 lg:relative lg:bg-transparent lg:w-auto lg:opacity-100 lg:translate-x-0 lg:flex lg:items-center lg:justify-between">
         <ul class="space-y-6">
-            <li><x-navigation.link href="{{ route('news') }}">Novosti</x-navigation.link></li>
-            <li><x-navigation.link href="{{ route('results') }}">Rezultati</x-navigation.link></li>
-            <li><x-navigation.link href="{{ route('schedule') }}">Raspored</x-navigation.link></li>
-            <li><x-navigation.link href="{{ route('teams') }}">Ekipe</x-navigation.link></li>
-            <li><x-navigation.link href="{{ route('galleries') }}">Galerije</x-navigation.link></li>
-            <li><x-navigation.link href="{{ route('history') }}">Povijest</x-navigation.link></li>
-            <li><x-navigation.link href="{{ route('contact') }}">Kontakt</x-navigation.link></li>
+            <x-navigation.links />
+
             <li class="flex gap-6">
                 <a href="https://www.instagram.com/zimsko.prvenstvo.cakovec/" target="_blank">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">

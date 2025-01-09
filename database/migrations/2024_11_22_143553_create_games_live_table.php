@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('games_live', function (Blueprint $table) {
-            $table->ulid('id')->primary();
-            $table->foreignUlid('game_id')->constrained('games');
+            $table->id();
+            $table->foreignId('game_id')->cascadeOnDelete();
             $table->string('status')->default('pending');
             $table->integer('home_score')->default(0);
             $table->integer('away_score')->default(0);

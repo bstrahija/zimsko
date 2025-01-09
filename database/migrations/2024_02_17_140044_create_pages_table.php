@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('pages', function (Blueprint $table) {
-            $table->ulid('id')->primary();
+            $table->id();
             $table->unsignedInteger('external_id')->nullable()->index();
-            $table->unsignedInteger('user_id')->nullable()->index();
+            $table->foreignId('user_id')->nullable();
             $table->string('slug')->nullable()->index();
             $table->string('title');
             $table->longText('body')->nullable();

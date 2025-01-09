@@ -2,6 +2,7 @@
 
 namespace App\Legacy;
 
+use App\Jobs\AddMediaToModel;
 use App\Models\Team;
 use Illuminate\Support\Facades\DB;
 
@@ -31,7 +32,6 @@ class SyncTeams
                 if ($team->slug === 'shpitza')              $shortTitle = 'SHPZ';
                 if ($team->slug === 'basket-case-2019')     $shortTitle = 'BCAS';
 
-
                 $newTeam              = new \App\Models\Team();
                 $newTeam->external_id = $team->wp_id;
                 $newTeam->title       = $team->title;
@@ -48,17 +48,26 @@ class SyncTeams
                     $data = @json_decode($team->data);
 
                     try {
-                        if ($data && isset($data->photo) && $data->photo) $newTeam->addMediaFromUrl($data->photo)->toMediaCollection('photos');
+                        if ($data && isset($data->photo) && $data->photo) {
+                            AddMediaToModel::dispatch($newTeam, $data->photo, 'photos');
+                            //defer(fn() => $newTeam->addMediaFromUrl($data->photo)->toMediaCollection('photos'));
+                        }
                     } catch (\Exception $e) {
                         dump($e->getMessage());
                     }
                     try {
-                        if ($data && isset($data->logo) && $data->logo) $newTeam->addMediaFromUrl($data->logo)->toMediaCollection('logos');
+                        if ($data && isset($data->logo) && $data->logo) {
+                            AddMediaToModel::dispatch($newTeam, $data->logo, 'logos');
+                            //defer(fn() => $newTeam->addMediaFromUrl($data->logo)->toMediaCollection('logos'));
+                        }
                     } catch (\Exception $e) {
                         dump($e->getMessage());
                     }
                     try {
-                        if ($data && isset($data->background) && $data->background) $newTeam->addMediaFromUrl($data->background)->toMediaCollection('backgrounds');
+                        if ($data && isset($data->background) && $data->background) {
+                            AddMediaToModel::dispatch($newTeam, $data->background, 'backgrounds');
+                            //defer(fn() => $newTeam->addMediaFromUrl($data->background)->toMediaCollection('backgrounds'));
+                        }
                     } catch (\Exception $e) {
                         dump($e->getMessage());
                     }

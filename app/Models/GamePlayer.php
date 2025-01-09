@@ -24,10 +24,6 @@ class GamePlayer extends Model
     ];
 
     protected $casts = [
-        'id'           => 'integer',
-        'team_id'      => 'string',
-        'player_id'    => 'string',
-        'game_id'      => 'string',
         'points'       => 'integer',
         'three_points' => 'integer',
         'free_throws'  => 'integer',

@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('officials', function (Blueprint $table) {
-            $table->ulid('id')->primary();
+            $table->id();
             $table->unsignedInteger('external_id')->nullable()->index();
             $table->string('slug')->nullable()->index();
             $table->string('first_name')->nullable();

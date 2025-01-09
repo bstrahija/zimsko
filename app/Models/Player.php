@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -17,7 +16,7 @@ use Spatie\Sluggable\SlugOptions;
 
 class Player extends Model implements HasMedia
 {
-    use HasFactory, HasSlug, HasUlids, SoftDeletes, InteractsWithMedia;
+    use HasFactory, HasSlug, SoftDeletes, InteractsWithMedia;
 
     const POSITION_OPTIONS = [
         'point-guard'     => 'Point Guard',
@@ -90,7 +89,6 @@ class Player extends Model implements HasMedia
     ];
 
     protected $casts = [
-        'id'          => 'string',
         'external_id' => 'integer',
         'birthday'    => 'date',
         'data'        => 'array',
@@ -145,7 +143,7 @@ class Player extends Model implements HasMedia
 
     public function registerMediaCollections(): void
     {
-        $this->addMediaCollection('photos');
+        $this->addMediaCollection('photos')->singleFile();
     }
 
     public function registerMediaConversions(?Media $media = null): void

@@ -9,6 +9,11 @@ class GamesController extends Controller
 {
     public function results()
     {
-        return view('results');
+        return view('games.results');
+    }
+
+    public function schedule()
+    {
+        return view('games.schedule');
     }
 }

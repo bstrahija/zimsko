@@ -2,6 +2,7 @@
 
 namespace App\Legacy;
 
+use App\Jobs\AddMediaToModel;
 use App\Models\Game;
 use App\Models\Official;
 use Illuminate\Support\Facades\DB;
@@ -40,13 +41,11 @@ class SyncReferees
                             $game = Game::with('event')->where('external_id', $legacyGame->match_id)->first();
 
                             if ($game) {
-                                dump("Attached");
                                 $newReferee->games()->attach($game, ['created_at' => $game->created_at, 'updated_at' => $game->updated_at]);
                                 $newReferee->events()->attach($game->event, ['created_at' => $game->event->created_at, 'updated_at' => $game->event->updated_at]);
                             }
                         }
                     }
-                    dump($legacyGames->count());
 
                     // Also add media if needed
                     if ($media) {
@@ -54,7 +53,10 @@ class SyncReferees
                         $data = @json_decode($referee->data);
 
                         try {
-                            if ($data && isset($data->photo) && $data->photo) $newReferee->addMediaFromUrl($data->photo)->toMediaCollection('photos');
+                            if ($data && isset($data->photo) && $data->photo) {
+                                AddMediaToModel::dispatch($newReferee, $data->photo, 'photos');
+                                // $newReferee->addMediaFromUrl($data->photo)->toMediaCollection('photos');
+                            }
                         } catch (\Exception $e) {
                             dump($e->getMessage());
                         }

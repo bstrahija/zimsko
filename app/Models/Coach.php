@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -16,10 +15,9 @@ use Spatie\Sluggable\SlugOptions;
 
 class Coach extends Model implements HasMedia
 {
-    use HasFactory, HasSlug, HasUlids, SoftDeletes, InteractsWithMedia;
+    use HasFactory, HasSlug, SoftDeletes, InteractsWithMedia;
 
     protected $casts = [
-        'id'          => 'string',
         'external_id' => 'integer',
         'birthday'    => 'date',
         'data'        => 'array',
@@ -32,9 +30,7 @@ class Coach extends Model implements HasMedia
 
     public function registerMediaCollections(): void
     {
-        $this->addMediaCollection('logos');
-        $this->addMediaCollection('photos');
-        $this->addMediaCollection('backgrounds');
+        $this->addMediaCollection('photos')->singleFile();
     }
 
     public function registerMediaConversions(?Media $media = null): void

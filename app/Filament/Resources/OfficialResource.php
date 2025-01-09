@@ -2,10 +2,11 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\RefereeResource\Pages;
-use App\Filament\Resources\RefereeResource\RelationManagers;
-use App\Models\Referee;
+use App\Filament\Resources\OfficialResource\Pages;
+use App\Filament\Resources\OfficialResource\RelationManagers;
+use App\Models\Official;
 use Filament\Forms;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -13,9 +14,9 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class RefereeResource extends Resource
+class OfficialResource extends Resource
 {
-    protected static ?string $model = Referee::class;
+    protected static ?string $model = Official::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-adjustments-horizontal';
 
@@ -34,10 +35,10 @@ class RefereeResource extends Resource
                     ->required(),
                 Forms\Components\Textarea::make('body')
                     ->columnSpanFull(),
+                SpatieMediaLibraryFileUpload::make('photo')
+                    ->collection('photos'),
                 Forms\Components\DatePicker::make('birthday'),
                 Forms\Components\TextInput::make('status'),
-                Forms\Components\Textarea::make('data')
-                    ->columnSpanFull(),
             ]);
     }
 
@@ -45,17 +46,11 @@ class RefereeResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('external_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('slug')
+                Tables\Columns\TextColumn::make('first_name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('name')
+                Tables\Columns\TextColumn::make('last_name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('birthday')
-                    ->date()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('status')
+                Tables\Columns\TextColumn::make('type')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
@@ -93,9 +88,9 @@ class RefereeResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListReferees::route('/'),
-            'create' => Pages\CreateReferee::route('/create'),
-            'edit' => Pages\EditReferee::route('/{record}/edit'),
+            'index' => Pages\ListOfficials::route('/'),
+            'create' => Pages\CreateOfficial::route('/create'),
+            'edit' => Pages\EditOfficial::route('/{record}/edit'),
         ];
     }
 }

@@ -1,21 +1,18 @@
-<footer class="footer bg-slate-950 text-gray-100 items-center mt-24 pt-12 space-y-12">
-    <div class="grid grid-cols-4 gap-12 container mx-auto">
+<footer class="items-center pt-12 mt-24 space-y-12 text-gray-100 footer bg-slate-950">
+    <div class="container grid grid-cols-4 gap-12 mx-auto">
         <div>
             <a href="{{ route('home') }}">
-                <img src="{{ asset('img/logo.png') }}" alt="Logo" class="w-18 h-auto">
+                <img src="{{ asset('img/logo.png') }}" alt="Logo" class="h-auto w-18">
             </a>
         </div>
 
         <div>
-            <h2 class="font-oswald uppercase text-lg mb-10">NAJNOVIJE VIJESTI</h2>
+            <h2 class="mb-10 text-lg uppercase font-oswald">NAJNOVIJE VIJESTI</h2>
             <div class="space-y-4">
                 @foreach (App\Models\Post::orderBy('published_at', 'desc')->take(3)->get() as $item)
-                    <a href="{{ route('news.show', $item->slug) }}"
-                        class="text-gray-200 hover:text-primary block text-sm font-bold transition-all">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline-block mr-1" viewBox="0 0 20 20"
-                            fill="currentColor">
-                            <path fill-rule="evenodd"
-                                d="M2 3a1 1 0 011-1h14a1 1 0 011 1v14a1 1 0 01-1 1H3a1 1 0 01-1-1V3zm2 2v10h12V5H4zm2 2h8v2H6V7zm0 4h8v2H6v-2z"
+                    <a href="{{ route('news.show', $item->slug) }}" class="block text-sm font-bold text-gray-200 transition-all hover:text-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="inline-block mr-1 w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M2 3a1 1 0 011-1h14a1 1 0 011 1v14a1 1 0 01-1 1H3a1 1 0 01-1-1V3zm2 2v10h12V5H4zm2 2h8v2H6V7zm0 4h8v2H6v-2z"
                                 clip-rule="evenodd" />
                         </svg>
                         {{ $item->title }}
@@ -25,12 +22,11 @@
         </div>
 
         <div>
-            <h2 class="font-oswald uppercase text-lg mb-10">Prijavite ekipu</h2>
+            <h2 class="mb-10 text-lg uppercase font-oswald">Prijavite ekipu</h2>
 
             <div class="mb-8">
-                <svg fill="currentColor" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
-                    xmlns:xlink="http://www.w3.org/1999/xlink" class="h-12 w-12 mb-4 float-start mr-4"
-                    viewBox="0 0 31.118 31.119" xml:space="preserve">
+                <svg fill="currentColor" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                    class="mr-4 mb-4 w-12 h-12 float-start" viewBox="0 0 31.118 31.119" xml:space="preserve">
                     <g>
                         <g>
                             <path d="M11.939,8.819c-0.42-0.06-0.834-0.104-1.239-0.136c-0.914,1.908-1.53,3.981-1.794,6.168
@@ -55,62 +51,55 @@
                         </g>
                     </g>
                 </svg>
-                <h3 class="uppercase text-xs mb-1 font-bold">E-Mail</h3>
-                <p><a href="mailto:zimsko.prvenstvo.ck@gmail.com"
-                        class="text-gray-200 hover:text-primary text-xs transition-all">zimsko.prvenstvo.ck@gmail.com</a>
+                <h3 class="mb-1 text-xs font-bold uppercase">E-Mail</h3>
+                <p><a href="mailto:zimsko.prvenstvo.ck@gmail.com" class="text-xs text-gray-200 transition-all hover:text-primary">zimsko.prvenstvo.ck@gmail.com</a>
                 </p>
             </div>
 
             <div>
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mb-4 float-start mr-4" viewBox="0 0 24 24"
-                    fill="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" class="mr-4 mb-4 w-12 h-12 float-start" viewBox="0 0 24 24" fill="currentColor">
                     <path
                         d="M20.59 6.87c-.01-.01-.02-.03-.03-.04l-3.39-3.39A.996.996 0 0 0 16.46 3H7.54c-.28 0-.56.11-.76.32L3.41 6.86c-.01.01-.02.02-.03.03A.996.996 0 0 0 3 7.54V16.46c0 .55.45 1 1 1h16c.55 0 1-.45 1-1V7.54c0-.26-.1-.51-.28-.69zM12 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm4.5-9h-9L9 5h6l1.5 2z" />
                 </svg>
-                <h3 class="uppercase text-xs mb-1 font-bold">Prijava!</h3>
-                <p><a href="{{ route('contact') }}"
-                        class="text-gray-200 hover:text-primary text-xs transition-all">Prijavite se ovdje</a>
+                <h3 class="mb-1 text-xs font-bold uppercase">Prijava!</h3>
+                <p><a href="{{ route('contact') }}" class="text-xs text-gray-200 transition-all hover:text-primary">Prijavite se ovdje</a>
                 </p>
             </div>
         </div>
 
         <nav class="flex gap-4 justify-self-end">
             <a href="https://www.instagram.com/zimsko.prvenstvo.cakovec/" target="_blank">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                    class="fill-current">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="fill-current">
                     <path
                         d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z">
                     </path>
                 </svg>
             </a>
             <a href="https://www.facebook.com/ZimskoPrvenstvoCK/" target="_blank">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                    class="fill-current">
-                    <path
-                        d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="fill-current">
+                    <path d="M9 8h-3v4h3v12h5v-12h3.642l.358-4h-4v-1.667c0-.955.192-1.333 1.115-1.333h2.885v-5h-3.808c-3.596 0-5.192 1.583-5.192 4.615v3.385z">
                     </path>
                 </svg>
             </a>
         </nav>
     </div>
 
-    <div class="bg-gradient-to-br from-secondary to-burger py-8 text-center">
-        <div class="container mx-auto font-oswald uppercase text-white flex items-center justify-center gap-6">
-            <a href="{{ route('home') }}" class="hover:text-primary transition-all">Početna</a>
-            <a href="{{ route('results') }}" class="hover:text-primary transition-all">Rezultati</a>
-            <a href="{{ route('schedule') }}" class="hover:text-primary transition-all">Raspored</a>
-            <a href="{{ route('teams') }}" class="hover:text-primary transition-all">Ekipe</a>
-            <a href="{{ route('galleries') }}" class="hover:text-primary transition-all">Galerije</a>
-            <a href="{{ route('history') }}" class="hover:text-primary transition-all">Povijest</a>
-            <a href="{{ route('contact') }}" class="hover:text-primary transition-all">Kontakt</a>
+    <div class="py-8 text-center bg-gradient-to-br from-secondary to-burger">
+        <div class="flex gap-6 justify-center items-center mx-auto text-white uppercase wraper font-oswald">
+            <a href="{{ route('home') }}" class="transition-all hover:text-primary">Početna</a>
+            <a href="{{ route('results') }}" class="transition-all hover:text-primary">Rezultati</a>
+            <a href="{{ route('schedule') }}" class="transition-all hover:text-primary">Raspored</a>
+            <a href="{{ route('teams') }}" class="transition-all hover:text-primary">Ekipe</a>
+            <a href="{{ route('galleries') }}" class="transition-all hover:text-primary">Galerije</a>
+            <a href="{{ route('history') }}" class="transition-all hover:text-primary">Povijest</a>
+            <a href="{{ route('contact') }}" class="transition-all hover:text-primary">Kontakt</a>
         </div>
     </div>
 
-    <div class="grid-flow-col items-center container mx-auto pb-10">
+    <div class="grid-flow-col items-center pb-10 mx-auto wrapper">
         <p class="text-xs text-center">
             Copyright © {{ Carbon\Carbon::now()->year }} - by
-            <a href="https://www.creolab.hr" target="_blank" class="hover:underline hover:text-blue-300 transition-all"
-                target="_blank">Creo</a>
+            <a href="https://www.creolab.hr" target="_blank" class="transition-all hover:underline hover:text-blue-300" target="_blank">Creo</a>
         </p>
     </div>
 </footer>

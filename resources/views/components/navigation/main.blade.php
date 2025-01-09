@@ -1,20 +1,13 @@
-<div class="hidden absolute top-0 left-0 z-30 w-full bg-gray-100 navigation text-nav bg-opacity-85 lg:block">
+<div class="hidden z-30 w-full bg-gray-100 navigation text-nav bg-opacity-85 lg:block">
     <ul class="flex flex-wrap gap-8 items-center pr-8">
         <li class="relative mr-auto bg-logo">
             <a href="{{ route('home') }}" class="block py-3">
-                <img src="{{ asset('img/logo_2024.png') }}" alt="Logo" class="mx-6 w-auto h-12">
+                <x-ui.logo class="w-[150px] text-white mx-6" />
             </a>
-            <div class="absolute top-0 -right-10 w-10 h-full bg-logo" style="clip-path: polygon( 0 0, 100% 0, 0 100%);">
-            </div>
+            <div class="absolute top-0 -right-10 w-10 h-full bg-logo" style="clip-path: polygon( 0 0, 100% 0, 0 100%);"></div>
         </li>
 
-        <li><x-navigation.link href="{{ route('news') }}">Novosti</x-navigation.link></li>
-        <li><x-navigation.link href="{{ route('results') }}">Rezultati</x-navigation.link></li>
-        <li><x-navigation.link href="{{ route('schedule') }}">Raspored</x-navigation.link></li>
-        <li><x-navigation.link href="{{ route('teams') }}">Ekipe</x-navigation.link></li>
-        <li><x-navigation.link href="{{ route('galleries') }}">Galerije</x-navigation.link></li>
-        <li><x-navigation.link href="{{ route('history') }}">Povijest</x-navigation.link></li>
-        <li><x-navigation.link href="{{ route('contact') }}">Kontakt</x-navigation.link></li>
+        <x-navigation.links />
 
         <li class="ml-auto">
             <a href="https://www.instagram.com/zimsko.prvenstvo.cakovec/" target="_blank">

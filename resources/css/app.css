@@ -29,6 +29,6 @@ body {
     display: none !important;
 }
 
-.container {
-    @apply px-4 md:px-8 lg:px-16 mx-auto;
+.wrapper{
+    @apply px-4 mx-auto md:px-8 lg:px-16 max-w-[1800px];
 }

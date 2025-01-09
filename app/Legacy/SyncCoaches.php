@@ -2,6 +2,7 @@
 
 namespace App\Legacy;
 
+use App\Jobs\AddMediaToModel;
 use App\Models\Coach;
 use App\Models\Team;
 use Illuminate\Support\Facades\DB;
@@ -45,7 +46,10 @@ class SyncCoaches
                         $data = @json_decode($coach->data);
 
                         try {
-                            if ($data && isset($data->photo) && $data->photo) $newCoach->addMediaFromUrl($data->photo)->toMediaCollection('photos');
+                            if ($data && isset($data->photo) && $data->photo) {
+                                AddMediaToModel::dispatch($newCoach, $data->photo, 'photos');
+                                // $newCoach->addMediaFromUrl($data->photo)->toMediaCollection('photos');
+                            }
                         } catch (\Exception $e) {
                             dump($e->getMessage());
                         }

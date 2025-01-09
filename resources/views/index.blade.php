@@ -3,7 +3,7 @@
 @section('content')
     <x-hero />
 
-    <div class="container">
+    <div class="wrapper">
         <livewire:live-score />
 
         <x-basket.latest-results :latestGames="$latestGames" />
@@ -20,7 +20,7 @@
 
         <hr class="my-12">
 
-        <x-latest-articles />
+        <x-latest-articles :articles="$latestArticles" />
 
         <hr class="my-12">
 

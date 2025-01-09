@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::disableForeignKeyConstraints();
 
         Schema::create('games', function (Blueprint $table) {
-            $table->ulid('id')->primary();
+            $table->id();
             $table->unsignedInteger('external_id')->nullable()->index();
-            $table->foreignId('event_id')->constrained();
-            $table->foreignId('round_id')->nullable()->index();
+            $table->foreignId('event_id')->cascadeOnDelete();
+            $table->foreignId('round_id')->nullable();
             $table->string('slug')->nullable()->index();
             $table->string('title')->nullable();
             $table->text('body')->nullable();

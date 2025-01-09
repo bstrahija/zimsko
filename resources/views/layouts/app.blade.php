@@ -15,7 +15,7 @@
 
 <body class="dark bg-slate-100">
     <div class="relative z-10 app" id="app">
-        <x-header />
+        <x-navigation.main />
 
         @yield('content')
 

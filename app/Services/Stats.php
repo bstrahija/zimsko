@@ -23,7 +23,7 @@ class Stats
     public static function generateFromGameForTeams(Game $game): void
     {
         // First we cleanup any existing stats for this game
-        Stat::where('game_id', $game->id)->delete();
+        // Stat::where(['game_id' => $game->id, 'for' => 'team'])->delete();
 
         if ($game->status === 'completed') {
             // Next we go through the teams and collect stats
@@ -71,7 +71,7 @@ class Stats
     public static function generateFromGameForPlayers(Game $game): void
     {
         // Clean up any existing stats for player in this game
-        Stat::where('game_id', $game->id)->where('for', 'player')->delete();
+        // Stat::where('game_id', $game->id)->where('for', 'player')->delete();
 
         if ($game->status === 'completed') {
             foreach (['home' => $game->homePlayers, 'away' => $game->awayPlayers] as $side => $players) {
@@ -189,11 +189,12 @@ class Stats
     public static function generateFromEventForTeams(Event $event, $generateForGames = false)
     {
         // Clean out everything
-        Stat::where(['event_id' => $event->id, 'for' => 'team', 'type' => 'event'])->delete();
+        // Stat::where(['event_id' => $event->id, 'for' => 'team', 'type' => 'event'])->delete();
 
         // Get all the  games
         $games = $event->games()->where('status', 'completed')->get();
 
+        // Generate stats for each game
         if ($generateForGames) {
             foreach ($games as $game) {
                 self::generateFromGameForTeams($game);
@@ -262,13 +263,11 @@ class Stats
     public static function generateFromEventForPlayers(Event $event, $generateForGames = false)
     {
         // Clean out everything
-        Stat::where(['event_id' => $event->id, 'for' => 'player', 'type' => 'event'])->delete();
-
-        // Get all the games
-        $games = $event->games()->where('status', 'completed')->get();
+        // Stat::where(['event_id' => $event->id, 'for' => 'player', 'type' => 'event'])->delete();
+        dump($event->games->count());
 
         if ($generateForGames) {
-            foreach ($games as $game) {
+            foreach ($event->games as $game) {
                 self::generateFromGameForPlayers($game);
             }
         }
@@ -403,7 +402,7 @@ class Stats
 
     public static function generateTotalForPlayers($generateForEvents = false, $generateForGames = false)
     {
-        $events = Event::all();
+        $events = Event::with(['games'])->get();
 
         if ($generateForEvents) {
             foreach ($events as $event) {
@@ -411,7 +410,7 @@ class Stats
             }
         }
 
-        // Once we have data for all games, we generate for the event
+        // Once we have data for all games, we generate the totals
         $playerTotalStats = [];
         $rows             = Stat::where('for', 'player')->where('type', 'event')->get();
 

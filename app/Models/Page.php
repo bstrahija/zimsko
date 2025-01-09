@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -14,7 +13,7 @@ use Spatie\Sluggable\SlugOptions;
 
 class Page extends Model
 {
-    use HasFactory, HasSlug, HasUlids, InteractsWithMedia, SoftDeletes;
+    use HasFactory, HasSlug, InteractsWithMedia, SoftDeletes;
 
     protected $fillable = [
         'title',
@@ -25,9 +24,7 @@ class Page extends Model
     ];
 
     protected $casts = [
-        'id'           => 'string',
         'external_id'  => 'integer',
-        'user_id'      => 'integer',
         'data'         => 'array',
         'published_at' => 'timestamp',
     ];

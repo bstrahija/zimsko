@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::disableForeignKeyConstraints();
 
         Schema::create('rounds', function (Blueprint $table) {
-            $table->ulid('id')->primary();
+            $table->id();
             $table->unsignedInteger('external_id')->nullable()->index();
-            $table->string('event_id')->constrained('events')->cascadeOnDelete()->index();
+            $table->foreignId('event_id')->cascadeOnDelete();
             $table->string('slug')->nullable()->index();
             $table->string('title');
             $table->longText('body')->nullable();

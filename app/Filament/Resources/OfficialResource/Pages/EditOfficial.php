@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Filament\Resources\RefereeResource\Pages;
+namespace App\Filament\Resources\OfficialResource\Pages;
 
-use App\Filament\Resources\RefereeResource;
+use App\Filament\Resources\OfficialResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 
-class EditReferee extends EditRecord
+class EditOfficial extends EditRecord
 {
-    protected static string $resource = RefereeResource::class;
+    protected static string $resource = OfficialResource::class;
 
     protected function getHeaderActions(): array
     {

@@ -2,11 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 use Spatie\Image\Enums\Fit;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -15,7 +15,7 @@ use Spatie\Sluggable\SlugOptions;
 
 class Post extends Model
 {
-    use HasFactory, HasSlug, HasUlids, InteractsWithMedia, SoftDeletes;
+    use HasFactory, HasSlug, InteractsWithMedia, SoftDeletes;
 
     protected $fillable = [
         'title',
@@ -26,7 +26,6 @@ class Post extends Model
     ];
 
     protected $casts = [
-        'id'           => 'string',
         'external_id'  => 'integer',
         'user_id'      => 'integer',
         'data'         => 'array',
@@ -36,6 +35,11 @@ class Post extends Model
     public function categories(): BelongsToMany
     {
         return $this->belongsToMany(Category::class);
+    }
+
+    public function summary(): string
+    {
+        return Str::limit(strip_tags($this->body), 250, '...', true);
     }
 
     public function registerMediaCollections(): void

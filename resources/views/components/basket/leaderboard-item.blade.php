@@ -1,4 +1,4 @@
-<tr class="border-b hover:bg-gray-100">
+<tr class="hover:bg-gray-100">
     <td class="px-2 py-5">
         <a href="#" class="flex gap-2 items-center text-xs">
             <small class="mr-3 text-gray-500">{{ $position + 1 }}</small>

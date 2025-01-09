@@ -13,7 +13,6 @@ use App\Legacy\SyncPlayers;
 use App\Legacy\SyncPosts;
 use App\Legacy\SyncReferees;
 use App\Legacy\SyncRounds;
-use App\Legacy\SyncStats;
 use App\Legacy\SyncTeams;
 use Illuminate\Console\Command;
 
@@ -38,6 +37,8 @@ class SyncLegacy extends Command
      */
     public function handle(Sync $sync)
     {
+        opcache_reset();
+
         if ($this->option('clear')) {
             $this->info("Clearing data from new database.");
             $sync->clear();
@@ -61,18 +62,12 @@ class SyncLegacy extends Command
             SyncPlayers::run($this->option('media'));
             $this->info("Syncing coaches...");
             SyncCoaches::run($this->option('media'));
-            $this->info("Syncing games...");
-            SyncGames::run($this->option('media'));
             $this->info("Syncing referees...");
             SyncReferees::run($this->option('media'));
             $this->info("Syncing rounds...");
             SyncRounds::run();
-            $this->info("Syncing 3pts...");
-            Sync3pts::run();
-            $this->info("Syncing team stats...");
-            SyncStats::syncTeamStats();
-            $this->info("Syncing player stats...");
-            SyncStats::syncPlayerStats();
+            $this->info("Syncing games (queued)...");
+            SyncGames::run($this->option('media'));
         } elseif ($this->option('content') === 'teams') {
             $this->info("Syncing teams...");
             SyncTeams::run($this->option('media'));

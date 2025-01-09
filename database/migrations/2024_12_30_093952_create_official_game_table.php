@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('game_official', function (Blueprint $table) {
             $table->id();
-            $table->string('official_id')->constrained('officials')->cascadeOnDelete()->index();
-            $table->string('game_id')->constrained('games')->cascadeOnDelete()->index();
+            $table->foreignId('official_id')->cascadeOnDelete();
+            $table->foreignId('game_id')->cascadeOnDelete();
             $table->timestamps();
         });
     }

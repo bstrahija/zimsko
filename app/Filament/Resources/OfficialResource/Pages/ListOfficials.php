@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Filament\Resources\RefereeResource\Pages;
+namespace App\Filament\Resources\OfficialResource\Pages;
 
-use App\Filament\Resources\RefereeResource;
+use App\Filament\Resources\OfficialResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
-class ListReferees extends ListRecords
+class ListOfficials extends ListRecords
 {
-    protected static string $resource = RefereeResource::class;
+    protected static string $resource = OfficialResource::class;
 
     protected function getHeaderActions(): array
     {

@@ -2,20 +2,20 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Image\Enums\Fit;
+use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
-class Official extends Model
+class Official extends Model implements HasMedia
 {
-    use HasFactory, HasSlug, HasUlids, SoftDeletes, InteractsWithMedia;
+    use HasFactory, HasSlug, SoftDeletes, InteractsWithMedia;
 
     protected const TYPE_OPTIONS = [
         'organizer',
@@ -47,7 +47,7 @@ class Official extends Model
 
     public function registerMediaCollections(): void
     {
-        $this->addMediaCollection('photos');
+        $this->addMediaCollection('photos')->singleFile();
     }
 
     public function registerMediaConversions(?Media $media = null): void

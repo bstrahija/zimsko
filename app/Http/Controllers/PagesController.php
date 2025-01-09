@@ -7,38 +7,20 @@ use App\Legacy\SyncRounds;
 use App\Models\Event;
 use App\Models\Game;
 use App\Models\GameTeam;
+use App\Models\Post;
 use App\Models\Stat;
+use App\Models\Team;
 use App\Services\Leaderboards;
 use App\Services\Settings;
 use App\Services\Stats;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Uri;
 
 class PagesController extends Controller
 {
     public function index()
     {
-        // Try syncing three pointers
-        // Sync3pts::run();
-        // SyncRounds::run();
-
-
-        // die();
-
-
-
-
-        // Stats::generateTotalForTeams(generateForEvents: true, generateForGames: true);
-        // Stats::generateTotalForPlayers(generateForEvents: true, generateForGames: true);
-        // die();
-        // $game = Game::find('01jfmhadet2cq2kghhn38nd93y');
-        // $event = Event::where('slug', 'zimsko-2024')->with('games', 'games.homeTeam', 'games.awayTeam')->first();
-        // $result = Stats::generateFromGameForTeams($game);
-        // $result = Stats::generateFromEventForPlayers($event, true);
-
-
-        // die();
-
         // Get data for home page
         $lastEvent         = Event::last()->toArray();
         $currentEvent      = Event::current();
@@ -47,6 +29,7 @@ class PagesController extends Controller
         $leaderboard       = Leaderboards::getTeamLeaderboardForEvent($currentEvent);
         $leaderboardPoints = Leaderboards::getPlayerLeaderboardForEvent($currentEvent);
         $leaderboard3Point = Leaderboards::getPlayer3PointLeaderboardForEvent($currentEvent);
+        $latestArticles    = Post::orderBy('published_at', 'desc')->take(3)->get();
 
         // foreach ($latestGames as $game) {
         //     dump($game->toArray());
@@ -66,6 +49,7 @@ class PagesController extends Controller
             'leaderboard'       => $leaderboard,
             'leaderboardPoints' => $leaderboardPoints,
             'leaderboard3Point' => $leaderboard3Point,
+            'latestArticles'    => $latestArticles,
         ]);
     }
 }

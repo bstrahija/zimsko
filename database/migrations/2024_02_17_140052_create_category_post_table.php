@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('category_post', function (Blueprint $table) {
-            $table->foreignId('category_id');
-            $table->foreignId('post_id');
+            $table->foreignId('category_id')->cascadeOnDelete();
+            $table->foreignId('post_id')->cascadeOnDelete();
         });
     }
 

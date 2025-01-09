@@ -2,6 +2,7 @@
 
 namespace App\Legacy;
 
+use App\Jobs\AddMediaToModel;
 use App\Models\Player;
 use Illuminate\Support\Facades\DB;
 
@@ -24,7 +25,7 @@ class SyncPlayers
                 $newPlayer->last_name   = $lastName;
                 $newPlayer->slug        = $player->slug;
                 $newPlayer->body        = $player->body;
-                $newPlayer->birthday    = $player->birthday;
+                // $newPlayer->birthday    = $player->birthday; // TODO: check if birthday is in correct format
                 $newPlayer->status      = $player->status;
                 $newPlayer->data        = @json_decode($player->data);
                 $newPlayer->created_at  = $player->created_at;
@@ -61,7 +62,10 @@ class SyncPlayers
                     $data = @json_decode($player->data);
 
                     try {
-                        if ($data && isset($data->photo) && $data->photo) $newPlayer->addMediaFromUrl($data->photo)->toMediaCollection('photos');
+                        if ($data && isset($data->photo) && $data->photo) {
+                            AddMediaToModel::dispatch($newPlayer, $data->photo, 'photos');
+                            // defer(fn() => $newPlayer->addMediaFromUrl($data->photo)->toMediaCollection('photos'));
+                        }
                     } catch (\Exception $e) {
                         dump($e->getMessage());
                     }

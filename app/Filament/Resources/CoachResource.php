@@ -6,6 +6,7 @@ use App\Filament\Resources\CoachResource\Pages;
 use App\Filament\Resources\CoachResource\RelationManagers;
 use App\Models\Coach;
 use Filament\Forms;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -36,10 +37,10 @@ class CoachResource extends Resource
                     ->required(),
                 Forms\Components\Textarea::make('body')
                     ->columnSpanFull(),
-                Forms\Components\DatePicker::make('birthday'),
+                SpatieMediaLibraryFileUpload::make('logo')
+                    ->collection('photos'),
                 Forms\Components\TextInput::make('status'),
-                Forms\Components\Textarea::make('data')
-                    ->columnSpanFull(),
+
             ]);
     }
 
@@ -47,18 +48,12 @@ class CoachResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('external_id')
-                    ->numeric()
+                Tables\Columns\TextColumn::make('first_name')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('last_name')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('teams.title')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('slug')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('birthday')
-                    ->date()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('status')
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

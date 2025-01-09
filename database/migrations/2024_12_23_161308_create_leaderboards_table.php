@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('leaderboards', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('event_id')->constrained();
+            $table->foreignId('event_id')->cascadeOnDelete();
             $table->json('data')->nullable();
             $table->timestamps();
         });

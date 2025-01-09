@@ -12,9 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('games_log', function (Blueprint $table) {
-            $table->ulid('id')->primary();
-            $table->foreignUlid('game_id')->constrained('games')->onDelete('cascade');
-            $table->foreignUlid('game_live_id')->constrained('games_live')->onDelete('cascade');
+            $table->id();
+            $table->foreignId('game_id')->cascadeOnDelete();
+            $table->foreignId('game_live_id')->cascadeOnDelete();
             $table->string('type')->nullable();
             $table->string('subtype')->nullable();
             $table->integer('amount')->default(0)->nullable();
@@ -25,12 +25,11 @@ return new class extends Migration
             $table->string('player_2_name')->nullable();
             $table->string('team_name')->nullable();
             $table->string('team_side')->nullable();
-            $table->foreignUlid('player_id')->nullable()->constrained('players');
-            $table->foreignUlid('player_2_id')->nullable()->constrained('players');
-            $table->foreignUlid('team_id')->nullable()->constrained('teams');
-            $table->foreignUlid('coach_id')->nullable()->constrained('coaches');
-            $table->foreignUlid('referee_id')->nullable()->constrained('referees');
-            $table->foreignUlid('official_id')->nullable()->constrained('officials');
+            $table->foreignId('player_id')->nullable()->constrained('players');
+            $table->foreignId('player_2_id')->nullable()->constrained('players');
+            $table->foreignId('team_id')->nullable()->constrained('teams');
+            $table->foreignId('coach_id')->nullable()->constrained('coaches');
+            $table->foreignId('official_id')->nullable()->constrained('officials');
             $table->string('location')->nullable(); // Coordinates on the court, displayed as percentages
             $table->json('data')->nullable();
             $table->text('summary')->nullable();

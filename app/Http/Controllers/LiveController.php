@@ -167,7 +167,7 @@ class LiveController extends Controller
         LiveScoreUpdated::dispatch('addMiss');
     }
 
-    public function addRebound(Game $game, Request $request)
+    public function addRebound(Game $game, Request $request): void
     {
         // Find the player
         $playerId = $request->input('selectedPlayer') ?  $request->input('selectedPlayer')['id'] : null;
@@ -181,7 +181,7 @@ class LiveController extends Controller
         LiveScoreUpdated::dispatch('addRebound');
     }
 
-    public function addSteal(Game $game, Request $request)
+    public function addSteal(Game $game, Request $request): void
     {
         // Find the player
         $playerId      = $request->input('selectedPlayer')      ?  $request->input('selectedPlayer')['id'] : null;

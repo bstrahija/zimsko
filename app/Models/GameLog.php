@@ -3,14 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasTimestamps;
-use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class GameLog extends Model
 {
-    use HasFactory, HasUlids, HasTimestamps;
+    use HasFactory, HasTimestamps;
 
     protected $table = 'games_log';
 
@@ -40,12 +39,6 @@ class GameLog extends Model
     ];
 
     protected $casts = [
-        'player_id'   => 'string',
-        'player_2_id' => 'string',
-        'team_id'     => 'string',
-        'coach_id'    => 'string',
-        'referee_id'  => 'string',
-        'official_id' => 'string',
         'home_score'  => 'integer',
         'away_score'  => 'integer',
         'amount'      => 'integer',

@@ -1,5 +1,5 @@
-<div class="burger-weekend relative z-20 bg-burger">
-    <a href="https://www.facebook.com/burgerweekendcakovec/" class="w-full h-full flex justify-center items-center">
-        <img src="{{ asset('img/burger_weekend_2024.jpg') }}" alt="Burger Weekend" class="h-16 object-cover z-50">
+<div class="relative z-20 burger-weekend bg-burger">
+    <a href="https://www.facebook.com/burgerweekendcakovec/" class="flex justify-center items-center w-full h-full">
+        <img src="{{ asset('img/burger_weekend_2024.jpg') }}" alt="Burger Weekend" class="object-cover z-50 h-16">
     </a>
 </div>

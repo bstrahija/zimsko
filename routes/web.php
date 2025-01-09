@@ -19,12 +19,13 @@ Route::get('rezultati', [GamesController::class, 'results'])->name('results');
 Route::get('raspored', [GamesController::class, 'schedule'])->name('schedule');
 Route::get('ekipe', [TeamsController::class, 'index'])->name('teams');
 Route::get('ekipe/{team}', [TeamsController::class, 'show'])->name('teams.show');
+Route::get('igraci/{player}', [PlayersController::class, 'show'])->name('players.show');
 Route::get('galerije', [GalleriesController::class, 'index'])->name('galleries');
 Route::get('galerije/{gallery}', [GalleriesController::class, 'show'])->name('galleries.show');
 
-Route::get('/concept/001', function () {
-    return view('concept.001');
-});
+// Route::get('/concept/001', function () { return view('concept.001'); });
+Route::view('/concept/001', 'concept.001')->name('concept.001');
+Route::view('/concept/002', 'concept.002')->name('concept.002');
 
 // Manage games
 Route::get('live', [LiveController::class, 'index'])->name('live')->middleware('auth');
