@@ -25,10 +25,11 @@
                 <div class="flex flex-col p-4" x-data="{ open: false }">
                     <div class="flex flex-col items-center mb-4 sm:flex-row sm:justify-between">
                         <div class="flex flex-col items-center mb-4 sm:w-1/4 sm:mb-0">
-                            <a href="" class="mb-2">
+                            <a href="{{ route('teams.show', $game->homeTeam->slug) }}" class="mb-2">
                                 <img src="{{ $game->homeTeam->logo() }}" class="object-contain w-16 h-16 rounded-full shadow-md sm:w-20 sm:h-20" alt="{{ $game->homeTeam->title }}">
                             </a>
-                            <a href="" class="text-base font-bold text-center text-gray-700 transition hover:text-primary sm:text-lg">{{ $game->homeTeam->title }}</a>
+                            <a href="{{ route('teams.show', $game->homeTeam->slug) }}"
+                                class="text-base font-bold text-center text-gray-700 transition hover:text-primary sm:text-lg">{{ $game->homeTeam->title }}</a>
                         </div>
 
                         <div class="flex flex-col items-center mb-4 sm:w-2/4 sm:mb-0">
@@ -50,11 +51,12 @@
                         </div>
 
                         <div class="flex flex-col items-center sm:w-1/4">
-                            <a href="" class="mb-2">
+                            <a href="{{ route('teams.show', $game->awayTeam->slug) }}" class="mb-2">
                                 <img src="{{ $game->awayTeam->logo() }}" class="object-contain w-16 h-16 rounded-full shadow-md sm:w-20 sm:h-20"
                                     alt="{{ $game->awayTeam->title }}">
                             </a>
-                            <a href="" class="text-base font-bold text-center text-gray-700 transition hover:text-primary sm:text-lg">{{ $game->awayTeam->title }}</a>
+                            <a href="{{ route('teams.show', $game->awayTeam->slug) }}"
+                                class="text-base font-bold text-center text-gray-700 transition hover:text-primary sm:text-lg">{{ $game->awayTeam->title }}</a>
                         </div>
                     </div>
 

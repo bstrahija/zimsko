@@ -1,0 +1,11 @@
+<div class="overflow-hidden relative bg-black header">
+    <a href="#" class="block relative w-full bg-black bg-center bg-cover opacity-50">
+        <img src="{{ $url ?? asset('img/hero.jpg') }}" alt="" class="object-cover w-full h-full">
+    </a>
+
+    <h2 class="flex absolute inset-0 z-20 justify-center items-center text-5xl font-bold text-white uppercase">{!! $title ?? 'Zimsko Prvenstvo' !!}</h2>
+</div>
+
+<div class="mb-12">
+    <x-burger-weekend />
+</div>

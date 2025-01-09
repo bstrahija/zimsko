@@ -106,6 +106,11 @@ class Team extends Model implements HasMedia
         return $this->getFirstMediaUrl('logos', $size);
     }
 
+    public function photo($size = 'thumb')
+    {
+        return $this->getFirstMediaUrl('photos', $size);
+    }
+
     public function stats(): Attribute
     {
         return new Attribute(
