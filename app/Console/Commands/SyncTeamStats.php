@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Legacy\Sync;
 use App\Legacy\Sync3pts;
+use App\Legacy\SyncRounds;
 use App\Legacy\SyncStats as SyncStatsLegacy;
 use Illuminate\Console\Command;
 
@@ -31,6 +32,8 @@ class SyncTeamStats extends Command
         $this->info("Syncing stats.");
         $this->info("===============================================");
 
+        $this->info("Syncing rounds...");
+        SyncRounds::run();
         $this->info("Syncing 3pts...");
         Sync3pts::run();
         $this->info("Syncing team stats...");

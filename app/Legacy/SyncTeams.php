@@ -3,6 +3,7 @@
 namespace App\Legacy;
 
 use App\Jobs\AddMediaToModel;
+use App\Models\Event;
 use App\Models\Team;
 use Illuminate\Support\Facades\DB;
 
@@ -42,6 +43,77 @@ class SyncTeams
                 $newTeam->created_at  = $team->created_at;
                 $newTeam->updated_at  = $team->updated_at;
                 $newTeam->save();
+
+                // Also assign to events (hardcoded)
+                if ($team->slug === 'agrow-basket') {
+                    $newTeam->events()->attach(Event::where('slug', 'zimsko-2025')->first()->id);
+                    $newTeam->events()->attach(Event::where('slug', 'zimsko-2024')->first()->id);
+                    $newTeam->events()->attach(Event::where('slug', 'zimsko-2023')->first()->id);
+                    $newTeam->events()->attach(Event::where('slug', 'zimsko-2022')->first()->id);
+                } elseif ($team->slug === 'pozoji') {
+                    $newTeam->events()->attach(Event::where('slug', 'zimsko-2025')->first()->id);
+                    $newTeam->events()->attach(Event::where('slug', 'zimsko-2024')->first()->id);
+                    $newTeam->events()->attach(Event::where('slug', 'zimsko-2023')->first()->id);
+                    $newTeam->events()->attach(Event::where('slug', 'zimsko-2022')->first()->id);
+                } elseif ($team->slug === 'kk-rudar-veterani') {
+                    $newTeam->events()->attach(Event::where('slug', 'zimsko-2025')->first()->id);
+                    $newTeam->events()->attach(Event::where('slug', 'zimsko-2024')->first()->id);
+                } elseif ($team->slug === 'agm-basket') {
+                    $newTeam->events()->attach(Event::where('slug', 'zimsko-2025')->first()->id);
+                    $newTeam->events()->attach(Event::where('slug', 'zimsko-2024')->first()->id);
+                    $newTeam->events()->attach(Event::where('slug', 'zimsko-2023')->first()->id);
+                    $newTeam->events()->attach(Event::where('slug', 'zimsko-2022')->first()->id);
+                    $newTeam->events()->attach(Event::where('slug', 'zimsko-2021')->first()->id);
+                    $newTeam->events()->attach(Event::where('slug', 'zimsko-2020')->first()->id);
+                    $newTeam->events()->attach(Event::where('slug', 'zimsko-2019')->first()->id);
+                } elseif ($team->slug === 'stoperi-fiskal') {
+                    $newTeam->events()->attach(Event::where('slug', 'zimsko-2025')->first()->id);
+                    $newTeam->events()->attach(Event::where('slug', 'zimsko-2024')->first()->id);
+                    $newTeam->events()->attach(Event::where('slug', 'zimsko-2023')->first()->id);
+                    $newTeam->events()->attach(Event::where('slug', 'zimsko-2022')->first()->id);
+                    $newTeam->events()->attach(Event::where('slug', 'zimsko-2021')->first()->id);
+                    $newTeam->events()->attach(Event::where('slug', 'zimsko-2020')->first()->id);
+                    $newTeam->events()->attach(Event::where('slug', 'zimsko-2019')->first()->id);
+                } elseif ($team->slug === 'bc-nord-ing') {
+                    $newTeam->events()->attach(Event::where('slug', 'zimsko-2025')->first()->id);
+                    $newTeam->events()->attach(Event::where('slug', 'zimsko-2024')->first()->id);
+                    $newTeam->events()->attach(Event::where('slug', 'zimsko-2023')->first()->id);
+                    $newTeam->events()->attach(Event::where('slug', 'zimsko-2022')->first()->id);
+                    $newTeam->events()->attach(Event::where('slug', 'zimsko-2021')->first()->id);
+                    $newTeam->events()->attach(Event::where('slug', 'zimsko-2020')->first()->id);
+                } elseif ($team->slug === 'pilipinas') {
+                    $newTeam->events()->attach(Event::where('slug', 'zimsko-2025')->first()->id);
+                    $newTeam->events()->attach(Event::where('slug', 'zimsko-2024')->first()->id);
+                    $newTeam->events()->attach(Event::where('slug', 'zimsko-2023')->first()->id);
+                } elseif ($team->slug === 'ppc') {
+                    $newTeam->events()->attach(Event::where('slug', 'zimsko-2025')->first()->id);
+                    $newTeam->events()->attach(Event::where('slug', 'zimsko-2024')->first()->id);
+                    $newTeam->events()->attach(Event::where('slug', 'zimsko-2023')->first()->id);
+                    $newTeam->events()->attach(Event::where('slug', 'zimsko-2022')->first()->id);
+                    $newTeam->events()->attach(Event::where('slug', 'zimsko-2021')->first()->id);
+                    $newTeam->events()->attach(Event::where('slug', 'zimsko-2020')->first()->id);
+                    $newTeam->events()->attach(Event::where('slug', 'zimsko-2019')->first()->id);
+                } elseif ($team->slug === 'euro-opus') {
+                    $newTeam->events()->attach(Event::where('slug', 'zimsko-2025')->first()->id);
+                    $newTeam->events()->attach(Event::where('slug', 'zimsko-2024')->first()->id);
+                } elseif ($team->slug === 'parks') {
+                    $newTeam->events()->attach(Event::where('slug', 'zimsko-2025')->first()->id);
+                    $newTeam->events()->attach(Event::where('slug', 'zimsko-2024')->first()->id);
+                    $newTeam->events()->attach(Event::where('slug', 'zimsko-2023')->first()->id);
+                    $newTeam->events()->attach(Event::where('slug', 'zimsko-2022')->first()->id);
+                    $newTeam->events()->attach(Event::where('slug', 'zimsko-2021')->first()->id);
+                    $newTeam->events()->attach(Event::where('slug', 'zimsko-2020')->first()->id);
+                    $newTeam->events()->attach(Event::where('slug', 'zimsko-2019')->first()->id);
+                } elseif ($team->slug === 'hespo-medina-skrinja') {
+                    $newTeam->events()->attach(Event::where('slug', 'zimsko-2023')->first()->id);
+                    $newTeam->events()->attach(Event::where('slug', 'zimsko-2022')->first()->id);
+                } elseif ($team->slug === 'cfbl') {
+                    $newTeam->events()->attach(Event::where('slug', 'zimsko-2023')->first()->id);
+                } elseif ($team->slug === 'shpitza') {
+                    $newTeam->events()->attach(Event::where('slug', 'zimsko-2019')->first()->id);
+                } elseif ($team->slug === 'basket-case-2019') {
+                    $newTeam->events()->attach(Event::where('slug', 'zimsko-2019')->first()->id);
+                }
 
                 if ($media) {
                     // We also need to assign the media files

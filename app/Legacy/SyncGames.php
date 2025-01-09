@@ -19,7 +19,6 @@ class SyncGames
             });
 
 
-
         // TODO: We need to simulate three pointers from the last event
         // $event = Event::where('slug', 'zimsko-2024')->first();
         // if ($event) {

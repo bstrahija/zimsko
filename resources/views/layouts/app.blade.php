@@ -11,7 +11,7 @@
     @vite(['resources/js/app.js'])
 </head>
 
-<body class="dark bg-slate-100">
+<body class="bg-slate-100">
     <div class="relative z-10 app" id="app">
         <x-navigation.main />
 

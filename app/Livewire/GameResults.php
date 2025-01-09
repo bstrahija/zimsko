@@ -21,7 +21,8 @@ class GameResults extends Component
 
     public function mount()
     {
-        $this->events        = Event::all();
+        $this->events        = Event::orderByDesc('scheduled_at')->get();
+        $this->selectedEventSlug = Event::current()->slug;
         $this->selectedEvent = $this->selectedEventSlug ? Event::where('slug', $this->selectedEventSlug)->first() : Event::current();
 
         // Reload the results

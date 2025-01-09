@@ -1,5 +1,5 @@
 <div class="{{ $class ?? '' }}">
-    <x-ui.h2-double sub="Blog">Posljednji članci</x-ui.h2-double>
+    <x-ui.h2-double sub="Blog">Posljednje novosti</x-ui.h2-double>
 
     <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
         @foreach ($articles as $article)

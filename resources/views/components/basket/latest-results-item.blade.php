@@ -4,6 +4,10 @@
             {{ $game->scheduled_at->format('d.m.Y') }}
         </div>
 
+        <div class="mb-3 text-xs font-bold text-gray-500 uppercase">
+            {{ $game->round?->title }}
+        </div>
+
         <div class="flex justify-between items-center mb-6">
             <div class="flex-1 team">
                 <figure class="flex overflow-hidden justify-center items-center mx-auto mb-2 w-12 h-12 bg-gray-100 rounded-full">
@@ -33,19 +37,19 @@
         <div class="grid grid-cols-4 gap-2 pt-4 text-sm text-gray-600 border-t">
             <div class="period">
                 <div class="font-bold">Q1</div>
-                {{ $game->home_score }}:{{ $game->away_score }}
+                {{ $game->home_score_p1 }}:{{ $game->away_score_p1 }}
             </div>
             <div class="period">
                 <div class="font-bold">Q2</div>
-                {{ $game->home_score }}:{{ $game->away_score }}
+                {{ $game->home_score_p2 }}:{{ $game->away_score_p2 }}
             </div>
             <div class="period">
                 <div class="font-bold">Q3</div>
-                {{ $game->home_score }}:{{ $game->away_score }}
+                {{ $game->home_score_p3 }}:{{ $game->away_score_p3 }}
             </div>
             <div class="period">
                 <div class="font-bold">Q4</div>
-                {{ $game->home_score }}:{{ $game->away_score }}
+                {{ $game->home_score_p4 }}:{{ $game->away_score_p4 }}
             </div>
         </div>
     </a>

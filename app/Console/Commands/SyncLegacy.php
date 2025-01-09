@@ -64,8 +64,6 @@ class SyncLegacy extends Command
             SyncCoaches::run($this->option('media'));
             $this->info("Syncing referees...");
             SyncReferees::run($this->option('media'));
-            $this->info("Syncing rounds...");
-            SyncRounds::run();
             $this->info("Syncing games (queued)...");
             SyncGames::run($this->option('media'));
         } elseif ($this->option('content') === 'teams') {
