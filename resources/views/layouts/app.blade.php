@@ -8,9 +8,7 @@
     <title>Zimsko</title>
     <script defer src="https://cloud.umami.is/script.js" data-website-id="efe2fff4-3192-4870-9a3a-d56d04f56341"></script>
 
-    @livewireStyles
     @vite(['resources/js/app.js'])
-
 </head>
 
 <body class="dark bg-slate-100">
@@ -19,12 +17,17 @@
 
         @yield('content')
 
+        <div class="wrapper">
+            <hr class="my-12">
+
+            <x-sponsors />
+        </div>
+
         <x-footer />
     </div>
 
     {{-- <div class="fixed inset-0 z-0 opacity-20 bg"></div>
  --}}
-    @livewireScripts
 </body>
 
 </html>

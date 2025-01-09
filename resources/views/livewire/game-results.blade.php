@@ -1,0 +1,93 @@
+<div>
+    <div class="mb-8">
+        <div class="inline-block relative w-64">
+            <select wire:model="selectedEventSlug" wire:change="reloadResults"
+                class="block px-4 py-2 pr-8 w-full leading-tight text-gray-700 bg-white rounded-md border border-gray-300 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                <option disabled>Odaberi turnir</option>
+                @foreach ($events as $event)
+                    <option value="{{ $event->slug }}" wire:key="event-{{ $event->slug }}">{{ $event->title }}</option>
+                @endforeach
+            </select>
+            <div class="flex absolute inset-y-0 right-0 items-center px-2 pointer-events-none">
+                <svg class="w-4 h-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                        clip-rule="evenodd" />
+                </svg>
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="grid">
+        @foreach ($results as $game)
+            <x-ui.card>
+                <div class="flex flex-col p-4" x-data="{ open: false }">
+                    <div class="flex flex-col items-center mb-4 sm:flex-row sm:justify-between">
+                        <div class="flex flex-col items-center mb-4 sm:w-1/4 sm:mb-0">
+                            <a href="" class="mb-2">
+                                <img src="{{ $game->homeTeam->logo() }}" class="object-contain w-16 h-16 rounded-full shadow-md sm:w-20 sm:h-20" alt="{{ $game->homeTeam->title }}">
+                            </a>
+                            <a href="" class="text-base font-bold text-center text-gray-700 transition hover:text-primary sm:text-lg">{{ $game->homeTeam->title }}</a>
+                        </div>
+
+                        <div class="flex flex-col items-center mb-4 sm:w-2/4 sm:mb-0">
+                            <div class="mb-2 text-sm text-gray-500">
+                                <h2 class="mb-1 font-bold text-center">{{ $game->title }}</h2>
+                                <small class="block text-center">{{ $game->scheduled_at->format('d.m.Y. H:i') }}</small>
+                            </div>
+                            <div class="mb-2 text-3xl font-bold sm:text-4xl">
+                                <span class="{{ $game->home_score > $game->away_score ? 'text-primary' : 'text-gray-500' }}">{{ $game->home_score }}</span>
+                                <span class="mx-2 text-gray-400">-</span>
+                                <span class="{{ $game->away_score > $game->home_score ? 'text-primary' : 'text-gray-500' }}">{{ $game->away_score }}</span>
+                            </div>
+
+                            <button @click="open = !open"
+                                class="px-3 py-1 text-xs font-medium text-gray-500 bg-gray-50 rounded transition-colors hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-200">
+                                <span x-show="!open">Detalji</span>
+                                <span x-show="open">Sakrij</span>
+                            </button>
+                        </div>
+
+                        <div class="flex flex-col items-center sm:w-1/4">
+                            <a href="" class="mb-2">
+                                <img src="{{ $game->awayTeam->logo() }}" class="object-contain w-16 h-16 rounded-full shadow-md sm:w-20 sm:h-20"
+                                    alt="{{ $game->awayTeam->title }}">
+                            </a>
+                            <a href="" class="text-base font-bold text-center text-gray-700 transition hover:text-primary sm:text-lg">{{ $game->awayTeam->title }}</a>
+                        </div>
+                    </div>
+
+                    <div class="w-full">
+                        <div x-show="open" class="mt-4" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform scale-95"
+                            x-transition:enter-end="opacity-100 transform scale-100" x-transition:leave="transition ease-in duration-200"
+                            x-transition:leave-start="opacity-100 transform scale-100" x-transition:leave-end="opacity-0 transform scale-95">
+                            <div class="grid grid-cols-2 gap-2 text-sm text-center sm:grid-cols-4 sm:gap-4">
+                                <div class="p-2 bg-gray-100 rounded-md">
+                                    <div class="font-semibold">Q1</div>
+                                    <div>{{ $game->home_score_p1 }} - {{ $game->away_score_p1 }}</div>
+                                </div>
+                                <div class="p-2 bg-gray-100 rounded-md">
+                                    <div class="font-semibold">Q2</div>
+                                    <div>{{ $game->home_score_p2 }} - {{ $game->away_score_p2 }}</div>
+                                </div>
+                                <div class="p-2 bg-gray-100 rounded-md">
+                                    <div class="font-semibold">Q3</div>
+                                    <div>{{ $game->home_score_p3 }} - {{ $game->away_score_p3 }}</div>
+                                </div>
+                                <div class="p-2 bg-gray-100 rounded-md">
+                                    <div class="font-semibold">Q4</div>
+                                    <div>{{ $game->home_score_p4 }} - {{ $game->away_score_p4 }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </x-ui.card>
+        @endforeach
+
+        <div class="mt-6">
+            {{ $results->links() }}
+        </div>
+    </div>
+</div>

@@ -21,9 +21,5 @@
         <hr class="my-12">
 
         <x-latest-articles :articles="$latestArticles" />
-
-        <hr class="my-12">
-
-        <x-sponsors />
     </div>
 @endsection

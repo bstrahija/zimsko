@@ -1,14 +1,15 @@
 @extends('layouts.app')
 
 @section('content')
-    <x-header />
+    <x-header title="Rezultati" />
 
     <div class="wrapper">
-        <div class="prose">
-            <p>Ovdje dolazi livewire komponenta koja ima izbor eventa i kola (mozda i teama)</p>
-            <p>Ispod toga je tablica sa svim utakmicama prema odabranim filterima</p>
-        </div>
+        <div class="grid grid-cols-1 gap-8 md:grid-cols-12">
+            <div class="md:col-span-12 lg:col-span-8">
+                <livewire:game-results />
+            </div>
 
-        <x-sponsors />
+            <x-sidebar class="md:col-span-12 lg:col-span-4" />
+        </div>
     </div>
 @endsection
