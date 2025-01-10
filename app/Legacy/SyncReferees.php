@@ -21,6 +21,10 @@ class SyncReferees
                     $firstName  = $names[0];
                     $lastName   = isset($names[1]) ? $names[1] : '';
 
+                    // The slug
+                    $slug = $referee->slug;
+                    if ($slug === 'matija-terek' && $referee->name === 'Vedran Biševac') $slug = 'vedran-bisevac';
+
                     $newReferee              = new \App\Models\Official();
                     $newReferee->external_id = $referee->wp_id;
                     $newReferee->first_name  = $firstName;

@@ -22,17 +22,6 @@ class PagesController extends Controller
         $leaderboard3Point = Leaderboards::getPlayer3PointLeaderboardForEvent($currentEvent);
         $latestArticles    = Post::orderBy('published_at', 'desc')->take(3)->get();
 
-        // foreach ($latestGames as $game) {
-        //     dump($game->toArray());
-        //     dump(GameTeam::where(['game_id' => $game->id, 'team_id' => $game->home_team_id])->first());
-        //     dump(GameTeam::where(['game_id' => $game->id, 'team_id' => $game->away_team_id])->first());
-        //     // dump($game->homeTeamNumbers);
-        //     echo '<pre>';
-        //     print_r("===");
-        //     echo '</pre>';
-        // }
-        // die();
-
         return view('index', [
             'currentEvent'      => $currentEvent,
             'latestGames'       => $latestGames,

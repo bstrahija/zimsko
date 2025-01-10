@@ -6,6 +6,7 @@ use App\Jobs\SyncLegacyGame;
 use App\Models\Event;
 use App\Models\Game;
 use App\Models\GamePlayer;
+use App\Models\Official;
 use App\Models\Team;
 use Illuminate\Support\Facades\DB;
 
@@ -15,7 +16,8 @@ class SyncGames
     {
         DB::connection('mysql_legacy')->table('wp_zmsk_matches')->get()
             ->each(function ($game) {
-                SyncLegacyGame::dispatch($game);
+                // SyncLegacyGame::dispatch($game);
+                self::syncGame($game);
             });
 
 
@@ -38,6 +40,7 @@ class SyncGames
 
         // Get the event for linking
         $legacyEvent = DB::connection('mysql_legacy')->table('wp_zmsk_events')->where('id', $game->event_id)->first();
+        if (! $legacyEvent) return;
         $event       = Event::where('external_id', $legacyEvent->wp_id)->first();
 
         // Also get the teams
@@ -77,6 +80,18 @@ class SyncGames
             $newGame->{$side . '_score_p6'} = $game->{$side . '_team_score_ot2'};
         }
         $newGame->save();
+
+        // Find referee relation
+        $rows = DB::connection('mysql_legacy')->table('wp_zmsk_match_referee')->where('match_id', $game->id)->get();
+        $newGame->referees()->detach();
+        foreach ($rows as $row) {
+            // Now find the actual referee row
+            $refereeWp = DB::connection('mysql_legacy')->table('wp_zmsk_referees')->where('id', $row->referee_id)->first();
+
+            // And connect both in the new DB
+            $referee = Official::where('external_id', $refereeWp->wp_id)->where('type', 'referee')->first();
+            $referee->games()->attach($newGame->id);
+        }
 
         // After this we need to sync the player scores for this game
         self::syncPlayerScores($newGame, $game);

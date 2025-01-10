@@ -60,8 +60,8 @@ class SyncRounds
             if (Str::contains($game->title, '5. mjesto', true))    $round = Round::where('event_id', $game->event_id)->where('slug', $game->event->slug . '-za-5-mjesto')->first();
             if (Str::contains($game->title, '3. mjesto', true))    $round = Round::where('event_id', $game->event_id)->where('slug', $game->event->slug . '-za-3-mjesto')->first();
 
-            if (Str::contains($game->title, 'polufinale', true))    $round = Round::where('event_id', $game->event_id)->where('slug', $game->event->slug . '-polufinale')->first();
-            if (Str::contains($game->title, 'finale', true) || Str::contains($game->title, 'finalno', true)) $round = Round::where('event_id', $game->event_id)->where('slug', $game->event->slug . '-finale')->first();
+            if (Str::contains($game->title, 'finale ', true) || Str::contains($game->title, 'finalno', true)) $round = Round::where('event_id', $game->event_id)->where('slug', $game->event->slug . '-finale')->first();
+            if (Str::contains($game->title, 'polufinale ', true))    $round = Round::where('event_id', $game->event_id)->where('slug', $game->event->slug . '-polufinale')->first();
 
             if ($round) {
                 $game->round_id = $round->id;

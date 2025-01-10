@@ -20,6 +20,8 @@ class SyncEvents
                 elseif ($event->slug === 'zimsko-2022') $scheduledAt = '2022-02-06 08:00:00';
                 elseif ($event->slug === 'zimsko-2023') $scheduledAt = '2023-01-22 08:00:00';
                 elseif ($event->slug === 'zimsko-2024') $scheduledAt = '2024-02-02 08:00:00';
+                elseif ($event->slug === 'zimsko-2019') $scheduledAt = '2019-02-02 08:00:00';
+                elseif ($event->slug === 'zimsko-2021') $scheduledAt = '2021-02-02 08:00:00';
                 else                                    $scheduledAt = null;
 
                 $newEvent               = new \App\Models\Event();
@@ -35,26 +37,26 @@ class SyncEvents
             });
 
         // Add missing events (not stats, corona etc.)
-        Event::query()->createOrFirst([
-            'external_id'  => 9997,
-            'slug'         => 'zimsko-2019',
-        ], [
-            'title'        => 'Zimsko 2019',
-            'status'       => 'archived',
-            'created_at'   => now(),
-            'updated_at'   => now(),
-            'scheduled_at' => '2019-02-02 08:00:00',
-        ]);
-        Event::query()->createOrFirst([
-            'external_id'  => 9998,
-            'slug'         => 'zimsko-2021',
-        ], [
-            'title'        => 'Zimsko 2021',
-            'status'       => 'canceled',
-            'created_at'   => now(),
-            'updated_at'   => now(),
-            'scheduled_at' => '2021-02-02 08:00:00',
-        ]);
+        // Event::query()->createOrFirst([
+        //     'external_id'  => 9997,
+        //     'slug'         => 'zimsko-2019',
+        // ], [
+        //     'title'        => 'Zimsko 2019',
+        //     'status'       => 'archived',
+        //     'created_at'   => now(),
+        //     'updated_at'   => now(),
+        //     'scheduled_at' => '2019-02-02 08:00:00',
+        // ]);
+        // Event::query()->createOrFirst([
+        //     'external_id'  => 9998,
+        //     'slug'         => 'zimsko-2021',
+        // ], [
+        //     'title'        => 'Zimsko 2021',
+        //     'status'       => 'canceled',
+        //     'created_at'   => now(),
+        //     'updated_at'   => now(),
+        //     'scheduled_at' => '2021-02-02 08:00:00',
+        // ]);
 
         // Add latest event
         Event::query()->createOrFirst([
