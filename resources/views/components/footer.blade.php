@@ -91,7 +91,7 @@
     </div>
 
     <div class="py-8 text-center bg-gradient-to-br from-secondary to-burger">
-        <div class="flex gap-6 justify-center items-center mx-auto text-white uppercase wraper font-oswald">
+        <div class="flex flex-wrap gap-6 justify-center items-center mx-auto text-white uppercase wraper font-oswald">
             <a href="{{ route('home') }}" class="transition-all hover:text-primary">Početna</a>
             <a href="{{ route('results') }}" class="transition-all hover:text-primary">Rezultati</a>
             <a href="{{ route('schedule') }}" class="transition-all hover:text-primary">Raspored</a>
