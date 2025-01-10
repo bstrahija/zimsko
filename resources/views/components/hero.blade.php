@@ -1,4 +1,4 @@
-<div class="hero w-full h-[75vh] max-h-[30svh] md:max-h-[45svh] lg:max-h-[60svh] xl:max-h-[70svh] outline-2 outline-red-500 overflow-hidden pt-[72px]"
+<div class="hero w-full h-[75vh] max-h-[40svh] md:max-h-[45svh] lg:max-h-[60svh] xl:max-h-[70svh] outline-2 outline-red-500 overflow-hidden pt-[72px]"
     data-bg="{{ asset('img/hero.png') }}" style="background-image: url({{ asset('img/hero.png') }}); background-position: 50% 50%; position: relative;">
 
     <x-navigation.main />
