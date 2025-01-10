@@ -14,6 +14,8 @@ class GamesController extends Controller
 
     public function schedule()
     {
-        return view('games.schedule');
+        $results = Game::where('status', 'scheduled')->where('scheduled_at', '>', now()->format('Y-m-d H:i'))->orderBy('scheduled_at')->paginate(20);
+
+        return view('games.schedule', ['results' => $results]);
     }
 }

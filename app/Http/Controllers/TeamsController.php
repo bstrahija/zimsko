@@ -11,7 +11,7 @@ class TeamsController extends Controller
     public function index()
     {
         $event = Event::current();
-        $teams = Team::where('status', 'active')->get();
+        $teams = $event->teams()->orderBy('title')->get();
 
         return view('teams.index', ['teams' => $teams]);
     }

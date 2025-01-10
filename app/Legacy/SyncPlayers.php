@@ -38,7 +38,7 @@ class SyncPlayers
                 // Parse the position
                 $position = match ($player->position) {
                     'point-guard'    => 'pg',
-                    'shooting-guard' => 'sf',
+                    'shooting-guard' => 'sg',
                     'small-forward'  => 'sf',
                     'power-forward'  => 'pf',
                     'center'         => 'c',
