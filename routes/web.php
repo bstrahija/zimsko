@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [PagesController::class, 'index'])->name('home');
 Route::get('history', [PagesController::class, 'history'])->name('history');
 Route::get('kontakt', [PagesController::class, 'contact'])->name('contact');
+Route::post('kontakt', [PagesController::class, 'contactSubmit'])->name('contact.submit');
 Route::redirect('login', 'admin/login')->name('login');
 
 Route::get('novosti', [PostsController::class, 'index'])->name('news');

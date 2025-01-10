@@ -6,6 +6,7 @@ use App\Models\Event;
 use App\Models\Game;
 use App\Models\Post;
 use App\Services\Leaderboards;
+use Illuminate\Http\Request;
 
 class PagesController extends Controller
 {
@@ -41,5 +42,15 @@ class PagesController extends Controller
             'leaderboard3Point' => $leaderboard3Point,
             'latestArticles'    => $latestArticles,
         ]);
+    }
+
+    public function contact()
+    {
+        return view('pages.contact');
+    }
+
+    public function contactSubmit(Request $request)
+    {
+        return back()->with('success', 'Poruka je poslana!');
     }
 }
