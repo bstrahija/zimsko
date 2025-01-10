@@ -1,7 +1,7 @@
 <footer class="items-center pt-12 mt-24 space-y-12 text-gray-100 footer bg-slate-950">
-    <div class="container grid grid-cols-4 gap-12 mx-auto">
+    <div class="container grid grid-cols-1 gap-12 p-8 mx-auto md:grid-cols-4">
         <div>
-            <a href="{{ route('home') }}">
+            <a href="{{ route('home') }}" class="flex justify-center items-center md:justify-start">
                 <img src="{{ asset('img/logo.png') }}" alt="Logo" class="h-auto w-18">
             </a>
         </div>
@@ -67,7 +67,7 @@
             </div>
         </div>
 
-        <nav class="flex gap-4 justify-self-end">
+        <nav class="flex gap-4 justify-self-center md:justify-self-end">
             <a href="{{ \App\Services\Settings::get('general.instagram') }}" target="_blank">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" class="fill-current">
                     <path
