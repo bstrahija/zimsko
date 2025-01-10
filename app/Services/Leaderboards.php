@@ -34,8 +34,8 @@ class Leaderboards
                 'losses'          => $stat->losses,
                 'games'           => $stat->games,
                 'score'           => $stat->score,
-                'opponentScore'   => $stat->opponent_score,
-                'scoreDifference' => $stat->score - $stat->opponent_score,
+                'opponentScore'   => $stat->score_against,
+                'scoreDifference' => $stat->score_diff,
                 'team'            => $stat->team,
             ]));
         }
