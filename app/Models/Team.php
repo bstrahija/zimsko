@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -99,6 +100,11 @@ class Team extends Model implements HasMedia
     public function coaches(): BelongsToMany
     {
         return $this->belongsToMany(Coach::class);
+    }
+
+    public function scopeActive(Builder $query): void
+    {
+        $query->where('status', 'active');
     }
 
     public function logo($size = 'thumb')

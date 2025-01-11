@@ -401,9 +401,12 @@ class LiveScore
 
         // Prepare the data
         $data = [
-            'game' => $this->gameLive->toArray(),
-            'log'  => $this->logStream(),
+            'game'       => $this->game->toArray(),
+            'gameLive'   => $this->gameLive->toArray(),
+            'log'        => $this->logStream(),
         ];
+
+        // reformat some dates
 
         // We need to adjust some data
         foreach (['home_starting_players', 'away_starting_players', 'home_players_on_court', 'away_players_on_court'] as $type) {

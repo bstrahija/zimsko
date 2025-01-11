@@ -28,4 +28,9 @@ class Round extends Model
     {
         return $this->hasMany(Game::class);
     }
+
+    protected function serializeDate($date)
+    {
+        return $date->format('Y-m-d H:i:s');
+    }
 }

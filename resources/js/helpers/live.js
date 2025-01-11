@@ -155,6 +155,10 @@ export default {
         });
     },
 
+    pluck: function(arr, key) {
+        return arr.map(i => i[key]);
+    },
+
     __: function (str) {
         return str;
     },

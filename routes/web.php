@@ -25,21 +25,33 @@ Route::get('igraci/{player}', [PlayersController::class, 'show'])->name('players
 Route::get('galerije', [GalleriesController::class, 'index'])->name('galleries');
 Route::get('galerije/{gallery}', [GalleriesController::class, 'show'])->name('galleries.show');
 
+/**
+ * Concepts (delete later)
+ */
+
 // Route::get('/concept/001', function () { return view('concept.001'); });
 Route::view('/concept/001', 'concept.001')->name('concept.001');
 Route::view('/concept/002', 'concept.002')->name('concept.002');
+Route::view('live/concept', 'live.concept')->name('live.concept')->middleware('auth');
+Route::view('live/concept01', 'live.concept01')->name('live.concept1')->middleware('auth');
+
+/**
+ * Live score
+ */
 
 // Manage games
 Route::get('live', [LiveController::class, 'index'])->name('live')->middleware('auth');
 Route::get('live/sim', [LiveController::class, 'sim'])->name('live.sim')->middleware('auth');
-Route::view('live/concept', 'live.concept')->name('live.concept')->middleware('auth');
-Route::view('live/concept01', 'live.concept01')->name('live.concept1')->middleware('auth');
 
 // Create/Edit a game
-Route::get('live/create',               [LiveController::class, 'create'])->name('live.create')->middleware('auth');
-Route::get('live/{game}',               [LiveController::class, 'details'])->name('live.details')->middleware('auth');
-Route::get('live/{game}/players',       [LiveController::class, 'players'])->name('live.players')->middleware('auth');
-Route::get('live/{game}/score',         [LiveController::class, 'score'])->name('live.score.show')->middleware('auth');
+Route::get('live/create',                   [LiveController::class, 'create'])->name('live.create')->middleware('auth');
+Route::get('live/{game}',                   [LiveController::class, 'details'])->name('live.details')->middleware('auth');
+Route::post('live/{game}/details',          [LiveController::class, 'detailsStore'])->name('live.details.store')->middleware('auth');
+Route::get('live/{game}/players',           [LiveController::class, 'players'])->name('live.players')->middleware('auth');
+Route::post('live/{game}/players',          [LiveController::class, 'playersStore'])->name('live.players.store')->middleware('auth');
+Route::get('live/{game}/players-starting',  [LiveController::class, 'playersStarting'])->name('live.players.starting')->middleware('auth');
+Route::post('live/{game}/players-starting', [LiveController::class, 'playersStartingStore'])->name('live.players.starting.store')->middleware('auth');
+Route::get('live/{game}/score',             [LiveController::class, 'score'])->name('live.score.show')->middleware('auth');
 
 // Keep the score
 Route::post('live/{game}/score',        [LiveController::class, 'addScore'])->name('live.score')->middleware('auth');

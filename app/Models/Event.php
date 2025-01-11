@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Services\Settings;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -27,6 +28,11 @@ class Event extends Model
         'scheduled_at' => 'timestamp',
     ];
 
+    public function rounds(): HasMany
+    {
+        return $this->hasMany(Round::class);
+    }
+
     public function games(): HasMany
     {
         return $this->hasMany(Game::class);
@@ -40,6 +46,11 @@ class Event extends Model
     public function stats(): HasMany
     {
         return $this->hasMany(Stat::class);
+    }
+
+    public function scopeActive(Builder $query): void
+    {
+        $query->where('status', 'active');
     }
 
     public static function current(): ?Event
@@ -64,5 +75,10 @@ class Event extends Model
             ->generateSlugsFrom('title')
             ->saveSlugsTo('slug')
             ->doNotGenerateSlugsOnUpdate();
+    }
+
+    protected function serializeDate($date)
+    {
+        return $date->format('Y-m-d H:i:s');
     }
 }

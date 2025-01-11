@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('games', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('external_id')->nullable()->index();
-            $table->foreignId('event_id')->cascadeOnDelete();
+            $table->foreignId('event_id')->nullable()->cascadeOnDelete();
             $table->foreignId('round_id')->nullable();
             $table->string('slug')->nullable()->index();
             $table->string('title')->nullable();

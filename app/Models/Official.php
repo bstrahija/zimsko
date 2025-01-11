@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -34,6 +35,23 @@ class Official extends Model implements HasMedia
         'status',
         'data',
     ];
+
+    protected $appends = ['name'];
+
+    public function getNameAttribute()
+    {
+        return $this->first_name . ' ' . $this->last_name;
+    }
+
+    public function scopeActive(Builder $query): void
+    {
+        $query->where('status', 'active');
+    }
+
+    public function scopeReferees(Builder $query): void
+    {
+        $query->where('type', 'referee');
+    }
 
     public function games(): BelongsToMany
     {

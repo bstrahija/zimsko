@@ -8,10 +8,13 @@ use App\Models\Event;
 use App\Models\Game;
 use App\Models\GameLive;
 use App\Models\GameLog;
+use App\Models\GamePlayer;
+use App\Models\Official;
 use App\Models\Player;
 use App\Models\Team;
 use App\Services\LiveScore;
 use App\Services\Stats;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -19,6 +22,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Inertia\Response;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
+use InvalidArgumentException;
 
 class LiveController extends Controller
 {
@@ -33,12 +38,12 @@ class LiveController extends Controller
     public function index(Request $request): Response
     {
         $currentEvent = Event::current();
+        $lastEvent    = Event::last();
         $keyword      = trim($request->get('query'));
-        $eventId      = $request->get('event') ?: $currentEvent->id;
+        $eventId      = $request->get('event') ?: ($currentEvent ? $currentEvent->id : ($lastEvent ? $lastEvent->id : null));
         $team         = $request->get('team');
-        $events       = Event::orderBy('created_at', 'desc')->get();
+        $events       = Event::orderBy('scheduled_at', 'desc')->get();
         $teams        = Team::orderBy('title', 'desc')->get();
-        $event        = Event::find($eventId);
 
         // Start the query
         $query = Game::orderBy('scheduled_at', 'desc')->where('event_id', $eventId)->whereNot('status', 'tmp')->with(['event', 'homeTeam', 'awayTeam']);
@@ -62,7 +67,12 @@ class LiveController extends Controller
         // And get results
         $games  = $query->limit(50)->get();
 
-        return Inertia::render('Index', ['games' => $games, 'events' => $events, 'teams' => $teams, 'event' => $event]);
+        return Inertia::render('Index', [
+            'games'   => $games,
+            'events'  => $events,
+            'eventId' => $eventId ? (int) $eventId : null,
+            'teams'   => $teams,
+        ]);
     }
 
     /**
@@ -74,12 +84,13 @@ class LiveController extends Controller
     public function create()
     {
         $currentEvent = Event::current();
-        $eventId      = $currentEvent->id;
+        $lastEvent    = Event::last();
+        $eventId      = $currentEvent ? $currentEvent->id : ($lastEvent ? $lastEvent->id : null);
         $event        = Event::find($eventId);
         $game = Game::query()->create([
             'status'   => 'tmp',
             'title'    => 'Nova utakmica',
-            'event_id' => $event->id,
+            'event_id' => $eventId,
         ]);
 
         // Redirect to the game
@@ -105,10 +116,42 @@ class LiveController extends Controller
      */
     public function details(Game $game): Response
     {
+        // Load referees
+        $game = $game->load('referees');
+
         // We need to convert all the data to an array
         $data = $this->live($game)->toData();
 
+        // Add some edditional data
+        $data['currentEvent'] = Event::current() ?: Event::latest();
+        $data['events']       = Event::active()->with(['teams', 'rounds'])->orderBy('scheduled_at', 'desc')->get()->toArray();
+        $data['referees']     = Official::active()->referees()->orderBy('first_name')->get()->toArray();
+
         return Inertia::render('Details', $data);
+    }
+
+    /**
+     * Store game details
+     *
+     * @param Game $game
+     * @param Request $request
+     */
+    public function detailsStore(Game $game, Request $request)
+    {
+        $game->homeTeam()->associate($request->input('homeTeamId'));
+        $game->awayTeam()->associate($request->input('awayTeamId'));
+        $game->update(['title' => $request->input('title')]);
+
+        // Update event and round
+        $game->update(['event_id' => $request->input('eventId')]);
+        $game->update(['round_id' => $request->input('roundId')]);
+
+        // Also do referees
+        $game->referees()->detach();
+        if ($request->input('refereeId1')) $game->referees()->attach($request->input('refereeId1'));
+        if ($request->input('refereeId2')) $game->referees()->attach($request->input('refereeId2'));
+
+        return to_route('live.players', $game->id);
     }
 
     /**
@@ -123,6 +166,70 @@ class LiveController extends Controller
         $data = $this->live($game)->toData();
 
         return Inertia::render('Players', $data);
+    }
+
+    /**
+     * Store game players
+     *
+     * @param Game $game
+     * @param Request $request
+     */
+    public function playersStore(Game $game, Request $request)
+    {
+        $homePlayers = $request->input('home_players');
+        $homePlayerIds = collect($homePlayers)->pluck('id')->toArray();
+        $awayPlayers = $request->input('away_players');
+        $awayPlayerIds = collect($awayPlayers)->pluck('id')->toArray();
+
+        // We need to remove the relations that are not in the id list
+        // This is because the stats data is stored inside the relation table
+
+
+        // Let's store all player relations
+        foreach ([$homePlayers, $awayPlayers] as $players) {
+            foreach ($players as $player) {
+                GamePlayer::query()->updateOrCreate([
+                    'game_id'  => $game->id,
+                    'player_id' => $player['id'],
+                    'team_id'  => $player['pivot']['team_id']
+                ], ['event_id' => $game->event_id]);
+            }
+        }
+        // foreach ($homePlayerIds as $player id)
+        // $game->players->detach();
+
+        // $game->homePlayers()->sync($homePlayerIds);
+        // $game->awayPlayers()->sync($awayPlayerIds);
+
+        die();
+
+
+        return to_route('live.players.starting', $game->id);
+    }
+
+    /**
+     * Edit players  for teams, set starting players
+     *
+     * @param  Game $game
+     * @return Response
+     */
+    public function playersStarting(Game $game): Response
+    {
+        // We need to convert all the data to an array
+        $data = $this->live($game)->toData();
+
+        return Inertia::render('PlayersStarting', $data);
+    }
+
+    /**
+     * Store game players
+     *
+     * @param Game $game
+     * @param Request $request
+     */
+    public function playersStartingStore(Game $game, Request $request)
+    {
+        return to_route('live.players.starting', $game->id);
     }
 
     /**

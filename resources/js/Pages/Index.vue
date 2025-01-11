@@ -1,11 +1,12 @@
 <script setup>
-import { reactive } from 'vue';
+import { onMounted, reactive } from 'vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import Layout from './Layout.vue';
 
 let props = defineProps({
     games: Array,
     events: Array,
+    eventId: Number,
     teams: Array,
 });
 
@@ -13,6 +14,10 @@ let data = reactive({
     query: '',
     event: "",
     team: "",
+});
+
+onMounted(() => {
+    data.event = props.events.find(event => event.id === props.eventId)?.id || "";
 });
 
 const filterResults = () => {
@@ -48,14 +53,20 @@ const filterResults = () => {
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                             </svg>
                         </div>
-                        <Link href="/live/create" class="px-4 py-2 w-48 text-gray-200 rounded-lg hover:bg-slate-600 bg-slate-700">
+
+                        <Link href="/live/create" class="flex justify-center items-center px-4 py-2 w-48 text-center rounded-lg btn-primary group">
+                        <svg class="mr-2 w-5 h-5 transition-transform group-hover:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
                         Nova Utakmica
                         </Link>
+
                         <div class="flex space-x-4">
                             <div class="relative">
                                 <select v-model="data.event" @change="filterResults()"
                                     class="px-4 py-2 pr-8 text-gray-300 rounded-lg appearance-none bg-slate-700 focus:outline-none focus:ring-2 focus:ring-cyan-400">
-                                    <option value="">All Events</option>
+                                    <option value="">Svi turniri</option>
                                     <option v-for="event in events" :key="event.id" :value="event.id">
                                         {{ event.title }}
                                     </option>
@@ -67,7 +78,7 @@ const filterResults = () => {
                             <div class="relative">
                                 <select v-model="data.team" @change="filterResults()"
                                     class="px-4 py-2 pr-8 text-gray-300 rounded-lg appearance-none bg-slate-700 focus:outline-none focus:ring-2 focus:ring-cyan-400">
-                                    <option value="">All Teams</option>
+                                    <option value="">Sve ekipe</option>
                                     <option v-for="team in teams" :key="team.id" :value="team.id">
                                         {{ team.title }}
                                     </option>
@@ -80,15 +91,15 @@ const filterResults = () => {
                     </div>
 
 
-                    <table class="overflow-hidden w-full text-sm rounded-lg shadow-md bg-slate-800">
+                    <table class="overflow-hidden w-full text-sm rounded-lg shadow-md bg-slate-800" v-if="games.length > 0">
                         <thead class="text-gray-300 bg-slate-700">
                             <tr>
-                                <th class="px-4 py-3 text-left">Event</th>
-                                <th class="px-4 py-3 text-left">Title</th>
-                                <th class="px-4 py-3 text-left">Score</th>
-                                <th class="px-4 py-3 text-left">Date</th>
+                                <th class="px-4 py-3 text-left">Turnir</th>
+                                <th class="px-4 py-3 text-left">Naslov</th>
+                                <th class="px-4 py-3 text-left">Rezultat</th>
+                                <th class="px-4 py-3 text-left">Datum</th>
                                 <th class="px-4 py-3 text-left">Status</th>
-                                <th class="px-4 py-3 text-center">Actions</th>
+                                <th class="px-4 py-3 text-center"></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -108,6 +119,11 @@ const filterResults = () => {
                             </tr>
                         </tbody>
                     </table>
+
+                    <div v-else class="p-4 mt-12 text-yellow-300 rounded-lg bg-yellow-900/50">
+                        <p class="text-center">Nije pronađena nijedna utakmica.</p>
+                    </div>
+
                 </div>
             </div>
         </div>
