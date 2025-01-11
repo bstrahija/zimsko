@@ -176,14 +176,15 @@ class LiveController extends Controller
      */
     public function playersStore(Game $game, Request $request)
     {
-        $homePlayers = $request->input('home_players');
+        $homePlayers   = $request->input('home_players');
         $homePlayerIds = collect($homePlayers)->pluck('id')->toArray();
-        $awayPlayers = $request->input('away_players');
+        $awayPlayers   = $request->input('away_players');
         $awayPlayerIds = collect($awayPlayers)->pluck('id')->toArray();
+        $allPlayerIds  = array_merge($homePlayerIds, $awayPlayerIds);
 
         // We need to remove the relations that are not in the id list
         // This is because the stats data is stored inside the relation table
-
+        GamePlayer::query()->whereNotIn('player_id', $allPlayerIds)->where('game_id', $game->id)->delete();
 
         // Let's store all player relations
         foreach ([$homePlayers, $awayPlayers] as $players) {
@@ -195,14 +196,6 @@ class LiveController extends Controller
                 ], ['event_id' => $game->event_id]);
             }
         }
-        // foreach ($homePlayerIds as $player id)
-        // $game->players->detach();
-
-        // $game->homePlayers()->sync($homePlayerIds);
-        // $game->awayPlayers()->sync($awayPlayerIds);
-
-        die();
-
 
         return to_route('live.players.starting', $game->id);
     }

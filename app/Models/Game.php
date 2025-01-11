@@ -95,21 +95,21 @@ class Game extends Model
 
     public function players(): BelongsToMany
     {
-        return $this->belongsToMany(Player::class)->withPivot(config('stats.columns'));
+        return $this->belongsToMany(Player::class)->withPivot(array_merge(['event_id', 'team_id'], config('stats.columns')));
     }
 
     public function homePlayers(): BelongsToMany
     {
         return $this->belongsToMany(Player::class)->where('team_id', $this->home_team_id)
             ->with('media')
-            ->withPivot(array_column(config('stats.columns'), 'id'));
+            ->withPivot(array_merge(['event_id', 'team_id'], array_column(config('stats.columns'), 'id')));
     }
 
     public function awayPlayers(): BelongsToMany
     {
         return $this->belongsToMany(Player::class)->where('team_id', $this->away_team_id)
             ->with('media')
-            ->withPivot(array_column(config('stats.columns'), 'id'));
+            ->withPivot(array_merge(['event_id', 'team_id'], array_column(config('stats.columns'), 'id')));
     }
 
     public function gamePlayers(): HasMany
