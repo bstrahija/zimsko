@@ -94,7 +94,7 @@ function setType(type) {
                         <div class="grid gap-6 grid-cols-[1fr_100px_1fr]" :class="{ 'grid-cols-[1fr_120px]': data.type === 'tf' }">
                             <div class="text-center">
                                 <h3 class="mb-3 text-sm text-center uppercase">PREKRŠAJ OD</h3>
-                                <div class="grid grid-cols-3 gap-4">
+                                <div class="grid grid-cols-2 gap-4 md:grid-cols-3">
                                     <PlayerSelectBlock :player="player" :active="isActive(player)" v-for="player in players" :key="'playersc-' + player.id"
                                         @click="selectPlayer(player)" />
                                 </div>
@@ -117,9 +117,9 @@ function setType(type) {
                                 </button>
                             </div>
 
-                            <div v-if="data.selectedPlayer && data.type !== 'tf'">
+                            <div v-if="data.type !== 'tf'">
                                 <h3 class="mb-3 text-sm text-center uppercase">Prekršaj na</h3>
-                                <div class="grid grid-cols-3 gap-4">
+                                <div class="grid grid-cols-2 gap-4 md:grid-cols-3">
                                     <PlayerSelectBlock :player="player" :active="isActiveFouled(player)" v-for="player in opponentPlayers" :key="'playeras-' + player.id"
                                         @click="selectFouledPlayer(player)" :class="{ hidden: player.id === data.selectedPlayer?.id }" />
                                 </div>

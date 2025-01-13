@@ -105,7 +105,7 @@ function checkScore() {
                         <div class="grid gap-6 grid-cols-[1fr_100px_1fr]" :class="{ 'grid-cols-[1fr_120px]': data.score === 1 }">
                             <div class="text-center">
                                 <h3 class="mb-3 text-sm text-center uppercase">Pogađa</h3>
-                                <div class="grid grid-cols-3 gap-4">
+                                <div class="grid grid-cols-2 gap-4 md:grid-cols-3">
                                     <PlayerSelectBlock :player="player" :active="isActive(player)" v-for="player in players" :key="'playersc-' + player.id"
                                         @click="selectPlayer(player)" />
                                 </div>
@@ -130,7 +130,7 @@ function checkScore() {
 
                             <div v-if="data.score > 1">
                                 <h3 class="mb-3 text-sm text-center uppercase">Asistira</h3>
-                                <div class="grid grid-cols-3 gap-4">
+                                <div class="grid grid-cols-2 gap-4 md:grid-cols-3">
                                     <PlayerSelectBlock :player="player" :active="isActiveAssist(player)" v-for="player in players" :key="'playeras-' + player.id"
                                         @click="selectAssistPlayer(player)" :class="{ hidden: player.id === data.selectedPlayer?.id }" />
                                 </div>

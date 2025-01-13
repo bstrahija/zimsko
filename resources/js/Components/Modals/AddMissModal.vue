@@ -71,7 +71,7 @@ function setScore(score) {
                         <div class="grid gap-6 items-start grid-cols-[1fr_140px]">
                             <div class="space-y-3">
                                 <h3 class="text-sm text-center uppercase">PROMAŠUJE</h3>
-                                <div class="grid grid-cols-3 gap-4 items-start">
+                                <div class="grid grid-cols-2 gap-4 items-start sm:grid-cols-3 lg:grid-cols-4">
                                     <PlayerSelectBlock :player="player" v-for="player in players" @click="selectPlayer(player)" :active="isActive(player)" />
                                 </div>
                             </div>

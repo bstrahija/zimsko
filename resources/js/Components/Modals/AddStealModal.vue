@@ -79,7 +79,7 @@ function isActiveSteal(player) {
                         <div class="grid gap-6 grid-cols-[1fr_120px_1fr]">
                             <div class="text-center">
                                 <h3 class="mb-3 text-sm text-center uppercase">Krade</h3>
-                                <div class="grid grid-cols-3 gap-4">
+                                <div class="grid grid-cols-2 gap-4 md:grid-cols-3">
                                     <PlayerSelectBlock :player="player" :active="isActive(player)" v-for="player in players" :key="'playersc-' + player.id"
                                         @click="selectPlayer(player)" />
                                 </div>
@@ -94,7 +94,7 @@ function isActiveSteal(player) {
 
                             <div class="text-center">
                                 <h3 class="mb-3 text-sm text-center uppercase">Od</h3>
-                                <div class="grid grid-cols-3 gap-4">
+                                <div class="grid grid-cols-2 gap-4 md:grid-cols-3">
                                     <PlayerSelectBlock :player="player" :active="isActiveSteal(player)" v-for="player in opponentPlayers" :key="'playersc-' + player.id"
                                         @click="selectStealPlayer(player)" />
                                 </div>

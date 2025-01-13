@@ -31,7 +31,7 @@
     }
 
     .modal-dialog {
-        @apply mx-auto max-w-screen-xl text-gray-200;
+        @apply mx-auto w-[98vw] max-w-[98vw] md:max-w-[800px] lg:max-w-[900px] text-gray-200;
     }
 
     .modal-body {

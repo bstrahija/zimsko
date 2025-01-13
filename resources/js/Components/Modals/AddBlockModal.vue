@@ -79,7 +79,7 @@ function isActiveBlocked(player) {
                         <div class="grid gap-6 grid-cols-[1fr_120px_1fr]">
                             <div class="text-center">
                                 <h3 class="mb-3 text-sm text-center uppercase">Blokira</h3>
-                                <div class="grid grid-cols-3 gap-4">
+                                <div class="grid grid-cols-2 gap-4 md:grid-cols-3">
                                     <PlayerSelectBlock :player="player" :active="isActive(player)" v-for="player in players" :key="'playersc-' + player.id"
                                         @click="selectPlayer(player)" />
                                 </div>
@@ -94,7 +94,7 @@ function isActiveBlocked(player) {
 
                             <div class="text-center">
                                 <h3 class="mb-3 text-sm text-center uppercase">BLOKIRAN</h3>
-                                <div class="grid grid-cols-3 gap-4">
+                                <div class="grid grid-cols-2 gap-4 md:grid-cols-3">
                                     <PlayerSelectBlock :player="player" :active="isActiveBlocked(player)" v-for="player in opponentPlayers" :key="'playersc-' + player.id"
                                         @click="selectBlockedPlayer(player)" />
                                 </div>
