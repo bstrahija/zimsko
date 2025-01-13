@@ -260,6 +260,8 @@ class LiveController extends Controller
         $live->gameLive()->update([
             'home_starting_players' => $homePlayerIds,
             'away_starting_players' => $awayPlayerIds,
+            'home_players_on_court' => $homePlayerIds,
+            'away_players_on_court' => $awayPlayerIds,
         ]);
 
         if ($startGame) {

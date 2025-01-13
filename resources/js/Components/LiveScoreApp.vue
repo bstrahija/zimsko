@@ -57,35 +57,41 @@ let props = defineProps({
             </div>
         </div>
 
-        <div class="grid gap-12 mb-4 score-court" style="grid-template-columns: 1fr 8% 1fr">
-            <div class="grid sub-bar-home">
+        <div class="grid gap-4 mb-4 score-court grid-cols-[1fr_100px_1fr] md:grid-cols-[1fr_160px_1fr]">
+            <div class="sub-bar-home">
                 <PlayersOnCourt :game="game" :team="game.home_team" :players="game.home_players_on_court" />
             </div>
 
-            <div class="grid text-sm text-center uppercase">
+            <div class="text-sm text-center uppercase">
                 <GameControls :game="game" :log="log" />
             </div>
 
-            <div class="grid sub-bar-away">
+            <div class="sub-bar-away">
                 <PlayersOnCourt :game="game" :team="game.away_team" :players="game.away_players_on_court" />
             </div>
         </div>
 
-        <div class="grid gap-4 score-controls" style="grid-template-columns: 1fr 25% 1fr">
-            <div class="grid flex-row grid-cols-1 gap-4 md:grid-cols-2 home-controls sm:flex sm:flex-row-reverse">
-                <PlayersOnBench :players="game.home_players_on_bench" :game="game" :team="game.home_team" />
-
-                <ScoreButtonGroup :team="game.home_team" :game="game" />
+        <div class="grid gap-4 items-start score-controls grid-cols-2 sm:grid-cols-[1fr_200px_1fr] md:grid-cols-[1fr_230px_1fr]">
+            <div class="flex flex-col-reverse gap-4 lg:flex-row home-controls">
+                <div class="w-full">
+                    <PlayersOnBench :players="game.home_players_on_bench" :game="game" :team="game.home_team" />
+                </div>
+                <div class="w-full">
+                    <ScoreButtonGroup :team="game.home_team" :game="game" />
+                </div>
             </div>
 
             <div class="overflow-auto h-full max-h-[50svh] hidden sm:block">
                 <Log :log="log" :game="game" />
             </div>
 
-            <div class="grid grid-cols-1 gap-4 md:grid-cols-2 away-controls">
-                <ScoreButtonGroup :team="game.away_team" :game="game" />
-
-                <PlayersOnBench :players="game.away_players_on_bench" :game="game" :team="game.away_team" />
+            <div class="flex flex-col-reverse gap-4 lg:flex-row-reverse away-controls">
+                <div class="w-full">
+                    <PlayersOnBench :players="game.away_players_on_bench" :game="game" :team="game.away_team" />
+                </div>
+                <div class="w-full">
+                    <ScoreButtonGroup :team="game.away_team" :game="game" />
+                </div>
             </div>
         </div>
     </div>
