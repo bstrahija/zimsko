@@ -47,7 +47,7 @@ function backToDetails() {
 }
 
 function canBeSaved() {
-    if (props.game.home_players.length < 5 || props.game.away_players.length < 5) {
+    if (data.homePlayers.length < 5 || data.awayPlayers.length < 5) {
         return false
     }
 
@@ -70,7 +70,7 @@ const save = async function () {
         <Head title="Zimsko Live Score | Igrači" />
 
         <div class="flex relative justify-center min-h-[98svh]">
-            <div class="w-full space-y-2 max-w-[1920px]">
+            <div class="w-full space-y-2 max-w-[1920px] transition-all" :class="{ 'opacity-90': data.saving }">
                 <div class="bg-slate-900/95 p-6 rounded-lg border-5 border-cyan-400/50 shadow-[0_0_15px_rgba(6,182,212,0.5)] h-full grid-bg">
                     <h1 class="relative px-3 py-2 -mt-6 -mr-6 mb-4 -ml-6 text-xs text-center uppercase text-white/80 bg-cyan-400/15">
                         <Link href="/live" class="absolute right-3 top-1/2 text-red-500 transition-transform -translate-y-1/2 hover:text-cyan-300 hover:rotate-90">
@@ -91,9 +91,9 @@ const save = async function () {
                         {{ game.title }}
                     </h1>
 
-                    <div class="grid gap-4 mb-4 score-top" style="grid-template-columns: 1fr 160px 1fr">
+                    <div class="grid gap-4 mb-4 score-top grid-cols-[1fr_100px_1fr] md:grid-cols-[1fr_160px_1fr]">
                         <div class="space-y-4 home-team-top">
-                            <ScoreBar :score="0" :team="game.home_team" :side="'home'" />
+                            <ScoreBar :score="game.home_score" :team="game.home_team" :side="'home'" />
                         </div>
 
                         <div class="grid text-center rounded bg-slate-800/40">
@@ -101,13 +101,13 @@ const save = async function () {
                         </div>
 
                         <div class="space-y-4 away-team-top">
-                            <ScoreBar :score="0" :team="game.away_team" :side="'away'" />
+                            <ScoreBar :score="game.away_score" :team="game.away_team" :side="'away'" />
                         </div>
                     </div>
 
-                    <div class="grid gap-12 score-controls" style="grid-template-columns: 1fr 8% 1fr">
+                    <div class="grid gap-4 score-controls grid-cols-[1fr_100px_1fr] md:grid-cols-[1fr_160px_1fr]">
                         <div class="home-controls">
-                            <div class="grid grid-cols-4 auto-rows-min gap-2 grid-min-rows players-on-bench starting-players-on-bench">
+                            <div class="grid grid-cols-4 auto-rows-min gap-2 xl:grid-cols-5 grid-min-rows players-on-bench starting-players-on-bench">
                                 <PlayerSelectBlock v-for="player in data.homePlayers" :key="'home-selected-' + player.id" :player="player" @click="removeHomePlayer(player)" />
                             </div>
                         </div>
@@ -124,7 +124,7 @@ const save = async function () {
                         </div>
 
                         <div class="away-controls">
-                            <div class="grid grid-cols-4 auto-rows-min gap-2 grid-min-rows players-on-bench starting-players-on-bench">
+                            <div class="grid grid-cols-4 auto-rows-min gap-2 xl:grid-cols-5 grid-min-rows players-on-bench starting-players-on-bench">
                                 <PlayerSelectBlock v-for="player in data.awayPlayers" :key="'away-selected-' + player.id" :player="player" @click="removeAwayPlayer(player)" />
                             </div>
                         </div>
@@ -132,12 +132,12 @@ const save = async function () {
 
                     <hr class="mt-12 mb-8 opacity-20">
 
-                    <div class="grid gap-12 mt-8 score-controls" style="grid-template-columns: 1fr 8% 1fr">
+                    <div class="grid gap-4 mt-8 score-controls grid-cols-[1fr_100px_1fr] md:grid-cols-[1fr_160px_1fr]">
                         <div class="space-y-4 home-controls">
                             <h2 class="text-sm text-center text-white uppercase">
                                 Dostupni igrači ({{ game.available_home_players.length - helpers.pluck(data.homePlayers, 'id').length }})
                             </h2>
-                            <div class="grid grid-cols-4 auto-rows-min gap-2 grid-min-rows players-on-bench starting-players-on-bench">
+                            <div class="grid grid-cols-4 auto-rows-min gap-2 xl:grid-cols-5 lg:grid-cols-5 grid-min-rows players-on-bench starting-players-on-bench">
                                 <PlayerSelectBlock v-for="player in game.available_home_players" :key="'home-available-' + player.id" :player="player"
                                     @click="addHomePlayer(player)" :class="{ hidden: helpers.pluck(data.homePlayers, 'id').includes(player.id) }" />
                             </div>
@@ -149,7 +149,7 @@ const save = async function () {
                             <h2 class="text-sm text-center text-white uppercase">
                                 Dostupni igrači ({{ game.available_away_players.length - helpers.pluck(data.awayPlayers, 'id').length }})
                             </h2>
-                            <div class="grid grid-cols-4 auto-rows-min gap-2 grid-min-rows players-on-bench starting-players-on-bench">
+                            <div class="grid grid-cols-4 auto-rows-min gap-2 xl:grid-cols-5 grid-min-rows players-on-bench starting-players-on-bench">
                                 <PlayerSelectBlock v-for="player in game.available_away_players" :key="'away-available-' + player.id" :player="player"
                                     @click="addAwayPlayer(player)" :class="{ hidden: helpers.pluck(data.awayPlayers, 'id').includes(player.id) }" />
                             </div>

@@ -11,6 +11,7 @@ let props = defineProps({
 });
 
 let data = reactive({
+    saving: false,
     query: '',
     event: "",
     team: "",
@@ -35,6 +36,22 @@ const filterResults = () => {
         preserveScroll: true,
     });
 };
+
+const scoreUrl = function (game) {
+    let url = 'live/' + game.id;
+
+    if (game.status === 'in_progress') url = 'live/' + game.id + '/score';
+
+    return url
+}
+
+const deleteGame = async function (game) {
+    if (confirm('Da li ste sigurni da zelite obrisati ovu utakmicu?')) {
+        data.saving = true
+        await router.delete('/live/' + game.id);
+        data.saving = false
+    }
+}
 </script>
 
 <template>
@@ -103,18 +120,37 @@ const filterResults = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="game in games" :key="game.id" class="border-b cursor-pointer border-slate-600 hover:bg-slate-700" @click="router.visit('live/' + game.id)">
-                                <td class="px-4 py-3 text-gray-300">{{ game.event ? game.event.title : 'N/A' }}</td>
-                                <td class="px-4 py-3 text-gray-300">{{ game.title }}</td>
-                                <td class="px-4 py-3 text-gray-300">
+                            <tr v-for="game in games" :key="game.id" class="border-b cursor-pointer border-slate-600 hover:bg-slate-700">
+                                <td class="px-4 py-3 text-gray-300" @click="router.visit('live/' + game.id)">{{ game.event ? game.event.title : 'N/A' }}</td>
+                                <td class="px-4 py-3 text-gray-300" @click="router.visit('live/' + game.id)">{{ game.title }}</td>
+                                <td class="px-4 py-3 text-gray-300" @click="router.visit('live/' + game.id)">
                                     {{ game.home_score }} - {{ game.away_score }}
                                 </td>
-                                <td class="px-4 py-3 text-gray-300">{{ game.scheduled_at }}</td>
-                                <td class="px-4 py-3 text-gray-300">{{ game.status }}</td>
+                                <td class="px-4 py-3 text-gray-300" @click="router.visit('live/' + game.id)">{{ game.scheduled_at }}</td>
+                                <td class="px-4 py-3 text-gray-300" @click="router.visit('live/' + game.id)">
+                                    <span class="px-2 py-1 text-xs font-medium rounded-full opacity-80" :class="{
+                                        'bg-slate-600 text-slate-100': game.status === 'completed',
+                                        'bg-green-500 text-green-100 animate-pulse': game.status === 'in_progress',
+                                        'bg-orange-600 text-yellow-100': game.status === 'draft',
+                                        'bg-blue-500 text-blue-100': game.status === 'scheduled'
+                                    }">
+                                        {{ game.status.replace(/_/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') }}
+                                    </span>
+                                </td>
                                 <td class="px-4 py-3 text-center">
-                                    <Link :href="'live/' + game.id" class="btn btn-primary">
-                                    Live score
-                                    </Link>
+                                    <div class="flex gap-2 justify-end">
+                                        <Link :href="scoreUrl(game)" class="btn btn-primary">
+                                        Score
+                                        </Link>
+
+
+                                        <a class="btn btn-error" @click.prevent="deleteGame(game)">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-4 h-4">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                            </svg>
+                                        </a>
+                                    </div>
                                 </td>
                             </tr>
                         </tbody>

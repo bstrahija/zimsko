@@ -40,12 +40,7 @@ router.on('success', (event) => {
 
         <div class="flex relative justify-center min-h-[98svh]">
             <div class="w-full space-y-2 max-w-[1920px]">
-                <SelectPlayers :game="game" v-if="!game.home_players || !game.away_players || game.home_players.length < 5 || game.away_players.length < 5" />
-
-                <SelectStartingPlayers :game="game"
-                    v-if="!game.home_starting_players || !game.away_starting_players || game.home_starting_players.length < 5 || game.away_starting_players.length < 5" />
-
-                <LiveScoreApp v-else :game="game" :log="log" />
+                <LiveScoreApp :game="game" :log="log" />
             </div>
         </div>
     </Layout>

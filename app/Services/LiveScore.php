@@ -185,7 +185,7 @@ class LiveScore
         $this->playersOnCourt = $this->homePlayersOnCourt->merge($this->awayPlayersOnCourt);
     }
 
-    public function startGame()
+    public function startGame($writeToLog = true)
     {
         $this->currentPeriod = 1;
         $this->gameLive->update([
@@ -193,15 +193,17 @@ class LiveScore
         ]);
 
         // We also need to update the log
-        GameLog::query()->updateOrCreate([
-            'game_id'      => $this->game->id,
-            'game_live_id' => $this->gameLive->id,
-            'type'         => 'game_started',
-        ], [
-            'period'        => 1,
-            'occurred_at'   => '00:00:00',
-            'occurred_at_p' => '00:00:00',
-        ]);
+        if ($writeToLog) {
+            GameLog::query()->updateOrCreate([
+                'game_id'      => $this->game->id,
+                'game_live_id' => $this->gameLive->id,
+                'type'         => 'game_started',
+            ], [
+                'period'        => 1,
+                'occurred_at'   => '00:00:00',
+                'occurred_at_p' => '00:00:00',
+            ]);
+        }
 
         // Setup the players
         $this->setupPlayers();
@@ -313,6 +315,11 @@ class LiveScore
         $this->updateLog();
     }
 
+    public function gameLive(): GameLive
+    {
+        return $this->gameLive;
+    }
+
     public function homeTeam()
     {
         return $this->homeTeam;
@@ -410,9 +417,9 @@ class LiveScore
 
         // We need to adjust some data
         foreach (['home_starting_players', 'away_starting_players', 'home_players_on_court', 'away_players_on_court'] as $type) {
-            if (isset($data['game'][$type]) && $data['game'][$type]) {
+            if (isset($data['gameLive'][$type]) && $data['gameLive'][$type]) {
                 $players = [];
-                foreach ($data['game'][$type] as $key => $playerId) {
+                foreach ($data['gameLive'][$type] as $key => $playerId) {
                     $player = $this->findPlayer($playerId);
                     $players[$key] = $player->toArray();
                 }

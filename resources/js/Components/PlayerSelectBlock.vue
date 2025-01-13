@@ -9,18 +9,19 @@ defineProps({
 
 <template>
     <button
-        class="flex relative justify-center items-start pt-6 h-full text-center text-white rounded border shadow-sm transition-all pointer-events-auto hover:opacity-90 hover:shadow-lg player-block aspect-square">
-        <div class="text-xl font-bold">
-            {{ player.number ? player.number : '-' }}
+        class="overflow-hidden relative h-full text-center text-white rounded border shadow-sm transition-all pointer-events-auto hover:opacity-90 hover:shadow-lg player-block aspect-square">
+        <div>
+            <div class="z-30 text-sm font-bold shadow-lg md:text-lg lg:text-2xl xl:text-3xl">
+                {{ player.number ? player.number : '-' }}
 
-            <div v-if="player?.data?.photo" class="overflow-hidden mt-2 w-12 rounded-full opacity-60 aspect-square">
-                <img :src="player.data.photo" alt="">
             </div>
+            <small class="block relative z-20 font-medium text-center opacity-60 text-3xs lg:text-2xs xl:text-xs line-clamp-2">
+                {{ player.name }}
+            </small>
         </div>
 
-        <small
-            class="absolute bottom-2 left-1/2 font-medium text-center opacity-60 transform -translate-x-1/2 text-2xs line-clamp-2">
-            {{ player.name }}
-        </small>
+        <div v-if="player?.data?.photo" class="absolute inset-0 z-10 opacity-20">
+            <img :src="player.data.photo" alt="" class="object-cover w-full h-full">
+        </div>
     </button>
 </template>

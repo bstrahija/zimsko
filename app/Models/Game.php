@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
@@ -155,6 +156,30 @@ class Game extends Model
     public function stats(): HasMany
     {
         return $this->hasMany(Stat::class);
+    }
+
+    public function regenerateSlug(): string
+    {
+        $slug = Str::slug($this->title);
+
+        // Find games with the same slug
+        $exists = Game::query()->where('id', '!=', $this->id)->where('slug', $slug)->first();
+
+        if ($exists) {
+            foreach (range(2, 20) as $index) {
+                $slug   = Str::slug($this->title) . '-' . $index;
+                $exists = Game::query()->where('id', '!=', $this->id)->where('slug', $slug)->first();
+
+                if (! $exists) {
+                    break;
+                }
+            }
+        }
+
+        // Update it
+        $this->update(['slug' => $slug]);
+
+        return $slug;
     }
 
     /**

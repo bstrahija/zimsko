@@ -19,33 +19,35 @@ let { game, gameLive } = toRefs(props);
 let data = reactive({
     saving: false,
     gameId: game.value.game_id,
+    homeStartingPlayers: props.game.home_starting_players,
+    awayStartingPlayers: props.game.away_starting_players,
 });
 
 function missingHomePlayerNumber() {
-    return 5 - props.game.home_starting_players.length;
+    return 5 - data.homeStartingPlayers.length;
 }
 
 function missingAwayPlayerNumber() {
-    return 5 - props.game.away_starting_players.length;
+    return 5 - data.awayStartingPlayers.length;
 }
 
 const addHomePlayer = (player) => {
-    if (!props.game.home_starting_players.includes(player)) {
-        props.game.home_starting_players.push(player);
+    if (!data.homeStartingPlayers.includes(player) && data.homeStartingPlayers.length < 5) {
+        data.homeStartingPlayers.push(player);
     }
 }
 const addAwayPlayer = (player) => {
-    if (!props.game.away_starting_players.includes(player)) {
-        props.game.away_starting_players.push(player);
+    if (!data.awayStartingPlayers.includes(player) && data.awayStartingPlayers.length < 5) {
+        data.awayStartingPlayers.push(player);
     }
 }
 
 const removeHomePlayer = (player) => {
-    props.game.home_starting_players = props.game.home_starting_players.filter(p => p.id !== player.id);
+    data.homeStartingPlayers = data.homeStartingPlayers.filter(p => p.id !== player.id);
 }
 
 const removeAwayPlayer = (player) => {
-    props.game.away_starting_players = props.game.away_starting_players.filter(p => p.id !== player.id);
+    data.awayStartingPlayers = data.awayStartingPlayers.filter(p => p.id !== player.id);
 }
 
 function backToPlayers() {
@@ -53,7 +55,7 @@ function backToPlayers() {
 }
 
 function canBeSaved() {
-    if (props.game.home_starting_players.length < 5 || props.game.away_starting_players.length < 5) {
+    if (data.homeStartingPlayers.length < 5 || data.awayStartingPlayers.length < 5) {
         return false
     }
 
@@ -61,18 +63,17 @@ function canBeSaved() {
 }
 
 const save = async function () {
-    alert("Start!")
     data.saving = true
-    // await router.post('/live/' + props.game.id + '/players', props.game);
+    await router.post('/live/' + props.game.id + '/players-starting', props.game);
     data.saving = false
 };
 
 const startGame = async function () {
-    if (confirm('Da li ste sigurni da zelite zapoceti utakmicu?')) {
-        data.saving = true
-        // await router.post('/live/' + props.game.id + '/players', props.game);
-        data.saving = false
-    }
+    // if (confirm('Da li ste sigurni da zelite zapoceti utakmicu?')) {
+    data.saving = true
+    await router.post('/live/' + props.game.id + '/players-starting?start=1', props.game);
+    data.saving = false
+    // }
 };
 </script>
 
@@ -92,8 +93,7 @@ const startGame = async function () {
                                 clip-rule="evenodd" />
                         </svg>
                         </Link>
-                        <Link :href="'/live/' + game.id + '/players'"
-                            class="absolute left-3 top-1/2 text-cyan-400 transition-transform -translate-y-1/2 hover:text-cyan-300 hover:-rotate-90">
+                        <Link :href="'/live/' + game.id + '/players'" class="absolute left-3 top-1/2 text-cyan-400 transition-transform -translate-y-1/2 hover:text-cyan-300 group">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd"
                                 d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
@@ -104,9 +104,9 @@ const startGame = async function () {
                         {{ game.title }}
                     </h1>
 
-                    <div class="grid gap-4 mb-4 score-top" style="grid-template-columns: 1fr 160px 1fr">
+                    <div class="grid gap-4 mb-4 score-top grid-cols-[1fr_100px_1fr] md:grid-cols-[1fr_160px_1fr]">
                         <div class="space-y-4 home-team-top">
-                            <ScoreBar :score="0" :team="game.home_team" :side="'home'" />
+                            <ScoreBar :score="game.home_score" :team="game.home_team" :side="'home'" />
                         </div>
 
                         <div class="grid text-center rounded bg-slate-800/40">
@@ -114,23 +114,33 @@ const startGame = async function () {
                         </div>
 
                         <div class="space-y-4 away-team-top">
-                            <ScoreBar :score="0" :team="game.away_team" :side="'away'" />
+                            <ScoreBar :score="game.away_score" :team="game.away_team" :side="'away'" />
                         </div>
                     </div>
 
-                    <div class="grid gap-12 mb-4 score-court" style="grid-template-columns: 1fr 8% 1fr">
-                        <div class="grid sub-bar-home">
-                            <div class="grid grid-cols-5 gap-2 text-3xl font-bold text-white players-on-court min-h-20">
-                                <PlayerSelectBlock v-for="player in game.home_starting_players" :key="player.id" :player="player" @click="removeHomePlayer(player)" />
+                    <div class="grid gap-4 mb-4 score-court grid-cols-[1fr_100px_1fr] md:grid-cols-[1fr_160px_1fr]">
+                        <div class="sub-bar-home">
+                            <div class="grid grid-cols-5 gap-2 h-auto min-h-0 text-3xl font-bold text-white players-on-court">
+                                <PlayerSelectBlock v-for="player in data.homeStartingPlayers" :key="player.id" :player="player" @click="removeHomePlayer(player)" />
 
-                                <PlayerEmptyBlock v-for="player in missingHomePlayerNumber()" class="opacity-50" />
+                                <PlayerEmptyBlock v-for="player in missingHomePlayerNumber()" class="opacity-30 pointer-events-none" />
+                            </div>
+
+                            <hr class="my-8 opacity-20">
+
+                            <div class="space-y-4 home-controls">
+                                <h2 class="text-sm text-center text-white uppercase">Odaberi početnu petorku</h2>
+                                <div class="grid grid-cols-5 auto-rows-min gap-2 grid-min-rows players-on-bench starting-players-on-bench">
+                                    <PlayerSelectBlock v-for="player in game.home_players" :key="player.id" :player="player" @click="addHomePlayer(player)"
+                                        :class="{ hidden: helpers.pluck(data.homeStartingPlayers, 'id').includes(player.id) }" />
+                                </div>
                             </div>
                         </div>
 
                         <div class="space-y-4 text-sm text-center uppercase">
-                            <button class="btn btn-secondary" @click="startGame" v-if="game.status !== 'started' && game.status !== 'ended'"
+                            <button class="w-full btn btn-secondary" @click="startGame" v-if="game.status !== 'started' && game.status !== 'ended'"
                                 :class="{ 'opacity-50': !canBeSaved(), 'pointer-events-none': !canBeSaved() }" :disabled="!canBeSaved()">
-                                Započni utakmicu
+                                DALJE NA LIVE SCORE
                             </button>
 
                             <button class="w-full btn btn-primary" @click="save" :class="{ 'opacity-50': !canBeSaved(), 'pointer-events-none': !canBeSaved() }"
@@ -143,31 +153,21 @@ const startGame = async function () {
                             </button>
                         </div>
 
-                        <div class="grid sub-bar-away">
-                            <div class="grid grid-cols-5 gap-2 text-3xl font-bold text-white players-on-court min-h-20">
-                                <PlayerSelectBlock v-for="player in game.away_starting_players" :key="player.id" :player="player" @click="removeAwayPlayer(player)" />
+                        <div class="sub-bar-away">
+                            <div class="grid grid-cols-5 gap-2 h-auto min-h-0 text-3xl font-bold text-white players-on-court">
+                                <PlayerSelectBlock v-for="player in data.awayStartingPlayers" :key="player.id" :player="player" @click="removeAwayPlayer(player)" />
 
-                                <PlayerEmptyBlock v-for="player in missingAwayPlayerNumber()" class="opacity-50" />
+                                <PlayerEmptyBlock v-for="player in missingAwayPlayerNumber()" class="opacity-30 pointer-events-none" />
                             </div>
-                        </div>
-                    </div>
 
-                    <div class="grid gap-12 mt-8 score-controls" style="grid-template-columns: 1fr 8% 1fr">
-                        <div class="space-y-4 home-controls">
-                            <h2 class="text-sm text-center text-white uppercase">Odaberi početnu petorku</h2>
-                            <div class="grid grid-cols-4 auto-rows-min gap-2 grid-min-rows players-on-bench starting-players-on-bench">
-                                <PlayerSelectBlock v-for="player in game.home_players" :key="player.id" :player="player" @click="addHomePlayer(player)"
-                                    :class="{ hidden: game.home_starting_players.includes(player) }" />
-                            </div>
-                        </div>
+                            <hr class="my-8 opacity-20">
 
-                        <div></div>
-
-                        <div class="space-y-4 away-controls">
-                            <h2 class="text-sm text-center text-white uppercase">Odaberi početnu petorku</h2>
-                            <div class="grid grid-cols-4 auto-rows-min gap-2 grid-min-rows players-on-bench starting-players-on-bench">
-                                <PlayerSelectBlock v-for="player in game.away_players" :key="player.id" :player="player" @click="addAwayPlayer(player)"
-                                    :class="{ hidden: game.away_starting_players.includes(player) }" />
+                            <div class="space-y-4 away-controls">
+                                <h2 class="text-sm text-center text-white uppercase">Odaberi početnu petorku</h2>
+                                <div class="grid grid-cols-5 auto-rows-min gap-2 grid-min-rows players-on-bench starting-players-on-bench">
+                                    <PlayerSelectBlock v-for="player in game.away_players" :key="player.id" :player="player" @click="addAwayPlayer(player)"
+                                        :class="{ hidden: helpers.pluck(data.awayStartingPlayers, 'id').includes(player.id) }" />
+                                </div>
                             </div>
                         </div>
                     </div>

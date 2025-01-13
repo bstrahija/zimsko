@@ -14,12 +14,15 @@ use App\Models\Player;
 use App\Models\Team;
 use App\Services\LiveScore;
 use App\Services\Stats;
+use Carbon\Carbon;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Str;
 use Inertia\Inertia;
 use Inertia\Response;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
@@ -108,6 +111,13 @@ class LiveController extends Controller
         return redirect()->route('live.players');
     }
 
+    public function destroy(Game $game)
+    {
+        $game->delete();
+
+        return to_route('live', ['event' => $game->event_id]);
+    }
+
     /**
      * Edit game details (title, teams, event, status etc.)
      *
@@ -138,13 +148,18 @@ class LiveController extends Controller
      */
     public function detailsStore(Game $game, Request $request)
     {
+        // Basic data
         $game->homeTeam()->associate($request->input('homeTeamId'));
         $game->awayTeam()->associate($request->input('awayTeamId'));
-        $game->update(['title' => $request->input('title')]);
-
-        // Update event and round
-        $game->update(['event_id' => $request->input('eventId')]);
-        $game->update(['round_id' => $request->input('roundId')]);
+        $game->update([
+            'event_id'     => $request->input('eventId'),
+            'round_id'     => $request->input('roundId'),
+            'title'        => $request->input('title'),
+            'scheduled_at' => $request->input('scheduledAt'),
+            'slug'         => Str::slug($request->input('title')),
+            'status'       => 'scheduled',
+        ]);
+        $game->regenerateSlug();
 
         // Also do referees
         $game->referees()->detach();
@@ -176,26 +191,38 @@ class LiveController extends Controller
      */
     public function playersStore(Game $game, Request $request)
     {
+        $live          = $this->live($game)->gameLive();
         $homePlayers   = $request->input('home_players');
         $homePlayerIds = collect($homePlayers)->pluck('id')->toArray();
         $awayPlayers   = $request->input('away_players');
         $awayPlayerIds = collect($awayPlayers)->pluck('id')->toArray();
         $allPlayerIds  = array_merge($homePlayerIds, $awayPlayerIds);
+        $liveHomePlayers = new Collection();
+        $liveAwayPlayers = new Collection();
 
         // We need to remove the relations that are not in the id list
         // This is because the stats data is stored inside the relation table
         GamePlayer::query()->whereNotIn('player_id', $allPlayerIds)->where('game_id', $game->id)->delete();
 
         // Let's store all player relations
-        foreach ([$homePlayers, $awayPlayers] as $players) {
+        foreach (['home' => $homePlayers, 'away' => $awayPlayers] as $side => $players) {
             foreach ($players as $player) {
                 GamePlayer::query()->updateOrCreate([
                     'game_id'  => $game->id,
                     'player_id' => $player['id'],
                     'team_id'  => $player['pivot']['team_id']
                 ], ['event_id' => $game->event_id]);
+
+                if ($side === 'home') $liveHomePlayers->push($player);
+                else                  $liveAwayPlayers->push($player);
             }
         }
+
+        // Update live game players
+        $live->update([
+            'home_players' => $homePlayerIds,
+            'away_players' => $awayPlayerIds,
+        ]);
 
         return to_route('live.players.starting', $game->id);
     }
@@ -222,6 +249,27 @@ class LiveController extends Controller
      */
     public function playersStartingStore(Game $game, Request $request)
     {
+        $live          = $this->live($game);
+        $startGame     = (bool) $request->input('start');
+        $homePlayers   = $request->input('home_starting_players');
+        $homePlayerIds = collect($homePlayers)->pluck('id')->toArray();
+        $awayPlayers   = $request->input('away_starting_players');
+        $awayPlayerIds = collect($awayPlayers)->pluck('id')->toArray();
+
+        // Update live game players
+        $live->gameLive()->update([
+            'home_starting_players' => $homePlayerIds,
+            'away_starting_players' => $awayPlayerIds,
+        ]);
+
+        if ($startGame) {
+            // We need to check the current live game status, if it's already started, don't add to log
+            // dump($this->live($game));
+            // $game->update(['status' => 'in_progress']);
+            // $live->startGame();
+            return to_route('live.game', $game->id);
+        }
+
         return to_route('live.players.starting', $game->id);
     }
 
