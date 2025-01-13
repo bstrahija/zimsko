@@ -7,7 +7,8 @@ import PlayerSelectBlock from './PlayerSelectBlock.vue';
 import Pretty from './Pretty.vue';
 
 const props = defineProps({
-    game: Object,
+    game: { type: Object, required: true },
+    gameLive: { type: Object, required: true },
 });
 
 const { game } = toRefs(props);

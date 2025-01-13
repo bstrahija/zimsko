@@ -11,9 +11,8 @@ import Pretty from "./Pretty.vue";
 import { Head, Link, router } from '@inertiajs/vue3';
 
 let props = defineProps({
-    game: Object,
-    gameLive: Object,
-    log: Array,
+    game: { type: Object, required: true },
+    log: { type: Array, required: true },
 });
 </script>
 
@@ -27,7 +26,8 @@ let props = defineProps({
                     clip-rule="evenodd" />
             </svg>
             </Link>
-            <Link :href="'/live/' + game.id + '/players-starting'" class="absolute left-3 top-1/2 text-cyan-400 transition-transform -translate-y-1/2 hover:text-cyan-300 group">
+            <Link :href="'/live/' + game.game_id + '/players-starting'"
+                class="absolute left-3 top-1/2 text-cyan-400 transition-transform -translate-y-1/2 hover:text-cyan-300 group">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
                 <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
                     clip-rule="evenodd" />

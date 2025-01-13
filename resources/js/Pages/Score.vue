@@ -9,27 +9,28 @@ import SelectStartingPlayers from '../Components/SelectStartingPlayers.vue';
 const helpers = inject('helpers');
 
 let props = defineProps({
-    log: Array,
-    game: Object,
+    game: { type: Object, required: true },
+    gameLive: { type: Object, required: true },
+    log: { type: Array, required: true },
 });
 
-let { log, game } = toRefs(props);
+// let { log, game, gameLive } = toRefs(props);
 
 onMounted(() => {
-    const channel = window.Echo.channel(`live-score`)
-        .listen('LiveScoreUpdated', (e) => {
-            router.visit('/live/' + game.value.game_id, {
-                only: ['game', 'log'],
-                preserveState: true,
-                preserveScroll: true,
-            });
-        });
+    // const channel = window.Echo.channel(`live-score`)
+    //     .listen('LiveScoreUpdated', (e) => {
+    //         router.visit('/live/' + props.game.id, {
+    //             only: ['gameLive', 'log'],
+    //             preserveState: true,
+    //             preserveScroll: true,
+    //         });
+    //     });
 
-    helpers.checkPlayersForFouls(game.value);
+    // helpers.checkPlayersForFouls(props.gameLive);
 });
 
 router.on('success', (event) => {
-    helpers.checkPlayersForFouls(game.value);
+    // helpers.checkPlayersForFouls(props.gameLive);
 })
 </script>
 
@@ -40,7 +41,7 @@ router.on('success', (event) => {
 
         <div class="flex relative justify-center min-h-[98svh]">
             <div class="w-full space-y-2 max-w-[1920px]">
-                <LiveScoreApp :game="game" :log="log" />
+                <LiveScoreApp :game="gameLive" :log="log" />
             </div>
         </div>
     </Layout>

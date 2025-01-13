@@ -189,7 +189,10 @@ class LiveScore
     {
         $this->currentPeriod = 1;
         $this->gameLive->update([
-            'status' => 'started',
+            'status' => 'in_progress',
+        ]);
+        $this->game->update([
+            'status' => 'in_progress',
         ]);
 
         // We also need to update the log
@@ -413,7 +416,8 @@ class LiveScore
             'log'        => $this->logStream(),
         ];
 
-        // reformat some dates
+        // Add more data
+        $data['gameLive']['title'] = $data['game']['title'];
 
         // We need to adjust some data
         foreach (['home_starting_players', 'away_starting_players', 'home_players_on_court', 'away_players_on_court'] as $type) {
@@ -424,22 +428,24 @@ class LiveScore
                     $players[$key] = $player->toArray();
                 }
                 $data['game'][$type] = $players;
+                $data['gameLive'][$type] = $players;
             } else {
                 $data['game'][$type] = [];
+                $data['gameLive'][$type] = [];
             }
         }
 
         // Add some team data
-        $data['game']['available_home_players'] = $this->availableHomePlayers?->toArray();
-        $data['game']['available_away_players'] = $this->availableAwayPlayers?->toArray();
-        $data['game']['home_players']          = $this->homePlayers?->toArray();
-        $data['game']['away_players']          = $this->awayPlayers?->toArray();
-        $data['game']['home_team']             = $this->homeTeam?->toArray();
-        $data['game']['away_team']             = $this->awayTeam?->toArray();
-        $data['game']['home_team']['logo']     = $this->homeTeam?->logo();
-        $data['game']['away_team']['logo']     = $this->awayTeam?->logo();
-        $data['game']['home_players_on_bench'] = $this->homePlayers?->diff($this->homePlayersOnCourt)->toArray();
-        $data['game']['away_players_on_bench'] = $this->awayPlayers?->diff($this->awayPlayersOnCourt)->toArray();
+        $data['game']['available_home_players'] = $data['gameLive']['available_home_players'] = $this->availableHomePlayers?->toArray();
+        $data['game']['available_away_players'] = $data['gameLive']['available_away_players'] = $this->availableAwayPlayers?->toArray();
+        $data['game']['home_players']           = $data['gameLive']['home_players']           = $this->homePlayers?->toArray();
+        $data['game']['away_players']           = $data['gameLive']['away_players']           = $this->awayPlayers?->toArray();
+        $data['game']['home_team']              = $data['gameLive']['home_team']              = $this->homeTeam?->toArray();
+        $data['game']['away_team']              = $data['gameLive']['away_team']              = $this->awayTeam?->toArray();
+        $data['game']['home_team']['logo']      = $data['gameLive']['home_team']['logo']      = $this->homeTeam?->logo();
+        $data['game']['away_team']['logo']      = $data['gameLive']['away_team']['logo']      = $this->awayTeam?->logo();
+        $data['game']['home_players_on_bench']  = $data['gameLive']['home_players_on_bench']  = $this->homePlayers?->diff($this->homePlayersOnCourt)->toArray();
+        $data['game']['away_players_on_bench']  = $data['gameLive']['away_players_on_bench']  = $this->awayPlayers?->diff($this->awayPlayersOnCourt)->toArray();
         unset($data['game']['home_team']['players']);
         unset($data['game']['away_team']['players']);
 

@@ -256,18 +256,34 @@ class LiveController extends Controller
         $awayPlayers   = $request->input('away_starting_players');
         $awayPlayerIds = collect($awayPlayers)->pluck('id')->toArray();
 
-        // Update live game players
-        $live->gameLive()->update([
-            'home_starting_players' => $homePlayerIds,
-            'away_starting_players' => $awayPlayerIds,
-            'home_players_on_court' => $homePlayerIds,
-            'away_players_on_court' => $awayPlayerIds,
-        ]);
+        // Get the request data
+        Log::debug("Home starting five. Game: {$game->id}, Players: " . @json_encode($homePlayerIds), ['section' => 'LIVE', 'game_id' => $game->id]);
+        Log::debug("Away starting five. Game: {$game->id}, Players: " . @json_encode($awayPlayerIds), ['section' => 'LIVE', 'game_id' => $game->id]);
+        $this->live($game)->addStartingPlayers(
+            homePlayerIds: $homePlayerIds,
+            awayPlayerIds: $awayPlayerIds
+        );
 
         if ($startGame) {
+            // Also update the scores if needed
+            if (! $live->gameLive()->home_score) $live->gameLive()->update(['home_score' => $game->home_score]);
+            if (! $live->gameLive()->away_score) $live->gameLive()->update(['away_score' => $game->away_score]);
+            if (! $live->gameLive()->home_score_p1) $live->gameLive()->update(['home_score_p1' => $game->home_score_p1]);
+            if (! $live->gameLive()->away_score_p1) $live->gameLive()->update(['away_score_p1' => $game->away_score_p1]);
+            if (! $live->gameLive()->home_score_p2) $live->gameLive()->update(['home_score_p2' => $game->home_score_p2]);
+            if (! $live->gameLive()->away_score_p2) $live->gameLive()->update(['away_score_p2' => $game->away_score_p2]);
+            if (! $live->gameLive()->home_score_p3) $live->gameLive()->update(['home_score_p3' => $game->home_score_p3]);
+            if (! $live->gameLive()->away_score_p3) $live->gameLive()->update(['away_score_p3' => $game->away_score_p3]);
+            if (! $live->gameLive()->home_score_p4) $live->gameLive()->update(['home_score_p4' => $game->home_score_p4]);
+            if (! $live->gameLive()->away_score_p4) $live->gameLive()->update(['away_score_p4' => $game->away_score_p4]);
+            if (! $live->gameLive()->home_score_p5) $live->gameLive()->update(['home_score_p5' => $game->home_score_p5]);
+            if (! $live->gameLive()->away_score_p5) $live->gameLive()->update(['away_score_p5' => $game->away_score_p5]);
+            if (! $live->gameLive()->home_score_p6) $live->gameLive()->update(['home_score_p6' => $game->home_score_p6]);
+            if (! $live->gameLive()->away_score_p6) $live->gameLive()->update(['away_score_p6' => $game->away_score_p6]);
+
             // We need to check the current live game status, if it's already started, don't add to log
             // dump($this->live($game));
-            // $game->update(['status' => 'in_progress']);
+            $game->update(['status' => 'scheduled']);
             // $live->startGame();
             return to_route('live.game', $game->id);
         }
@@ -403,28 +419,10 @@ class LiveController extends Controller
         LiveScoreUpdated::dispatch('substitution');
     }
 
-
-
     public function startGame(Game $game, Request $request)
     {
-        // Get the request data
-        $homePlayers = $request->input('homeStartingPlayers');
-        $awayPlayers = $request->input('awayStartingPlayers');
-
-        if (count($homePlayers) === 5 && count($awayPlayers) === 5) {
-            $homePlayerIds = array_column($homePlayers, 'id');
-            $awayPlayerIds = array_column($awayPlayers, 'id');
-            Log::debug("Home starting five. Game: {$game->id}, Players: " . @json_encode($homePlayers), ['section' => 'LIVE', 'game_id' => $game->id]);
-            Log::debug("Away starting five. Game: {$game->id}, Players: " . @json_encode($awayPlayers), ['section' => 'LIVE', 'game_id' => $game->id]);
-            $this->live($game)->addStartingPlayers(
-                homePlayerIds: $homePlayerIds,
-                awayPlayerIds: $awayPlayerIds
-            );
-            sleep(1);
-
-            Log::debug("Starting game. Game: {$game->id}", ['section' => 'LIVE', 'game_id' => $game->id]);
-            $this->live($game)->startGame();
-        }
+        Log::debug("Starting game. Game: {$game->id}", ['section' => 'LIVE', 'game_id' => $game->id]);
+        $this->live($game)->startGame();
 
         LiveScoreUpdated::dispatch('startGame');
     }

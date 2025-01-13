@@ -28,11 +28,11 @@ onMounted(() => {
     let eventId = props.game.event_id ? props.game.event_id : props.currentEvent.id
 
     // Set the event
-    form.eventId = eventId
+    form.eventId = eventId ? eventId : ''
 
     // Fill the rest of the data
     form.title = props.game.title
-    form.roundId = props.game.round_id
+    form.roundId = props.game.round_id ? props.game.round_id : ''
     form.homeTeamId = props.game.home_team_id
     form.awayTeamId = props.game.away_team_id
     form.scheduledAt = props.game.scheduled_at

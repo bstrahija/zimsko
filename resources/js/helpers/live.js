@@ -14,17 +14,17 @@ export default {
     checkIfCanUpdateStats: function (game) {
         console.log(game);
 
-        if (game.status === 'pending') {
+        if (game.status === 'scheduled' || game.status === 'draft') {
             alert('Da bi ste promijenili statistiku, trebate započeti utakmicu.');
             return false;
         }
 
-        if (game.status === 'ended') {
+        if (game.status === 'completed') {
             alert('Utakmica je zavrsila.');
             return false;
         }
 
-        if (game.status === 'started') {
+        if (game.status === 'in_progress') {
             return true;
         } else {
             alert('Nepoznat status utakmice [' + game.status + ']');

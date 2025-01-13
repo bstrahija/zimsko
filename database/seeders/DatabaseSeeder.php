@@ -26,12 +26,32 @@ class DatabaseSeeder extends Seeder
             'email' => 'bstrahija@gmail.com',
             'password' => Hash::make(env('ADMIN_PASSWORD')),
         ]);
-
         $user->assignRole('superadmin');
         $user->assignRole('admin');
 
+        $user = User::factory()->create([
+            'name' => 'Matija Terek',
+            'email' => 'terek.mat@hotmail.com',
+            'password' => Hash::make(env('MATIJA_PASSWORD')),
+        ]);
+        $user->assignRole('admin');
+
+        $user = User::factory()->create([
+            'name' => 'Nevel Levačić',
+            'email' => 'cknevco@gmail.com',
+            'password' => Hash::make(env('NEVCO_PASSWORD')),
+        ]);
+        $user->assignRole('admin');
+
+        $user = User::factory()->create([
+            'name' => 'Davor Novak',
+            'email' => 'davor74@gmail.com',
+            'password' => Hash::make(env('NOVCIC_PASSWORD')),
+        ]);
+        $user->assignRole('admin');
+
         $this->call([
-            GlobetkaSeeder::class,
+            // GlobetkaSeeder::class,
         ]);
     }
 }
