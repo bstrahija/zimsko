@@ -1,5 +1,32 @@
 import '../css/app.css';
 import './bootstrap';
+import Echo from 'laravel-echo';
+import Pusher from 'pusher-js';
+
+window.Pusher = Pusher;
+
+window.Echo = new Echo({
+    broadcaster: 'pusher',
+    key: import.meta.env.VITE_PUSHER_APP_KEY,
+    cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
+    forceTLS: true
+});
+
+const channel = window.Echo.channel('live-score')
+
+channel.listen('LiveScoreUpdated', function(e) {
+    console.log(e);
+});
+
+
+        // .listen('LiveScoreUpdated', (e) => {
+        //     alert("APP UPDATED PUSHER");
+
+        // });
+
+
+
+
 
 let HeroVideo = {
     scriptTag: null,

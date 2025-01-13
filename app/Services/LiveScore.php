@@ -188,12 +188,8 @@ class LiveScore
     public function startGame($writeToLog = true)
     {
         $this->currentPeriod = 1;
-        $this->gameLive->update([
-            'status' => 'in_progress',
-        ]);
-        $this->game->update([
-            'status' => 'in_progress',
-        ]);
+        $this->gameLive->update(['status' => 'in_progress']);
+        $this->game->update(['status' => 'in_progress']);
 
         // We also need to update the log
         if ($writeToLog) {
@@ -292,10 +288,9 @@ class LiveScore
     {
         // $lastPeriod = 4; // Check if this is correct (could be overtime, or game suspended before)
 
-        $this->gameLive->update([
-            'status' => 'ended',
-            // 'period' => $lastPeriod,
-        ]);
+        $this->gameLive->update(['status' => 'completed']);
+        $this->game->update(['status' => 'completed']);
+
 
         // We also need to update the log
         $log = GameLog::query()->updateOrCreate([

@@ -317,7 +317,7 @@ class LiveController extends Controller
         if ($assistPlayerId) $this->live($game)->playerScore(playerId: $playerId, points: $score, playerAssistId: $assistPlayerId);
         else                 $this->live($game)->playerScore(playerId: $playerId, points: $score);
 
-        LiveScoreUpdated::dispatch('addScore');
+        $dispatched = LiveScoreUpdated::dispatch('addScore');
     }
 
     public function addMiss(Game $game, Request $request)
@@ -463,8 +463,9 @@ class LiveController extends Controller
 
     public function deleteLog(GameLog $log)
     {
-        if ($log->type === 'game_ended') {
-            $log->game->live->update(['status' => 'started']);
+        if ($log->type === 'completed') {
+            $log->game->live->update(['status' => 'in_progress']);
+            $log->game->game->update(['status' => 'in_progress']);
         } elseif ($log->type === 'period_started') {
             $log->game->live->update(['period' => $log->period - 1]);
         } elseif ($log->type === 'substitution') {

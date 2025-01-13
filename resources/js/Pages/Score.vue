@@ -17,14 +17,14 @@ let props = defineProps({
 // let { log, game, gameLive } = toRefs(props);
 
 onMounted(() => {
-    // const channel = window.Echo.channel(`live-score`)
-    //     .listen('LiveScoreUpdated', (e) => {
-    //         router.visit('/live/' + props.game.id, {
-    //             only: ['gameLive', 'log'],
-    //             preserveState: true,
-    //             preserveScroll: true,
-    //         });
-    //     });
+    const channel = window.Echo.channel(`zimsko-local`)
+        .listen('LiveScoreUpdated', (e) => {
+            router.visit('/live/' + props.game.id + '/score', {
+                only: ['game', 'gameLive', 'log'],
+                preserveState: true,
+                preserveScroll: true,
+            });
+        });
 
     // helpers.checkPlayersForFouls(props.gameLive);
 });
