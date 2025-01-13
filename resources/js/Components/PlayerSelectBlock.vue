@@ -11,13 +11,13 @@ defineProps({
 <template>
     <button
         class="overflow-hidden relative h-full text-center text-white rounded border shadow-sm transition-all pointer-events-auto hover:opacity-90 hover:shadow-lg player-block aspect-square"
-        :class="{ 'opacity-50': !active }">
+        :class="{ 'opacity-50': !active, 'active': active }">
         <div>
-            <div class="z-30 text-sm font-bold shadow-lg md:text-lg lg:text-2xl xl:text-3xl">
+            <div class="z-30 text-sm font-bold shadow-lg md:text-lg lg:text-2xl xl:text-3xl player-number">
                 {{ player.number ? player.number : '-' }}
 
             </div>
-            <small class="block relative z-20 font-medium text-center opacity-60 text-3xs lg:text-2xs xl:text-xs line-clamp-2">
+            <small class="block relative z-20 font-medium text-center opacity-60 text-3xs lg:text-2xs xl:text-xs line-clamp-2 player-name">
                 {{ player.name }}
             </small>
         </div>

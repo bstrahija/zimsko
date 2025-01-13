@@ -2,6 +2,7 @@
 import { onMounted, reactive, watch } from 'vue';
 import Layout from './Layout.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
+import LiveTopBar from '../Components/LiveTopBar.vue';
 
 let props = defineProps({
     game: Object,
@@ -105,16 +106,7 @@ const save = async function () {
         <div class="flex relative min-h-screen">
             <div class="space-y-2 w-full max-w-[1920px] mx-auto">
                 <div class="bg-slate-900/95 p-6 rounded-lg border-5 border-cyan-400/50 shadow-[0_0_15px_rgba(6,182,212,0.5)] grid-bg w-full create-live-game">
-                    <h1 class="relative px-3 py-2 -mt-6 -mr-6 mb-4 -ml-6 text-xs text-center uppercase text-white/80 bg-cyan-400/15">
-                        <Link href="/live" class="absolute right-3 top-1/2 text-red-500 transition-transform -translate-y-1/2 hover:text-cyan-300 hover:rotate-90">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd"
-                                d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                                clip-rule="evenodd" />
-                        </svg>
-                        </Link>
-                        {{ form.title }}
-                    </h1>
+                    <LiveTopBar :title="form.title" :backUrl="'/live'" />
 
                     <form @submit.prevent="save" class="space-y-6 transition-all" :class="{ 'opacity-50': form.saving }">
                         <!-- Event Selection -->

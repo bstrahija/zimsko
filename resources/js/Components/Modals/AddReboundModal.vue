@@ -1,7 +1,9 @@
 <script setup>
 import { reactive, ref, toRefs } from 'vue';
 import { router } from '@inertiajs/vue3';
+import ButtonModalAction from './ButtonModalAction.vue';
 import PlayerBlock from '../PlayerBlock.vue';
+import PlayerSelectBlock from '../PlayerSelectBlock.vue';
 import { $vfm } from 'vue-final-modal';
 
 const props = defineProps({
@@ -56,37 +58,42 @@ function setType(type) {
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h3 class="mb-3 text-2xl font-bold text-center">Odaberi igrača (skok)</h3>
-                        <button @click="close" class="absolute top-4 right-4 text-2xl">X</button>
+                        <h3>Skok</h3>
+                        <button @click="close" class="close">
+                            <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
                     </div>
 
-                    <div class="modal-body">
-                        <div class="grid">
-                            <div class="text-center">
-                                <button @click="selectPlayer(player)" v-for="player in players" :key="player.id"
-                                    :class="{ 'bg-emerald-600': isActive(player), 'bg-slate-500': !isActive(player) }"
-                                    class="px-4 py-2 m-1 text-white rounded-md shadow-md transition-colors duration-200 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-opacity-50">
-                                    <p class="text-2xl font-bold">{{ player.number }}</p>
-                                    {{ player.name }}
-                                </button>
+                    <div class="px-8 py-6 modal-body">
+                        <div class="grid gap-6 items-start grid-cols-[1fr_140px]">
+                            <div class="space-y-3">
+                                <h3 class="text-sm text-center uppercase">PROMAŠUJE</h3>
+                                <div class="grid grid-cols-3 gap-4 items-start">
+                                    <PlayerSelectBlock :player="player" v-for="player in players" @click="selectPlayer(player)" :active="isActive(player)" />
+                                </div>
                             </div>
 
-                            <div class="grid grid-cols-2 text-center max-w-[360px] mt-4 mb-6 mx-auto">
-                                <button @click="setType('def')" :class="{ 'opacity-50': data.type !== 'def' }"
-                                    class="overflow-hidden px-4 py-2 m-1 text-white bg-blue-500 rounded-md shadow-md transition-colors duration-200 aspect-square hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50">
-                                    Defenzivni
-                                </button>
-                                <button @click="setType('off')" :class="{ 'opacity-50': data.type !== 'off' }"
-                                    class="overflow-hidden px-4 py-2 m-1 text-white bg-blue-500 rounded-md shadow-md transition-colors duration-200 aspect-square hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50">
-                                    Ofenzivni
-                                </button>
-                            </div>
-                        </div>
+                            <div class="space-y-3 text-center">
+                                <h3 class="text-sm text-center uppercase">SKOK</h3>
+                                <ButtonModalAction :active="data.type === 'def'" @click="setType('def')">Defenzivni</ButtonModalAction>
+                                <ButtonModalAction :active="data.type === 'off'" @click="setType('off')">Ofenzivni</ButtonModalAction>
 
-                        <div class="flex justify-center p-6">
-                            <button :disabled="!canBeSaved()"
-                                :class="{ 'opacity-50': !canBeSaved(), 'pointer-events-none': !canBeSaved() }"
-                                @click="save" class="btn btn-primary">Spremi</button>
+                                <div class="w-full">
+                                    <hr class="mb-6 opacity-20">
+
+                                    <button :disabled="!canBeSaved()" :class="{ 'opacity-50': !canBeSaved(), 'pointer-events-none': !canBeSaved() }" @click="save"
+                                        class="flex justify-center items-center py-5 space-x-2 w-full text-sm transition-transform duration-300 btn btn-secondary hover:scale-105">
+                                        <span>Spremi</span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd"
+                                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

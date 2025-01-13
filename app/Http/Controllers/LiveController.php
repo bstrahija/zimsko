@@ -157,7 +157,7 @@ class LiveController extends Controller
             'title'        => $request->input('title'),
             'scheduled_at' => $request->input('scheduledAt'),
             'slug'         => Str::slug($request->input('title')),
-            'status'       => 'scheduled',
+            'status'       => $game->status !== 'in_progress' ? 'scheduled' : $game->status,
         ]);
         $game->regenerateSlug();
 
@@ -396,6 +396,20 @@ class LiveController extends Controller
         $this->live($game)->playerFoul(playerId: $playerId, subtype: $type, playerFouledId: $fouledPlayerId);
 
         LiveScoreUpdated::dispatch('addFoul');
+    }
+
+    public function addTimeout(Game $game, Request $request)
+    {
+        // Find the team
+        $teamId = $request->input('team_id');
+
+        if ($this->live($game)->timeout(teamId: $teamId)) {
+            Log::debug("Adding timeout. Game: {$game->id}, Team: {$teamId}");
+        } else {
+            Log::warning("No timeouts left. Game: {$game->id}, Team: {$teamId}");
+        }
+
+        LiveScoreUpdated::dispatch('addTimeout');
     }
 
     public function substitution(Game $game, Request $request)

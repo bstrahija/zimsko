@@ -4,15 +4,19 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\RoundResource\Pages;
 use App\Filament\Resources\RoundResource\RelationManagers;
+use App\Models\Event;
 use App\Models\Round;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use FilamentTiptapEditor\TiptapEditor;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Auth;
 
 class RoundResource extends Resource
 {
@@ -44,6 +48,7 @@ class RoundResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->paginated([20, 40, 100])
             ->columns([
                 Tables\Columns\TextColumn::make('title')
                     ->searchable(),
@@ -55,7 +60,11 @@ class RoundResource extends Resource
                     ->searchable(),
             ])
             ->filters([
-                //
+                SelectFilter::make('event')
+                    ->relationship('event', 'title')
+                    ->default(Event::current() ? Event::current()->id : (Event::last() ? Event::last()->id : null))
+                    ->label('Event'),
+
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
@@ -81,5 +90,10 @@ class RoundResource extends Resource
             'create' => Pages\CreateRound::route('/create'),
             'edit' => Pages\EditRound::route('/{record}/edit'),
         ];
+    }
+
+    public static function canDelete(Model $record): bool
+    {
+        return Auth::user()->hasRole(['superadmin']);
     }
 }

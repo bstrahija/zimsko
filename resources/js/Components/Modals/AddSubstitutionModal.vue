@@ -2,6 +2,7 @@
 import { onMounted, reactive, ref, toRefs } from 'vue';
 import { router } from '@inertiajs/vue3';
 import PlayerBlock from '../PlayerBlock.vue';
+import PlayerSelectBlock from '../PlayerSelectBlock.vue';
 import { $vfm } from 'vue-final-modal';
 
 const props = defineProps({
@@ -101,20 +102,23 @@ async function save() {
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h3 class="mb-3 text-2xl font-bold text-center">Odaberi igrače (izlaze)</h3>
-                        <button @click="close" class="absolute top-4 right-4 text-2xl">X</button>
+                        <h3>IZMJENA</h3>
+                        <button @click="close" class="close">
+                            <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
                     </div>
 
-                    <div class="modal-body">
+                    <div class="px-8 py-6 modal-body">
                         <div class="grid">
                             <div v-if="data.playerFouledOut"
-                                class="flex justify-center items-center p-4 mx-auto mb-4 text-red-300 rounded-md border border-red-700 shadow-sm bg-red-900/50 max-w-[800px]">
+                                class="flex text-xs uppercase justify-center items-center px-2 py-1 mx-auto mb-4 text-red-300 rounded-md border border-red-700 shadow-sm bg-red-900/50 max-w-[800px]">
                                 <svg class="mr-2 w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636L5.636 18.364M5.636 5.636l12.728 12.728"></path>
                                 </svg>
                                 <span>{{ data.playerFouledOut.name }} ima 5 prekršaja.</span>
                             </div>
-
 
                             <!-- <p><small>IN: {{ playerIn }}</small></p>
                             <p><small>OUT: {{ playerOut }}</small></p>
@@ -122,34 +126,30 @@ async function save() {
                             <p><small>IN: {{ data.selectedPlayersIn }}</small></p>
                             <p><small>OUT: {{ data.selectedPlayersOut }}</small></p> -->
 
-                            <div class="text-center">
-                                <button @click="selectPlayerOut(player)" v-for="player in players" :key="player.id"
-                                    :class="{ 'bg-emerald-600': isActiveOut(player), 'bg-slate-500': !isActiveOut(player) }"
-                                    class="px-4 py-2 m-1 text-white rounded-md shadow-md transition-colors duration-200 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-opacity-50">
-                                    <p class="text-2xl font-bold">{{ player.number }}</p>
-                                    {{ player.name }}
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="mt-8">
-                            <h3 class="mb-3 text-2xl font-bold text-center">Ulaze</h3>
-
-                            <div class="grid mb-12">
+                            <div class="grid gap-6 grid-cols-[1fr_120px_1fr]">
                                 <div class="text-center">
-                                    <button @click="selectPlayerIn(player)" v-for="player in playersOnBench" :key="player.id"
-                                        :class="{ hidden: player.stats.fouls >= 5, 'bg-emerald-600': isActiveIn(player), 'bg-slate-500': !isActiveIn(player) }"
-                                        class="px-4 py-2 m-1 text-white rounded-md shadow-md transition-colors duration-200 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-opacity-50">
-                                        <p class="text-2xl font-bold">{{ player.number }}</p>
-                                        {{ player.name }}
+                                    <h3 class="mb-3 text-sm text-center uppercase">IZLAZE</h3>
+                                    <div class="grid grid-cols-3 gap-4">
+                                        <PlayerSelectBlock :player="player" :active="isActiveOut(player)" v-for="player in players" :key="'playersc-' + player.id"
+                                            @click="selectPlayerOut(player)" />
+                                    </div>
+                                </div>
+
+                                <div class="mt-8">
+                                    <button :disabled="!canBeSaved()" :class="{ 'opacity-50': !canBeSaved(), 'pointer-events-none': !canBeSaved() }" @click="save"
+                                        class="flex justify-center items-center py-5 space-x-2 w-full text-sm transition-transform duration-300 btn btn-secondary hover:scale-105">
+                                        IZMIJENI
                                     </button>
                                 </div>
-                            </div>
-                        </div>
 
-                        <div class="flex justify-center p-6">
-                            <button :disabled="!canBeSaved()" :class="{ 'opacity-50': !canBeSaved(), 'pointer-events-none': !canBeSaved() }" @click="save"
-                                class="btn btn-primary">Spremi</button>
+                                <div>
+                                    <h3 class="mb-3 text-sm text-center uppercase">ULAZE</h3>
+                                    <div class="grid grid-cols-3 gap-4">
+                                        <PlayerSelectBlock :player="player" :active="isActiveIn(player)" v-for="player in playersOnBench" :key="'playeras-' + player.id"
+                                            @click="selectPlayerIn(player)" :class="{ hidden: player.id === data.selectedPlayer?.id }" />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

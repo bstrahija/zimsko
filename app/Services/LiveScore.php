@@ -218,7 +218,7 @@ class LiveScore
     public function timeout(string $teamId, ?string $occurredAt = '00:00:00')
     {
         // Find the team
-        $team = ($teamId === $this->homeTeam->id) ? $this->homeTeam : $this->awayTeam;
+        $team         = ($teamId === $this->homeTeam->id) ? $this->homeTeam : $this->awayTeam;
         $timeoutsLeft = ($teamId === $this->homeTeam->id) ? $this->homeTimeoutsLeft : $this->awayTimeoutsLeft;
 
         // We need to check if we have timeouts left

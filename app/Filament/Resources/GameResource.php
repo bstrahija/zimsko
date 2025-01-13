@@ -8,6 +8,7 @@ use App\Models\Event;
 use App\Models\Game;
 use App\Models\GamePlayer;
 use App\Models\Player;
+use App\Models\Round;
 use App\Models\Team;
 use App\Validation\CheckGameScores;
 use Closure;
@@ -159,6 +160,14 @@ class GameResource extends Resource
                         ->columnSpanFull()
                         ->default($defaultEvent?->id)
                         ->relationship('event', 'title'),
+                    Forms\Components\Select::make('round_id')
+                        ->columnSpanFull()
+                        ->placeholder(fn(Forms\Get $get): string => empty($get('event_id')) ? 'First select event' : 'Select an option')
+                        ->options(function (Forms\Get $get) {
+                            return Round::where('event_id', $get('event_id'))->pluck('title', 'id');
+                        })
+                        ->label('Round'),
+                    // ->relationship('round', 'title'),
                     Forms\Components\Select::make('status')
                         ->default('scheduled')
                         ->options(Game::STATUS_OPTIONS)
@@ -389,7 +398,8 @@ class GameResource extends Resource
             ->defaultSort('scheduled_at', 'desc')
             ->filters([
                 SelectFilter::make('event')
-                    ->relationship('event', 'title'),
+                    ->relationship('event', 'title')
+                    ->default(Event::current() ? Event::current()->id : (Event::last() ? Event::last()->id : null)),
                 SelectFilter::make('status')
                     ->options(Game::STATUS_OPTIONS),
             ])

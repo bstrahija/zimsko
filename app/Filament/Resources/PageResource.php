@@ -12,7 +12,9 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use FilamentTiptapEditor\TiptapEditor;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Facades\Auth;
 
 class PageResource extends Resource
 {
@@ -95,5 +97,25 @@ class PageResource extends Resource
             'create' => Pages\CreatePage::route('/create'),
             'edit' => Pages\EditPage::route('/{record}/edit'),
         ];
+    }
+
+    public static function canViewAny(): bool
+    {
+        return Auth::user()->hasRole(['superadmin']);
+    }
+
+    public static function canCreate(): bool
+    {
+        return Auth::user()->hasRole(['superadmin']);
+    }
+
+    public static function canEdit(Model $record): bool
+    {
+        return Auth::user()->hasRole(['superadmin']);
+    }
+
+    public static function canDelete(Model $record): bool
+    {
+        return Auth::user()->hasRole(['superadmin']);
     }
 }

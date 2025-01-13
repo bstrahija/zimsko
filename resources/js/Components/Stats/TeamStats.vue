@@ -11,11 +11,11 @@ defineProps({
     <table class="overflow-hidden w-full text-sm text-gray-300 rounded-lg border shadow-lg bg-slate-800/60 border-cyan-400/30">
         <thead>
             <tr class="bg-slate-700/50">
-                <th class="px-4 py-3 text-3xl font-bold text-left text-cyan-400 w-[40%]">
+                <th class="px-4 py-3 text-3xl font-bold text-center text-cyan-400 w-[40%]">
                     {{ game.home_team.title }}
                 </th>
                 <th class="px-4 py-3 text-center w-[20%]"></th>
-                <th class="px-4 py-3 text-3xl font-bold text-right text-cyan-400 w-[40%]">
+                <th class="px-4 py-3 text-3xl font-bold text-center text-purple-400 w-[40%]">
                     {{ game.away_team.title }}
                 </th>
             </tr>

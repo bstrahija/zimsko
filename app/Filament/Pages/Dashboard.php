@@ -50,11 +50,11 @@ class Dashboard extends \Filament\Pages\Dashboard
             \Schmeits\FilamentUmami\Widgets\UmamiWidgetStatsGrouped::class,
             // PulseServers::class,
             // PulseCache::class,
-            PulseUsage::class,
-            PulseExceptions::class,
+            // PulseUsage::class,
+            // PulseExceptions::class,
             // PulseQueues::class,
-            PulseSlowQueries::class,
-            PulseSlowRequests::class,
+            // PulseSlowQueries::class,
+            // PulseSlowRequests::class,
             // PulseSlowOutGoingRequests::class
         ];
     }

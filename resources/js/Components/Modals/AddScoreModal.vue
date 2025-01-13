@@ -93,11 +93,15 @@ function checkScore() {
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h3 class="mb-3 text-2xl font-bold text-center">Odaberi igrača (pogodak)</h3>
-                        <button @click="close" class="absolute top-4 right-4 text-2xl">X</button>
+                        <h3>POGODAK</h3>
+                        <button @click="close" class="close">
+                            <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
                     </div>
 
-                    <div class="px-8 modal-body">
+                    <div class="px-8 py-6 modal-body">
                         <div class="grid gap-6 grid-cols-[1fr_100px_1fr]" :class="{ 'grid-cols-[1fr_120px]': data.score === 1 }">
                             <div class="text-center">
                                 <h3 class="mb-3 text-sm text-center uppercase">Pogađa</h3>
