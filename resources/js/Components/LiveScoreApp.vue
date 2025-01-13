@@ -51,7 +51,7 @@ let props = defineProps({
             </div>
         </div>
 
-        <div class="grid gap-4 mb-4 score-top" style="grid-template-columns: 1fr 160px 1fr">
+        <div class="grid gap-4 mb-4 score-top grid-cols-[1fr_100px_1fr]  md:grid-cols-[1fr_160px_1fr]">
             <div class="space-y-4 home-team-top">
                 <FoulsTimeouts :side="'home'" :team="game.home_team" :game="game" />
             </div>
