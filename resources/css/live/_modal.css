@@ -11,7 +11,7 @@
     }
 
     .modal {
-        @apply bg-cyan-900/60 flex justify-center items-center h-full absolute inset-0 z-[999999];
+        @apply bg-cyan-900/60 flex justify-center items-center h-full max-h-[98vh] absolute inset-0 z-[999999];
 
         .body {
             padding: 35px 0;
@@ -19,13 +19,11 @@
     }
 
     .modal-dialog {
-        @apply max-w-screen-xl mx-auto text-gray-200;
-        min-width: 80%;
-        max-width: 80%;
+        @apply mx-auto max-w-screen-xl text-gray-200;
     }
 
     .modal-content {
-        @apply bg-black/70 border border-cyan-500/40 rounded-lg shadow-lg shadow-cyan-500/20 grid outline-none pointer-events-auto relative;
+        @apply grid relative rounded-lg border shadow-lg outline-none pointer-events-auto bg-black/70 border-cyan-500/40 shadow-cyan-500/20;
         /* background-clip: padding-box;
         background-color: #fff;
         border: 1px solid rgba(80, 80, 80, 0.1);
@@ -36,5 +34,9 @@
         pointer-events: auto;
         position: relative;
         width: 100%; */
+        min-width: 80%;
+        height: 95vh;
+        max-height: 95vh;
+        overflow-y: auto;
     }
 }

@@ -1,7 +1,10 @@
 <script setup>
 import { reactive, ref, toRefs } from 'vue';
 import { router } from '@inertiajs/vue3';
+import ButtonModalAction from './ButtonModalAction.vue';
+import ButtonModalPlayer from './ButtonModalPlayer.vue';
 import PlayerBlock from '../PlayerBlock.vue';
+import PlayerSelectBlock from '../PlayerSelectBlock.vue';
 import { $vfm } from 'vue-final-modal';
 
 const props = defineProps({
@@ -60,33 +63,28 @@ function setScore(score) {
                         <button @click="close" class="absolute top-4 right-4 text-2xl">X</button>
                     </div>
 
-                    <div class="modal-body">
-                        <div class="grid">
-                            <div class="text-center">
-                                <button @click="selectPlayer(player)" v-for="player in players" :key="player.id"
-                                    :class="{ 'bg-emerald-600': isActive(player), 'bg-slate-500': !isActive(player) }"
-                                    class="px-4 py-2 m-1 text-white rounded-md shadow-md transition-colors duration-200 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-opacity-50">
-                                    <p class="text-2xl font-bold">{{ player.number }}</p>
-                                    {{ player.name }}
+                    <div class="px-8 modal-body">
+                        <div class="grid grid-cols-2 gap-6">
+                            <div class="grid grid-cols-3 gap-4">
+                                <PlayerSelectBlock :player="player" v-for="player in players" @click="selectPlayer(player)" :active="isActive(player)" />
+                            </div>
+
+                            <div class="mb-6 space-y-6 text-center gt-8">
+                                <ButtonModalAction :active="data.score === 2" @click="setScore(2)">2 Poena</ButtonModalAction>
+                                <ButtonModalAction :active="data.score === 3" @click="setScore(3)">3 Poena</ButtonModalAction>
+                                <ButtonModalAction :active="data.score === 1" @click="setScore(1)">Slobodno Bacanje</ButtonModalAction>
+                                <hr class="opacity-20">
+
+                                <button :disabled="!canBeSaved()" :class="{ 'opacity-50': !canBeSaved(), 'pointer-events-none': !canBeSaved() }" @click="save"
+                                    class="flex justify-center items-center py-5 space-x-2 w-full text-sm transition-transform duration-300 btn btn-secondary hover:scale-105">
+                                    <span>Spremi</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                            clip-rule="evenodd" />
+                                    </svg>
                                 </button>
                             </div>
-
-                            <div class="grid grid-cols-3 text-center max-w-[360px] mt-4 mb-6 mx-auto">
-                                <button @click="setScore(2)" :class="{ 'opacity-50': data.score !== 2 }"
-                                    class="overflow-hidden px-4 py-2 m-1 text-white bg-blue-500 rounded-md shadow-md transition-colors duration-200 aspect-square hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50">2
-                                    poena</button>
-                                <button @click="setScore(3)" :class="{ 'opacity-50': data.score !== 3 }"
-                                    class="overflow-hidden px-4 py-2 m-1 text-white bg-blue-500 rounded-md shadow-md transition-colors duration-200 aspect-square hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50">Trica</button>
-                                <button @click="setScore(1)" :class="{ 'opacity-50': data.score !== 1 }"
-                                    class="overflow-hidden px-4 py-2 m-1 text-white bg-blue-500 rounded-md shadow-md transition-colors duration-200 aspect-square hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50">Slobodno
-                                    Bacanje</button>
-                            </div>
-                        </div>
-
-                        <div class="flex justify-center p-6">
-                            <button :disabled="!canBeSaved()"
-                                :class="{ 'opacity-50': !canBeSaved(), 'pointer-events-none': !canBeSaved() }"
-                                @click="save" class="btn btn-primary">Spremi</button>
                         </div>
                     </div>
                 </div>
