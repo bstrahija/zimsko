@@ -31,19 +31,19 @@ const foul = () => {
 </script>
 
 <template>
-    <div class="grid grid-cols-3 gap-4">
-        <button @click="$live.addFoul(game, team)" class="px-2 py-2 space-y-1 text-center rounded foul-timeout-btn">
-            <div class="text-xs">PREKRŠAJI</div>
-            <div class="text-2xl font-bold">{{ team.stats.current_period_fouls }}</div>
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+        <button @click="$live.addFoul(game, team)" class="grid grid-cols-2 items-center px-2 py-2 space-y-1 text-center rounded md:grid-cols-1 foul-timeout-btn">
+            <div class="text-3xs sm:text-2xs">PREKRŠAJI</div>
+            <div class="text-xs font-bold sm:text-lg lg:text-2xl">{{ team.stats.current_period_fouls }}</div>
         </button>
-        <button @click="$live.addTimeout(game, team)" class="px-2 py-2 space-y-1 text-center rounded foul-timeout-btn">
-            <div class="text-xs">TIMEOUT</div>
-            <div class="text-2xl font-bold">{{ team.stats.current_period_timeouts }}</div>
+        <button @click="$live.addTimeout(game, team)" class="grid grid-cols-2 items-center px-2 py-2 space-y-1 text-center rounded md:grid-cols-1 foul-timeout-btn">
+            <div class="text-3xs sm:text-2xs">TIMEOUT</div>
+            <div class="text-xs font-bold sm:text-lg lg:text-2xl">{{ team.stats.current_period_timeouts }}</div>
         </button>
-        <div class="px-2 py-2 space-y-1 text-center rounded foul-timeout-btn">
-            <div class="text-xs">BONUS</div>
-            <div class="text-2xl font-bold text-pink-500" v-if="team.stats.current_period_fouls >= 5">✓</div>
-            <div class="text-2xl font-bold" v-else>-</div>
+        <div class="grid grid-cols-2 items-center px-2 py-2 space-y-1 text-center rounded md:grid-cols-1 foul-timeout-btn">
+            <div class="text-3xs sm:text-2xs">BONUS</div>
+            <div class="text-xs font-bold text-pink-500 sm:text-lg lg:text-2xl" v-if="team.stats.current_period_fouls >= 5">✓</div>
+            <div class="text-xs font-bold sm:text-lg lg:text-2xl" v-else>-</div>
         </div>
     </div>
 </template>

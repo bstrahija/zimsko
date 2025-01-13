@@ -37,22 +37,30 @@ let props = defineProps({
             {{ game.title }}
         </h1>
 
-        <div class="grid gap-4 mb-4 score-top" style="grid-template-columns: 1fr 160px 1fr">
+        <div class="grid gap-4 mb-4 score-top grid-cols-[1fr_1fr] md:grid-cols-[1fr_160px_1fr]">
             <div class="space-y-4 home-team-top">
                 <ScoreBar :score="game.home_score" :team="game.home_team" :side="'home'" />
-
-                <FoulsTimeouts :side="'home'" :team="game.home_team" :game="game" />
             </div>
 
-            <div class="grid text-center rounded bg-slate-800/40">
-                <Pretty />
-
-                <PeriodIndicator :game="game" />
+            <div class="hidden text-center rounded bg-slate-800/40 md:block">
+                <Pretty class="" />
             </div>
 
             <div class="space-y-4 away-team-top">
                 <ScoreBar :score="game.away_score" :team="game.away_team" :side="'away'" />
+            </div>
+        </div>
 
+        <div class="grid gap-4 mb-4 score-top" style="grid-template-columns: 1fr 160px 1fr">
+            <div class="space-y-4 home-team-top">
+                <FoulsTimeouts :side="'home'" :team="game.home_team" :game="game" />
+            </div>
+
+            <div class="grid text-center rounded bg-slate-800/40">
+                <PeriodIndicator :game="game" />
+            </div>
+
+            <div class="space-y-4 away-team-top">
                 <FoulsTimeouts :side="'away'" :team="game.away_team" :game="game" />
             </div>
         </div>
