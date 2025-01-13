@@ -64,26 +64,34 @@ function setScore(score) {
                     </div>
 
                     <div class="px-8 modal-body">
-                        <div class="grid grid-cols-2 gap-6">
-                            <div class="grid grid-cols-3 gap-4">
-                                <PlayerSelectBlock :player="player" v-for="player in players" @click="selectPlayer(player)" :active="isActive(player)" />
+                        <div class="grid gap-6 items-start grid-cols-[1fr_140px]">
+                            <div class="space-y-3">
+                                <h3 class="text-sm text-center uppercase">PROMAŠUJE</h3>
+                                <div class="grid grid-cols-3 gap-4 items-start">
+                                    <PlayerSelectBlock :player="player" v-for="player in players" @click="selectPlayer(player)" :active="isActive(player)" />
+                                </div>
                             </div>
 
-                            <div class="mb-6 space-y-6 text-center gt-8">
-                                <ButtonModalAction :active="data.score === 2" @click="setScore(2)">2 Poena</ButtonModalAction>
-                                <ButtonModalAction :active="data.score === 3" @click="setScore(3)">3 Poena</ButtonModalAction>
-                                <ButtonModalAction :active="data.score === 1" @click="setScore(1)">Slobodno Bacanje</ButtonModalAction>
-                                <hr class="opacity-20">
+                            <div class="space-y-3 text-center">
+                                <h3 class="text-sm text-center uppercase">Poena</h3>
+                                <ButtonModalAction :active="data.score === 2" @click="setScore(2)">2</ButtonModalAction>
+                                <ButtonModalAction :active="data.score === 3" @click="setScore(3)">3</ButtonModalAction>
+                                <ButtonModalAction :active="data.score === 1" @click="setScore(1)">1</ButtonModalAction>
 
-                                <button :disabled="!canBeSaved()" :class="{ 'opacity-50': !canBeSaved(), 'pointer-events-none': !canBeSaved() }" @click="save"
-                                    class="flex justify-center items-center py-5 space-x-2 w-full text-sm transition-transform duration-300 btn btn-secondary hover:scale-105">
-                                    <span>Spremi</span>
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd"
-                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                            clip-rule="evenodd" />
-                                    </svg>
-                                </button>
+                                <div class="w-full">
+                                    <hr class="mb-6 opacity-20">
+
+                                    <button :disabled="!canBeSaved()" :class="{ 'opacity-50': !canBeSaved(), 'pointer-events-none': !canBeSaved() }" @click="save"
+                                        class="flex justify-center items-center py-5 space-x-2 w-full text-sm transition-transform duration-300 btn btn-secondary hover:scale-105">
+                                        <span>Spremi</span>
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd"
+                                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                    </button>
+                                </div>
+
                             </div>
                         </div>
                     </div>

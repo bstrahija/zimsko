@@ -98,19 +98,20 @@ function checkScore() {
                     </div>
 
                     <div class="px-8 modal-body">
-                        <div class="grid grid-cols-3 gap-6">
+                        <div class="grid gap-6 grid-cols-[1fr_100px_1fr]" :class="{ 'grid-cols-[1fr_120px]': data.score === 1 }">
                             <div class="text-center">
-                                <h3 class="mb-3 text-sm text-center uppercase">Pogodak</h3>
+                                <h3 class="mb-3 text-sm text-center uppercase">Pogađa</h3>
                                 <div class="grid grid-cols-3 gap-4">
                                     <PlayerSelectBlock :player="player" :active="isActive(player)" v-for="player in players" :key="'playersc-' + player.id"
                                         @click="selectPlayer(player)" />
                                 </div>
                             </div>
 
-                            <div class="mt-8 mb-6 space-y-6 text-center">
-                                <ButtonModalAction :active="data.score === 2" @click="setScore(2)">2 Poena</ButtonModalAction>
-                                <ButtonModalAction :active="data.score === 3" @click="setScore(3)">3 Poena</ButtonModalAction>
-                                <ButtonModalAction :active="data.score === 1" @click="setScore(1)">Slobodno Bacanje</ButtonModalAction>
+                            <div class="mb-6 space-y-3 text-center">
+                                <h3 class="text-sm text-center uppercase">Poena</h3>
+                                <ButtonModalAction :active="data.score === 2" @click="setScore(2)">2</ButtonModalAction>
+                                <ButtonModalAction :active="data.score === 3" @click="setScore(3)">3</ButtonModalAction>
+                                <ButtonModalAction :active="data.score === 1" @click="setScore(1)">1</ButtonModalAction>
                                 <hr class="opacity-20">
                                 <button :disabled="!canBeSaved()" :class="{ 'opacity-50': !canBeSaved(), 'pointer-events-none': !canBeSaved() }" @click="save"
                                     class="flex justify-center items-center py-5 space-x-2 w-full text-sm transition-transform duration-300 btn btn-secondary hover:scale-105">
@@ -124,10 +125,10 @@ function checkScore() {
                             </div>
 
                             <div v-if="data.score > 1">
-                                <h3 class="mb-3 text-sm text-center uppercase">Asistencija</h3>
+                                <h3 class="mb-3 text-sm text-center uppercase">Asistira</h3>
                                 <div class="grid grid-cols-3 gap-4">
                                     <PlayerSelectBlock :player="player" :active="isActiveAssist(player)" v-for="player in players" :key="'playeras-' + player.id"
-                                        @click="selectAssistPlayer(player)" />
+                                        @click="selectAssistPlayer(player)" :class="{ hidden: player.id === data.selectedPlayer?.id }" />
                                 </div>
                             </div>
                         </div>

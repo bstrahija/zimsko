@@ -40,7 +40,7 @@ const props = defineProps({
         </ScoreButton> -->
         <ScoreButton class="add-rebound" @click="$live.addRebound(game, team)">
             <IconRebound />
-            Skok
+            <span class="text-3xs md:text-2xs">Skok</span>
         </ScoreButton>
         <ScoreButton class="add-steal" @click="$live.addSteal(game, team)">
             <IconSteal />

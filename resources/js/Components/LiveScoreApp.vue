@@ -37,7 +37,7 @@ let props = defineProps({
             {{ game.title }}
         </h1>
 
-        <div class="grid gap-4 mb-4 score-top grid-cols-[1fr_1fr] md:grid-cols-[1fr_160px_1fr]">
+        <div class="grid gap-4 mb-4 score-top grid-cols-[1fr_1fr] md:grid-cols-[1fr_100px_1fr] lg:grid-cols-[1fr_120px_1fr] xl:grid-cols-[1fr_160px_1fr]">
             <div class="space-y-4 home-team-top">
                 <ScoreBar :score="game.home_score" :team="game.home_team" :side="'home'" />
             </div>
@@ -51,7 +51,7 @@ let props = defineProps({
             </div>
         </div>
 
-        <div class="grid gap-4 mb-4 score-top grid-cols-[1fr_100px_1fr]  md:grid-cols-[1fr_160px_1fr]">
+        <div class="grid gap-4 mb-4 score-top grid-cols-[1fr_100px_1fr] md:grid-cols-[1fr_100px_1fr] lg:grid-cols-[1fr_120px_1fr] xl:grid-cols-[1fr_160px_1fr]">
             <div class="space-y-4 home-team-top">
                 <FoulsTimeouts :side="'home'" :team="game.home_team" :game="game" />
             </div>

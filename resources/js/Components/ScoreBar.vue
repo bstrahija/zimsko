@@ -16,7 +16,7 @@ defineProps({
 </script>
 
 <template>
-    <div class="flex flex-col justify-between items-center p-4 rounded-lg border sm:flex-row score-bar" :class="{ 'flex-row-reverse': side === 'away' }">
+    <div class="flex flex-col justify-between items-center p-4 rounded-lg border sm:flex-row score-bar" :class="{ 'sm:flex-row-reverse': side === 'away' }">
         <div class="flex col-span-3 justify-center items-center lg:col-span-3">
             <img :src="team.logo" alt="" class="rounded-full size-10 sm:size-12 md:size-[60px] lg:size-20 aspect-square" />
         </div>
