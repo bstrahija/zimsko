@@ -1,8 +1,8 @@
-<footer class="items-center pt-12 mt-24 space-y-12 text-gray-100 footer bg-slate-950">
+<footer class="items-center pt-12 mt-24 space-y-12 text-gray-100 footer bg-secondary">
     <div class="container grid grid-cols-1 gap-12 p-8 mx-auto md:grid-cols-4">
         <div>
-            <a href="{{ route('home') }}" class="flex justify-center items-center md:justify-start">
-                <img src="{{ asset('img/logo.png') }}" alt="Logo" class="h-auto w-18">
+            <a href="{{ route('home') }}" class="flex justify-center items-center text-white md:justify-start">
+                <x-ui.logo class="w-48 h-auto" />
             </a>
         </div>
 
@@ -10,7 +10,7 @@
             <h2 class="mb-10 text-lg uppercase font-oswald">NAJNOVIJE VIJESTI</h2>
             <div class="space-y-4">
                 @foreach (App\Models\Post::orderBy('published_at', 'desc')->take(3)->get() as $item)
-                    <a href="{{ route('news.show', $item->slug) }}" class="block text-sm font-bold text-gray-200 transition-all hover:text-primary">
+                    <a href="{{ route('news.show', $item->slug) }}" class="block text-sm font-bold leading-5 text-gray-200 transition-all hover:text-primary">
                         <svg xmlns="http://www.w3.org/2000/svg" class="inline-block mr-1 w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M2 3a1 1 0 011-1h14a1 1 0 011 1v14a1 1 0 01-1 1H3a1 1 0 01-1-1V3zm2 2v10h12V5H4zm2 2h8v2H6V7zm0 4h8v2H6v-2z"
                                 clip-rule="evenodd" />
@@ -90,8 +90,8 @@
         </nav>
     </div>
 
-    <div class="py-8 text-center bg-gradient-to-br from-secondary to-burger">
-        <div class="flex flex-wrap gap-6 justify-center items-center mx-auto text-white uppercase wraper font-oswald">
+    <div class="py-8 text-center bg-black/20">
+        <div class="flex flex-wrap gap-6 justify-center items-center mx-auto text-white uppercase wraper font-nav">
             <a href="{{ route('home') }}" class="transition-all hover:text-primary">Početna</a>
             <a href="{{ route('results') }}" class="transition-all hover:text-primary">Rezultati</a>
             <a href="{{ route('schedule') }}" class="transition-all hover:text-primary">Raspored</a>
@@ -102,7 +102,7 @@
         </div>
     </div>
 
-    <div class="grid-flow-col items-center pb-10 mx-auto wrapper">
+    <div class="hidden grid-flow-col items-center pb-10 mx-auto wrapper">
         <p class="text-xs text-center">
             Copyright © {{ Carbon\Carbon::now()->year }} - by
             <a href="https://www.creolab.hr" target="_blank" class="transition-all hover:underline hover:text-blue-300" target="_blank">Creo</a>

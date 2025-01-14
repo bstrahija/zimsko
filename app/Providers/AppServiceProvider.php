@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Event;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -18,7 +19,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        view()->composer('*', function ($view) {
+            $currentEvent = Event::current() ?: (Event::last() ?: null);
+            $view->with('currentEvent', $currentEvent);
+        });
     }
 
     /**

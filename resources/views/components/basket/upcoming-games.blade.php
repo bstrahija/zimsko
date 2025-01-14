@@ -1,4 +1,4 @@
-<x-ui.card class="overflow-x-auto" title="Parovi" subtitle="{{ App\Models\Event::current()->title }}">
+<x-ui.card class="overflow-x-auto" title="Parovi" subtitle="{{ $currentEvent->title ?: 'Zimsko' }}">
     <div class="game-list">
         @if (!$games->count())
             <p class="py-4 text-center text-gray-500">Trenutno nema dostupnih utakmica.</p>

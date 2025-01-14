@@ -2,6 +2,7 @@
     <div id="hero-player" class="hidden w-full h-full border-2" data-video-id="2NXwPtblEbs">
         <div id="hero-player-container">Loading...</div>
     </div>
+
     <div id="play-hero-video" class="flex absolute top-0 left-0 justify-center items-center w-full h-full bg-black">
         <div class="flex absolute inset-0 justify-center items-center">
             <div class="flex relative top-8 justify-center items-center w-24 h-24 bg-red-600 rounded-full transition-colors cursor-pointer hover:bg-red-700">

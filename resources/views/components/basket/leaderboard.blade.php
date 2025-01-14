@@ -9,7 +9,7 @@
 @endphp
 
 <div class="{{ $class ?? '' }}">
-    <x-ui.card class="overflow-x-auto" title="Poredak ekipa" subtitle="{{ App\Models\Event::current()->title }}" variant="cta">
+    <x-ui.card class="overflow-x-auto" title="Poredak ekipa" subtitle="{{ $currentEvent->title ?: 'Zimsko' }}" variant="cta">
         <table class="w-full text-sm table-auto">
             <thead>
                 <tr class="border-b border-gray-200">

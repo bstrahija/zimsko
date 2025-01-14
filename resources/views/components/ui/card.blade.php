@@ -8,11 +8,11 @@
         $headColor = 'text-secondary';
         $bgLogo = 'text-sky-800 opacity-20 ';
     } elseif ($variant === 'cta') {
-        $bgTop = 'bg-[#d95d2b]';
+        $bgTop = 'bg-primary';
         $headColor = 'text-white';
         $bgLogo = 'text-orange-900 opacity-20 ';
     } else {
-        $bgTop = 'bg-[#28658d]';
+        $bgTop = 'bg-secondary';
         $headColor = 'text-white';
         $bgLogo = 'text-sky-900 opacity-40 ';
     }
