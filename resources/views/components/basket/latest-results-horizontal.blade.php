@@ -3,7 +3,7 @@
 
     <div class="grid grid-cols-1 gap-4 lg:gap-6 xl-+:gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 3xl:grid-cols-6">
         @foreach ($latestGames as $index => $game)
-            <x-basket.latest-results-item :game="$game" class="" />
+            <x-basket.latest-results-horizontal-item :game="$game" class="" />
         @endforeach
     </div>
 
