@@ -181,6 +181,7 @@ class GameResource extends Resource
                     //     ->columnSpanFull()
                     //     ->relationship('round', 'title'),
                     Forms\Components\DateTimePicker::make('scheduled_at')
+                        ->required()
                         ->columnSpanFull(),
                 ]),
 

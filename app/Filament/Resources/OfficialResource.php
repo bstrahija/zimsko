@@ -28,17 +28,12 @@ class OfficialResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('slug')
-                    ->hiddenOn(['create'])
+                Forms\Components\TextInput::make('first_name')
                     ->required(),
-                Forms\Components\TextInput::make('name')
+                Forms\Components\TextInput::make('last_name')
                     ->required(),
-                Forms\Components\Textarea::make('body')
-                    ->columnSpanFull(),
                 SpatieMediaLibraryFileUpload::make('photo')
                     ->collection('photos'),
-                Forms\Components\DatePicker::make('birthday'),
-                Forms\Components\TextInput::make('status'),
             ]);
     }
 

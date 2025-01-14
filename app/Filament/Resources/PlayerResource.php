@@ -11,6 +11,7 @@ use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Table;
 use FilamentTiptapEditor\TiptapEditor;
 use Illuminate\Database\Eloquent\Builder;
@@ -69,10 +70,12 @@ class PlayerResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->paginated([25, 50, 100])
             ->columns([
                 // Tables\Columns\TextColumn::make('external_id')
                 //     ->numeric()
                 //     ->sortable(),
+                SpatieMediaLibraryImageColumn::make('photo')->collection('photos'),
                 Tables\Columns\TextColumn::make('first_name')
                     ->sortable()
                     ->searchable(),

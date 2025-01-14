@@ -28,18 +28,17 @@ class CoachResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('external_id')
-                    ->numeric(),
-                Forms\Components\TextInput::make('slug')
-                    ->hiddenOn(['create'])
+                Forms\Components\TextInput::make('first_name')
                     ->required(),
-                Forms\Components\TextInput::make('name')
+                Forms\Components\TextInput::make('last_name')
                     ->required(),
-                Forms\Components\Textarea::make('body')
-                    ->columnSpanFull(),
-                SpatieMediaLibraryFileUpload::make('logo')
+                Forms\Components\Select::make('team_id')
+                    ->preload()
+                    ->searchable()
+                    ->multiple()
+                    ->relationship('teams', 'title'),
+                SpatieMediaLibraryFileUpload::make('photo')
                     ->collection('photos'),
-                Forms\Components\TextInput::make('status'),
 
             ]);
     }

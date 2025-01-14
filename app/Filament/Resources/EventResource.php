@@ -39,6 +39,9 @@ class EventResource extends Resource
                     ->columnSpanFull()
                     ->hiddenOn(['create'])
                     ->required(),
+                Forms\Components\DateTimePicker::make('scheduled_at')
+                    ->required()
+                    ->columnSpanFull(),
                 TiptapEditor::make('body')
                     ->columnSpanFull()
                     ->profile('simple'),
@@ -53,6 +56,9 @@ class EventResource extends Resource
                 Tables\Columns\TextColumn::make('title')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('slug')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('scheduled_at')
+                    ->dateTime()
                     ->sortable(),
             ])
             ->filters([
