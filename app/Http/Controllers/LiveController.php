@@ -317,6 +317,9 @@ class LiveController extends Controller
         if ($assistPlayerId) $this->live($game)->playerScore(playerId: $playerId, points: $score, playerAssistId: $assistPlayerId);
         else                 $this->live($game)->playerScore(playerId: $playerId, points: $score);
 
+        // Sync with game
+        $this->syncGame($game);
+
         $dispatched = LiveScoreUpdated::dispatch('addScore');
     }
 
@@ -448,6 +451,9 @@ class LiveController extends Controller
 
         $this->live($game)->nextPeriod();
 
+        // Sync with game
+        $this->syncGame($game);
+
         LiveScoreUpdated::dispatch('nextPeriod');
     }
 
@@ -458,6 +464,9 @@ class LiveController extends Controller
 
         $this->live($game)->endGame();
 
+        // Sync with game
+        $this->syncGame($game);
+
         LiveScoreUpdated::dispatch('endGame');
     }
 
@@ -465,7 +474,10 @@ class LiveController extends Controller
     {
         if ($log->type === 'completed') {
             $log->game->live->update(['status' => 'in_progress']);
-            $log->game->game->update(['status' => 'in_progress']);
+            $log->game->update(['status' => 'in_progress']);
+        } elseif ($log->type === 'game_started') {
+            $log->game->live->update(['status' => 'scheduled']);
+            $log->game->update(['status' => 'scheduled']);
         } elseif ($log->type === 'period_started') {
             $log->game->live->update(['period' => $log->period - 1]);
         } elseif ($log->type === 'substitution') {
@@ -475,6 +487,8 @@ class LiveController extends Controller
 
         $log->delete();
         $this->live($log->game)->updateLiveStats();
+
+        $this->syncGame($log->game);
     }
 
     // public function update(Game $game)
@@ -715,6 +729,28 @@ class LiveController extends Controller
         // echo '</ul>';
 
         return $live;
+    }
+
+    public function syncGame(Game $game)
+    {
+        $live = $this->live($game);
+
+        // Sync live game periods
+        foreach (range(1, 10) as $period) {
+            $homeScore = GameLog::where('game_id', $game->id)->where('type', 'LIKE', 'player_score%')->where('period', $period)->where('team_side', 'home')->sum('amount');
+            $awayScore = GameLog::where('game_id', $game->id)->where('type', 'LIKE', 'player_score%')->where('period', $period)->where('team_side', 'away')->sum('amount');
+
+            foreach ([$live->gameLive(), $live->game()] as $target) {
+                $target->update(['home_score_p' . $period => $homeScore]);
+                $target->update(['away_score_p' . $period => $awayScore]);
+            }
+        }
+
+        // Sync the main game
+        $live->game()->update([
+            'home_score' => $live->gameLive()->home_score,
+            'away_score' => $live->gameLive()->away_score,
+        ]);
     }
 
     protected function live(Game $game): LiveScore

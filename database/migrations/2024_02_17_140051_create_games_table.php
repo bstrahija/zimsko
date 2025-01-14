@@ -18,6 +18,7 @@ return new class extends Migration
             $table->unsignedInteger('external_id')->nullable()->index();
             $table->foreignId('event_id')->nullable()->cascadeOnDelete();
             $table->foreignId('round_id')->nullable();
+            $table->string('status', 50)->nullable()->default('scheduled')->index();
             $table->string('slug')->nullable()->index();
             $table->string('title')->nullable();
             $table->text('body')->nullable();
@@ -30,7 +31,6 @@ return new class extends Migration
                 }
             }
 
-            $table->string('status', 50)->nullable()->default('pending')->index();
             $table->json('data')->nullable();
             $table->string('type', 50)->default('default')->index();
             $table->dateTime('scheduled_at')->nullable();

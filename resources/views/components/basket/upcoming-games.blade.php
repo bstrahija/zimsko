@@ -9,13 +9,16 @@
                     <div class="mb-2 text-sm text-center uppercase font-roboto text-secondary">
                         <span class="font-bold">{{ $game->round->title }}</span>
                         <small>({{ $game->scheduled_at->format('d.m.Y H:i') }})</small>
+                        <span class="inline-flex items-center px-2 py-1 text-xs font-bold text-red-100 bg-red-600 rounded-full animate-pulse">
+                            LIVE
+                        </span>
                     </div>
 
                     <a href="{{ route('results.show', $game) }}" class="game-list__item grid grid-cols-[10%_1fr_auto_1fr_10%] gap-6 font-condensed ">
                         <div class="flex justify-center items-center"><img src="{{ $game->homeTeam->logo() }}" alt=""
                                 class="max-h-12 rounded-full transition-transform duration-300 transform max-w-12 hover:scale-110"></div>
                         <div class="flex items-center transition-colors duration-300 hover:text-primary">{{ $game->homeTeam->title }}</div>
-                        <div class="flex items-center text-xl font-bold font-condensed text-primary">
+                        <div class="flex relative items-center text-xl font-bold font-condensed text-primary">
                             <span class="{{ $game->home_score > $game->away_score ? 'text-primary' : 'text-gray-400' }}">{{ $game->home_score }}</span>
                             <span class="mx-1">:</span>
                             <span class="{{ $game->away_score > $game->home_score ? 'text-primary' : 'text-gray-400' }}">{{ $game->away_score }}</span>

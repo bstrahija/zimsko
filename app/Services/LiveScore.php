@@ -91,7 +91,7 @@ class LiveScore
         $this->initGame();
     }
 
-    public function initGame(): void
+    public function initGame()
     {
         // This simply creates the game live model
         $this->gameLive       = $this->game->live()->firstOrCreate([], ['period' => 1, 'home_starting_players' => [], 'away_starting_players' => [], 'home_players_on_court' => [], 'away_players_on_court' => []]);
@@ -114,7 +114,7 @@ class LiveScore
         $this->updateLog();
     }
 
-    function setupPlayers(): void
+    function setupPlayers()
     {
         // Add players if we have any
         $this->startingPlayers     = new Collection();
@@ -149,7 +149,7 @@ class LiveScore
         }
     }
 
-    public function addStartingPlayers(array $homePlayerIds, array $awayPlayerIds): void
+    public function addStartingPlayers(array $homePlayerIds, array $awayPlayerIds)
     {
         $log = GameLog::query()->updateOrCreate([
             'game_id'      => $this->game->id,
@@ -185,7 +185,7 @@ class LiveScore
         $this->playersOnCourt = $this->homePlayersOnCourt->merge($this->awayPlayersOnCourt);
     }
 
-    public function startGame($writeToLog = true): void
+    public function startGame($writeToLog = true)
     {
         $this->currentPeriod = 1;
         $this->gameLive->update(['status' => 'in_progress']);
@@ -211,7 +211,7 @@ class LiveScore
         $this->updateLog();
     }
 
-    public function timeout(string $teamId, ?string $occurredAt = '00:00:00'): void
+    public function timeout(string $teamId, ?string $occurredAt = '00:00:00')
     {
         // Find the team
         $team         = ($teamId === $this->homeTeam->id) ? $this->homeTeam : $this->awayTeam;
@@ -219,7 +219,7 @@ class LiveScore
 
         // We need to check if we have timeouts left
         if ($timeoutsLeft <= 0) {
-            return;
+            return false;
         }
 
         // And also update the timeouts left
@@ -238,22 +238,22 @@ class LiveScore
         $this->updateLiveStats(log: $log);
     }
 
-    public function updateGame(): void
+    public function updateGame()
     {
         // This will write the data to the DB
     }
 
-    public function currentPeriod(): int
+    public function currentPeriod()
     {
         return $this->currentPeriod;
     }
 
-    public function setPeriod(int $period): void
+    public function setPeriod($period)
     {
         $this->currentPeriod = $period;
     }
 
-    public function nextPeriod(): void
+    public function nextPeriod()
     {
         // We need to reset the timeouts and fouls
         $this->homeTimeoutsLeft = config('live.team_timeouts_per_period');
@@ -311,6 +311,11 @@ class LiveScore
 
         // And update the log collection
         $this->updateLog();
+    }
+
+    public function game(): Game
+    {
+        return $this->game;
     }
 
     public function gameLive(): GameLive

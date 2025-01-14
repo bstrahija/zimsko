@@ -39,11 +39,14 @@
             <div class="grid grid-cols-4 gap-10 mx-auto max-w-xl">
                 @foreach (range(1, 4) as $quarter)
                     <div class="aspect-square bg-white/90">
-                        <h3 class="text-sm bg-[#d3307d] font-heading text-center text-white/90 px-4 py-2 border-t-4 border-[#ae2666]">Q{{ $quarter }}</h3>
+                        <h3
+                            class="text-sm bg-[#d3307d] font-heading text-center text-white/90 px-4 py-2 border-t-4 border-[#ae2666] {{ $live['period'] !== $quarter ? ($live['period'] > $quarter ? 'grayscale opacity-50' : 'opacity-50') : '' }}">
+                            Q{{ $quarter }}
+                        </h3>
                         <div class="px-5 py-3 font-mono text-2xl font-bold text-center whitespace-nowrap text-black/80">
-                            <span>{{ $live['home_score_p1'] }}</span>
+                            <span>{{ $live['home_score_p' . $quarter] }}</span>
                             <span>:</span>
-                            <span>{{ $live['away_score_p1'] }}</span>
+                            <span>{{ $live['away_score_p' . $quarter] }}</span>
                         </div>
                     </div>
                 @endforeach
