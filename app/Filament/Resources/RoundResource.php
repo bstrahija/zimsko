@@ -68,11 +68,11 @@ class RoundResource extends Resource
         return $table
             ->paginated([20, 40, 100])
             ->columns([
+                Tables\Columns\TextColumn::make('event.title')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('title')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('slug')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('event.title')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('games_count')
                     ->label('Games')
