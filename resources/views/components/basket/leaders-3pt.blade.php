@@ -1,7 +1,5 @@
 <div class="{{ $class ?? '' }}">
-    <x-ui.h2-double sub="Trice">Najbolji u tricama</x-ui.h2-double>
-
-    <x-ui.card class="overflow-x-auto">
+    <x-ui.card class="overflow-x-auto" title="Najbolji u tricama" variant="light">
         <table class="w-full text-sm table-auto">
             <thead>
                 <tr class="border-b border-gray-200">

@@ -31,7 +31,7 @@ class AwayGamesRelationManager extends RelationManager
         return $table
             ->paginated([25, 50, 100])
             ->defaultSort('scheduled_at', 'desc')
-            ->recordTitleAttribute('name')
+            ->recordTitleAttribute('title')
             ->columns([
                 Tables\Columns\TextColumn::make('title'),
                 Tables\Columns\TextColumn::make('homeTeam.title')->label('Against'),

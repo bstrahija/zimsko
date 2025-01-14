@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\TeamResource\RelationManagers;
 
 use Filament\Forms;
+use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables;
@@ -10,6 +11,7 @@ use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Support\Str;
 
 class PlayersRelationManager extends RelationManager
 {
@@ -31,6 +33,8 @@ class PlayersRelationManager extends RelationManager
                 Forms\Components\TextInput::make('position')
                     ->required()
                     ->maxLength(255),
+                SpatieMediaLibraryFileUpload::make('photo')
+                    ->collection('photos'),
             ]);
     }
 
@@ -38,14 +42,14 @@ class PlayersRelationManager extends RelationManager
     {
         return $table
             ->paginated([25, 50, 100])
-            ->defaultSort('name', 'asc')
-            ->recordTitleAttribute('name')
+            ->defaultSort('first_name', 'asc')
+            ->recordTitleAttribute('first_name')
             ->columns([
                 SpatieMediaLibraryImageColumn::make('photo')->collection('photos'),
                 Tables\Columns\TextColumn::make('number'),
                 Tables\Columns\TextColumn::make('first_name'),
                 Tables\Columns\TextColumn::make('last_name'),
-                Tables\Columns\TextColumn::make('position'),
+                Tables\Columns\TextColumn::make('position')->formatStateUsing(fn(string $state) => Str::upper($state)),
             ])
             ->filters([
                 //

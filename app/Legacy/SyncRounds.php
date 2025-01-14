@@ -66,6 +66,9 @@ class SyncRounds
             if ($round) {
                 $game->round_id = $round->id;
                 $game->save();
+
+                // We also update the round schedule
+                $round->update(['scheduled_at' => $game->scheduled_at->format('Y-m-d') . ' 08:00:00']);
             }
         }
     }

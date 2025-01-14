@@ -11,9 +11,7 @@
 @endphp
 
 <div class="{{ $class ?? '' }}">
-    <x-ui.h2-double sub="Igrači">Najbolji strijelci</x-ui.h2-double>
-
-    <x-ui.card class="overflow-x-auto">
+    <x-ui.card class="overflow-x-auto" title="Najbolji strijelci" variant="light">
         <table class="w-full text-sm table-auto">
             <thead>
                 <tr class="border-b border-gray-200">

@@ -1,7 +1,5 @@
 <div class="{{ $class ?? '' }}">
-    <x-ui.h2-double sub="Hvala">Sponzori!</x-ui.h2-double>
-
-    <x-ui.card class="overflow-x-auto">
+    <x-ui.card class="overflow-x-auto" title="Sponzori">
         <div class="flex flex-wrap gap-12 justify-center items-center">
             <a href="#"><img src="{{ asset('img/sponsors/sponsor_burger.png') }}" alt="Burger Weekend" class="h-40"></a>
             <a href="#"><img src="{{ asset('img/sponsors/sponsor_medjimurje.jpg') }}" alt="Međimurska Županija" class="h-16"></a>

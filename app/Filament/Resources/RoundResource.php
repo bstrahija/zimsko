@@ -7,6 +7,7 @@ use App\Filament\Resources\RoundResource\RelationManagers;
 use App\Models\Event;
 use App\Models\Round;
 use Filament\Forms;
+use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -30,18 +31,35 @@ class RoundResource extends Resource
 
     public static function form(Form $form): Form
     {
+        // Get default event
+        $defaultEvent = Event::current() ?: (Event::last() ?: null);
+
         return $form
+            ->columns('12')
             ->schema([
-                Forms\Components\TextInput::make('title')
-                    ->required(),
-                Forms\Components\TextInput::make('slug')
-                    ->hiddenOn(['create'])
-                    ->required(),
-                TiptapEditor::make('body')
-                    ->required()
-                    ->columnSpanFull(),
-                Forms\Components\TextInput::make('status')
-                    ->required(),
+                Fieldset::make('General')
+                    ->columnSpan(8)
+                    ->schema([
+                        Forms\Components\TextInput::make('title')
+                            ->required(),
+                        Forms\Components\TextInput::make('slug')
+                            ->hiddenOn(['create'])
+                            ->required(),
+                        TiptapEditor::make('body')
+                            ->required()
+                            ->columnSpanFull(),
+
+                    ]),
+                Fieldset::make('Meta')
+                    ->columnSpan(4)
+                    ->schema([
+                        Forms\Components\Select::make('event_id')
+                            ->columnSpanFull()
+                            ->default($defaultEvent?->id)
+                            ->relationship('event', 'title'),
+                        // Forms\Components\TextInput::make('status')
+                        //     ->required(),
+                    ]),
             ]);
     }
 
@@ -56,8 +74,12 @@ class RoundResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('event.title')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('status')
-                    ->searchable(),
+                Tables\Columns\TextColumn::make('games_count')
+                    ->label('Games')
+                    ->counts('games'),
+                Tables\Columns\TextColumn::make('scheduled_at')
+                    ->dateTime()
+                    ->sortable(),
             ])
             ->filters([
                 SelectFilter::make('event')
@@ -79,7 +101,7 @@ class RoundResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\GamesRelationManager::class,
         ];
     }
 

@@ -1,9 +1,9 @@
-<x-ui.card class="text-center {{ $class ?? '' }} item">
+<x-ui.card class="text-center {{ $class ?? '' }} item" subtitle="{{ $game->scheduled_at->format('d.m.Y') }}">
     <a href="#" class="block">
-        <div class="p-2 -mx-6 -mt-6 mb-4 text-sm text-white bg-gradient-to-br rounded-t from-secondary/95 to-secondary/70">
+        {{-- <div class="p-2 -mx-6 -mt-6 mb-4 text-sm text-white bg-gradient-to-br rounded-t from-secondary/95 to-secondary/70">
             {{ $game->scheduled_at->format('d.m.Y') }}
             <!-- <small>{{ $game->scheduled_at->format('H:i') }}</small> -->
-        </div>
+        </div> --}}
 
         <div class="mb-3 text-xs font-bold text-gray-500 uppercase">
             {{ $game->round?->title }}

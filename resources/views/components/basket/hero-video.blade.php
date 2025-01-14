@@ -11,6 +11,6 @@
             </div>
         </div>
 
-        <img id="play-hero-video-img" src="{{ asset('img/hero_video_no_bars.jpg') }}" class="object-cover w-full h-full" />
+        <img id="play-hero-video-img" src="{{ asset('img/video-overlay.jpg') }}" class="object-cover w-full h-full" />
     </div>
 </div>

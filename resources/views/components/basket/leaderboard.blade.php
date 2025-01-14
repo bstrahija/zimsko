@@ -2,8 +2,6 @@
     use App\Models\Event;
     use App\Services\Leaderboards;
 
-    $hideTitle = $hideTitle ?? false;
-
     // Check if we have leaderboard data
     if (!isset($leaderboard)) {
         $leaderboard = Leaderboards::getTeamLeaderboardForEvent(Event::current());
@@ -11,11 +9,7 @@
 @endphp
 
 <div class="{{ $class ?? '' }}">
-    @if (!$hideTitle)
-        <x-ui.h2-double sub="Ljestvica">Poredak ekipa</x-ui.h2-double>
-    @endif
-
-    <x-ui.card class="overflow-x-auto px-4">
+    <x-ui.card class="overflow-x-auto" title="Poredak ekipa" subtitle="{{ App\Models\Event::current()->title }}" variant="cta">
         <table class="w-full text-sm table-auto">
             <thead>
                 <tr class="border-b border-gray-200">

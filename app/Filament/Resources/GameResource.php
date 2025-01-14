@@ -375,12 +375,13 @@ class GameResource extends Resource
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('status')
+                    ->badge()
                     ->color(fn($state) => match ($state) {
-                        'scheduled' => 'blue',
-                        'in_progress' => 'orange',
-                        'finished' => 'green',
-                        'cancelled' => 'red',
-                        'completed' => '#0f0',
+                        'scheduled' => 'warning',
+                        'in_progress' => 'success',
+                        'finished' => 'gray',
+                        'cancelled' => 'error',
+                        'completed' => 'gray',
                     })
                     ->searchable(),
                 Tables\Columns\TextColumn::make('scheduled_at')

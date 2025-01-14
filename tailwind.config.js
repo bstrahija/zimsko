@@ -12,13 +12,16 @@ export default {
                 primary: '#FF6B00',
                 secondary: 'rgb(1, 114, 173)',
                 accent: '#FFAD69',
-                logo: 'rgb(1, 114, 173)',
+                logo: '#28658d',
                 burger: '#009dbc',
             },
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
                 oswald: ['Oswald', ...defaultTheme.fontFamily.sans],
-                nav: ['Oswald', ...defaultTheme.fontFamily.sans],
+                roboto: ['Roboto', ...defaultTheme.fontFamily.sans],
+                condensed: ['Roboto Condensed', ...defaultTheme.fontFamily.sans],
+                nav: ['Roboto Condensed', ...defaultTheme.fontFamily.sans],
+                heading: ['Roboto Condensed', ...defaultTheme.fontFamily.sans],
                 body: ['"Open Sans"'],
             },
             fontSize: {

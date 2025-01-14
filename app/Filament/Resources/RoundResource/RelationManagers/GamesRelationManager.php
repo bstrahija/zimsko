@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Filament\Resources\TeamResource\RelationManagers;
+namespace App\Filament\Resources\RoundResource\RelationManagers;
 
+use App\Models\Game;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\RelationManagers\RelationManager;
@@ -11,9 +12,9 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class HomeGamesRelationManager extends RelationManager
+class GamesRelationManager extends RelationManager
 {
-    protected static string $relationship = 'homeGames';
+    protected static string $relationship = 'games';
 
     public function form(Form $form): Form
     {
@@ -34,9 +35,12 @@ class HomeGamesRelationManager extends RelationManager
             ->recordTitleAttribute('title')
             ->columns([
                 Tables\Columns\TextColumn::make('title'),
-                Tables\Columns\TextColumn::make('homeTeamNumbers.score')->label('Score'),
-                Tables\Columns\TextColumn::make('awayTeamNumbers.score')->label('Score OPP'),
-                Tables\Columns\TextColumn::make('awayTeam.title')->label('Against'),
+                Tables\Columns\TextColumn::make('home_score')
+                    ->label('Score')
+                    ->formatStateUsing(function ($state, Game $game) {
+                        return $game->home_score . ':' . $game->away_score;
+                    })
+                    ->label('Home'),
                 Tables\Columns\TextColumn::make('scheduled_at'),
             ])
             ->filters([

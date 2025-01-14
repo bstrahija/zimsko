@@ -18,4 +18,9 @@ class GamesController extends Controller
 
         return view('games.schedule', ['results' => $results]);
     }
+
+    public function show(Game $game)
+    {
+        return view('games.show', ['game' => $game]);
+    }
 }

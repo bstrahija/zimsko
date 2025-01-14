@@ -62,6 +62,7 @@ class TeamResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->paginated([20, 40, 100])
             ->columns([
                 SpatieMediaLibraryImageColumn::make('logo')->collection('logos'),
                 Tables\Columns\TextColumn::make('title')
@@ -93,6 +94,7 @@ class TeamResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
