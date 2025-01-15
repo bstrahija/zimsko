@@ -2,10 +2,20 @@
 
 namespace App\Leaderboards;
 
+use App\Models\Event;
 use Illuminate\Support\Collection;
 
 class Leaderboard extends Collection
 {
+    public ?Event $event = null;
+
+    public function setEvent(Event $event): self
+    {
+        $this->event = $event;
+
+        return $this;
+    }
+
     public function multiOrderBy($instructions)
     {
         return $this->sort(function ($a, $b) use ($instructions) {

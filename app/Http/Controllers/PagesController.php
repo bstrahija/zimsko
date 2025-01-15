@@ -16,13 +16,14 @@ class PagesController extends Controller
         $lastEvent          = Event::last()->toArray();
         $currentEvent       = Event::current() ?: ($lastEvent ?: null);
         $latestGames        = Game::where(['status' => 'completed', 'event_id' => $currentEvent->id])->with(['homeTeam', 'awayTeam'])->orderByDesc('scheduled_at')->limit(6)->get();
+        $pastEvent          = Event::whereNot('id', $currentEvent->id)->orderBy('scheduled_at', 'desc')->first();
         $upcomingGames      = Game::where(['event_id' => $currentEvent->id])->where(function ($query) {
             $query->where('status', 'scheduled');
             $query->orWhere('status', 'in_progress');
         })->with(['homeTeam', 'awayTeam'])->orderBy('scheduled_at')->limit(6)->get();
         $leaderboard        = Leaderboards::getTeamLeaderboardForEvent($currentEvent);
-        $leaderboardPoints  = Leaderboards::getPlayerLeaderboardForEvent($currentEvent);
-        $leaderboard3Point  = Leaderboards::getPlayer3PointLeaderboardForEvent($currentEvent);
+        $leaderboardPoints  = Leaderboards::getPlayerLeaderboardForEvent($pastEvent);
+        $leaderboard3Point  = Leaderboards::getPlayer3PointLeaderboardForEvent($pastEvent);
         $latestArticles     = Post::orderBy('published_at', 'desc')->take(3)->get();
 
         return view('index', [

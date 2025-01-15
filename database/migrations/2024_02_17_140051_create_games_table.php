@@ -16,14 +16,14 @@ return new class extends Migration
         Schema::create('games', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('external_id')->nullable()->index();
-            $table->foreignId('event_id')->nullable()->cascadeOnDelete();
-            $table->foreignId('round_id')->nullable();
+            $table->foreignId('event_id')->nullable()->constrained('events')->cascadeOnDelete();
+            $table->foreignId('round_id')->nullable()->constrained('rounds');
             $table->string('status', 50)->nullable()->default('scheduled')->index();
             $table->string('slug')->nullable()->index();
             $table->string('title')->nullable();
             $table->text('body')->nullable();
-            $table->foreignId('home_team_id')->nullable()->constrained('teams');
-            $table->foreignId('away_team_id')->nullable()->constrained('teams');
+            $table->foreignId('home_team_id')->nullable()->constrained('teams')->cascadeOnDelete();
+            $table->foreignId('away_team_id')->nullable()->constrained('teams')->cascadeOnDelete();
 
             foreach (config('stats.columns') as $column) {
                 foreach (['home', 'away'] as $side) {

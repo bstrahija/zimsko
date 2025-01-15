@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('games_live', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('game_id')->cascadeOnDelete();
+            $table->foreignId('game_id')->constrained('games')->cascadeOnDelete();
             $table->string('status')->default('pending');
             $table->integer('home_score')->default(0);
             $table->integer('away_score')->default(0);

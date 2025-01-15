@@ -320,7 +320,7 @@ class LiveController extends Controller
         // Sync with game
         $this->syncGame($game);
 
-        $dispatched = LiveScoreUpdated::dispatch('addScore');
+        LiveScoreUpdated::dispatch('addScore');
     }
 
     public function addMiss(Game $game, Request $request)

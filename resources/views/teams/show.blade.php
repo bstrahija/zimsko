@@ -36,7 +36,7 @@
                                             </div>
                                         </td>
                                         <td class="px-2 py-3 text-right text-gray-500">{{ $player->number }}</td>
-                                        <td class="px-2 py-3 text-right text-gray-500">{{ $player->position }}</td>
+                                        <td class="px-2 py-3 text-right text-gray-500">{{ strtoupper($player->position) }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>

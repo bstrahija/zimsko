@@ -383,6 +383,7 @@ class GameResource extends Resource
                         'finished' => 'gray',
                         'cancelled' => 'error',
                         'completed' => 'gray',
+                        'tmp' => 'error',
                     })
                     ->searchable(),
                 Tables\Columns\TextColumn::make('scheduled_at')
@@ -413,7 +414,10 @@ class GameResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
-            ]);
+            ])
+            ->query(function (Game $query) {
+                return $query->whereNot('status', 'tmp');
+            });
     }
 
     public static function getRelations(): array

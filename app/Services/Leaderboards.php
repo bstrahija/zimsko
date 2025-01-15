@@ -16,34 +16,53 @@ class Leaderboards
 {
     public static function getTeamLeaderboardForEvent(Event $event, int $limit = 20): Collection
     {
-        $leaderboard = new Leaderboard;
+        $leaderboard = (new Leaderboard)->setEvent($event);
 
         // First get the stats
         $stats = Stat::where(['event_id' => $event->id, 'for' => 'team', 'type' => 'event'])->with(['team'])->get();
 
         // The add to leaderboard
-        foreach ($stats as $stat) {
-            // Calculate the points based on the config
-            $points = (config('stats.points_for_win') * $stat->wins) + (config('stats.points_for_loss') * $stat->losses);
+        if ($stats && $stats->count()) {
+            foreach ($stats as $stat) {
+                // Calculate the points based on the config
+                $points = (config('stats.points_for_win') * $stat->wins) + (config('stats.points_for_loss') * $stat->losses);
 
-            $leaderboard->add(new LeaderboardTeamItem([
-                'id'              => $stat->team_id,
-                'title'           => $stat->team->title,
-                'points'          => $points,
-                'wins'            => $stat->wins,
-                'losses'          => $stat->losses,
-                'games'           => $stat->games,
-                'score'           => $stat->score,
-                'opponentScore'   => $stat->score_against,
-                'scoreDifference' => $stat->score_diff,
-                'team'            => $stat->team,
-            ]));
+                $leaderboard->add(new LeaderboardTeamItem([
+                    'id'              => $stat->team_id,
+                    'title'           => $stat->team->title,
+                    'points'          => $points,
+                    'wins'            => $stat->wins,
+                    'losses'          => $stat->losses,
+                    'games'           => $stat->games,
+                    'score'           => $stat->score,
+                    'opponentScore'   => $stat->score_against,
+                    'scoreDifference' => $stat->score_diff,
+                    'team'            => $stat->team,
+                ]));
+            }
+
+            $leaderboard = $leaderboard->multiOrderBy([
+                ['column' => 'points',          'order' => 'desc'],
+                ['column' => 'scoreDifference', 'order' => 'desc'],
+            ])->values()->take($limit);
+
+            // Generate empty leaderboard
+        } else {
+            foreach ($event->teams as $team) {
+                $leaderboard->add(new LeaderboardTeamItem([
+                    'id'              => $team->id,
+                    'title'           => $team->title,
+                    // 'points'          => $points,
+                    // 'wins'            => $stat->wins,
+                    // 'losses'          => $stat->losses,
+                    // 'games'           => $stat->games,
+                    // 'score'           => $stat->score,
+                    // 'opponentScore'   => $stat->score_against,
+                    // 'scoreDifference' => $stat->score_diff,
+                    'team'            => $team,
+                ]));
+            }
         }
-
-        $leaderboard = $leaderboard->multiOrderBy([
-            ['column' => 'points',          'order' => 'desc'],
-            ['column' => 'scoreDifference', 'order' => 'desc'],
-        ])->values()->take($limit);
 
         return $leaderboard;
     }
@@ -86,7 +105,7 @@ class Leaderboards
 
     public static function getPlayerLeaderboardForEvent(Event $event, $orderBy = 'score', $limit = 10): Leaderboard
     {
-        $leaderboard = new Leaderboard;
+        $leaderboard = (new Leaderboard)->setEvent($event);
 
         // Get all stat rows
         $rows = Stat::where('event_id', $event->id)

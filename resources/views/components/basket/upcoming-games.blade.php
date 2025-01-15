@@ -9,9 +9,12 @@
                     <div class="mb-2 text-sm text-center uppercase font-roboto text-secondary">
                         <span class="font-bold">{{ $game->round->title }}</span>
                         <small>({{ $game->scheduled_at->format('d.m.Y H:i') }})</small>
-                        <span class="inline-flex items-center px-2 py-1 text-xs font-bold text-red-100 bg-red-600 rounded-full animate-pulse">
-                            LIVE
-                        </span>
+
+                        @if ($game->status === 'in_progress')
+                            <span class="inline-flex items-center px-2 py-1 text-xs font-bold text-red-100 bg-red-600 rounded-full animate-pulse">
+                                LIVE
+                            </span>
+                        @endif
                     </div>
 
                     <a href="{{ route('results.show', $game) }}" class="game-list__item grid grid-cols-[10%_1fr_auto_1fr_10%] gap-6 font-condensed ">

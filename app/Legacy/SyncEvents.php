@@ -71,6 +71,6 @@ class SyncEvents
         ]);
 
         // We also need to set the active event
-        Settings::set('general.current_event_id', Event::where('slug', 'zimsko-2024')->first()?->id);
+        Settings::set('general.current_event_id', Event::where('slug', 'zimsko-2025')->first()?->id);
     }
 }
