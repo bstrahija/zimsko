@@ -15,6 +15,10 @@ class TestSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        $event = Event::query()->create([
+            'title' => 'Test event',
+            'slug'  => 'test-event',
+            'scheduled_at' => '2000-01-01 00:00:00',
+        ]);
     }
 }

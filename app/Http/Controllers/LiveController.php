@@ -162,6 +162,9 @@ class LiveController extends Controller
         ]);
         $game->regenerateSlug();
 
+        // Also update status for live game entry
+        $this->live($game)->gameLive()->update(['status' => $game->status]);
+
         // Also do referees
         $game->referees()->detach();
         if ($request->input('refereeId1')) $game->referees()->attach($request->input('refereeId1'));

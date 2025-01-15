@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('games_live', function (Blueprint $table) {
             $table->id();
             $table->foreignId('game_id')->constrained('games')->cascadeOnDelete();
-            $table->string('status')->default('pending');
+            $table->string('status')->default('draft');
             $table->integer('home_score')->default(0);
             $table->integer('away_score')->default(0);
             $table->integer('home_score_p1')->default(0);

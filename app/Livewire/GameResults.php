@@ -39,9 +39,9 @@ class GameResults extends Component
         $this->selectedEvent = $this->selectedEventSlug ? Event::where('slug', $this->selectedEventSlug)->first() : Event::current();
 
         if ($this->selectedEvent->id === Event::current()->id) {
-            $results = $this->selectedEvent->games()->orderBy('scheduled_at')->with('homeTeam', 'awayTeam')->paginate(25);
+            $results = $this->selectedEvent->games()->where('status', 'completed')->orderBy('scheduled_at')->with('homeTeam', 'awayTeam')->paginate(25);
         } else {
-            $results = $this->selectedEvent->games()->orderByDesc('scheduled_at')->with('homeTeam', 'awayTeam')->paginate(25);
+            $results = $this->selectedEvent->games()->where('status', 'completed')->orderByDesc('scheduled_at')->with('homeTeam', 'awayTeam')->paginate(25);
         }
 
         return view('livewire.game-results', [

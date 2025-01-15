@@ -52,6 +52,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             // GlobetkaSeeder::class,
+            TestSeeder::class
         ]);
     }
 }
