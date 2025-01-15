@@ -1,6 +1,10 @@
 <div>
-    <div class="mb-8">
-        <div class="inline-block relative w-64">
+    <div class="grid grid-cols-1 lg:grid-cols-[1fr_260px] mb-8">
+        <h1 class="mb-4 text-2xl font-bold text-left font-condensed text-secondary md:text-3xl">
+            Rezulatati utakmica
+        </h1>
+
+        <div class="inline-block relative text-right">
             <select wire:model="selectedEventSlug" wire:change="reloadResults"
                 class="block px-4 py-2 pr-8 w-full leading-tight text-gray-700 bg-white rounded-md border border-gray-300 appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                 <option disabled>Odaberi turnir</option>
@@ -8,7 +12,7 @@
                     <option value="{{ $event->slug }}" wire:key="event-{{ $event->slug }}">{{ $event->title }}</option>
                 @endforeach
             </select>
-            <div class="flex absolute inset-y-0 right-0 items-center px-2 pointer-events-none">
+            <div class="flex absolute right-0 top-3 items-center px-2 pointer-events-none">
                 <svg class="w-4 h-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                     <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
                         clip-rule="evenodd" />
@@ -39,15 +43,15 @@
                             </div>
 
                             <div class="flex flex-col items-center mb-4 sm:w-2/4 sm:mb-0">
-                                <div class="mb-2 text-sm text-gray-500">
+                                <a href="{{ route('results.show', $game->slug) }}" class="block mb-2 text-sm text-gray-500">
                                     <h2 class="mb-1 font-bold text-center">{{ $game->title }}</h2>
                                     <small class="block text-center">{{ $game->scheduled_at->format('d.m.Y. H:i') }}</small>
-                                </div>
-                                <div class="mb-2 text-3xl font-bold sm:text-4xl">
+                                </a>
+                                <a href="{{ route('results.show', $game->slug) }}" class="block mb-2 text-3xl font-bold sm:text-4xl">
                                     <span class="{{ $game->home_score > $game->away_score ? 'text-primary' : 'text-gray-500' }}">{{ $game->home_score }}</span>
                                     <span class="mx-2 text-gray-400">-</span>
                                     <span class="{{ $game->away_score > $game->home_score ? 'text-primary' : 'text-gray-500' }}">{{ $game->away_score }}</span>
-                                </div>
+                                </a>
 
                                 <button @click="open = !open"
                                     class="px-3 py-1 text-xs font-medium text-gray-500 bg-gray-50 rounded transition-colors hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-200">

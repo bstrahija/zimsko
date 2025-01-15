@@ -3,15 +3,25 @@
 namespace App\Leaderboards;
 
 use App\Models\Event;
+use App\Models\Game;
 use Illuminate\Support\Collection;
 
 class Leaderboard extends Collection
 {
     public ?Event $event = null;
 
+    public ?Game $game = null;
+
     public function setEvent(Event $event): self
     {
         $this->event = $event;
+
+        return $this;
+    }
+
+    public function setGame(Game $game): self
+    {
+        $this->game = $game;
 
         return $this;
     }

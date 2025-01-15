@@ -130,6 +130,33 @@ class Leaderboards
         return $leaderboard;
     }
 
+    public static function getPlayerLeaderboardForGame(Game $game, $orderBy = 'score', $limit = 10): Leaderboard
+    {
+        $leaderboard = (new Leaderboard)->setGame($game)->setEvent($game->event);
+
+        // Get all stat rows
+        $rows = Stat::where('game_id', $game->id)
+            ->with(['player', 'team'])
+            ->where('for', 'player')
+            ->where('type', 'game')
+            ->orderBy($orderBy, 'desc')
+            ->take($limit)
+            ->get();
+
+        foreach ($rows as $row) {
+            $data = array_merge($row->toArray(), [
+                'title'  => $row->player->name,
+                'player' => $row->player,
+                'team'   => $row->team,
+            ]);
+
+            $player = new LeaderboardPlayerItem($data);
+            $leaderboard->push($player);
+        }
+
+        return $leaderboard;
+    }
+
     public static function getPlayer3PointLeaderboardForEvent(Event $event, $limit = 10): Leaderboard
     {
         return self::getPlayerLeaderboardForEvent($event, 'three_points', $limit);

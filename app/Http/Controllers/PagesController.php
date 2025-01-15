@@ -15,7 +15,6 @@ class PagesController extends Controller
         // Get data for home page
         $lastEvent          = Event::last()->toArray();
         $currentEvent       = Event::current() ?: ($lastEvent ?: null);
-        $latestGames        = Game::where(['status' => 'completed', 'event_id' => $currentEvent->id])->with(['homeTeam', 'awayTeam'])->orderByDesc('scheduled_at')->limit(6)->get();
         $pastEvent          = Event::whereNot('id', $currentEvent->id)->orderBy('scheduled_at', 'desc')->first();
         $upcomingGames      = Game::where(['event_id' => $currentEvent->id])->where(function ($query) {
             $query->where('status', 'scheduled');
@@ -25,6 +24,12 @@ class PagesController extends Controller
         $leaderboardPoints  = Leaderboards::getPlayerLeaderboardForEvent($pastEvent);
         $leaderboard3Point  = Leaderboards::getPlayer3PointLeaderboardForEvent($pastEvent);
         $latestArticles     = Post::orderBy('published_at', 'desc')->take(3)->get();
+        $latestGames        = Game::where(['status' => 'completed', 'event_id' => $currentEvent->id])->with(['homeTeam', 'awayTeam'])->orderByDesc('scheduled_at')->limit(6)->get();
+
+        // If we dont have games for current event, show past event
+        if (! $latestGames || ! $latestGames->count()) {
+            $latestGames = Game::where(['status' => 'completed', 'event_id' => $pastEvent->id])->with(['homeTeam', 'awayTeam'])->orderByDesc('scheduled_at')->limit(6)->get();
+        }
 
         return view('index', [
             'currentEvent'      => $currentEvent,

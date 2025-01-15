@@ -7,16 +7,16 @@
         <div class="grid grid-cols-1 gap-8 md:grid-cols-12">
             <div class="md:col-span-12 lg:col-span-8">
                 <div class="grid gap-4">
-                    <h1 class="mb-4 text-2xl font-bold md:text-3xl">
+                    <h1 class="mb-4 text-2xl font-bold text-center font-condensed text-secondary md:text-3xl">
                         Nadolazeće utakmice
                     </h1>
 
-                    @if (!$results || !count($results))
+                    @if (!$games || !count($games))
                         <div class="p-4 text-yellow-700 bg-yellow-100 border-l-4 border-yellow-500">
                             Nisu pronađene utakmice
                         </div>
                     @else
-                        @foreach ($results as $game)
+                        @foreach ($games as $game)
                             <x-ui.card>
                                 <div class="flex flex-col pt-2">
                                     <div class="flex flex-col items-center mb-4 sm:flex-row sm:justify-between">
@@ -57,7 +57,7 @@
                 </div>
 
                 <div class="mt-6">
-                    {{ $results->links() }}
+                    {{ $games->links() }}
                 </div>
             </div>
 

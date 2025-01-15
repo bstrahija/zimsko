@@ -16,9 +16,9 @@ Route::post('kontakt', [PagesController::class, 'contactSubmit'])->name('contact
 Route::redirect('login', 'admin/login')->name('login');
 
 Route::get('novosti', [PostsController::class, 'index'])->name('news');
-Route::get('novosti/{post}', [PostsController::class, 'show'])->name('news.show');
+Route::get('novosti/{slug}', [PostsController::class, 'show'])->name('news.show');
 Route::get('rezultati', [GamesController::class, 'results'])->name('results');
-Route::get('rezultati/{game}', [GamesController::class, 'show'])->name('results.show');
+Route::get('rezultati/{slug}', [GamesController::class, 'show'])->name('results.show');
 Route::get('raspored', [GamesController::class, 'schedule'])->name('schedule');
 Route::get('ekipe', [TeamsController::class, 'index'])->name('teams');
 Route::get('ekipe/{team}', [TeamsController::class, 'show'])->name('teams.show');

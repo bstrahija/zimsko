@@ -1,3 +1,7 @@
+@php
+    $for = $for ?? 'event';
+@endphp
+
 <tr class="border-b hover:bg-gray-100">
     <td class="px-2 py-5">
         <a href="{{ route('teams.show', $item->team->slug ?? ($item->player->team->slug ?? '')) }}" class="flex gap-2 items-center text-xs">
@@ -6,7 +10,13 @@
             <span class="text-gray-800 whitespace-nowrap">{{ $item->title }}</span>
         </a>
     </td>
-    <td class="px-2 py-5 text-xs text-right">{{ $item->games }}</td>
+    @if ($for !== 'game')
+        <td class="px-2 py-5 text-xs text-right">{{ $item->games }}</td>
+    @endif
+
     <td class="px-2 py-5 text-xs text-right">{{ $item->score }}</td>
-    <td class="px-2 py-5 text-xs font-bold text-right">{{ round($item->score_avg, 1) }}</td>
+
+    @if ($for !== 'game')
+        <td class="px-2 py-5 text-xs font-bold text-right">{{ round($item->score_avg, 1) }}</td>
+    @endif
 </tr>
