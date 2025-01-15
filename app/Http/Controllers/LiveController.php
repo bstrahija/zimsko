@@ -20,6 +20,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Str;
@@ -440,6 +441,7 @@ class LiveController extends Controller
     {
         Log::debug("Starting game. Game: {$game->id}", ['section' => 'LIVE', 'game_id' => $game->id]);
         $this->live($game)->startGame();
+        Cache::clear();
 
         LiveScoreUpdated::dispatch('startGame');
     }
@@ -466,6 +468,9 @@ class LiveController extends Controller
 
         // Sync with game
         $this->syncGame($game);
+
+        // Clear the cache
+        Cache::clear();
 
         LiveScoreUpdated::dispatch('endGame');
     }

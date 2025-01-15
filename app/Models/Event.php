@@ -16,6 +16,10 @@ class Event extends Model
 {
     use HasFactory, HasSlug, SoftDeletes;
 
+    public static $currentEvent;
+
+    public static $lastEvent;
+
     protected $fillable = [
         'title',
         'slug',
@@ -55,15 +59,21 @@ class Event extends Model
 
     public static function current(): ?Event
     {
-        $settingsEventId = Settings::get('general.current_event_id', null);
-        $event           = $settingsEventId ? Event::find($settingsEventId) : Event::last();
+        if (! static::$currentEvent) {
+            $settingsEventId      = Settings::get('general.current_event_id', null);
+            static::$currentEvent = $settingsEventId ? Event::find($settingsEventId) : Event::last();
+        }
 
-        return $event;
+        return static::$currentEvent;
     }
 
     public static function last(): ?Event
     {
-        return Event::orderBy('scheduled_at', 'desc')->first();
+        if (! static::$lastEvent) {
+            static::$lastEvent = Event::orderBy('scheduled_at', 'desc')->first();
+        }
+
+        return static::$lastEvent;
     }
 
     /**

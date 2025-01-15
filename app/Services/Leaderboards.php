@@ -19,7 +19,7 @@ class Leaderboards
         $leaderboard = (new Leaderboard)->setEvent($event);
 
         // First get the stats
-        $stats = Stat::where(['event_id' => $event->id, 'for' => 'team', 'type' => 'event'])->with(['team'])->get();
+        $stats = Stat::where(['event_id' => $event->id, 'for' => 'team', 'type' => 'event'])->with(['team', 'team.media'])->get();
 
         // The add to leaderboard
         if ($stats && $stats->count()) {
@@ -48,7 +48,7 @@ class Leaderboards
 
             // Generate empty leaderboard
         } else {
-            foreach ($event->teams as $team) {
+            foreach ($event->teams()->with(['media'])->get() as $team) {
                 $leaderboard->add(new LeaderboardTeamItem([
                     'id'              => $team->id,
                     'title'           => $team->title,

@@ -33,7 +33,7 @@ class Settings
     {
         $keys = self::parseGroupAndKey($key);
 
-        if (Setting::updateOrCreate(['group' => $keys['group'], 'name' => $keys['name']], ['payload' => $value])) {
+        if (Setting::query()->updateOrCreate(['group' => $keys['group'], 'name' => $keys['name']], ['payload' => $value])) {
             return self::$cache[$key] = $value;
         };
     }
