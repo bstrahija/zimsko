@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Event;
+use App\Models\GameLive;
 use App\Services\LiveScore as LiveScoreService;
 use Livewire\Component;
 
@@ -28,12 +29,14 @@ class LiveScore extends Component
         $event = Event::current() ?: (Event::last() ?: null);
 
         if ($event) {
-            $this->game = $event->games()->where('status', 'in_progress')->orderBy('scheduled_at', 'desc')->first();
+            $this->game = $event->games()
+                ->with(['homeTeam', 'awayTeam', 'homeTeam.players', 'awayTeam.players', 'homeTeam.players.media', 'awayTeam.players.media'])
+                ->where('status', 'in_progress')
+                ->orderBy('scheduled_at', 'desc')
+                ->first();
 
             if ($this->game) {
-                $live = new LiveScoreService($this->game);
-                $data = $live->toData();
-                $this->live = $data['gameLive'];
+                $this->live = GameLive::where('game_id', $this->game->id)->first();
             }
         }
     }

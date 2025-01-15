@@ -52,10 +52,10 @@ class LiveScore
 
     protected int $awayFoulsLeft;
 
-    public function __construct(Game|string $game)
+    public function __construct(Game|int $game, $loadPlayers = true)
     {
         // First find the game model
-        if (is_string($game)) {
+        if (is_int($game)) {
             $this->game = Game::find($game)->with(['homeTeam', 'awayTeam', 'homeTeam.players', 'awayTeam.players', 'homeTeam.players.media', 'awayTeam.players.media'])->first();
         } else {
             $this->game = $game;
@@ -65,22 +65,24 @@ class LiveScore
         $this->homeTeam    = $this->game->homeTeam()->with(['players', 'players.media'])->first();
         $this->awayTeam    = $this->game->awayTeam()->with(['players', 'players.media'])->first();
 
-        $this->availableHomePlayers = $this->homeTeam ? $this->homeTeam->players : null;
-        $this->availableAwayPlayers = $this->awayTeam ? $this->awayTeam->players : null;
+        if ($loadPlayers) {
+            $this->availableHomePlayers = $this->homeTeam ? $this->homeTeam->players : null;
+            $this->availableAwayPlayers = $this->awayTeam ? $this->awayTeam->players : null;
 
-        $this->homePlayers = $this->game->homePlayers;
-        $this->awayPlayers = $this->game->awayPlayers;
-        $this->players     = $this->homePlayers->merge($this->awayPlayers);
+            $this->homePlayers = $this->game->homePlayers;
+            $this->awayPlayers = $this->game->awayPlayers;
+            $this->players     = $this->homePlayers->merge($this->awayPlayers);
 
-        // Init starting players
-        $this->startingPlayers     = new Collection();
-        $this->homeStartingPlayers = new Collection();
-        $this->awayStartingPlayers = new Collection();
+            // Init starting players
+            $this->startingPlayers     = new Collection();
+            $this->homeStartingPlayers = new Collection();
+            $this->awayStartingPlayers = new Collection();
 
-        // Init players on court
-        $this->playersOnCourt     = new Collection();
-        $this->homePlayersOnCourt = new Collection();
-        $this->awayPlayersOnCourt = new Collection();
+            // Init players on court
+            $this->playersOnCourt     = new Collection();
+            $this->homePlayersOnCourt = new Collection();
+            $this->awayPlayersOnCourt = new Collection();
+        }
 
         // Init timeouts and fouls
         $this->homeTimeoutsLeft = config('live.team_timeouts_per_period');
