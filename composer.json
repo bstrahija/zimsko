@@ -12,6 +12,7 @@
         "awcodes/filament-tiptap-editor": "^3.0",
         "blade-ui-kit/blade-heroicons": "^2.4",
         "blade-ui-kit/blade-icons": "^1.7",
+        "cms-multi/filament-clear-cache": "^2.0",
         "codeat3/blade-forkawesome": "^1.10",
         "dotswan/filament-laravel-pulse": "^1.1",
         "filament/filament": "^3.2",
