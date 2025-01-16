@@ -2,6 +2,17 @@ import '../css/app.css';
 import './bootstrap';
 import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
+import { getSlider } from 'simple-slider';
+
+getSlider({
+    transitionTime:1,
+    delay: 5,
+    prop: 'opacity',
+    unit: '',
+    init: 0,
+    show: 1,
+    end: 0
+});
 
 window.Pusher = Pusher;
 
