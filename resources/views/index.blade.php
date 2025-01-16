@@ -6,7 +6,7 @@
     <div class="mb-16 md:mb-24 lg:mb-32 wrapper">
         <livewire:live-score />
 
-        <div class="grid grid-cols-1 gap-10 lg:grid-cols-3 lg:gap-10 xl:gap-10">
+        <div class="grid grid-cols-1 gap-10 xl:grid-cols-3 lg:gap-10 xl:gap-10">
             <x-basket.latest-results :games="$latestGames" />
             <x-basket.upcoming-games :games="$upcomingGames" />
             <x-basket.leaderboard :leaderboard="$leaderboard" />
