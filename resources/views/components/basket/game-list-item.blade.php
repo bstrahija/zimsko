@@ -4,9 +4,10 @@
         <small>({{ $game->scheduled_at->format('d.m.Y H:i') }})</small>
     </div>
 
-    <a href="{{ route('results.show', $game->slug) }}" class="game-list__item grid grid-cols-[10%_28%_auto_28%_10%] gap-3 font-condensed hover:scale-105 transition-all">
+    <a href="{{ route('results.show', $game->slug) }}"
+        class="game-list__item grid grid-cols-[8%_30%_auto_30%_8%]  md:grid-cols-[10%_28%_auto_28%_10%] gap-3 font-condensed hover:scale-105 transition-all">
         <div class="flex justify-center items-center"><img src="{{ $game->homeTeam->logo() }}" alt=""
-                class="max-h-12 rounded-full transition-transform duration-300 transform max-w-12 hover:scale-110"></div>
+                class="max-h-8 rounded-full transition-transform duration-300 transform max-w-8 md:max-h-12 md:max-w-12 hover:scale-110"></div>
 
         <div class="flex items-center transition-colors duration-300 hover:text-primary">
             <span class="overflow-hidden max-w-full whitespace-nowrap text-ellipsis">{{ $game->homeTeam->title }}</span>
@@ -23,6 +24,6 @@
         </div>
 
         <div class="flex justify-center items-center"><img src="{{ $game->awayTeam->logo() }}" alt=""
-                class="max-h-12 rounded-full transition-transform duration-300 transform max-w-12 hover:scale-110"></div>
+                class="max-h-8 rounded-full transition-transform duration-300 transform max-w-8 md:max-h-12 md:max-w-12 hover:scale-110"></div>
     </a>
 </div>
