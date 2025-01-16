@@ -1,4 +1,4 @@
-<div class="hero w-full h-[75vh] max-h-[40svh] md:max-h-[45svh] lg:max-h-[60svh] xl:max-h-[70svh] outline-2 outline-red-500 overflow-hidden mt-[62px] lg:mt-0"
+<div class="hero w-full h-[75vh] max-h-[40svh] md:max-h-[45svh] lg:max-h-[60svh] xl:max-h-[70svh] outline-2 outline-red-500 overflow-hidden mt-[62px] lg:mt-0 mb-16 md:mb-24 lg:mb-32"
     data-bg="{{ asset('img/video-overlay.jpg') }}" style="background-image: url({{ asset('img/video-overlay.jpg') }}); background-position: 50% 50%; position: relative;">
 
     <div class="container">
@@ -15,8 +15,4 @@
     </a>
 
     <x-basket.hero-video />
-</div>
-
-<div class="mb-12">
-    <x-burger-weekend />
 </div>

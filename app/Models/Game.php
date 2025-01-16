@@ -64,6 +64,15 @@ class Game extends Model
     //     });
     // }
 
+    public static function boot()
+    {
+        parent::boot();
+
+        self::saved(function ($model) {
+            if ($model->live) $model->live->updateQuietly(['status' => $model->status]);
+        });
+    }
+
     public function event(): BelongsTo
     {
         return $this->belongsTo(Event::class);

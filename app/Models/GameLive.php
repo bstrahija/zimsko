@@ -81,6 +81,15 @@ class GameLive extends Model
         'data'                  => 'array',
     ];
 
+    public static function boot()
+    {
+        parent::boot();
+
+        self::updated(function ($model) {
+            $model->game->updateQuietly(['status' => $model->status]);
+        });
+    }
+
     public function game()
     {
         return $this->belongsTo(Game::class);

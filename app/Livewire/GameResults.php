@@ -21,7 +21,11 @@ class GameResults extends Component
 
     public function mount()
     {
-        $this->events        = Event::orderByDesc('scheduled_at')->get();
+        $this->events        = Event::orderByDesc('scheduled_at')
+            ->whereNot('slug', 'zimsko-2019')
+            ->whereNot('slug', 'zimsko-2021')
+            ->whereNot('slug', 'LIKE', '%test%')
+            ->get();
         $this->selectedEventSlug = Event::current()->slug;
         $this->selectedEvent = $this->selectedEventSlug ? Event::where('slug', $this->selectedEventSlug)->first() : Event::current();
 
