@@ -58,6 +58,14 @@
                                         <div class="font-semibold">Q4</div>
                                         <div>{{ $game->home_score_p4 }} - {{ $game->away_score_p4 }}</div>
                                     </div>
+
+                                    <!-- Also check for overtime -->
+                                    @if ($game->home_score_p5 || $game->away_score_p5)
+                                        <div class="p-2 bg-gray-100 rounded-md">
+                                            <div class="font-semibold">OT</div>
+                                            <div>{{ $game->home_score_p5 }} - {{ $game->away_score_p5 }}</div>
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                         </div>

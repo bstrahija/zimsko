@@ -42,7 +42,7 @@
                                     class="text-base font-bold text-center text-gray-700 transition hover:text-primary sm:text-lg">{{ $game->homeTeam->title }}</a>
                             </div>
 
-                            <div class="flex flex-col items-center mb-4 sm:w-2/4 sm:mb-0">
+                            <div class="flex flex-col items-center mb-4 sm:order-first sm:w-2/4 sm:mb-0">
                                 <a href="{{ route('results.show', $game->slug) }}" class="block mb-2 text-sm text-gray-500">
                                     <h2 class="mb-1 font-bold text-center">{{ $game->title }}</h2>
                                     <small class="block text-center">{{ $game->scheduled_at->format('d.m.Y. H:i') }}</small>
@@ -91,6 +91,14 @@
                                         <div class="font-semibold">Q4</div>
                                         <div>{{ $game->home_score_p4 }} - {{ $game->away_score_p4 }}</div>
                                     </div>
+
+                                    <!-- Also check for overtime -->
+                                    @if ($game->home_score_p5 || $game->away_score_p5)
+                                        <div class="p-2 bg-gray-100 rounded-md">
+                                            <div class="font-semibold">OT</div>
+                                            <div>{{ $game->home_score_p5 }} - {{ $game->away_score_p5 }}</div>
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                         </div>

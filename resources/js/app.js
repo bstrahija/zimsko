@@ -25,20 +25,6 @@ window.Echo = new Echo({
 
 const channel = window.Echo.channel('live-score')
 
-channel.listen('LiveScoreUpdated', function(e) {
-    console.log(e);
-});
-
-
-        // .listen('LiveScoreUpdated', (e) => {
-        //     alert("APP UPDATED PUSHER");
-
-        // });
-
-
-
-
-
 let HeroVideo = {
     scriptTag: null,
     player: null,
@@ -92,7 +78,7 @@ let HeroVideo = {
     },
 
     onPlayerReady(event) {
-        console.log('PLAYER READY', event);
+        // console.log('PLAYER READY', event);
         // event.target.playVideo();
         // this.player.loadVideoById(this.videoId, "large")
     },
@@ -100,9 +86,9 @@ let HeroVideo = {
     playVideo() {
         this.el.classList.remove('hidden');
         this.elContainer.classList.add('w-full', 'h-full');
-        console.log(this.el);
+        // console.log(this.el);
         this.thumbnailEl.classList.add('hidden');
-        console.log(this.thumbnailEl);
+        // console.log(this.thumbnailEl);
         this.player.playVideo();
     },
 
