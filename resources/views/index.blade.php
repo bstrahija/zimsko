@@ -13,7 +13,7 @@
         </div>
     </div>
 
-    <div class="pt-10 pb-16 mb-16 bg-center bg-cover md:mb-24 lg:mb-32" style="background-image: url('{{ asset('img/bg2.jpg') }}');">
+    <div class="pt-24 pb-24 mb-16 bg-center bg-cover md:pt-30 md:pb-32 md:mb-24 lg:mb-32" style="background-image: url('{{ asset('img/bg2.jpg') }}');">
         <div class="wrapper">
             <div class="flex justify-center items-center mb-10 text-center">
                 <a href="{{ route('home') }}" class="inline-block transition-transform hover:scale-105">
