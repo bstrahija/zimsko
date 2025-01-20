@@ -31,6 +31,87 @@
         @else
             @foreach ($results as $game)
                 <x-ui.card>
+                    <div x-data="{ open: false }">
+                        <div>
+                            <a href="{{ route('results.show', $game->slug) }}" class="block mb-2 text-sm text-gray-500 transition-all hover:text-primary">
+                                <h2 class="mb-1 font-bold text-center">{{ $game->title }}</h2>
+                                <small class="block text-center">{{ $game->scheduled_at->format('d.m.Y. H:i') }}</small>
+                            </a>
+                        </div>
+
+                        <div class="grid grid-cols-3 gap-4">
+                            <div class="flex flex-col gap-3 items-center md:gap-6 md:flex-row">
+                                <a href="{{ route('teams.show', $game->homeTeam->slug) }}" class="mb-2">
+                                    <img src="{{ $game->homeTeam->logo() }}" class="object-contain rounded-full shadow-md size-10 md:size-16 sm:w-20 sm:h-20"
+                                        alt="{{ $game->homeTeam->title }}">
+                                </a>
+                                <a href="{{ route('teams.show', $game->homeTeam->slug) }}"
+                                    class="text-base font-bold text-center text-gray-700 transition hover:text-primary sm:text-lg">{{ $game->homeTeam->title }}</a>
+                            </div>
+
+                            <div class="pt-3 text-center">
+                                <a href="{{ route('results.show', $game->slug) }}" class="block mb-6 text-lg font-bold md:mb-2 md:text-3xl sm:text-4xl">
+                                    <span class="{{ $game->home_score > $game->away_score ? 'text-primary' : 'text-gray-500' }}">{{ $game->home_score }}</span>
+                                    <span class="text-gray-400 md:mx-2">:</span>
+                                    <span class="{{ $game->away_score > $game->home_score ? 'text-primary' : 'text-gray-500' }}">{{ $game->away_score }}</span>
+                                </a>
+
+                                <button @click="open = !open"
+                                    class="px-3 py-1 text-xs font-medium text-gray-500 bg-gray-50 rounded transition-colors hover:bg-gray-100 focus:outline-none focus:ring-1 focus:ring-gray-200">
+                                    <span x-show="!open">Detalji</span>
+                                    <span x-show="open">Sakrij</span>
+                                </button>
+                            </div>
+
+                            <div class="flex flex-col gap-3 items-center md:gap-6 md:flex-row-reverse">
+                                <a href="{{ route('teams.show', $game->awayTeam->slug) }}" class="mb-2">
+                                    <img src="{{ $game->awayTeam->logo() }}" class="object-contain rounded-full shadow-md size-10 md:size-16 sm:w-20 sm:h-20"
+                                        alt="{{ $game->awayTeam->title }}">
+                                </a>
+                                <a href="{{ route('teams.show', $game->awayTeam->slug) }}"
+                                    class="text-base font-bold text-center text-gray-700 transition hover:text-primary sm:text-lg">{{ $game->awayTeam->title }}</a>
+                            </div>
+                        </div>
+
+                        <div x-show="open" class="mt-4" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 transform scale-95"
+                            x-transition:enter-end="opacity-100 transform scale-100" x-transition:leave="transition ease-in duration-200"
+                            x-transition:leave-start="opacity-100 transform scale-100" x-transition:leave-end="opacity-0 transform scale-95">
+                            <div class="grid grid-cols-2 gap-2 text-sm text-center sm:grid-cols-4 sm:gap-4">
+                                <div class="p-2 bg-gray-100 rounded-md">
+                                    <div class="font-semibold">Q1</div>
+                                    <div>{{ $game->home_score_p1 }} - {{ $game->away_score_p1 }}</div>
+                                </div>
+                                <div class="p-2 bg-gray-100 rounded-md">
+                                    <div class="font-semibold">Q2</div>
+                                    <div>{{ $game->home_score_p2 }} - {{ $game->away_score_p2 }}</div>
+                                </div>
+                                <div class="p-2 bg-gray-100 rounded-md">
+                                    <div class="font-semibold">Q3</div>
+                                    <div>{{ $game->home_score_p3 }} - {{ $game->away_score_p3 }}</div>
+                                </div>
+                                <div class="p-2 bg-gray-100 rounded-md">
+                                    <div class="font-semibold">Q4</div>
+                                    <div>{{ $game->home_score_p4 }} - {{ $game->away_score_p4 }}</div>
+                                </div>
+
+                                <!-- Also check for overtime -->
+                                @if ($game->home_score_p5 || $game->away_score_p5)
+                                    <div class="p-2 bg-gray-100 rounded-md">
+                                        <div class="font-semibold">OT</div>
+                                        <div>{{ $game->home_score_p5 }} - {{ $game->away_score_p5 }}</div>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </x-ui.card>
+            @endforeach
+
+
+
+
+            {{-- @foreach ($results as $game)
+                <x-ui.card>
                     <div class="flex flex-col pt-2" x-data="{ open: false }">
                         <div class="flex flex-col items-center mb-4 sm:flex-row sm:justify-between">
                             <div class="flex flex-col items-center mb-4 sm:w-1/4 sm:mb-0">
@@ -104,7 +185,7 @@
                         </div>
                     </div>
                 </x-ui.card>
-            @endforeach
+            @endforeach --}}
 
             <div class="mt-6">
                 {{ $results->links() }}
