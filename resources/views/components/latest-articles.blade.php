@@ -10,7 +10,7 @@
                     <p class="leading-6 line-clamp-5">{{ $article->summary() }}</p>
                 </div>
                 <div class="mt-auto">
-                    <x-ui.button tag="a" variant="secondary" href="{{ route('news.show', $article->slug) }}">Procitaj više</x-ui.button>
+                    <x-ui.button tag="a" variant="secondary" href="{{ route('news.show', $article->slug) }}">Pročitaj više</x-ui.button>
                 </div>
             </x-ui.card>
         @endforeach
