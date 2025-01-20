@@ -7,9 +7,9 @@
         <livewire:live-score />
 
         <div class="grid grid-cols-1 gap-10 xl:grid-cols-3 lg:gap-10 xl:gap-10">
-            {{-- <x-basket.latest-results :games="$latestGames" />
+            <x-basket.latest-results :games="$latestGames" />
             <x-basket.upcoming-games :games="$upcomingGames" />
-            <x-basket.leaderboard :leaderboard="$leaderboard" /> --}}
+            <x-basket.leaderboard :leaderboard="$leaderboard" />
         </div>
     </div>
 
@@ -22,9 +22,9 @@
             </div>
 
             <div class="grid grid-cols-1 gap-10 lg:grid-cols-3 lg:gap-10 xl:gap-10">
-                {{-- <x-basket.leaders :leaderboard="$leaderboardPoints" />
+                <x-basket.leaders :leaderboard="$leaderboardPoints" />
                 <x-basket.leaders-3pt :leaderboard="$leaderboard3Point" />
-                <x-basket.slideshow /> --}}
+                <x-basket.slideshow />
             </div>
         </div>
     </div>

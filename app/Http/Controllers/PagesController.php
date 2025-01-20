@@ -45,6 +45,8 @@ class PagesController extends Controller
         // $leaderboardPoints  = Leaderboards::getPlayerLeaderboardForEvent($pastEvent);
         // $leaderboard3Point  = Leaderboards::getPlayer3PointLeaderboardForEvent($pastEvent);
 
+        // return view('empty');
+
         return view('index', [
             'currentEvent'      => $currentEvent,
             'latestGames'       => $latestGames,
