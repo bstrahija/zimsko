@@ -492,7 +492,10 @@ class LiveController extends Controller
             $homeScore = GameLog::where('game_id', $game->id)->where('type', 'LIKE', 'player_score%')->where('period', $period)->where('team_side', 'home')->sum('amount');
             $awayScore = GameLog::where('game_id', $game->id)->where('type', 'LIKE', 'player_score%')->where('period', $period)->where('team_side', 'away')->sum('amount');
 
-            $game->update(['home_score_p' . $period => $homeScore]);
+            $game->update([
+                'home_score_p' . $period => $homeScore,
+                'away_score_p' . $period => $awayScore,
+            ]);
         }
     }
 

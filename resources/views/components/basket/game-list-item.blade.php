@@ -1,6 +1,14 @@
 <div class="pb-4 mb-6 border-b">
     <div class="mb-2 text-sm text-center uppercase font-roboto text-secondary">
-        <span class="font-bold">{{ $game->round->title }}</span>
+        <span class="font-bold">
+            @if ($game->round->type === 'finals')
+                🏆
+            @elseif ($game->round->type === 'placing' && $game->round->subtype === '3rd')
+                🥉
+            @endif
+
+            {{ $game->round->title }}
+        </span>
         <small>({{ $game->scheduled_at->format('d.m.Y H:i') }})</small>
     </div>
 

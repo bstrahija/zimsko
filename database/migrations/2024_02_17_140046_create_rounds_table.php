@@ -24,6 +24,7 @@ return new class extends Migration
             $table->json('data')->nullable();
             $table->timestamp('scheduled_at')->nullable();
             $table->string('type', 50)->default('default')->index();
+            $table->string('subtype', 20)->nullable()->index();
             $table->timestamps();
             $table->softDeletes();
         });
