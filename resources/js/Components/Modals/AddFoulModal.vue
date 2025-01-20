@@ -33,7 +33,7 @@ const { game, type } = toRefs(props);
 
 const data = reactive({
     selectedPlayer: null,
-    selectedFouledPlayer: null,
+    selectedOtherPlayer: null,
     type: 'pf',
 });
 
@@ -59,7 +59,7 @@ function selectPlayer(player) {
 }
 
 function selectFouledPlayer(player) {
-    data.selectedFouledPlayer = player;
+    data.selectedOtherPlayer = player;
 }
 
 function isActive(player) {
@@ -67,12 +67,12 @@ function isActive(player) {
 }
 
 function isActiveFouled(player) {
-    return player.id === data.selectedFouledPlayer?.id;
+    return player.id === data.selectedOtherPlayer?.id;
 }
 
 function setType(type) {
     data.type = type;
-    if (type === 'tf') data.selectedFouledPlayer = null;
+    if (type === 'tf') data.selectedOtherPlayer = null;
 }
 </script>
 

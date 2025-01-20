@@ -9,6 +9,7 @@ import AddReboundModal from '../Components/Modals/AddReboundModal.vue';
 import AddStealModal from '../Components/Modals/AddStealModal.vue';
 import AddBlockModal from '../Components/Modals/AddBlockModal.vue';
 import AddTurnoverModal from '../Components/Modals/AddTurnoverModal.vue';
+import MultiModal from '../Components/Modals/MultiModal.vue';
 
 export default {
     checkIfCanUpdateStats: function (game) {
@@ -29,6 +30,20 @@ export default {
         } else {
             alert('Nepoznat status utakmice [' + game.status + ']');
             return false;
+        }
+    },
+
+    multiModal:  function (game, team, player) {
+        if (this.checkIfCanUpdateStats(game)) {
+            $vfm.show({ component: MultiModal, bind: {
+                game: game,
+                team: team,
+                playersOnCourt: this.playersOnCourt(game, team),
+                playersOnBench: this.playersOnBench(game, team),
+                opponentPlayers: this.opponentPlayers(game, team),
+                opponentPlayersOnCourt: this.opponentPlayersOnCourt(game, team),
+                player: player
+            } });
         }
     },
 

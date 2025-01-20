@@ -29,7 +29,7 @@ const { game } = toRefs(props);
 
 const data = reactive({
     selectedPlayer: null,
-    selectedBlockedPlayer: null,
+    selectedOtherPlayer: null,
     gameId: null,
 });
 
@@ -45,11 +45,11 @@ function canBeSaved() {
 
 function selectPlayer(player) {
     data.selectedPlayer = player;
-    data.selectedBlockedPlayer = null;
+    data.selectedOtherPlayer = null;
 }
 
 function selectBlockedPlayer(player) {
-    data.selectedBlockedPlayer = player;
+    data.selectedOtherPlayer = player;
 }
 
 function isActive(player) {
@@ -57,7 +57,7 @@ function isActive(player) {
 }
 
 function isActiveBlocked(player) {
-    return player.id === data.selectedBlockedPlayer?.id;
+    return player.id === data.selectedOtherPlayer?.id;
 }
 </script>
 

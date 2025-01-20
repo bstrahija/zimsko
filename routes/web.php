@@ -56,6 +56,7 @@ Route::post('live/{game}/players-starting', [LiveController::class, 'playersStar
 Route::get('live/{game}/score',             [LiveController::class, 'score'])->name('live.game')->middleware('auth');
 
 // Keep the score
+Route::post('live/{game}/multi',        [LiveController::class, 'addMulti'])->name('live.multi')->middleware('auth');
 Route::post('live/{game}/score',        [LiveController::class, 'addScore'])->name('live.score')->middleware('auth');
 Route::post('live/{game}/miss',         [LiveController::class, 'addMiss'])->name('live.miss')->middleware('auth');
 Route::post('live/{game}/foul',         [LiveController::class, 'addFoul'])->name('live.foul')->middleware('auth');

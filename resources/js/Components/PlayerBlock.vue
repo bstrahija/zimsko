@@ -13,7 +13,7 @@ defineProps({
         class="overflow-hidden relative h-full text-center text-white rounded border shadow-sm transition-all pointer-events-auto hover:opacity-90 hover:shadow-lg player-block aspect-square"
         :class="{ 'active': active }">
         <div>
-            <div class="z-30 text-sm font-bold shadow-lg md:text-lg lg:text-xl xl:text-3xl">
+            <div class="z-30 font-mono text-sm font-bold shadow-lg md:text-lg lg:text-xl xl:text-3xl">
                 {{ player.number ? player.number : '-' }}
 
             </div>

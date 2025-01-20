@@ -26,7 +26,7 @@ const { game } = toRefs(props);
 
 const data = reactive({
     selectedPlayer: null,
-    score: 2,
+    type: 2,
     gameId: null,
 });
 
@@ -38,7 +38,7 @@ const save = async function () {
 };
 
 function canBeSaved() {
-    return data.selectedPlayer && data.score;
+    return data.selectedPlayer && data.type;
 }
 
 function selectPlayer(player) {
@@ -49,7 +49,7 @@ function isActive(player) {
 }
 
 function setScore(score) {
-    data.score = score;
+    data.type = score;
 }
 </script>
 
@@ -78,9 +78,9 @@ function setScore(score) {
 
                             <div class="space-y-3 text-center">
                                 <h3 class="text-sm text-center uppercase">Poena</h3>
-                                <ButtonModalAction :active="data.score === 2" @click="setScore(2)">2</ButtonModalAction>
-                                <ButtonModalAction :active="data.score === 3" @click="setScore(3)">3</ButtonModalAction>
-                                <ButtonModalAction :active="data.score === 1" @click="setScore(1)">1</ButtonModalAction>
+                                <ButtonModalAction :active="data.type === 2" @click="setScore(2)">2</ButtonModalAction>
+                                <ButtonModalAction :active="data.type === 3" @click="setScore(3)">3</ButtonModalAction>
+                                <ButtonModalAction :active="data.type === 1" @click="setScore(1)">1</ButtonModalAction>
 
                                 <div class="w-full">
                                     <hr class="mb-6 opacity-20">

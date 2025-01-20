@@ -262,12 +262,34 @@ class LiveController extends Controller
         return Inertia::render('Score', $data);
     }
 
+    public function addMulti(Game $game, Request $request)
+    {
+        $action = $request->input('action');
+        $type   = $request->input('type');
+
+        if ($action === 'score')             $this->addScore($game, $request);
+        elseif ($action === 'miss')          $this->addMiss($game, $request);
+        elseif ($action === 'rebound')       $this->addRebound($game, $request);
+        elseif ($action === 'steal')         $this->addSteal($game, $request);
+        elseif ($action === 'block')         $this->addBlock($game, $request);
+        elseif ($action === 'turnover')      $this->addTurnover($game, $request);
+        elseif ($action === 'foul')          $this->addFoul($game, $request);
+        elseif ($action === 'substitution') {
+            $request->merge([
+                'selectedPlayersOut' => [$request->input('selectedPlayer')],
+                'selectedPlayersIn'  => [$request->input('selectedOtherPlayer')],
+            ]);
+
+            $this->substitution($game, $request);
+        }
+    }
+
     public function addScore(Game $game, Request $request)
     {
         // Prepare data
         $playerId       = $request->input('selectedPlayer') ?  $request->input('selectedPlayer')['id'] : null;
-        $assistPlayerId = $request->input('selectedAssistPlayer') ?  $request->input('selectedAssistPlayer')['id'] : null;
-        $score          = $request->input('score');
+        $assistPlayerId = $request->input('selectedOtherPlayer') ?  $request->input('selectedOtherPlayer')['id'] : null;
+        $score          = $request->input('type');
         Log::debug("Adding score. Game: {$game->id}, Player: {$playerId}, Assist: {$assistPlayerId}, Score: {$score}", ['section' => 'LIVE', 'game_id' => $game->id, 'player_id' => $playerId]);
 
         // Write the score
@@ -284,7 +306,7 @@ class LiveController extends Controller
     {
         // Find the player
         $playerId = $request->input('selectedPlayer') ?  $request->input('selectedPlayer')['id'] : null;
-        $score    = $request->input('score');
+        $score    = $request->input('type');
         Log::debug("Adding miss. Game: {$game->id}, Player: {$playerId}, Points: {$score}", ['section' => 'LIVE', 'game_id' => $game->id, 'player_id' => $playerId]);
 
         // Write the score
@@ -297,9 +319,8 @@ class LiveController extends Controller
     {
         // Find the player
         $playerId = $request->input('selectedPlayer') ?  $request->input('selectedPlayer')['id'] : null;
-        $score    = $request->input('score');
         $subtype  = $request->input('type') ?: 'reb';
-        Log::debug("Adding rebound. Game: {$game->id}, Player: {$playerId}, Points: {$score}", ['section' => 'LIVE', 'game_id' => $game->id, 'player_id' => $playerId]);
+        Log::debug("Adding rebound. Game: {$game->id}, Player: {$playerId}, Subtype: {$subtype}", ['section' => 'LIVE', 'game_id' => $game->id, 'player_id' => $playerId]);
 
         // Write the score
         $this->live($game)->playerRebound(playerId: $playerId, subtype: $subtype);
@@ -311,7 +332,7 @@ class LiveController extends Controller
     {
         // Find the player
         $playerId      = $request->input('selectedPlayer')      ?  $request->input('selectedPlayer')['id'] : null;
-        $stealPlayerId = $request->input('selectedStealPlayer') ?  $request->input('selectedStealPlayer')['id'] : null;
+        $stealPlayerId = $request->input('selectedOtherPlayer') ?  $request->input('selectedOtherPlayer')['id'] : null;
         Log::debug("Adding steal. Game: {$game->id}, Player: {$playerId}, Player stolen: {$stealPlayerId}", ['section' => 'LIVE', 'game_id' => $game->id, 'player_id' => $playerId]);
 
         // Write the score
