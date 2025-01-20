@@ -483,15 +483,6 @@ class LiveController extends Controller
     //     ]);
     // }
 
-    public function sim()
-    {
-        // 4. kolo Park's - BC Nording
-        $game = Game::find('01je1krqjrfafqe8ywf1htcawh');
-        $live = $this->runSim($game, true);
-
-        dd($live->toData());
-    }
-
     public function syncGame(Game $game)
     {
         $live = $this->live($game);

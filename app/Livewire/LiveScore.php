@@ -13,8 +13,6 @@ class LiveScore extends Component
 
     public $game;
 
-    public $live;
-
     // Special Syntax: ['echo:{channel},{event}' => '{method}']
     protected $listeners = ['echo:live-score,LiveScoreUpdated' => 'updateLiveScore'];
 
@@ -34,10 +32,6 @@ class LiveScore extends Component
                 ->where('status', 'in_progress')
                 ->orderBy('scheduled_at', 'desc')
                 ->first();
-
-            if ($this->game) {
-                $this->live = GameLive::where('game_id', $this->game->id)->first();
-            }
         }
     }
 

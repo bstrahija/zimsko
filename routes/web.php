@@ -42,7 +42,6 @@ Route::view('live/concept01', 'live.concept01')->name('live.concept1')->middlewa
 
 // Manage games
 Route::get('live', [LiveController::class, 'index'])->name('live')->middleware('auth');
-Route::get('live/sim', [LiveController::class, 'sim'])->name('live.sim')->middleware('auth');
 
 // Create/Edit a game
 Route::get('live/create',                   [LiveController::class, 'create'])->name('live.create')->middleware('auth');
