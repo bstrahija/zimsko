@@ -13,8 +13,8 @@
     </div>
 
     <a href="{{ route('results.show', $game->slug) }}"
-        class="game-list__item grid grid-cols-[33%_auto_33%] max-w-full overflow-hidden md:grid-cols-[10%_28%_auto_28%_10%] gap-3 font-condensed hover:scale-105 transition-all">
-        <div class="flex flex-col gap-4 items-center text-center">
+        class="game-list__item grid grid-cols-[33%_auto_33%] max-w-full overflow-hidden md:grid-cols-[36%_auto_36%] gap-3 font-condensed hover:scale-105 transition-all">
+        <div class="flex flex-col gap-4 items-center text-center md:flex-row">
             <div class="flex justify-center items-center"><img src="{{ $game->homeTeam->logo() }}" alt=""
                     class="max-h-8 rounded-full transition-transform duration-300 transform max-w-8 md:max-h-12 md:max-w-12 hover:scale-110"></div>
 
@@ -29,7 +29,7 @@
             <span class="{{ $game->away_score > $game->home_score ? 'text-primary' : 'text-gray-400' }}">{{ $game->away_score }}</span>
         </div>
 
-        <div class="flex flex-col gap-4 justify-center items-center text-center">
+        <div class="flex flex-col gap-4 justify-center items-center text-center md:flex-row-reverse md:justify-start">
             <div class="flex justify-center items-center"><img src="{{ $game->awayTeam->logo() }}" alt=""
                     class="max-h-8 rounded-full transition-transform duration-300 transform max-w-8 md:max-h-12 md:max-w-12 hover:scale-110"></div>
 
