@@ -74,6 +74,7 @@ class Team extends Model implements HasMedia
     ];
 
     protected $casts = [
+        'id' => 'integer',
         'external_id' => 'integer',
         'data'        => 'object',
     ];

@@ -6,7 +6,6 @@ import LiveTopBar from '../Components/LiveTopBar.vue';
 
 let props = defineProps({
     game: Object,
-    gameLive: Object,
     events: Array,
     referees: Array,
     currentEvent: Object,
@@ -34,8 +33,8 @@ onMounted(() => {
     // Fill the rest of the data
     form.title = props.game.title
     form.roundId = props.game.round_id ? props.game.round_id : ''
-    form.homeTeamId = props.game.home_team_id
-    form.awayTeamId = props.game.away_team_id
+    form.homeTeamId = props.game.home_team_id ? props.game.home_team_id : ""
+    form.awayTeamId = props.game.away_team_id ? props.game.away_team_id : ""
     form.scheduledAt = props.game.scheduled_at
 
     // Add referees

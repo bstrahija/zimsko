@@ -6,6 +6,8 @@ use App\Models\Event;
 use App\Models\Game;
 use App\Models\Post;
 use App\Services\Leaderboards;
+use App\Services\LiveScore;
+use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
@@ -23,12 +25,14 @@ class PagesController extends Controller
         $upcomingGames      = Game::where(['event_id' => $currentEvent->id])->where(function ($query) {
             $query->where('status', 'scheduled');
             $query->orWhere('status', 'in_progress');
-        })->with(['homeTeam', 'awayTeam'])->orderBy('scheduled_at')->limit(6)->get();
-        $latestGames        = Game::where(['status' => 'completed', 'event_id' => $currentEvent->id])->with(['homeTeam', 'awayTeam'])->orderByDesc('scheduled_at')->limit(6)->get();
+        })->with(['homeTeam', 'awayTeam', 'homeTeam.media', 'awayTeam.media'])->orderBy('scheduled_at')->limit(6)->get();
+        $latestGames        = Game::where(['status' => 'completed', 'event_id' => $currentEvent->id])
+            ->with(['homeTeam', 'awayTeam', 'homeTeam.media', 'awayTeam.media'])->orderByDesc('scheduled_at')->limit(6)->get();
 
         // If we dont have games for current event, show past event
         if (! $latestGames || ! $latestGames->count()) {
-            $latestGames = Game::where(['status' => 'completed', 'event_id' => $pastEvent->id])->with(['homeTeam', 'awayTeam'])->orderByDesc('scheduled_at')->limit(6)->get();
+            $latestGames = Game::where(['status' => 'completed', 'event_id' => $pastEvent->id])
+                ->with(['homeTeam', 'awayTeam', 'homeTeam.media', 'awayTeam.media'])->orderByDesc('scheduled_at')->limit(6)->get();
         }
 
         // And the leaderboards (shold be cached)

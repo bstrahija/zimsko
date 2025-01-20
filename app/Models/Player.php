@@ -103,9 +103,12 @@ class Player extends Model implements HasMedia
 
     public function getNumberAttribute()
     {
+
+
         if (isset($this->pivot) && isset($this->pivot->number) && $this->pivot->number) {
             return $this->pivot->number;
-        } else {
+        } elseif (! isset($this->pivot) || ! $this->pivot) {
+            dump("DB");
             return PlayerTeam::where('player_id', $this->id)->first()?->number;
         }
 

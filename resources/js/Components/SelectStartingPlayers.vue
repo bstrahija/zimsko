@@ -14,7 +14,7 @@ const props = defineProps({
 const { game } = toRefs(props);
 
 let data = reactive({
-    gameId: game.value.game_id,
+    gameId: game.value.id,
     homeStartingPlayers: [],
     awayStartingPlayers: [],
 });

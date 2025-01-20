@@ -10,7 +10,6 @@ const helpers = inject('helpers');
 
 let props = defineProps({
     game: { type: Object, required: true },
-    gameLive: { type: Object, required: true },
     log: { type: Array, required: true },
 });
 
@@ -20,17 +19,17 @@ onMounted(() => {
     const channel = window.Echo.channel(`zimsko-local`)
         .listen('LiveScoreUpdated', (e) => {
             router.visit('/live/' + props.game.id + '/score', {
-                only: ['game', 'gameLive', 'log'],
+                only: ['game', 'log'],
                 preserveState: true,
                 preserveScroll: true,
             });
         });
 
-    // helpers.checkPlayersForFouls(props.gameLive);
+    // helpers.checkPlayersForFouls(props.game);
 });
 
 router.on('success', (event) => {
-    // helpers.checkPlayersForFouls(props.gameLive);
+    // helpers.checkPlayersForFouls(props.game);
 })
 </script>
 
@@ -41,7 +40,7 @@ router.on('success', (event) => {
 
         <div class="flex relative justify-center min-h-[98svh]">
             <div class="w-full space-y-2 max-w-[1920px]">
-                <LiveScoreApp :game="gameLive" :log="log" />
+                <LiveScoreApp :game="game" :log="log" />
             </div>
         </div>
     </Layout>

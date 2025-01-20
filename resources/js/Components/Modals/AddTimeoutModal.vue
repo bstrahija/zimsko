@@ -26,7 +26,7 @@ const data = reactive({
 });
 
 const save = async function () {
-    await router.post('/live/' + props.game.game_id + '/timeout', {
+    await router.post('/live/' + props.game.id + '/timeout', {
         'team_id': props.team.id
     });
 

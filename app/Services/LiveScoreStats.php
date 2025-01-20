@@ -13,7 +13,7 @@ trait LiveScoreStats
             foreach ([$this->homeTeam, $this->awayTeam] as $team) {
                 $side = $team->id === $this->homeTeam->id ? 'home' : 'away';
 
-                $team->setStats('score',                $this->gameLive->{$side . '_score'});
+                $team->setStats('score',                $this->game->{$side . '_score'});
                 $team->setStats('misses',               $this->getTeamStat(team: $team, types: ['player_miss'], method: 'count'));
                 $team->setStats('rebounds',             $this->getTeamStat(team: $team, types: ['player_rebound'], method: 'count'));
                 $team->setStats('offensive_rebounds',   $this->getTeamStat(team: $team, types: ['player_rebound'], subtypes: ['off'], method: 'count'));

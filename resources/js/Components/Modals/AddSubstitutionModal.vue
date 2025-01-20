@@ -89,7 +89,7 @@ const canBeSaved = function () {
 }
 
 async function save() {
-    data.gameId = game.value.game_id;
+    data.gameId = game.value.id;
     await router.post('/live/' + data.gameId + '/substitution', data);
 
     $vfm.hideAll();

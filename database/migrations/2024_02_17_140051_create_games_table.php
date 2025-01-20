@@ -25,12 +25,25 @@ return new class extends Migration
             $table->foreignId('home_team_id')->nullable()->constrained('teams')->cascadeOnDelete();
             $table->foreignId('away_team_id')->nullable()->constrained('teams')->cascadeOnDelete();
 
+            // Add stats columns
             foreach (config('stats.columns') as $column) {
                 foreach (['home', 'away'] as $side) {
                     $table->{$column['type'] ?? 'integer'}($side . '_' . $column['id'])->nullable()->default(0);
                 }
             }
 
+            // More "Live" columns
+            $table->integer('period')->default(1);
+            $table->json('home_starting_players')->nullable();
+            $table->json('away_starting_players')->nullable();
+            $table->json('home_players_on_court')->nullable();
+            $table->json('away_players_on_court')->nullable();
+            $table->integer('home_timeouts_left')->default(0);
+            $table->integer('away_timeouts_left')->default(0);
+            $table->integer('home_fouls_left')->default(0);
+            $table->integer('away_fouls_left')->default(0);
+
+            // Other
             $table->json('data')->nullable();
             $table->string('type', 50)->default('default')->index();
             $table->dateTime('scheduled_at')->nullable();

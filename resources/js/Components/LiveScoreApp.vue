@@ -19,7 +19,7 @@ let props = defineProps({
 
 <template>
     <div class="bg-slate-900/95 p-6 rounded-lg border-5 border-cyan-400/50 shadow-[0_0_15px_rgba(6,182,212,0.5)] h-full grid-bg">
-        <LiveTopBar :title="game.title" :game="game" :backUrl="'/live/' + game.game_id + '/players-starting'" />
+        <LiveTopBar :title="game.title" :game="game" :backUrl="'/live/' + game.id + '/players-starting'" />
 
         <div class="grid gap-4 mb-4 score-top grid-cols-[1fr_1fr] md:grid-cols-[1fr_100px_1fr] lg:grid-cols-[1fr_120px_1fr] xl:grid-cols-[1fr_160px_1fr]">
             <div class="space-y-4 home-team-top">

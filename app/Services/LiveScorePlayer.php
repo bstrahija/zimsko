@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\GameLog;
 use App\Models\Player;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
 trait LiveScorePlayer
@@ -288,7 +289,7 @@ trait LiveScorePlayer
             } else {
                 $this->awayPlayersOnCourt->push($playerIn);
             }
-            $this->gameLive->update([
+            $this->game->update([
                 // 'players_on_court'      => $this->playersOnCourt->pluck('id')->toArray(),
                 'home_players_on_court' => $this->homePlayersOnCourt->pluck('id')->toArray(),
                 'away_players_on_court' => $this->awayPlayersOnCourt->pluck('id')->toArray(),
@@ -341,11 +342,9 @@ trait LiveScorePlayer
     {
         // Only events with a score update
         $homeScore = GameLog::where('game_id', $this->game->id)
-            ->where('game_live_id', $this->gameLive->id)
             ->where('team_side', 'home')
             ->whereIn('type', ['player_score', 'player_score_with_assist'])->sum('amount');
         $awayScore = GameLog::where('game_id', $this->game->id)
-            ->where('game_live_id', $this->gameLive->id)
             ->where('team_side', 'away')
             ->whereIn('type', ['player_score', 'player_score_with_assist'])->sum('amount');
 
@@ -358,7 +357,7 @@ trait LiveScorePlayer
         }
 
         // Also update live game stats
-        $this->gameLive->update([
+        $this->game->update([
             'home_score' => $homeScore,
             'away_score' => $awayScore,
         ]);
@@ -372,5 +371,19 @@ trait LiveScorePlayer
     public function findPlayerByNumber(int $playerNumber): ?Player
     {
         return $this->players->where('number', $playerNumber)->first();
+    }
+
+    public function getPlayersBySide(string $side = 'home'): Collection
+    {
+        $this->{$side . 'Players'} = new Collection;
+        // $this->game->players->where('relations.pivot.team_id', $this->game->home_team_id)->toArray()
+
+        foreach ($this->players as $player) {
+            if ($player->pivot->team_id === $this->{$side . 'Team'}->id) {
+                $this->{$side . 'Players'}->push($player);
+            }
+        }
+
+        return $this->{$side . 'Players'};
     }
 }

@@ -28,7 +28,6 @@ trait LiveScoreLog
         // Create log entry
         $item                = new GameLog();
         $item->game_id       = $this->game->id;
-        $item->game_live_id  = $this->gameLive->id;
         $item->type          = $data['type'];
         $item->subtype       = $data['subtype'] ?? null;
         $item->player_id     = $data['player_id'] ?? null;
@@ -244,7 +243,6 @@ trait LiveScoreLog
     public function updateLog()
     {
         $this->log = GameLog::where('game_id', $this->game->id)
-            ->where('game_live_id', $this->gameLive->id)
             ->orderBy('period', 'desc')
             ->orderBy('created_at', 'desc')
             ->orderBy('occurred_at', 'desc')
@@ -254,7 +252,6 @@ trait LiveScoreLog
     public function clearLog()
     {
         GameLog::where('game_id', $this->game->id)
-            ->where('game_live_id', $this->gameLive->id)
             ->whereNotIn('type', ['game_initialized', 'game_started'])
             ->delete();
     }

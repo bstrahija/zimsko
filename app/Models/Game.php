@@ -42,9 +42,13 @@ class Game extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'external_id'  => 'integer',
-        'data'         => 'array',
-        'scheduled_at' => 'datetime',
+        'external_id'           => 'integer',
+        'data'                  => 'array',
+        'scheduled_at'          => 'datetime',
+        'home_starting_players' => 'array',
+        'away_starting_players' => 'array',
+        'home_players_on_court' => 'array',
+        'away_players_on_court' => 'array',
     ];
 
     // protected static function boot()
@@ -64,15 +68,6 @@ class Game extends Model
     //     });
     // }
 
-    public static function boot()
-    {
-        parent::boot();
-
-        self::saved(function ($model) {
-            if ($model->live) $model->live->updateQuietly(['status' => $model->status]);
-        });
-    }
-
     public function event(): BelongsTo
     {
         return $this->belongsTo(Event::class);
@@ -81,11 +76,6 @@ class Game extends Model
     public function round(): BelongsTo
     {
         return $this->belongsTo(Round::class);
-    }
-
-    public function live(): HasOne
-    {
-        return $this->hasOne(GameLive::class);
     }
 
     public function gameLogs(): HasMany
@@ -105,7 +95,7 @@ class Game extends Model
 
     public function players(): BelongsToMany
     {
-        return $this->belongsToMany(Player::class)->withPivot(array_merge(['event_id', 'team_id'], config('stats.columns')));
+        return $this->belongsToMany(Player::class)->withPivot(array_merge(['event_id', 'team_id'], array_column(config('stats.columns'), 'id')));
     }
 
     public function homePlayers(): BelongsToMany

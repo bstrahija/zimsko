@@ -12,16 +12,15 @@ const helpers = inject('helpers');
 
 let props = defineProps({
     game: Object,
-    gameLive: Object,
 });
 
-let { game, gameLive } = toRefs(props);
+let { game } = toRefs(props);
 
 let data = reactive({
     saving: false,
     homePlayers: props.game.home_players,
     awayPlayers: props.game.away_players,
-    gameId: props.game.game_id,
+    gameId: props.game.id,
 });
 
 const addHomePlayer = (player) => {
