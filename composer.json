@@ -19,6 +19,7 @@
         "filament/spatie-laravel-media-library-plugin": "^3.2",
         "filament/spatie-laravel-settings-plugin": "^3.2",
         "inertiajs/inertia-laravel": "^2.0",
+        "jeffgreco13/filament-breezy": "^2.5",
         "laravel/folio": "^1.1",
         "laravel/framework": "^11.9",
         "laravel/pulse": "^1.2",

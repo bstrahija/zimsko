@@ -2,10 +2,12 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Pages\EditProfile;
 use CmsMulti\FilamentClearCache\FilamentClearCachePlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\MenuItem;
 use Filament\Navigation\NavigationItem;
 use Filament\Pages;
 use Filament\Panel;
@@ -19,6 +21,7 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Jeffgreco13\FilamentBreezy\BreezyCore;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -29,7 +32,7 @@ class AdminPanelProvider extends PanelProvider
             ->brandLogo(asset('img/logo_2024.png'))
             ->brandLogoHeight('2.5rem')
             ->id('admin')
-            ->profile()
+            // ->profile()
             ->path('admin')
             ->login()
             ->colors([
@@ -39,6 +42,9 @@ class AdminPanelProvider extends PanelProvider
             ->plugins([
                 \Schmeits\FilamentUmami\FilamentUmamiPlugin::make(),
                 FilamentClearCachePlugin::make(),
+                BreezyCore::make()
+                    ->enableTwoFactorAuthentication(false)
+                    ->myProfile(),
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
@@ -58,6 +64,9 @@ class AdminPanelProvider extends PanelProvider
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,
             ])
+            // ->userMenuItems([
+            //     'profile' => MenuItem::make()->url(fn(): string => EditProfile::getUrl())
+            // ])
             ->viteTheme('resources/css/filament/admin/theme.css')
             ->middleware([
                 EncryptCookies::class,
