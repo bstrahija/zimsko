@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\Cache;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -88,6 +89,17 @@ class Team extends Model implements HasMedia
 
     protected $appends = ['stats'];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        self::saved(function ($model) {
+            // Clear cache when savin anything
+            Cache::forgetLeaderboards();
+        });
+    }
+
+
     public function events(): BelongsToMany
     {
         return $this->belongsToMany(Event::class);
@@ -151,11 +163,13 @@ class Team extends Model implements HasMedia
     {
         $this
             ->addMediaConversion('thumb')
+            ->performOnCollections('photos', 'backgrounds')
             ->fit(Fit::Contain, 300, 300)
             ->nonQueued();
 
         $this
             ->addMediaConversion('preview')
+            ->performOnCollections('photos', 'backgrounds')
             ->fit(Fit::Contain, 600, 600)
             ->nonQueued();
     }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\Cache;
 use Illuminate\Database\Eloquent\Concerns\HasTimestamps;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -51,22 +52,15 @@ class Game extends Model
         'away_players_on_court' => 'array',
     ];
 
-    // protected static function boot()
-    // {
-    //     parent::boot();
+    protected static function boot()
+    {
+        parent::boot();
 
-    //     self::updating(function ($model) {
-    //         GameTeam::updateOrCreate(['event_id' => $model->event_id, 'game_id' => $model->id, 'team_id' => $model->home_team_id]);
-    //         GameTeam::updateOrCreate(['event_id' => $model->event_id, 'game_id' => $model->id, 'team_id' => $model->away_team_id]);
-    //         GameTeam::whereNotIn('team_id', [$model->home_team_id, $model->away_team_id])->where('game_id', $model->id)->delete();
-    //     });
-
-    //     self::saved(function ($model) {
-    //         GameTeam::updateOrCreate(['event_id' => $model->event_id, 'game_id' => $model->id, 'team_id' => $model->home_team_id]);
-    //         GameTeam::updateOrCreate(['event_id' => $model->event_id, 'game_id' => $model->id, 'team_id' => $model->away_team_id]);
-    //         GameTeam::whereNotIn('team_id', [$model->home_team_id, $model->away_team_id])->where('game_id', $model->id)->delete();
-    //     });
-    // }
+        self::saved(function ($model) {
+            // Clear cache when savin anything
+            Cache::forgetLeaderboards();
+        });
+    }
 
     public function event(): BelongsTo
     {

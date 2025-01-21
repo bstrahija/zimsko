@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\Cache;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -95,6 +96,17 @@ class Player extends Model implements HasMedia
     ];
 
     protected $appends = ['stats', 'name', 'number', 'position'];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        self::saved(function ($model) {
+            // Clear cache when savin anything
+            Cache::forgetLeaderboards();
+        });
+    }
+
 
     public function getNameAttribute()
     {
