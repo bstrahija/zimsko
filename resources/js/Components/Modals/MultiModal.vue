@@ -163,8 +163,7 @@ function isActiveOther(player) {
                                         Tehnička
                                     </ScoreButton>
 
-                                    <ScoreButton class="col-span-2 add-substitution" @click="setAction('substitution')"
-                                        :active="data.action === 'substitution'">
+                                    <ScoreButton class="col-span-2 add-substitution" @click="setAction('substitution')" :active="data.action === 'substitution'">
                                         <IconSubstitution />
                                         Izmjena
                                     </ScoreButton>
@@ -208,7 +207,7 @@ function isActiveOther(player) {
                                     <h3 class="mb-3 text-sm text-center uppercase">Asistira</h3>
                                     <div class="grid grid-cols-2 gap-4 md:grid-cols-3">
                                         <PlayerSelectBlock :player="player" :active="isActiveOther(player)" v-for="player in playersOnCourt" :key="'playeron-' + player.id"
-                                            @click="selectOtherPlayer(player)" :class="{ hidden: player.id === data.player?.id }" />
+                                            @click="selectOtherPlayer(player)" :class="{ hidden: player.id == data.selectedPlayer?.id }" />
                                     </div>
                                 </div>
 
@@ -218,7 +217,7 @@ function isActiveOther(player) {
                                     <h3 class="mb-3 text-sm text-center uppercase" v-if="data.action === 'foul'">Prekršaj na</h3>
                                     <div class="grid grid-cols-2 gap-4 md:grid-cols-3">
                                         <PlayerSelectBlock :player="player" :active="isActiveOther(player)" v-for="player in opponentPlayersOnCourt" :key="'playerop-' + player.id"
-                                            @click="selectOtherPlayer(player)" :class="{ hidden: player.id === data.player?.id }" />
+                                            @click="selectOtherPlayer(player)" :class="{ hidden: player.id === data.selectedPlayer?.id }" />
                                     </div>
                                 </div>
 
@@ -226,7 +225,7 @@ function isActiveOther(player) {
                                     <h3 class="mb-3 text-sm text-center uppercase">Ulazi</h3>
                                     <div class="grid grid-cols-2 gap-4 md:grid-cols-3">
                                         <PlayerSelectBlock :player="player" :active="isActiveOther(player)" v-for="player in playersOnBench" :key="'playerbc-' + player.id"
-                                            @click="selectOtherPlayer(player)" :class="{ hidden: player.id === data.player?.id }" />
+                                            @click="selectOtherPlayer(player)" :class="{ hidden: player.id === data.selectedPlayer?.id }" />
                                     </div>
                                 </div>
                             </div>

@@ -128,7 +128,7 @@ const deleteGame = async function (game) {
                                 </td>
                                 <td class="px-4 py-3 text-gray-300" @click="router.visit('live/' + game.id)">{{ game.scheduled_at }}</td>
                                 <td class="px-4 py-3 text-gray-300" @click="router.visit('live/' + game.id)">
-                                    <span class="px-2 py-1 text-xs font-medium rounded-full opacity-80" :class="{
+                                    <span class="px-2 py-1 text-xs font-medium whitespace-nowrap rounded-full opacity-80" :class="{
                                         'bg-slate-600 text-slate-100': game.status === 'completed',
                                         'bg-green-500 text-green-100 animate-pulse': game.status === 'in_progress',
                                         'bg-orange-600 text-yellow-100': game.status === 'draft',

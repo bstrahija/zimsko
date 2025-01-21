@@ -12,8 +12,17 @@
         <small>({{ $game->scheduled_at->format('d.m.Y H:i') }})</small>
     </div>
 
+    @if ($game->status === 'in_progress')
+        <div class="-mt-2 mb-1 text-center">
+            <span class="inline-flex items-center px-2 py-1 text-xs font-bold text-red-100 bg-red-600 rounded-full animate-pulse">
+                LIVE
+            </span>
+        </div>
+    @endif
+
     <a href="{{ route('results.show', $game->slug) }}"
-        class="game-list__item grid grid-cols-[33%_auto_33%] max-w-full overflow-hidden md:grid-cols-[36%_auto_36%] gap-3 font-condensed hover:scale-105 transition-all">
+        class="game-list__item grid grid-cols-[33%_auto_33%] max-w-full overflow-hidden md:grid-cols-[36%_auto_36%] gap-3 font-condensed hover:scale-105 transition-all relative">
+
         <div class="flex flex-col gap-4 items-center text-center md:flex-row">
             <div class="flex justify-center items-center"><img src="{{ $game->homeTeam->logo() }}" alt=""
                     class="max-h-8 rounded-full transition-transform duration-300 transform max-w-8 md:max-h-12 md:max-w-12 hover:scale-110"></div>

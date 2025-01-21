@@ -46,7 +46,7 @@
                 @foreach (range(1, 4) as $quarter)
                     <div class="bg-white/90">
                         <h3
-                            class="text-xs md:text-sm bg-primary/80 font-heading text-center text-white/90 px-4 py-2 border-t-4 border-primary {{ $game->period === $quarter ? 'animate-pulse' : '' }} {{ $game->period !== $quarter ? ($game->period > $quarter ? ' grayscale opacity-50' : 'opacity-50 bg-secondary/90') : '' }}">
+                            class="text-xs md:text-sm bg-primary/80 font-heading text-center text-white/90 px-4 py-2 border-t-4 border-primary {{ $game->period === $quarter ? 'animate-pulse' : '' }} {{ $game->period !== $quarter ? ($game->period > $quarter ? ' grayscale opacity-50' : 'opacity-50 border-secondary bg-secondary/90') : '' }}">
                             Q{{ $quarter }}
                         </h3>
                         <div class="px-5 py-3 font-mono font-bold text-center whitespace-nowrap lg:py-6 text-md md:text-xl xl:text-2xl text-black/80">
