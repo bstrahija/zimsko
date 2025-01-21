@@ -1,1 +1,1 @@
-<x-basket.game-list-item :game="$game" /> />
+<x-basket.game-list-item :game="$game" />

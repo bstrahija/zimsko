@@ -8,7 +8,7 @@
     }
 @endphp
 
-<div class="{{ $class ?? '' }}">
+<div class="block lg:grid{{ $class ?? '' }}">
     <x-ui.card class="overflow-x-auto" title="Poredak ekipa" subtitle="{{ $currentEvent->title ?: 'Zimsko' }}" variant="cta">
         <table class="w-full text-sm table-auto">
             <thead>
