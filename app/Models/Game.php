@@ -52,16 +52,6 @@ class Game extends Model
         'away_players_on_court' => 'array',
     ];
 
-    protected static function boot()
-    {
-        parent::boot();
-
-        self::saved(function ($model) {
-            // Clear cache when savin anything
-            Cache::forgetLeaderboards();
-        });
-    }
-
     public function event(): BelongsTo
     {
         return $this->belongsTo(Event::class);
