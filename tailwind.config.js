@@ -12,7 +12,7 @@ export default {
                 primary: '#FF6B00',
                 secondary: 'rgb(1, 114, 173)',
                 accent: '#FFAD69',
-                logo: '#28658d',
+                logo: 'rgb(1, 114, 173)',
                 burger: '#009dbc',
             },
             fontFamily: {

@@ -327,6 +327,11 @@ class LiveScore
         return $this->game;
     }
 
+    public function log(): Collection
+    {
+        return $this->log;
+    }
+
     public function homeTeam()
     {
         return $this->homeTeam;

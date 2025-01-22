@@ -9,12 +9,11 @@
         </svg>
     </button>
 
-    <div class="block fixed top-0 left-0 z-30 w-full h-auto bg-gray-100 navigation text-nav bg-opacity-85 lg:block">
-        <div class="inline-block relative mr-auto bg-opacity-90 w-content bg-logo">
+    <div class="block fixed top-0 left-0 z-30 w-full bg-gray-100 navigation text-nav bg-opacity-85 lg:block">
+        <div class="block overflow-hidden relative pr-6 mr-auto h-full bg-opacity-100 w-fit bg-logo" style="clip-path: polygon(0 0, 100% 0, 80% 100%, 0 100%);">
             <a href="{{ route('home') }}" class="inline-block py-2">
                 <img src="{{ asset('img/logo_2024.png') }}" alt="Logo" class="mx-6 w-auto h-10">
             </a>
-            <div class="absolute top-0 -right-10 w-10 h-full opacity-90 bg-logo" style="clip-path: polygon( 0 0, 100% 0, 0 100%);"></div>
         </div>
     </div>
 

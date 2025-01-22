@@ -57,6 +57,10 @@
                     </div>
                 @endforeach
             </div>
+
+            <div class="mt-6 text-center">
+                <x-ui.button tag="a" href="{{ route('games.live.show', $game->slug) }}" variant="primary">🕗 Prati tijek</x-ui.button>
+            </div>
         </div>
 
         <hr class="mb-12">

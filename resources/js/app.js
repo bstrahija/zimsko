@@ -5,13 +5,13 @@ import Pusher from 'pusher-js';
 import { getSlider } from 'simple-slider';
 
 getSlider({
-    transitionTime:1,
+    transitionTime: 1,
     delay: 5,
     prop: 'opacity',
     unit: '',
     init: 0,
     show: 1,
-    end: 0
+    end: 0,
 });
 
 window.Pusher = Pusher;
@@ -20,10 +20,44 @@ window.Echo = new Echo({
     broadcaster: 'pusher',
     key: import.meta.env.VITE_PUSHER_APP_KEY,
     cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
-    forceTLS: true
+    forceTLS: true,
 });
 
-const channel = window.Echo.channel('live-score')
+window.requestNotificationPermission = function () {
+    // Check if the browser supports notifications
+    if (!('Notification' in window)) {
+        console.log('This browser does not support notifications.');
+        return;
+    }
+    Notification.requestPermission().then((permission) => {
+        // Do something with the permission
+        // console.log(permission);
+    });
+};
+
+Notification.requestPermission().then((result) => {
+    window.requestNotificationPermission();
+});
+
+window.sendNotification = function (message) {
+    const img = '/img/logo_ball_white.png';
+    const text = message;
+    const notification = new Notification('Zimsko Live Score', { body: text, icon: img });
+};
+
+const channel = window.Echo.channel('live-score');
+
+channel.listen('LiveScoreUpdated', (e, obj) => {
+    console.log(e.event, e.data);
+
+    if (e.event === 'startGame') {
+        window.sendNotification(`Utakmica je započela.\n${e.data.homeTeam} ${e.data.homeScore} : ${e.data.awayScore} ${e.data.awayTeam}`);
+    } else if (e.event === 'endGame') {
+        window.sendNotification(`Utakmica je zavrsila.\n${e.data.homeTeam} ${e.data.homeScore} : ${e.data.awayScore} ${e.data.awayTeam}`);
+    } else if (e.event === 'nextPeriod') {
+        window.sendNotification(`Završena je ${e.data.period - 1}. četvrtina.\n${e.data.homeTeam} ${e.data.homeScore} : ${e.data.awayScore} ${e.data.awayTeam}`);
+    }
+});
 
 let HeroVideo = {
     scriptTag: null,

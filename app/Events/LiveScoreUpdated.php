@@ -18,12 +18,15 @@ class LiveScoreUpdated implements ShouldBroadcastNow
 
     public $event = null;
 
+    public $data;
+
     /**
      * Create a new event instance.
      */
-    public function __construct(string $event = null)
+    public function __construct(string $event = null, $data = null)
     {
         $this->event = $event;
+        $this->data  = $data;
     }
 
     /**

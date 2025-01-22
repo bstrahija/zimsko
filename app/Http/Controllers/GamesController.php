@@ -32,4 +32,16 @@ class GamesController extends Controller
             'scorers' => $scorers,
         ]);
     }
+
+    public function live()
+    {
+        // Find live game and redirect to it
+    }
+
+    public function liveShow($slug)
+    {
+        $game = Game::where('slug', $slug)->where('status', 'in_progress')->firstOrFail();
+
+        return view('games.live', ['game' => $game]);
+    }
 }

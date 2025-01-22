@@ -299,7 +299,11 @@ class LiveController extends Controller
         // Sync with game
         $this->syncGame($game);
 
-        LiveScoreUpdated::dispatch('addScore');
+        LiveScoreUpdated::dispatch('addScore', [
+            'playerId'       => $playerId,
+            'assistPlayerId' => $assistPlayerId,
+            'score'          => $score,
+        ]);
     }
 
     public function addMiss(Game $game, Request $request)
@@ -420,7 +424,13 @@ class LiveController extends Controller
         $this->live($game)->startGame();
         Cache::clear();
 
-        LiveScoreUpdated::dispatch('startGame');
+        LiveScoreUpdated::dispatch('startGame', [
+            'gameId'    => $game->id,
+            'homeTeam'  => $game->homeTeam->title,
+            'awayTeam'  => $game->awayTeam->title,
+            'homeScore' => $game->home_score,
+            'awayScore' => $game->away_score,
+        ]);
     }
 
     public function nextPeriod(Game $game, Request $request)
@@ -431,9 +441,16 @@ class LiveController extends Controller
         $this->live($game)->nextPeriod();
 
         // Sync with game
-        $this->syncGame($game);
+        $game = $this->syncGame($game);
 
-        LiveScoreUpdated::dispatch('nextPeriod');
+        LiveScoreUpdated::dispatch('nextPeriod', [
+            'gameId'    => $game->id,
+            'period'    => $this->live($game)->currentPeriod(),
+            'homeTeam'  => $game->homeTeam->title,
+            'awayTeam'  => $game->awayTeam->title,
+            'homeScore' => $game->home_score,
+            'awayScore' => $game->away_score,
+        ]);
     }
 
     public function endGame(Game $game, Request $request)
@@ -444,24 +461,28 @@ class LiveController extends Controller
         $this->live($game)->endGame();
 
         // Sync with game
-        $this->syncGame($game);
+        $game = $this->syncGame($game);
 
         // Clear the cache
         Cache::clear();
 
-        LiveScoreUpdated::dispatch('endGame');
+        LiveScoreUpdated::dispatch('endGame', [
+            'gameId'    => $game->id,
+            'homeTeam'  => $game->homeTeam->title,
+            'awayTeam'  => $game->awayTeam->title,
+            'homeScore' => $game->home_score,
+            'awayScore' => $game->away_score,
+        ]);
     }
 
     public function deleteLog(GameLog $log)
     {
         if ($log->type === 'completed') {
-            $log->game->live->update(['status' => 'in_progress']);
             $log->game->update(['status' => 'in_progress']);
         } elseif ($log->type === 'game_started') {
-            $log->game->live->update(['status' => 'scheduled']);
             $log->game->update(['status' => 'scheduled']);
         } elseif ($log->type === 'period_started') {
-            $log->game->live->update(['period' => $log->period - 1]);
+            $log->game->update(['period' => $log->period - 1]);
         } elseif ($log->type === 'substitution') {
             // We need to revert the substitution
             $this->live($log->game)->substitution(playersIn: [$log->player_2_id], playersOut: [$log->player_id], addLog: false);
@@ -483,7 +504,7 @@ class LiveController extends Controller
     //     ]);
     // }
 
-    public function syncGame(Game $game)
+    public function syncGame(Game $game): Game
     {
         $live = $this->live($game);
 
@@ -497,6 +518,8 @@ class LiveController extends Controller
                 'away_score_p' . $period => $awayScore,
             ]);
         }
+
+        return $game;
     }
 
     protected function live(Game $game): LiveScore
