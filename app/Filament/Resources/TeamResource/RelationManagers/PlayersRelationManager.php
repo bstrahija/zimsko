@@ -10,6 +10,7 @@ use Filament\Tables;
 use Filament\Tables\Columns\SpatieMediaLibraryImageColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Str;
 
@@ -50,13 +51,17 @@ class PlayersRelationManager extends RelationManager
                 Tables\Columns\TextColumn::make('first_name'),
                 Tables\Columns\TextColumn::make('last_name'),
                 Tables\Columns\TextColumn::make('position')->formatStateUsing(fn(string $state) => Str::upper($state)),
+                Tables\Columns\ToggleColumn::make('is_active')
             ])
             ->filters([
                 //
             ])
             ->headerActions([
                 Tables\Actions\CreateAction::make(),
-                Tables\Actions\AttachAction::make()->label('Add Player'),
+                Tables\Actions\AttachAction::make()
+                    ->label('Add Player')
+                    ->recordTitle(fn($record) => "{$record->first_name} {$record->last_name}")
+                    ->recordSelectSearchColumns(['first_name', 'last_name']),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

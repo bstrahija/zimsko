@@ -27,7 +27,7 @@
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-200">
-                                @foreach ($team->players as $player)
+                                @foreach ($team->activePlayers as $player)
                                     <tr class="hover:bg-gray-100">
                                         <td class="px-2 py-3">
                                             <div class="flex items-center">

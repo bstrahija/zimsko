@@ -18,7 +18,7 @@ class TeamsController extends Controller
 
     public function show($slug, Request $request)
     {
-        $team = Team::where('slug', $slug)->firstOrFail();
+        $team = Team::where('slug', $slug)->with(['activePlayers', 'activePlayers.media', 'coaches'])->firstOrFail();
 
         return view('teams.show', ['team' => $team]);
     }

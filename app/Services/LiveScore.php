@@ -98,8 +98,8 @@ class LiveScore
         $this->players = new Collection();
 
         // First get all available players
-        $this->availableHomePlayers = $this->homeTeam ? $this->homeTeam->players : new Collection();
-        $this->availableAwayPlayers = $this->awayTeam ? $this->awayTeam->players : new Collection();
+        $this->availableHomePlayers = $this->homeTeam ? $this->homeTeam->activePlayers : new Collection();
+        $this->availableAwayPlayers = $this->awayTeam ? $this->awayTeam->activePlayers : new Collection();
 
         // Then we get players selected for this game
         $playerIds = $this->game->players->pluck('id');

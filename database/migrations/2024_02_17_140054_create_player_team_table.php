@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('team_id')->cascadeOnDelete();
             $table->string('position')->nullable()->index();
             $table->string('number')->nullable()->index();
+            $table->boolean('is_active')->default(true)->index();
         });
 
         Schema::enableForeignKeyConstraints();
