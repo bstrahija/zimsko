@@ -40,7 +40,11 @@ class TeamResource extends Resource
                     ->required(),
                 Forms\Components\Textarea::make('body')
                     ->columnSpanFull(),
-                Forms\Components\TextInput::make('status')
+                Forms\Components\Select::make('status')
+                    ->options([
+                        'active' => 'Active',
+                        'inactive' => 'Inactive',
+                    ])
                     ->required(),
                 Forms\Components\Select::make('events')
                     ->multiple()
@@ -72,6 +76,10 @@ class TeamResource extends Resource
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('slug')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('events.title')
+                    ->badge()
                     ->sortable()
                     ->searchable(),
                 Tables\Columns\TextColumn::make('status')
