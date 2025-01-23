@@ -95,7 +95,7 @@ class Player extends Model implements HasMedia
         'data'        => 'array',
     ];
 
-    protected $appends = ['stats', 'name', 'number', 'position', 'is_active'];
+    protected $appends = ['stats', 'name', 'number', 'position'];
 
     protected static function boot()
     {
