@@ -498,6 +498,30 @@ class LiveController extends Controller
         ]);
     }
 
+    public function resetGame(Game $game, Request $request)
+    {
+        // Find the player
+        Log::debug("Resetting game. Game: {$game->id}", ['section' => 'LIVE', 'game_id' => $game->id]);
+
+        $this->live($game)->resetGame();
+
+        // Sync with game
+        $game = $this->syncGame($game);
+
+        // Clear the cache
+        Cache::clear();
+
+        LiveScoreUpdated::dispatch('resetGame', [
+            'gameId'    => $game->id,
+            'homeTeam'  => $game->homeTeam->title,
+            'awayTeam'  => $game->awayTeam->title,
+            'homeScore' => $game->home_score,
+            'awayScore' => $game->away_score,
+        ]);
+
+        return to_route('live.players', $game->id);
+    }
+
     public function deleteLog(GameLog $log)
     {
         if ($log->type === 'completed') {

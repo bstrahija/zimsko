@@ -1,12 +1,26 @@
 <script setup>
+import { ref, toRefs } from 'vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 
-defineProps({
+const showDropdown = ref(false);
+
+const props = defineProps({
     backUrl: String,
     title: { type: String, required: true },
     game: Object,
     closeUrl: String,
 });
+
+const toggleDropdown = function () {
+    showDropdown.value = !showDropdown.value;
+
+}
+
+const resetGame = async function () {
+    if (confirm("Jeste li sigurni? Izgubit će te svu statistiku!")) {
+        router.post('/live/' + props.game.id + '/reset-game');
+    }
+}
 </script>
 
 <template>
@@ -28,13 +42,28 @@ defineProps({
 
         {{ title }}
 
-        <span v-if="game" class="px-2 py-[3px] ml-2 font-medium rounded-full opacity-80 text-2xs" :class="{
-            'bg-slate-600 text-slate-100': game.status === 'completed',
-            'bg-green-500 text-green-100 animate-pulse': game.status === 'in_progress',
-            'bg-orange-600 text-yellow-100': game.status === 'draft',
-            'bg-blue-500 text-blue-100': game.status === 'scheduled'
-        }">
-            {{ game.status.replace(/_/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') }}
-        </span>
+        <div v-if="game" class="inline-block relative">
+            <a @click="toggleDropdown" href="#" class="inline-block px-2 py-[3px] ml-2 font-medium rounded-full text-2xs" :class="{
+                'bg-slate-600 text-slate-100': game.status === 'completed',
+                'bg-green-500 text-green-100 animate-pulse': game.status === 'in_progress',
+                'bg-orange-600 text-yellow-100': game.status === 'draft',
+                'bg-blue-500 text-blue-100': game.status === 'scheduled'
+            }">
+                {{ game.status.replace(/_/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') }}
+            </a>
+
+            <div class="overflow-hidden absolute left-0 top-full z-50 mt-1 w-48 rounded-md shadow-lg bg-slate-800/90" v-if="showDropdown">
+                <div class="py-1">
+                    <a href="#" @click="resetGame" class="block px-4 py-2 text-sm text-rose-400 hover:bg-slate-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="inline-block mr-1 w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                        </svg>
+
+                        Reset game
+                    </a>
+                </div>
+            </div>
+        </div>
     </h1>
 </template>

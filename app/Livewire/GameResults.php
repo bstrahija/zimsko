@@ -25,6 +25,7 @@ class GameResults extends Component
             ->whereNot('slug', 'zimsko-2019')
             ->whereNot('slug', 'zimsko-2021')
             ->whereNot('slug', 'LIKE', '%test%')
+            ->whereNot('slug', 'LIKE', '%c-liga%')
             ->get();
         $this->selectedEventSlug = Event::current()->slug;
         $this->selectedEvent = $this->selectedEventSlug ? Event::where('slug', $this->selectedEventSlug)->first() : Event::current();

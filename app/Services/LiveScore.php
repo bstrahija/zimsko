@@ -301,7 +301,6 @@ class LiveScore
 
         $this->game->update(['status' => 'completed']);
 
-
         // We also need to update the log
         $log = GameLog::query()->updateOrCreate([
             'game_id'      => $this->game->id,
@@ -320,6 +319,30 @@ class LiveScore
 
         // And update the log collection
         $this->updateLog();
+    }
+
+    public function resetGame()
+    {
+        // Clear the log
+        GameLog::where('game_id', $this->game->id)->delete();
+
+        $data = [
+            'status'                => 'scheduled',
+            'period'                => 1,
+            'home_starting_players' => [],
+            'home_players_on_court' => [],
+            'away_starting_players' => [],
+            'away_players_on_court' => [],
+        ];
+
+        // Reset stats
+        foreach (config('stats.columns') as $column) {
+            foreach (['home', 'away'] as $side) {
+                $data[$side . '_' . $column['id']] = 0;
+            }
+        }
+
+        $this->game->update($data);
     }
 
     public function game(): Game

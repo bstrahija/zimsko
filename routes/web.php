@@ -71,4 +71,5 @@ Route::post('live/{game}/substitution', [LiveController::class, 'substitution'])
 Route::post('live/{game}/start-game',   [LiveController::class, 'startGame'])->name('live.start-game')->middleware('auth');
 Route::post('live/{game}/next-period',  [LiveController::class, 'nextPeriod'])->name('live.next-period')->middleware('auth');
 Route::post('live/{game}/end-game',     [LiveController::class, 'endGame'])->name('live.end-game')->middleware('auth');
+Route::post('live/{game}/reset-game',   [LiveController::class, 'resetGame'])->name('live.reset-game')->middleware('auth');
 Route::delete('live/log/{log}',         [LiveController::class, 'deleteLog'])->name('live.log')->middleware('auth');
