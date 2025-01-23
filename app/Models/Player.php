@@ -95,7 +95,7 @@ class Player extends Model implements HasMedia
         'data'        => 'array',
     ];
 
-    protected $appends = ['stats', 'name', 'number', 'position'];
+    protected $appends = ['stats', 'name', 'number', 'position', 'is_active'];
 
     protected static function boot()
     {
@@ -115,8 +115,6 @@ class Player extends Model implements HasMedia
 
     public function getNumberAttribute()
     {
-
-
         if (isset($this->pivot) && isset($this->pivot->number) && $this->pivot->number) {
             return $this->pivot->number;
         } elseif (! isset($this->pivot) || ! $this->pivot) {
@@ -147,7 +145,7 @@ class Player extends Model implements HasMedia
 
     public function teams(): BelongsToMany
     {
-        return $this->belongsToMany(Team::class)->withPivot(['number', 'position']);
+        return $this->belongsToMany(Team::class)->withPivot(['number', 'position', 'is_active']);
     }
 
     public function getTeamAttribute()
