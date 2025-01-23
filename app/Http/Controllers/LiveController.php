@@ -268,6 +268,7 @@ class LiveController extends Controller
         $type   = $request->input('type');
 
         if ($action === 'score')             $this->addScore($game, $request);
+        elseif ($action === 'assist')        $this->addAssist($game, $request);
         elseif ($action === 'miss')          $this->addMiss($game, $request);
         elseif ($action === 'rebound')       $this->addRebound($game, $request);
         elseif ($action === 'steal')         $this->addSteal($game, $request);
@@ -302,6 +303,28 @@ class LiveController extends Controller
         LiveScoreUpdated::dispatch('addScore', [
             'playerId'       => $playerId,
             'assistPlayerId' => $assistPlayerId,
+            'score'          => $score,
+        ]);
+    }
+
+    public function addAssist(Game $game, Request $request)
+    {
+        // Add the assist
+        $playerId      = $request->input('selectedPlayer') ?  $request->input('selectedPlayer')['id'] : null;
+        $otherPlayerId = $request->input('selectedOtherPlayer') ?  $request->input('selectedOtherPlayer')['id'] : null;
+        $score         = $request->input('type');
+        Log::debug("Adding assist. Game: {$game->id}, Player: {$playerId}, Assisted: {$otherPlayerId}, Score: {$score}", ['section' => 'LIVE', 'game_id' => $game->id, 'player_id' => $playerId]);
+
+        // Write the assist and score
+        if ($otherPlayerId) $this->live($game)->playerAssist(playerId: $playerId, points: $score, playerAssistToId: $otherPlayerId);
+        else                $this->live($game)->playerAssist(playerId: $playerId, points: $score);
+
+        // Sync with game
+        $this->syncGame($game);
+
+        LiveScoreUpdated::dispatch('addAssist', [
+            'playerId'       => $playerId,
+            'assistPlayerId' => $otherPlayerId,
             'score'          => $score,
         ]);
     }

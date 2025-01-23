@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Log;
 
 trait LiveScorePlayer
 {
-    public function playerScore(string $playerId, int $points = 2, ?string $playerAssistId = null, ?array $location = null, ?string $occurredAt = '00:00:00')
+    public function playerScore(int $playerId, int $points = 2, ?int $playerAssistId = null, ?array $location = null, ?string $occurredAt = '00:00:00')
     {
         // Find players
         $player         = $this->findPlayer($playerId);
@@ -45,7 +45,7 @@ trait LiveScorePlayer
         }
     }
 
-    public function playerMiss(string $playerId, int $points = 2, ?array $location = null, ?string $occurredAt = '00:00:00')
+    public function playerMiss(int $playerId, int $points = 2, ?array $location = null, ?string $occurredAt = '00:00:00')
     {
         // Find player
         $player = $this->findPlayer($playerId);
@@ -71,11 +71,27 @@ trait LiveScorePlayer
         }
     }
 
-    public function playerAssist(string $playerId, ?string $playerAssistToId = null, ?int $points = 0, ?array $location = null, ?string $occurredAt = '00:00:00')
+    public function playerAssist(int $playerId, ?int $playerAssistToId = null, ?int $points = 0, ?array $location = null, ?string $occurredAt = '00:00:00')
     {
         // Find player
         $player           = $this->findPlayer($playerId);
         $playerAssistedTo = $playerAssistToId ? $this->findPlayer($playerAssistToId) : null;
+
+        // If we don't have a player assisted to, try to find it by getting the last log message for this team
+        if (! $playerAssistedTo) {
+            $lastLog = GameLog::where('game_id', $this->game->id)->latest()->first();
+
+            // Only proceed if the team matches, and the score is 2 or 3
+            if ($lastLog && $lastLog->type === 'player_score' && $lastLog->team_id === $player->team?->id && $lastLog->amount > 1) {
+                $playerAssistedTo = $this->findPlayer($lastLog->player_id);
+
+                // Update the last log entry
+                $lastLog->update([
+                    'player_2_id'   => $player->id,
+                    'player_2_name' => $player->name
+                ]);
+            }
+        }
 
         // Check player
         if (! $this->checkPlayer($player) || ! $this->checkPlayer($playerAssistedTo)) {
@@ -83,6 +99,8 @@ trait LiveScorePlayer
         }
 
         if ($player) {
+
+            // Add the assist to log
             $log = $this->addLog([
                 'type'        => 'player_assist',
                 'subtype'     => 'ast',
@@ -103,7 +121,7 @@ trait LiveScorePlayer
         }
     }
 
-    public function playerBlock(string $playerId, ?string $playerBlockedId = null, ?array $location = null, ?string $occurredAt = '00:00:00')
+    public function playerBlock(int $playerId, ?int $playerBlockedId = null, ?array $location = null, ?string $occurredAt = '00:00:00')
     {
         // Find players
         $player        = $this->findPlayer($playerId);
@@ -131,7 +149,7 @@ trait LiveScorePlayer
         }
     }
 
-    public function playerFoul(string $playerId, string $subtype = 'pf', ?string $playerFouledId = null, ?array $location = null, ?string $occurredAt = '00:00:00')
+    public function playerFoul(int $playerId, string $subtype = 'pf', ?int $playerFouledId = null, ?array $location = null, ?string $occurredAt = '00:00:00')
     {
         // Find players
         $player        = $this->findPlayer($playerId);
@@ -164,7 +182,7 @@ trait LiveScorePlayer
         }
     }
 
-    public function playerRebound(string $playerId, string $subtype = 'reb', ?array $location = null, ?string $occurredAt = '00:00:00')
+    public function playerRebound(int $playerId, string $subtype = 'reb', ?array $location = null, ?string $occurredAt = '00:00:00')
     {
         // Find players
         $player = $this->findPlayer($playerId);
@@ -190,7 +208,7 @@ trait LiveScorePlayer
         }
     }
 
-    public function playerSteal(string $playerId, ?string $playerStolenId = null, ?array $location = null, ?string $occurredAt = '00:00:00')
+    public function playerSteal(int $playerId, ?int $playerStolenId = null, ?array $location = null, ?string $occurredAt = '00:00:00')
     {
         // Find players
         $player       = $this->findPlayer($playerId);
@@ -223,7 +241,7 @@ trait LiveScorePlayer
         }
     }
 
-    public function playerTurnover(string $playerId, ?array $location = null, $subtype = 'to', ?string $occurredAt = '00:00:00')
+    public function playerTurnover(int $playerId, ?array $location = null, $subtype = 'to', ?string $occurredAt = '00:00:00')
     {
         // Find players
         $player = $this->findPlayer($playerId);
@@ -363,7 +381,7 @@ trait LiveScorePlayer
         ]);
     }
 
-    public function findPlayer(string $playerId): ?Player
+    public function findPlayer(int $playerId): ?Player
     {
         return $this->players->where('id', $playerId)->first();
     }

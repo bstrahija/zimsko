@@ -8,6 +8,8 @@
 @import 'live/_score-top.css';
 @import 'live/_score-teams.css';
 @import 'live/_score-buttons.css';
+@import 'live/_action-wheel.css';
+@import 'live/_action-box.css';
 @import 'live/_log.css';
 
 /* Tailwind */

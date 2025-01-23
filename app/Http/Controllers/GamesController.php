@@ -36,6 +36,9 @@ class GamesController extends Controller
     public function live()
     {
         // Find live game and redirect to it
+        $game = Game::where('status', 'in_progress')->first();
+
+        return redirect()->route('games.live.show', $game->slug);
     }
 
     public function liveShow($slug)

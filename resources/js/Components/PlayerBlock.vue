@@ -10,14 +10,16 @@ defineProps({
 
 <template>
     <button
-        class="overflow-hidden relative h-full text-center text-white rounded border shadow-sm transition-all pointer-events-auto hover:opacity-90 hover:shadow-lg player-block aspect-square"
+        class="overflow-hidden relative h-full text-center text-white rounded border shadow-sm transition-all pointer-events-auto bg-black/90 hover:opacity-90 hover:shadow-lg player-block aspect-square"
         :class="{ 'active': active }">
         <div>
-            <div class="flex absolute top-1 left-1 z-40 justify-center items-center w-4 h-4 font-bold text-white rounded-full opacity-70 text-3xs bg-green-600/80">
+            <div
+                class="flex absolute top-1 left-1 z-40 justify-center items-center w-4 h-4 font-bold text-white rounded-full opacity-70 text-3xs bg-green-600/80 player-stat-indicator">
                 {{ player.stats.score }}
             </div>
 
-            <div class="flex absolute top-1 right-1 z-40 justify-center items-center w-4 h-4 font-bold text-white rounded-full opacity-70 text-3xs bg-red-600/80">
+            <div
+                class="flex absolute top-1 right-1 z-40 justify-center items-center w-4 h-4 font-bold text-white rounded-full opacity-70 text-3xs bg-red-600/80 player-stat-indicator">
                 {{ player.stats.fouls }}
             </div>
 

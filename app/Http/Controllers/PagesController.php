@@ -6,13 +6,18 @@ use App\Models\Event;
 use App\Models\Game;
 use App\Models\Post;
 use App\Services\Leaderboards;
-use App\Services\LiveScore;
-use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
 class PagesController extends Controller
 {
+    /**
+     * Displays the home page.
+     *
+     * This page displays the latest news, articles, games and leaderboards.
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
     public function index()
     {
         // Get data for home page

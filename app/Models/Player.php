@@ -150,6 +150,11 @@ class Player extends Model implements HasMedia
         return $this->belongsToMany(Team::class)->withPivot(['number', 'position']);
     }
 
+    public function getTeamAttribute()
+    {
+        return $this->teams()->first();
+    }
+
     public function photo($size = 'thumb')
     {
         return $this->getFirstMediaUrl('photos', $size);

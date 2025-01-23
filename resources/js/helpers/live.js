@@ -33,17 +33,20 @@ export default {
         }
     },
 
-    multiModal:  function (game, team, player) {
+    multiModal: function (game, team, player) {
         if (this.checkIfCanUpdateStats(game)) {
-            $vfm.show({ component: MultiModal, bind: {
-                game: game,
-                team: team,
-                playersOnCourt: this.playersOnCourt(game, team),
-                playersOnBench: this.playersOnBench(game, team),
-                opponentPlayers: this.opponentPlayers(game, team),
-                opponentPlayersOnCourt: this.opponentPlayersOnCourt(game, team),
-                player: player
-            } });
+            $vfm.show({
+                component: MultiModal,
+                bind: {
+                    game: game,
+                    team: team,
+                    playersOnCourt: this.playersOnCourt(game, team),
+                    playersOnBench: this.playersOnBench(game, team),
+                    opponentPlayers: this.opponentPlayers(game, team),
+                    opponentPlayersOnCourt: this.opponentPlayersOnCourt(game, team),
+                    player: player,
+                },
+            });
         }
     },
 
@@ -170,8 +173,8 @@ export default {
         });
     },
 
-    pluck: function(arr, key) {
-        return arr.map(i => i[key]);
+    pluck: function (arr, key) {
+        return arr.map((i) => i[key]);
     },
 
     __: function (str) {
