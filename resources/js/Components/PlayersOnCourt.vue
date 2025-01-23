@@ -24,6 +24,12 @@ const activePlayer = ref(null);
 
 const toggleIcons = (player, event) => {
     event.stopPropagation();
+
+    if (props.game.status !== 'in_progress') {
+        alert('Započnite utakmicu da bi upisivali statistiku!');
+        return;
+    }
+
     activePlayer.value = activePlayer.value === player ? null : player;
 };
 
@@ -49,6 +55,11 @@ onUnmounted(() => {
 
 const addStat = (stat, type) => {
     console.log(stat, type, activePlayer.value.id)
+
+    if (props.game.status !== 'in_progress') {
+        alert('Započnite utakmicu da bi upisivali statistiku!');
+        return;
+    }
 
     if (stat !== 'substitution') {
         let data = {
@@ -157,69 +168,5 @@ const addStat = (stat, type) => {
 
             <PlayerBlock :player="player" @click="(event) => toggleIcons(player, event)" class="relative z-20" />
         </div>
-
-        <!-- <div class="relative aspect-square action-wheel-container" v-for="player in players" :key="player.id"
-            :class="{ 'active-with-wheel': activePlayer === player, 'inactive-with-wheel': activePlayer !== player }">
-
-            <div class="action-wheel" v-if="activePlayer === player" :class="{ 'active': activePlayer === player }">
-                <button class="action-pos-1 hover:bg-green-500 bg-green-500/70">
-                    <strong>1</strong>
-                </button>
-
-                <button class="action-pos-2 hover:bg-green-500 bg-green-500/70">
-                    <strong>2</strong>
-                </button>
-
-                <button class="action-pos-3 hover:bg-green-500 bg-green-500/70">
-                    <strong>3</strong>
-                </button>
-
-                <button class="smaller action-pos-inner-1 hover:bg-rose-500 bg-rose-500/70">
-                    <strong>1</strong>
-                </button>
-
-                <button class="smaller action-pos-inner-2 hover:bg-rose-500 bg-rose-500/70">
-                    <strong>2</strong>
-                </button>
-
-                <button class="smaller action-pos-inner-3 hover:bg-rose-500 bg-rose-500/70">
-                    <strong>3</strong>
-                </button>
-
-                <button class="action-pos-4 hover:bg-purple-500 bg-purple-500/70">
-                    <IconRebound />
-                </button>
-
-                <button class="smaller action-pos-inner-4 hover:bg-sky-500 bg-sky-500/70">
-                    <IconSubstitution />
-                </button>
-
-                <button class="action-pos-5 hover:bg-amber-500 bg-amber-500/70">
-                    <IconRebound />
-                </button>
-
-                <button class="smaller action-pos-inner-5 hover:bg-purple-500 bg-purple-500/70">
-                    <IconBlock />
-                </button>
-
-                <button class="action-pos-6 hover:bg-rose-500 bg-rose-500/70">
-                    <IconTurnover />
-                </button>
-
-                <button class="action-pos-7 hover:bg-rose-500 bg-rose-500/70">
-                    <IconFoul />
-                </button>
-
-                <button class="action-pos-8 hover:bg-green-500 bg-green-500/70">
-                    <IconAssist />
-                </button>
-
-                <button class="action-pos-9 hover:bg-green-500 bg-green-500/70">
-                    <IconSteal />
-                </button>
-            </div>
-
-            <PlayerBlock :player="player" @click="(event) => toggleIcons(player, event)" class="relative z-20" />
-        </div> -->
     </div>
 </template>

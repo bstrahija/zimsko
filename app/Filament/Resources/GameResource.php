@@ -311,7 +311,7 @@ class GameResource extends Resource
         ];
 
         foreach ($teams as $location => $team) {
-            $players = $team->players;
+            $players = $team->activePlayers;
 
             if ($players->count() > 0) {
                 // Generate records for each player

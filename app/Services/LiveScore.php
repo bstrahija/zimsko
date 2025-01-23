@@ -392,12 +392,13 @@ class LiveScore
         ];
 
         // We need to adjust some data
+        // dd($data['game']);
         foreach (['home_starting_players', 'away_starting_players', 'home_players_on_court', 'away_players_on_court'] as $type) {
             if (isset($data['game'][$type]) && $data['game'][$type]) {
                 $players = [];
                 foreach ($data['game'][$type] as $key => $playerId) {
                     $player = $this->findPlayer($playerId);
-                    $players[$key] = $player->toArray();
+                    if ($player) $players[] = $player->toArray();
                 }
                 $data['game'][$type] = $players;
             } else {
