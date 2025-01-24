@@ -43,18 +43,21 @@ class PlayerResource extends Resource
                                 Forms\Components\TextInput::make('slug')
                                     ->hiddenOn(['create'])
                                     ->required(),
-                                TiptapEditor::make('body')
-                                    ->columnSpanFull(),
+                                // TiptapEditor::make('body')
+                                //     ->columnSpanFull(),
                             ]),
                         Forms\Components\Section::make('Meta')
                             ->columnSpan(4)
                             ->schema([
-                                Forms\Components\TextInput::make('status')
-                                    ->required(),
-                                Forms\Components\Select::make('position')
-                                    ->options(Player::POSITION_OPTIONS),
-                                Forms\Components\TextInput::make('number')
-                                    ->numeric(),
+                                // Forms\Components\TextInput::make('status')
+                                //     ->required(),
+                                Forms\Components\Placeholder::make('Position / Number')
+                                    ->content("Position and number are entered when assigning a player to a team"),
+                                // Position and number are entered when assigning to a team
+                                // Forms\Components\Select::make('position')
+                                //     ->options(Player::POSITION_OPTIONS),
+                                // Forms\Components\TextInput::make('number')
+                                //     ->numeric(),
                                 SpatieMediaLibraryFileUpload::make('photo')
                                     ->collection('photos'),
                                 Forms\Components\Select::make('team_id')
