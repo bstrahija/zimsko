@@ -40,6 +40,12 @@ trait LiveScoreStats
                 $team->setStats('technical_fouls',      $this->getTeamStat(team: $team, types: ['player_foul'], subtypes: ['tf'], method: 'count'));
                 $team->setStats('flagrant_fouls',       $this->getTeamStat(team: $team, types: ['player_foul'], subtypes: ['ff'], method: 'count'));
 
+                // Calculate the percentages
+                $team->setStats('free_throws_percent',  $team->statsData['free_throws']  ? round(($team->statsData['free_throws_made'] / $team->statsData['free_throws']) * 100, 2) : 0);
+                $team->setStats('two_points_percent',   $team->statsData['two_points']   ? round(($team->statsData['two_points_made'] / $team->statsData['two_points']) * 100, 2) : 0);
+                $team->setStats('three_points_percent', $team->statsData['three_points'] ? round(($team->statsData['three_points_made'] / $team->statsData['three_points']) * 100, 2) : 0);
+                $team->setStats('field_goals_percent',  $team->statsData['field_goals']  ? round(($team->statsData['field_goals_made'] / $team->statsData['field_goals']) * 100, 2) : 0);
+
                 // TODO: Add fouls for current quarter
                 $team->setStats('current_period_fouls', $this->log->where('team_id', $team->id)->where('period', $this->currentPeriod)->filter(function ($item) {
                     return $item->type === 'player_foul';
@@ -122,6 +128,12 @@ trait LiveScoreStats
             $player->setStats('personal_fouls',       $this->getPlayerStat(player: $player, types: ['player_foul'], subtypes: ['pf'], method: 'count'));
             $player->setStats('technical_fouls',      $this->getPlayerStat(player: $player, types: ['player_foul'], subtypes: ['tf'], method: 'count'));
             $player->setStats('flagrant_fouls',       $this->getPlayerStat(player: $player, types: ['player_foul'], subtypes: ['ff'], method: 'count'));
+
+            // Calculate the percentages
+            $player->setStats('free_throws_percent',  $player->statsData['free_throws']  ? round(($player->statsData['free_throws_made'] / $player->statsData['free_throws']) * 100, 2) : 0);
+            $player->setStats('two_points_percent',   $player->statsData['two_points']   ? round(($player->statsData['two_points_made'] / $player->statsData['two_points']) * 100, 2) : 0);
+            $player->setStats('three_points_percent', $player->statsData['three_points'] ? round(($player->statsData['three_points_made'] / $player->statsData['three_points']) * 100, 2) : 0);
+            $player->setStats('field_goals_percent',  $player->statsData['field_goals']  ? round(($player->statsData['field_goals_made'] / $player->statsData['field_goals']) * 100, 2) : 0);
 
             // Calculate the efficiency
             $efficiency = 0; // ($team->stats['score'] + $team->stats['rebounds'] + $team->stats['assists'] + $team->stats['steals'] + $team->stats['blocks'] − (($team->stats['field_goals'] − $team->stats['field_goals_missed']) + ($team->stats['free_throws'] − $team->stats['free_throws_missed']) + $team->stats['turnovers']));

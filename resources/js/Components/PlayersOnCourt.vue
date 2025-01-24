@@ -63,6 +63,7 @@ const addStat = (stat, type) => {
 
     if (stat !== 'substitution') {
         let data = {
+            teamId: props.team.id,
             selectedPlayer: activePlayer.value,
             action: stat,
             type: type

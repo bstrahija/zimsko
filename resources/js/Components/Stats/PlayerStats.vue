@@ -34,39 +34,51 @@ const getSortedPlayers = () => {
     }
 
     if (type.value === 'assists') {
-        return players.value.sort((a, b) => {
-            return (b.stats?.assists || 0) - (a.stats?.assists || 0);
-        }).slice(0, playerCount);
+        return players.value
+            .filter(player => player.stats?.assists > 0)
+            .sort((a, b) => {
+                return (b.stats?.assists || 0) - (a.stats?.assists || 0);
+            }).slice(0, playerCount);
     }
 
     if (type.value === 'steals') {
-        return players.value.sort((a, b) => {
-            return (b.stats?.steals || 0) - (a.stats?.steals || 0);
-        }).slice(0, playerCount);
+        return players.value
+            .filter(player => player.stats?.steals > 0)
+            .sort((a, b) => {
+                return (b.stats?.steals || 0) - (a.stats?.steals || 0);
+            }).slice(0, playerCount);
     }
 
     if (type.value === 'rebounds') {
-        return players.value.sort((a, b) => {
-            return (b.stats?.rebounds || 0) - (a.stats?.rebounds || 0);
-        }).slice(0, playerCount);
+        return players.value
+            .filter(player => player.stats?.rebounds > 0)
+            .sort((a, b) => {
+                return (b.stats?.rebounds || 0) - (a.stats?.rebounds || 0);
+            }).slice(0, playerCount);
     }
 
     if (type.value === 'blocks') {
-        return players.value.sort((a, b) => {
-            return (b.stats?.blocks || 0) - (a.stats?.blocks || 0);
-        }).slice(0, playerCount);
+        return players.value
+            .filter(player => player.stats?.blocks > 0)
+            .sort((a, b) => {
+                return (b.stats?.blocks || 0) - (a.stats?.blocks || 0);
+            }).slice(0, playerCount);
     }
 
     if (type.value === 'turnovers') {
-        return players.value.sort((a, b) => {
-            return (b.stats?.turnovers || 0) - (a.stats?.turnovers || 0);
-        }).slice(0, playerCount);
+        return players.value
+            .filter(player => player.stats?.turnovers > 0)
+            .sort((a, b) => {
+                return (b.stats?.turnovers || 0) - (a.stats?.turnovers || 0);
+            }).slice(0, playerCount);
     }
 
     if (type.value === 'fouls') {
-        return players.value.sort((a, b) => {
-            return (b.stats?.fouls || 0) - (a.stats?.fouls || 0);
-        }).slice(0, playerCount);
+        return players.value
+            .filter(player => player.stats?.fouls > 0)
+            .sort((a, b) => {
+                return (b.stats?.fouls || 0) - (a.stats?.fouls || 0);
+            }).slice(0, playerCount);
     }
 
     if (type.value === 'efficiency') {
@@ -82,6 +94,10 @@ const getSortedPlayers = () => {
 
 <template>
     <div>
+        <!-- <p><small>
+                <pre>{{ players }}</pre>
+            </small></p> -->
+
         <table class="overflow-hidden w-full text-sm text-gray-300 rounded-lg border shadow-lg bg-slate-800/60 border-cyan-400/30">
             <thead>
                 <tr class="bg-slate-700/50">
@@ -117,7 +133,15 @@ const getSortedPlayers = () => {
                 </tr>
             </thead>
             <tbody class="text-[14px]">
-                <tr v-for="player in getSortedPlayers()" :key="player.id" class="border-t transition-colors duration-200 border-slate-700/50 hover:bg-slate-700/30">
+                <tr v-if="!getSortedPlayers().length">
+                    <td colspan="15">
+                        <div class="p-4 text-sm text-yellow-300 rounded-lg bg-yellow-900/50">
+                            <p class="text-center">Nema dostupnih podataka za prikaz.</p>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr v-else v-for="player in getSortedPlayers()" :key="player.id" class="border-t transition-colors duration-200 border-slate-700/50 hover:bg-slate-700/30">
                     <td class="px-4 py-4 w-1" width="1%">{{ player.number }}</td>
                     <td class="px-4 py-4">
                         <div class="flex gap-3 items-center">

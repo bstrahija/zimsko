@@ -508,9 +508,9 @@ class LiveController extends Controller
 
     public function resetGame(Game $game, Request $request)
     {
-        // Find the player
         Log::debug("Resetting game. Game: {$game->id}", ['section' => 'LIVE', 'game_id' => $game->id]);
 
+        // Reset all stats and scores, delete log
         $this->live($game)->resetGame();
 
         // Sync with game
@@ -518,14 +518,6 @@ class LiveController extends Controller
 
         // Clear the cache
         Cache::clear();
-
-        LiveScoreUpdated::dispatch('resetGame', [
-            'gameId'    => $game->id,
-            'homeTeam'  => $game->homeTeam->title,
-            'awayTeam'  => $game->awayTeam->title,
-            'homeScore' => $game->home_score,
-            'awayScore' => $game->away_score,
-        ]);
 
         return to_route('live.players', $game->id);
     }
@@ -561,8 +553,6 @@ class LiveController extends Controller
 
     public function syncGame(Game $game): Game
     {
-        $live = $this->live($game);
-
         // Sync live game periods
         foreach (range(1, 10) as $period) {
             $homeScore = GameLog::where('game_id', $game->id)->where('type', 'LIKE', 'player_score%')->where('period', $period)->where('team_side', 'home')->sum('amount');

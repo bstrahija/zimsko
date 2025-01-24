@@ -82,7 +82,7 @@ trait LiveScorePlayer
             $lastLog = GameLog::where('game_id', $this->game->id)->latest()->first();
 
             // Only proceed if the team matches, and the score is 2 or 3
-            if ($lastLog && $lastLog->type === 'player_score' && $lastLog->team_id === $player->team?->id && $lastLog->amount > 1) {
+            if ($lastLog && $lastLog->type === 'player_score' && $player->teams->pluck('id')->contains($lastLog->team_id) && $lastLog->amount > 1) {
                 $playerAssistedTo = $this->findPlayer($lastLog->player_id);
 
                 // Update the last log entry
