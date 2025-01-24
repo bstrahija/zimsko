@@ -53,23 +53,23 @@ const showStats = function () {
 
 <template>
     <div class="grid gap-2">
-        <button class="btn btn-secondary text-2xs md:text-xs" @click="nextPeriod" v-if="game.status === 'in_progress'">
+        <button class="btn btn-secondary text-3xs md:text-2xs xl:text-xs" @click="nextPeriod" v-if="game.status === 'in_progress'">
             Slijedeći period
         </button>
 
-        <button class="btn btn-error text-2xs md:text-xs" @click="endGame" v-if="game.status === 'in_progress'">
+        <button class="btn btn-error text-3xs md:text-2xs xl:text-xs" @click="endGame" v-if="game.status === 'in_progress'">
             Završi utakmicu
         </button>
 
-        <button class="btn btn-secondary text-2xs md:text-xs" @click="startGame" v-if="game.status !== 'in_progress' && game.status !== 'ended'">
+        <button class="btn btn-secondary text-3xs md:text-2xs xl:text-xs" @click="startGame" v-if="game.status !== 'in_progress' && game.status !== 'ended'">
             Započni utakmicu
         </button>
 
-        <button class="btn btn-error text-2xs md:text-xs" @click="backToPlayers" v-if="game.status !== 'in_progress' && game.status !== 'ended'">
+        <button class="btn btn-error text-3xs md:text-2xs xl:text-xs" @click="backToPlayers" v-if="game.status !== 'in_progress' && game.status !== 'ended'">
             Natrag
         </button>
 
-        <button class="btn btn-primary text-2xs md:text-xs" @click="showStats" v-if="game.status !== 'scheduled'">
+        <button class="btn btn-primary text-3xs md:text-2xs xl:text-xs" @click="showStats" v-if="game.status !== 'scheduled'">
             Statistika
         </button>
     </div>

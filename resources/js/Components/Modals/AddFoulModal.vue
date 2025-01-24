@@ -34,6 +34,7 @@ const { game, type } = toRefs(props);
 const data = reactive({
     selectedPlayer: null,
     selectedOtherPlayer: null,
+    teamId: props.team.id,
     type: 'pf',
 });
 
@@ -51,6 +52,10 @@ const save = async function () {
 };
 
 function canBeSaved() {
+    if (data.type === 'tf') {
+        return true;
+    }
+
     return data.selectedPlayer && data.type;
 }
 

@@ -397,11 +397,19 @@ class LiveController extends Controller
     {
         // Find the player
         $playerId       = $request->input('selectedPlayer') ?  $request->input('selectedPlayer')['id'] : null;
+        $teamId         = $request->input('teamId') ?: null;
         $fouledPlayerId = $request->input('selectedFouledPlayer') ?  $request->input('selectedFouledPlayer')['id'] : null;
         $type           = request('type') ?: 'pf';
-        Log::debug("Adding foul. Game: {$game->id}, Player: {$playerId}, Player fouled: {$fouledPlayerId}, Type: {$type}", ['section' => 'LIVE', 'game_id' => $game->id, 'player_id' => $playerId]);
 
-        $this->live($game)->playerFoul(playerId: $playerId, subtype: $type, playerFouledId: $fouledPlayerId);
+        if ($type === 'tf' && ! $playerId && $teamId) {
+            Log::debug("Adding team technical foul. Game: {$game->id}, Team: {$teamId}", ['section' => 'LIVE', 'game_id' => $game->id, 'player_id' => $playerId]);
+
+            $this->live($game)->teamTechnicalFoul(teamId: $teamId);
+        } else {
+            Log::debug("Adding foul. Game: {$game->id}, Player: {$playerId}, Player fouled: {$fouledPlayerId}, Type: {$type}", ['section' => 'LIVE', 'game_id' => $game->id, 'player_id' => $playerId]);
+
+            $this->live($game)->playerFoul(playerId: $playerId, subtype: $type, playerFouledId: $fouledPlayerId);
+        }
 
         LiveScoreUpdated::dispatch('addFoul');
     }

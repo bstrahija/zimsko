@@ -182,6 +182,24 @@ trait LiveScorePlayer
         }
     }
 
+    public function teamTechnicalFoul(int $teamId, ?array $location = null, ?string $occurredAt = '00:00:00')
+    {
+        if ($teamId) {
+            $log = $this->addLog([
+                'type'            => 'team_technical',
+                'subtype'         => 'tf', // can be pf (personal), tf (technical) or ff (flagrant)
+                'team_id'         => $teamId,
+                'amount'          => 1,
+                'period'          => $this->currentPeriod,
+                'location'        => $location,
+                'occurred_at'     => $occurredAt,
+            ]);
+
+            // Now update the score
+            $this->updateLiveStats(log: $log);
+        }
+    }
+
     public function playerRebound(int $playerId, string $subtype = 'reb', ?array $location = null, ?string $occurredAt = '00:00:00')
     {
         // Find players

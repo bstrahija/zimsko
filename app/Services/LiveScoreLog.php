@@ -88,6 +88,7 @@ trait LiveScoreLog
                 else if ($log->type === 'player_rebound')           $message = $this->logMessageForPlayerRebound($log);
                 else if ($log->type === 'player_steal')             $message = $this->logMessageForPlayerSteal($log);
                 else if ($log->type === 'player_turnover')          $message = $this->logMessageForPlayerTurnover($log);
+                else if ($log->type === 'team_technical')           $message = $this->logMessageForTeamTechnical($log);
                 else if ($log->type === 'substitution')             $message = $this->logMessageForPlayerSubstitution($log);
                 else if ($log->type === 'timeout')                  $message = 'Pozvan timeout: ' . $log->team_name;
                 else                                                $message = $log->type;
@@ -185,6 +186,11 @@ trait LiveScoreLog
         }
 
         return $message;
+    }
+
+    public function logMessageForTeamTechnical(GameLog $log): string
+    {
+        return $message = 'Tehnička dosuđena: ' . $log->team_name;
     }
 
     public function logMessageForPlayerBlock(GameLog $log): string
