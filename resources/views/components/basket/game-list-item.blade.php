@@ -1,4 +1,4 @@
-<div class="pb-4 mb-6 border-b">
+<div class="pb-4 mb-6">
     <div class="mb-4 text-sm text-center uppercase font-roboto text-secondary">
         <span class="font-bold">
             @if ($game->round->type === 'finals')

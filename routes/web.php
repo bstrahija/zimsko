@@ -27,6 +27,7 @@ Route::get('ekipe/{team}', [TeamsController::class, 'show'])->name('teams.show')
 Route::get('igraci/{player}', [PlayersController::class, 'show'])->name('players.show');
 Route::get('galerije', [GalleriesController::class, 'index'])->name('galleries');
 Route::get('galerije/{gallery}', [GalleriesController::class, 'show'])->name('galleries.show');
+Route::get('globetka', [PagesController::class, 'globetka'])->name('globetka');
 
 /**
  * Concepts (delete later)

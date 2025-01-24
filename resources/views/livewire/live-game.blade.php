@@ -39,19 +39,19 @@
             <div class="w-full">
                 <div class="mt-4">
                     <div class="grid grid-cols-2 gap-2 text-sm text-center sm:grid-cols-4 sm:gap-4">
-                        <div class="p-2 bg-gray-100 rounded-md">
+                        <div class="p-2 bg-gray-100 rounded-md border-t-4 {{ $game->period === 1 ? 'border-primary' : 'border-gray-200 opacity-60' }}">
                             <div class="font-semibold">Q1</div>
                             <div>{{ $game->home_score_p1 }} - {{ $game->away_score_p1 }}</div>
                         </div>
-                        <div class="p-2 bg-gray-100 rounded-md">
+                        <div class="p-2 bg-gray-100 rounded-md border-t-4 {{ $game->period === 2 ? 'border-primary' : 'border-gray-400 opacity-60' }}">
                             <div class="font-semibold">Q2</div>
                             <div>{{ $game->home_score_p2 }} - {{ $game->away_score_p2 }}</div>
                         </div>
-                        <div class="p-2 bg-gray-100 rounded-md">
+                        <div class="p-2 bg-gray-100 rounded-md border-t-4 {{ $game->period === 3 ? 'border-primary' : 'border-gray-400 opacity-60' }}">
                             <div class="font-semibold">Q3</div>
                             <div>{{ $game->home_score_p3 }} - {{ $game->away_score_p3 }}</div>
                         </div>
-                        <div class="p-2 bg-gray-100 rounded-md">
+                        <div class="p-2 bg-gray-100 rounded-md border-t-4 {{ $game->period === 4 ? 'border-primary' : 'border-gray-400 opacity-60' }}">
                             <div class="font-semibold">Q4</div>
                             <div>{{ $game->home_score_p4 }} - {{ $game->away_score_p4 }}</div>
                         </div>

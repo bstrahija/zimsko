@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Event;
 use App\Models\Game;
 use App\Models\Post;
+use App\Models\Team;
 use App\Services\Leaderboards;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
@@ -71,5 +72,19 @@ class PagesController extends Controller
     public function contactSubmit(Request $request)
     {
         return back()->with('success', 'Poruka je poslana!');
+    }
+
+    public function globetka()
+    {
+        $team = Team::where('slug', 'kk-globetka-cakovec')->firstOrfail();
+
+        // Gel all globetka games
+        $games = Game::where('home_team_id', $team->id)
+            ->orWhere('away_team_id', $team->id)
+            ->paginate(100);
+
+        return view('globetka.index', [
+            'games' => $games,
+        ]);
     }
 }

@@ -539,6 +539,8 @@ class LiveController extends Controller
         $this->live($log->game)->updateLiveStats();
 
         $this->syncGame($log->game);
+
+        LiveScoreUpdated::dispatch('deleteLog', []);
     }
 
     // public function update(Game $game)
