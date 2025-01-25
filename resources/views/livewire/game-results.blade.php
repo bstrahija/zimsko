@@ -33,7 +33,7 @@
                 <x-ui.card>
                     <div x-data="{ open: false }">
                         <div>
-                            <a href="{{ route('results.show', $game->slug) }}" class="block mb-2 text-sm text-gray-500 transition-all hover:text-primary">
+                            <a href="{{ route('games.show', $game->slug) }}" class="block mb-2 text-sm text-gray-500 transition-all hover:text-primary">
                                 <h2 class="mb-1 font-bold text-center">{{ $game->title }}</h2>
                                 <small class="block text-center">{{ $game->scheduled_at->format('d.m.Y. H:i') }}</small>
                             </a>
@@ -45,12 +45,12 @@
                                     <img src="{{ $game->homeTeam->logo() }}" class="object-contain rounded-full shadow-md size-10 md:size-16 sm:w-20 sm:h-20"
                                         alt="{{ $game->homeTeam->title }}">
                                 </a>
-                                <a href="{{ route('teams.show', $game->homeTeam->slug) }}"
+                                <a href="{{ route('games.show', $game->homeTeam->slug) }}"
                                     class="text-base font-bold text-center text-gray-700 transition hover:text-primary sm:text-lg">{{ $game->homeTeam->title }}</a>
                             </div>
 
                             <div class="pt-3 text-center">
-                                <a href="{{ route('results.show', $game->slug) }}" class="block mb-6 text-lg font-bold md:mb-2 md:text-3xl sm:text-4xl">
+                                <a href="{{ route('games.show', $game->slug) }}" class="block mb-6 text-lg font-bold md:mb-2 md:text-3xl sm:text-4xl">
                                     <span class="{{ $game->home_score > $game->away_score ? 'text-primary' : 'text-gray-500' }}">{{ $game->home_score }}</span>
                                     <span class="text-gray-400 md:mx-2">:</span>
                                     <span class="{{ $game->away_score > $game->home_score ? 'text-primary' : 'text-gray-500' }}">{{ $game->away_score }}</span>
@@ -124,11 +124,11 @@
                             </div>
 
                             <div class="flex flex-col items-center mb-4 sm:order-first sm:w-2/4 sm:mb-0">
-                                <a href="{{ route('results.show', $game->slug) }}" class="block mb-2 text-sm text-gray-500">
+                                <a href="{{ route('games.show', $game->slug) }}" class="block mb-2 text-sm text-gray-500">
                                     <h2 class="mb-1 font-bold text-center">{{ $game->title }}</h2>
                                     <small class="block text-center">{{ $game->scheduled_at->format('d.m.Y. H:i') }}</small>
                                 </a>
-                                <a href="{{ route('results.show', $game->slug) }}" class="block mb-2 text-3xl font-bold sm:text-4xl">
+                                <a href="{{ route('games.show', $game->slug) }}" class="block mb-2 text-3xl font-bold sm:text-4xl">
                                     <span class="{{ $game->home_score > $game->away_score ? 'text-primary' : 'text-gray-500' }}">{{ $game->home_score }}</span>
                                     <span class="mx-2 text-gray-400">-</span>
                                     <span class="{{ $game->away_score > $game->home_score ? 'text-primary' : 'text-gray-500' }}">{{ $game->away_score }}</span>

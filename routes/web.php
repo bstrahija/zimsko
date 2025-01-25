@@ -18,7 +18,7 @@ Route::redirect('login', 'admin/login')->name('login');
 Route::get('novosti', [PostsController::class, 'index'])->name('news');
 Route::get('novosti/{slug}', [PostsController::class, 'show'])->name('news.show');
 Route::get('rezultati', [GamesController::class, 'results'])->name('results');
-Route::get('rezultati/{slug}', [GamesController::class, 'show'])->name('results.show');
+Route::get('utakmice/{slug}', [GamesController::class, 'show'])->name('games.show');
 Route::get('raspored', [GamesController::class, 'schedule'])->name('schedule');
 Route::get('uzivo', [GamesController::class, 'live'])->name('games.live');
 Route::get('uzivo/{slug}', [GamesController::class, 'liveShow'])->name('games.live.show');

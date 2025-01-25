@@ -1,13 +1,13 @@
 <div class="pb-4 mb-6">
     <div class="mb-4 text-sm text-center uppercase font-roboto text-secondary">
         <span class="font-bold">
-            @if ($game->round->type === 'finals')
+            @if ($game?->round?->type === 'finals')
                 🏆
-            @elseif ($game->round->type === 'placing' && $game->round->subtype === '3rd')
+            @elseif ($game?->round?->type === 'placing' && $game?->round?->subtype === '3rd')
                 🥉
             @endif
 
-            {{ $game->round->title }}
+            {{ $game?->round?->title }}
         </span>
         <small>({{ $game->scheduled_at->format('d.m.Y H:i') }})</small>
     </div>
@@ -20,7 +20,7 @@
         </div>
     @endif
 
-    <a href="{{ route('results.show', $game->slug) }}"
+    <a href="{{ route('games.show', $game->slug) }}"
         class="game-list__item grid grid-cols-[33%_auto_33%] max-w-full overflow-hidden md:grid-cols-[36%_auto_36%] gap-3 font-condensed hover:scale-105 transition-all relative">
 
         <div class="flex flex-col gap-4 items-center text-center md:flex-row">

@@ -29,7 +29,7 @@
                                                 class="text-base font-bold text-center text-gray-700 transition hover:text-primary sm:text-lg">{{ $game->homeTeam->title }}</a>
                                         </div>
 
-                                        <div class="flex flex-col items-center mb-4 sm:w-2/4 sm:mb-0">
+                                        <a href="{{ route('games.show', $game->slug) }}" class="flex flex-col items-center mb-4 sm:w-2/4 sm:mb-0">
                                             <div class="mb-2 text-sm text-gray-500">
                                                 <h2 class="mb-1 font-bold text-center">{{ $game->title }}</h2>
                                                 <small class="block text-center">{{ $game->scheduled_at->format('d.m.Y. H:i') }}</small>
@@ -39,7 +39,7 @@
                                                 <span class="mx-2 text-gray-400">-</span>
                                                 <span class="text-gray-500">0</span>
                                             </div>
-                                        </div>
+                                        </a>
 
                                         <div class="flex flex-col items-center sm:w-1/4">
                                             <a href="{{ route('teams.show', $game->awayTeam->slug) }}" class="mb-2">

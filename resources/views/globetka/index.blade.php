@@ -14,7 +14,7 @@
                     @else
                         @foreach ($games as $game)
                             <x-ui.card>
-                                <livewire:game-item :game="$game" />
+                                <x-basket.game-list-item :game="$game" />
                             </x-ui.card>
                         @endforeach
                     @endif
