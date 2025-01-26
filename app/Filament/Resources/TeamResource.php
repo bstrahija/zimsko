@@ -60,6 +60,8 @@ class TeamResource extends Resource
                     ->searchable(['first_name', 'last_name']),
                 SpatieMediaLibraryFileUpload::make('logo')
                     ->collection('logos'),
+                SpatieMediaLibraryFileUpload::make('photo')
+                    ->collection('photos'),
             ]);
     }
 
