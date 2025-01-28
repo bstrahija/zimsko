@@ -13,6 +13,8 @@ class LiveGame extends Component
 
     public $log;
 
+    public $live;
+
     public $slug;
 
     // Special Syntax: ['echo:{channel},{event}' => '{method}']
@@ -27,13 +29,29 @@ class LiveGame extends Component
     public function loadGame()
     {
         $this->game = Game::where('slug', $this->slug)->first();
-        $live = new LiveScore($this->game);
-        $this->log = $live->logStream();
+        $live       = new LiveScore($this->game);
+        $this->live = $live->toData()['game'];
+        $this->log  = $live->logStream();
     }
 
     public function updateLiveScore()
     {
         $this->loadGame();
+    }
+
+    public function getSortedPlayerStats(string $type)
+    {
+        $players = array_merge($this->live['home_players'], $this->live['away_players']);
+
+        $sorted = collect($players)
+            ->sortByDesc(function ($player) use ($type) {
+                return $player['stats'][$type] ?? 0;
+            })
+            ->take(15)
+            ->values()
+            ->all();
+
+        return $sorted;
     }
 
     public function render()
