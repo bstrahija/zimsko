@@ -32,8 +32,8 @@ defineProps({
             </small>
         </div>
 
-        <div v-if="player?.data?.photo" class="absolute inset-0 z-10 opacity-20">
-            <img :src="player.data.photo" alt="" class="object-cover w-full h-full">
+        <div v-if="player?.photo" class="absolute inset-0 z-10 opacity-20">
+            <img :src="player.photo" alt="" class="object-cover w-full h-full">
         </div>
     </button>
 </template>

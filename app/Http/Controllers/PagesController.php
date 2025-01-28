@@ -81,6 +81,7 @@ class PagesController extends Controller
         // Gel all globetka games
         $games = Game::where('home_team_id', $team->id)
             ->orWhere('away_team_id', $team->id)
+            ->orderBy('scheduled_at', 'desc')
             ->paginate(100);
 
         return view('globetka.index', [

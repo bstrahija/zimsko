@@ -139,7 +139,6 @@ class Player extends Model implements HasMedia
     {
         $team = Team::with('players')->find($teamId);
 
-
         return $team->players()->where('number', $number)->first();
     }
 
@@ -197,5 +196,19 @@ class Player extends Model implements HasMedia
     public function setStats($key, $value)
     {
         $this->statsData[$key] = $value;
+    }
+
+    /**
+     * Convert the model instance to an array.
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        $player = parent::toArray();
+
+        $player['photo'] = $this->photo();
+
+        return $player;
     }
 }

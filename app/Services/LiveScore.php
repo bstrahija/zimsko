@@ -113,7 +113,7 @@ class LiveScore
             }
         }
 
-        // // Add players to required collections
+        // Add players to required collections
         $this->getPlayersBySide('home');
         $this->getPlayersBySide('away');
 
@@ -415,7 +415,6 @@ class LiveScore
         ];
 
         // We need to adjust some data
-        // dd($data['game']);
         foreach (['home_starting_players', 'away_starting_players', 'home_players_on_court', 'away_players_on_court'] as $type) {
             if (isset($data['game'][$type]) && $data['game'][$type]) {
                 $players = [];
@@ -443,8 +442,11 @@ class LiveScore
         unset($data['game']['home_team']['players']);
         unset($data['game']['away_team']['players']);
 
-        // TODO: Optimize the response, we don't need all the properties
+        return $this->optimizeData($data);
+    }
 
+    public function optimizeData(array $data): array
+    {
         return $data;
     }
 
@@ -469,12 +471,10 @@ class LiveScore
             'awayTeam',
             'homeTeam.media',
             'awayTeam.media',
-            'homeTeam.players',
-            'homeTeam.players.media',
-            'awayTeam.players',
-            'awayTeam.players.media',
-            'players',
-            'players.media',
+            'homeTeam.activePlayers',
+            'homeTeam.activePlayers.media',
+            'awayTeam.activePlayers',
+            'awayTeam.activePlayers.media',
             'referees',
             'referees.media',
         ];
