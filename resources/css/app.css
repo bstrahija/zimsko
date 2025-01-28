@@ -1,4 +1,4 @@
-@import url(https://fonts.bunny.net/css?family=oswald:200,300,400,500,600,700|roboto:200,300,500,800,900|roboto-condensed:200,300,400,500,600,700,800,900);
+@import url(https://fonts.bunny.net/css?family=oswald:200,300,400,500,600,700|roboto:300,400,500,700,900|roboto-condensed:200,300,400,500,600,700,800,900);
 
 /* @import url(https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap); */
 @import 'site/_responsive.css';
@@ -8,8 +8,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-
 
 html,
 body {
@@ -33,6 +31,6 @@ body {
     display: none !important;
 }
 
-.wrapper{
+.wrapper {
     @apply px-4 mx-auto md:px-8 lg:px-16 max-w-[1800px];
 }

@@ -5,3 +5,8 @@
 <li><x-navigation.link href="https://www.facebook.com/ZimskoPrvenstvoCK/photos_albums" target="_blank">Galerije</x-navigation.link></li>
 <!-- <li><x-navigation.link href="{{ route('history') }}">Povijest</x-navigation.link></li> -->
 <li><x-navigation.link href="{{ route('contact') }}">Kontakt</x-navigation.link></li>
+
+@if (auth()->check())
+    <li class="pt-4 border-t border-secondary/40 md:hidden"><x-navigation.link href="{{ url('admin') }}">Admin</x-navigation.link></li>
+    <li class="md:hidden"><x-navigation.link href="{{ url('live') }}">Live</x-navigation.link></li>
+@endif

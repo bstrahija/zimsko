@@ -98,6 +98,7 @@
             <a href="{{ route('teams') }}" class="transition-all hover:text-primary">Ekipe</a>
             <a href="{{ route('galleries') }}" class="transition-all hover:text-primary">Galerije</a>
             <a href="{{ route('history') }}" class="transition-all hover:text-primary">Povijest</a>
+            <a href="{{ url('admin') }}" class="transition-all hover:text-primary">Login</a>
             <a href="{{ route('contact') }}" class="transition-all hover:text-primary">Kontakt</a>
         </div>
     </div>
