@@ -147,14 +147,73 @@ class Player extends Model implements HasMedia
         return $this->belongsToMany(Team::class)->withPivot(['number', 'position', 'is_active']);
     }
 
+    public function games(): BelongsToMany
+    {
+        return $this->belongsToMany(Game::class);
+    }
+
     public function getTeamAttribute()
     {
         return $this->teams()->first();
     }
 
+    public function lastGame(): ?Game
+    {
+        return $this->games()->orderBy('scheduled_at', 'desc')->first();
+    }
+
     public function photo($size = 'thumb')
     {
         return $this->getFirstMediaUrl('photos', $size);
+    }
+
+    public function gameCount(Event $event = null): int
+    {
+        if ($event) {
+            return GamePlayer::query()->where('player_id', $this->id)->where('event_id', $event->id)->count();
+        }
+
+        return GamePlayer::query()->where('player_id', $this->id)->count();
+    }
+
+    public function gameCountCurrent(): int
+    {
+        return $this->gameCount(Event::current());
+    }
+
+    public function points(Event $event = null): int
+    {
+        $where = [
+            'for' => 'player',
+            'type' => 'total',
+            'player_id' => $this->id
+        ];
+
+        if ($event) {
+            $where['event_id'] = $event->id;
+        }
+
+        $stats = Stat::where($where)->first();
+
+        return $stats ? $stats->score : 0;
+    }
+
+    public function pointsCurrent(): int
+    {
+        return $this->points(Event::current());
+    }
+
+    public function pointsAverage(Event $event = null): float
+    {
+        $points = $this->points($event);
+        $games = $this->gameCount($event);
+
+        return $games ? round($points / $games, 1) : 0;
+    }
+
+    public function pointsAverageCurrent(): float
+    {
+        return $this->pointsAverage(Event::current());
     }
 
     public function registerMediaCollections(): void

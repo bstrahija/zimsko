@@ -3,6 +3,28 @@ import './bootstrap';
 import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
 import { getSlider } from 'simple-slider';
+import PhotoSwipeLightbox from 'photoswipe/lightbox';
+
+import 'photoswipe/style.css';
+
+function initLightbox() {
+    const lightbox = new PhotoSwipeLightbox({
+        gallery: '#app',
+        children: '.lightbox',
+        showHideAnimationType: 'fade',
+        pswpModule: () => import('photoswipe'),
+    });
+    lightbox.init();
+}
+
+window.addEventListener('livewire:navigated', (e) => {
+    initLightbox();
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    initLightbox();
+    document.body.removeAttribute('x-cloak');
+});
 
 getSlider({
     transitionTime: 1,

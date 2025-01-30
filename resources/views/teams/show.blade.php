@@ -30,10 +30,10 @@
                                 @foreach ($team->activePlayers as $player)
                                     <tr class="hover:bg-gray-100">
                                         <td class="px-2 py-3">
-                                            <div class="flex items-center">
+                                            <a href="{{ route('teams.players.show', $player->slug) }}" class="flex items-center">
                                                 <img src="{{ $player->photo() ?: $team->logo() }}" alt="{{ $player->name }}" class="mr-3 w-8 h-8 rounded-full">
                                                 <span class="font-medium text-gray-900">{{ $player->name }}</span>
-                                            </div>
+                                            </a>
                                         </td>
                                         <td class="px-2 py-3 text-right text-gray-500">{{ $player->number }}</td>
                                         <td class="px-2 py-3 text-right text-gray-500">{{ strtoupper($player->position) }}</td>
@@ -47,7 +47,10 @@
 
             <x-sidebar class="md:col-span-12 lg:col-span-4">
                 <x-ui.card class="mb-8">
-                    <a href="{{ $team->photo('original') }}" target="_blank"><img src="{{ $team->photo('original') }}" alt="{{ $team->title }}" class="w-full"></a>
+                    <a href="{{ $team->photo('original') }}" target="_blank" class="lightbox" data-pswp-width="{{ $team->photoSize('w') }}"
+                        data-pswp-height="{{ $team->photoSize('h') }}">
+                        <img src="{{ $team->photo('original') }}" alt="{{ $team->title }}" class="w-full">
+                    </a>
                 </x-ui.card>
             </x-sidebar>
         </div>

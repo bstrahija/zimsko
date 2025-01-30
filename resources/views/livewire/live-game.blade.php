@@ -190,7 +190,7 @@
 
                     <div>
                         @if ($item['period'] <= 4)
-                            Četrtina: {{ $item['period'] }}
+                            Četvrtina: {{ $item['period'] }}
                         @else
                             Produžetak: {{ $item['period'] - 4 }}
                         @endif

@@ -135,6 +135,26 @@ class Team extends Model implements HasMedia
         return $this->getFirstMediaUrl('photos', $size);
     }
 
+    public function photoSize($dir = null)
+    {
+        if (file_exists($this->getFirstMedia('photos')?->getPath())) {
+            $imageInstance = \Spatie\MediaLibrary\Support\ImageFactory::load($this->getFirstMedia('photos')?->getPath());
+        } else {
+            $imageInstance = null;
+        }
+
+        if ($dir === 'w') {
+            return $imageInstance ? $imageInstance->getWidth() : 1280;
+        } elseif ($dir === 'h') {
+            return $imageInstance ? $imageInstance->getHeight() : 720;
+        }
+
+        return [
+            'w' => $imageInstance ? $imageInstance->getWidth() : 1280,
+            'h' => $imageInstance ? $imageInstance->getHeight() : 720,
+        ];
+    }
+
     public function stats(): Attribute
     {
         return new Attribute(

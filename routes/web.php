@@ -24,7 +24,7 @@ Route::get('uzivo', [GamesController::class, 'live'])->name('games.live');
 Route::get('uzivo/{slug}', [GamesController::class, 'liveShow'])->name('games.live.show');
 Route::get('ekipe', [TeamsController::class, 'index'])->name('teams');
 Route::get('ekipe/{team}', [TeamsController::class, 'show'])->name('teams.show');
-Route::get('igraci/{player}', [PlayersController::class, 'show'])->name('players.show');
+Route::get('igraci/{player}', [TeamsController::class, 'showPlayer'])->name('teams.players.show');
 Route::get('galerije', [GalleriesController::class, 'index'])->name('galleries');
 Route::get('galerije/{gallery}', [GalleriesController::class, 'show'])->name('galleries.show');
 Route::get('globetka', [PagesController::class, 'globetka'])->name('globetka');

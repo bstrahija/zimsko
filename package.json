@@ -26,6 +26,7 @@
         "alpinejs": "^3.14.7",
         "glazejs": "^2.0.1",
         "gsap": "^3.12.5",
+        "photoswipe": "^5.4.4",
         "simple-slider": "^1.0.1",
         "tailwindcss-motion": "^1.0.0",
         "vue": "^3.5.13",
