@@ -2,6 +2,7 @@
     $variant = isset($variant) ? $variant : 'default';
     $title = isset($title) ? $title : null;
     $subtitle = isset($subtitle) ? $subtitle : null;
+    $icon = isset($icon) ? $icon : null;
 
     if ($variant === 'light') {
         $bgTop = 'bg-[#b6d7e4]';
@@ -21,8 +22,14 @@
 <div class="block ui-card bg-white border border-gray-200 overflow-hidden rounded shadow-sm {{ $class ?? '' }}">
     @if ($title || $subtitle)
         <div class="overflow-hidden relative ui-card__top-bar {{ $bgTop }} {{ $headColor }} px-6 pt-4 pb-4 text-center">
+
+
             @if ($title)
-                <h2 class="relative z-20 mb-1 text-3xl font-semibold uppercase font-heading">
+                <h2 class="flex relative z-20 gap-3 justify-center mb-1 text-3xl font-semibold uppercase font-heading">
+                    @if ($icon)
+                        <img src="{{ $icon }}" class="max-h-10 rounded-full max-w-10" />
+                    @endif
+
                     {{ $title }}
                 </h2>
             @endif

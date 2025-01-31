@@ -13,8 +13,6 @@
                         <x-basket.game-details :game="$game" />
                     </x-ui.card>
 
-                    <hr class="my-12">
-
                     <x-ui.card class="mb-8" title="Najbolji strijelci">
                         @if ($scorers && $scorers->count())
                             <table class="w-full text-sm table-auto">

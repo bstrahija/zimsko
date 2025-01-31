@@ -1,6 +1,6 @@
-<div class="hidden overflow-hidden relative z-30 w-full text-white border-b-4 bg-secondary navigation text-nav lg:block border-b-primary">
+<div class="hidden relative z-30 w-full text-white border-b-4 bg-secondary navigation text-nav lg:block border-b-primary">
     <div class="relative wrapper">
-        <div class="aspect-square h-[700px] text-sky-400 opacity-20 absolute -top-[130px] -left-[200px] z-10">
+        <div class="w-[750px] h-[220px] overflow-hidden text-sky-400 opacity-20 absolute -top-[130px] -left-[200px] z-10">
             <x-ui.logo-basket class="w-[1850px] mx-6 aspect-square" />
         </div>
 

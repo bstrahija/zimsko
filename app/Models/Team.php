@@ -99,7 +99,6 @@ class Team extends Model implements HasMedia
         });
     }
 
-
     public function events(): BelongsToMany
     {
         return $this->belongsToMany(Event::class);
@@ -123,6 +122,22 @@ class Team extends Model implements HasMedia
     public function scopeActive(Builder $query): void
     {
         $query->where('status', 'active');
+    }
+
+    public function lastGame(): ?Game
+    {
+        return Game::where(fn($query) => $query->where('home_team_id', $this->id)->orWhere('away_team_id', $this->id))
+            ->where('status', 'completed')
+            ->orderBy('scheduled_at', 'desc')
+            ->first();
+    }
+
+    public function nextGame(): ?Game
+    {
+        return Game::where(fn($query) => $query->where('home_team_id', $this->id)->orWhere('away_team_id', $this->id))
+            ->where('status', 'scheduled')
+            ->orderBy('scheduled_at', 'asc')
+            ->first();
     }
 
     public function logo($size = 'thumb')
@@ -162,6 +177,20 @@ class Team extends Model implements HasMedia
         );
     }
 
+    public function games()
+    {
+        return Game::where(fn($query) => $query->where('home_team_id', $this->id)->orWhere('away_team_id', $this->id))
+            ->whereNot('status', 'tmp')
+            ->whereNot('status', 'archived')
+            ->whereNot('status', 'draft');
+    }
+
+    public function completedGames()
+    {
+        return Game::where(fn($query) => $query->where('home_team_id', $this->id)->orWhere('away_team_id', $this->id))
+            ->where('status', 'completed');
+    }
+
     public function homeGames(): HasMany
     {
         return $this->hasMany(Game::class, 'home_team_id');
@@ -170,6 +199,55 @@ class Team extends Model implements HasMedia
     public function awayGames(): HasMany
     {
         return $this->hasMany(Game::class, 'away_team_id');
+    }
+
+    public function gameCount(Event $event = null): int
+    {
+        if ($event) {
+            return Game::query()->where('status', 'completed')->where(fn($query) => $query->where('home_team_id', $this->id)->orWhere('away_team_id', $this->id))->where('event_id', $event->id)->count();
+        }
+
+        return Game::query()->where('status', 'completed')->where(fn($query) => $query->where('home_team_id', $this->id))->orWhere('away_team_id', $this->id)->count();
+    }
+
+    public function gameCountCurrent(): int
+    {
+        return $this->gameCount(Event::current());
+    }
+
+    public function points(Event $event = null): int
+    {
+        $where = [
+            'for' => 'team',
+            'type' => 'total',
+            'team_id' => $this->id
+        ];
+
+        if ($event) {
+            $where['event_id'] = $event->id;
+        }
+
+        $stats = Stat::where($where)->first();
+
+        return $stats ? $stats->score : 0;
+    }
+
+    public function pointsCurrent(): int
+    {
+        return $this->points(Event::current());
+    }
+
+    public function pointsAverage(Event $event = null): float
+    {
+        $points = $this->points($event);
+        $games = $this->gameCount($event);
+
+        return $games ? round($points / $games, 1) : 0;
+    }
+
+    public function pointsAverageCurrent(): float
+    {
+        return $this->pointsAverage(Event::current());
     }
 
     public function setStats($key, $value)

@@ -7,6 +7,7 @@ use App\Models\Game;
 use App\Models\Post;
 use App\Models\Team;
 use App\Services\Leaderboards;
+use App\Services\Stats;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
@@ -35,13 +36,13 @@ class PagesController extends Controller
         $latestGames        = Game::where(['status' => 'completed', 'event_id' => $currentEvent->id])
             ->with(['homeTeam', 'awayTeam', 'homeTeam.media', 'awayTeam.media'])->orderByDesc('scheduled_at')->limit(6)->get();
 
-        // If we dont have games for current event, show past event
+        // If we don't have games for current event, show past event
         if (! $latestGames || ! $latestGames->count()) {
             $latestGames = Game::where(['status' => 'completed', 'event_id' => $pastEvent->id])
                 ->with(['homeTeam', 'awayTeam', 'homeTeam.media', 'awayTeam.media'])->orderByDesc('scheduled_at')->limit(6)->get();
         }
 
-        // And the leaderboards (shold be cached)
+        // And the leaderboards (should be cached)
         $leaderboard        = Cache::remember('event_leaderboard.teams.'  . $currentEvent->id, (60 * 60 * 24), fn() => Leaderboards::getTeamLeaderboardForEvent($currentEvent));
         $leaderboardPoints  = Cache::remember('event_leaderboard.points.' . $currentEvent->id, (60 * 60 * 24), fn() => Leaderboards::getPlayerLeaderboardForEvent($pastEvent));
         $leaderboard3Point  = Cache::remember('event_leaderboard.3pts.'   . $currentEvent->id, (60 * 60 * 24), fn() => Leaderboards::getPlayer3PointLeaderboardForEvent($pastEvent));

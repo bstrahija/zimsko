@@ -4,6 +4,7 @@ import Echo from 'laravel-echo';
 import Pusher from 'pusher-js';
 import { getSlider } from 'simple-slider';
 import PhotoSwipeLightbox from 'photoswipe/lightbox';
+import Chart from 'chart.js/auto';
 
 import 'photoswipe/style.css';
 
@@ -26,15 +27,20 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.removeAttribute('x-cloak');
 });
 
-getSlider({
-    transitionTime: 1,
-    delay: 5,
-    prop: 'opacity',
-    unit: '',
-    init: 0,
-    show: 1,
-    end: 0,
-});
+let sliders = document.querySelectorAll('[data-simple-slider]');
+console.log('Sliders', sliders.length);
+
+if (sliders.length) {
+    getSlider({
+        transitionTime: 1,
+        delay: 5,
+        prop: 'opacity',
+        unit: '',
+        init: 0,
+        show: 1,
+        end: 0,
+    });
+}
 
 window.Pusher = Pusher;
 
@@ -157,3 +163,42 @@ let HeroVideo = {
 };
 
 HeroVideo.render();
+
+window.onload = function () {
+    const ctx = document.getElementById('globalChartContainer');
+
+    if (ctx && window.globalChartData) {
+        const chart = new Chart(ctx, {
+            type: 'line',
+            data: window.globalChartData,
+            options: {
+                pointStyle: 'circle',
+                elements: {
+                    line: {
+                        tension: 0.3,
+                    },
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                    },
+                    x: {
+                        display: false,
+                    },
+                },
+                plugins: {
+                    legend: {
+                        display: false,
+                    },
+                },
+            },
+        });
+
+        // Apply custom colors
+        chart.data.datasets.forEach((dataset, index) => {
+            dataset.borderColor = index === 0 ? 'rgb(1, 114, 173)' : '#FF6B00';
+            dataset.backgroundColor = index === 0 ? 'rgba(77, 255, 191, 0.2)' : 'rgba(236, 75, 75, 0.2)';
+        });
+        chart.update();
+    }
+};
