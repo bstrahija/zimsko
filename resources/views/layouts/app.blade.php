@@ -83,8 +83,7 @@
         <x-footer />
     </div>
 
-    {{-- <div class="fixed inset-0 z-0 opacity-20 bg"></div>
- --}}
+    <livewire:assets />
 </body>
 
 </html>
