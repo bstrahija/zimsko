@@ -2,7 +2,7 @@
 
 @section('content')
     @if ($player->team?->photo())
-        <x-header-photo title="{{ $player->name }}" url="{{ $player->team->photo('original') }}" />
+        <x-header-photo title="{{ $player->name }}" url="{{ $player?->team->photo('original') }}" />
     @else
         <x-header title="{{ $player->name }}" />
     @endif
@@ -66,10 +66,14 @@
                             <tr class="border-b border-gray-200">
                                 <th class="py-2">Ekipa:</th>
                                 <td class="py-2">
-                                    <a href="{{ route('teams.show', $player->team->slug) }}" class="flex gap-2">
-                                        <img src="{{ $player->team ? $player->team->logo('thumb') : '' }}" alt="" class="size-4">
-                                        {{ $player->team ? $player->team->title : '-' }}
-                                    </a>
+                                    @if ($player->team)
+                                        <a href="{{ route('teams.show', $player->team->slug) }}" class="flex gap-2">
+                                            <img src="{{ $player->team ? $player->team->logo('thumb') : '' }}" alt="" class="size-4">
+                                            {{ $player->team ? $player->team->title : '-' }}
+                                        </a>
+                                    @else
+                                        -
+                                    @endif
                                 </td>
                             </tr>
                             <tr class="border-b border-gray-200">
