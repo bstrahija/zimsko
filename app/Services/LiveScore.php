@@ -442,11 +442,64 @@ class LiveScore
         unset($data['game']['home_team']['players']);
         unset($data['game']['away_team']['players']);
 
-        return $this->optimizeData($data);
+        return $data;
+    }
+
+    /**
+     * Optimized data
+     *
+     * @return array
+     */
+    public function toOptimizedData(): array
+    {
+        return $this->optimizeData($this->toData());
     }
 
     public function optimizeData(array $data): array
     {
+        unset($data['game']['created_at'], $data['game']['updated_at'], $data['game']['deleted_at']);
+
+        // We move the stats to a separate array
+        $data['game']['player_stats'] = [];
+        foreach ([$data['game']['home_players'], $data['game']['away_players']] as $players) {
+            foreach ($players as $player) {
+                $data['game']['player_stats']['player__' . $player['id']] = $player['stats'];
+            }
+        }
+
+        // Remove unnecessary data
+        foreach (
+            [
+                'home_players',
+                'away_players',
+                'home_starting_players',
+                'away_starting_players',
+                'home_players_on_court',
+                'away_players_on_court',
+                'available_home_players',
+                'available_away_players',
+                'home_players_on_bench',
+                'away_players_on_bench'
+            ] as $type
+        ) {
+            foreach ($data['game'][$type] as $key => $player) {
+                unset(
+                    $data['game'][$type][$key]['created_at'],
+                    $data['game'][$type][$key]['updated_at'],
+                    $data['game'][$type][$key]['deleted_at'],
+                    $data['game'][$type][$key]['data'],
+                    $data['game'][$type][$key]['stats'],
+                    $data['game'][$type][$key]['nickname'],
+                    $data['game'][$type][$key]['body'],
+                    $data['game'][$type][$key]['birthday'],
+                    $data['game'][$type][$key]['pivot'],
+                    $data['game'][$type][$key]['media'],
+                    $data['game'][$type][$key]['external_id'],
+                    $data['game'][$type][$key]['status'],
+                );
+            }
+        }
+
         return $data;
     }
 

@@ -173,6 +173,12 @@ export default {
         });
     },
 
+    getPlayerStat: function (game, player, stat) {
+        // console.log('Game', game.player_stats['player__' + player.id]['score']);
+        // return 69;
+        return game.player_stats['player__' + player.id][stat];
+    },
+
     pluck: function (arr, key) {
         return arr.map((i) => i[key]);
     },

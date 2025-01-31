@@ -110,9 +110,9 @@ class LiveController extends Controller
         $game = $game->load('referees');
 
         // We need to convert all the data to an array
-        $data = $this->live($game)->toData();
+        $data = $this->live($game)->toOptimizedData();
 
-        // Add some edditional data
+        // Add some additional data
         $data['currentEvent'] = Event::current() ?: Event::latest();
         $data['events']       = Event::active()->with(['teams', 'rounds'])->orderBy('scheduled_at', 'desc')->get()->toArray();
         $data['referees']     = Official::active()->referees()->orderBy('first_name')->get()->toArray();
@@ -158,7 +158,7 @@ class LiveController extends Controller
     public function players(Game $game): Response
     {
         // We need to convert all the data to an array
-        $data = $this->live($game)->toData();
+        $data = $this->live($game)->toOptimizedData();
 
         return Inertia::render('Players', $data);
     }
@@ -209,7 +209,7 @@ class LiveController extends Controller
     public function playersStarting(Game $game): Response
     {
         // We need to convert all the data to an array
-        $data = $this->live($game)->toData();
+        $data = $this->live($game)->toOptimizedData();
 
         return Inertia::render('PlayersStarting', $data);
     }
@@ -257,7 +257,7 @@ class LiveController extends Controller
     public function score(Game $game)
     {
         // We need to convert all the data to an array
-        $data = $this->live($game)->toData();
+        $data = $this->live($game)->toOptimizedData();
 
         return Inertia::render('Score', $data);
     }

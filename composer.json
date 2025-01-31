@@ -42,7 +42,6 @@
     "require-dev": {
         "aaronfrancis/solo": "^0.2.2",
         "barryvdh/laravel-debugbar": "^3.14",
-        "barryvdh/laravel-ide-helper": "^3.3",
         "fakerphp/faker": "^1.23",
         "larastan/larastan": "^3.0",
         "laravel/pail": "^1.1",

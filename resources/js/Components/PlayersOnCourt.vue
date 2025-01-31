@@ -167,7 +167,7 @@ const addStat = (stat, type) => {
 
             </div>
 
-            <PlayerBlock :player="player" @click="(event) => toggleIcons(player, event)" class="relative z-20" />
+            <PlayerBlock :player="player" :game="game" @click="(event) => toggleIcons(player, event)" class="relative z-20" />
         </div>
     </div>
 </template>
