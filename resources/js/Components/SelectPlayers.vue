@@ -103,7 +103,7 @@ const startGame = async () => {
         <div class="grid gap-12 mb-4 score-court" style="grid-template-columns: 1fr 8% 1fr">
             <div class="grid sub-bar-home">
                 <div class="grid grid-cols-5 gap-2 text-3xl font-bold text-white players-on-court min-h-20">
-                    <PlayerSelectBlock v-for="player in game.home_starting_players" :key="player.id" :player="player" @click="removeHomePlayer(player)" />
+                    <PlayerSelectBlock v-for="player in game.home_starting_players" :key="player.id" :player="player" :game="game" @click="removeHomePlayer(player)" />
 
                     <PlayerEmptyBlock v-for="player in missingHomePlayerNumber()" class="opacity-50" />
                 </div>

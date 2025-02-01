@@ -104,7 +104,7 @@ const startGame = async function () {
                     <div class="grid gap-4 mb-4 score-court grid-cols-[1fr_100px_1fr] md:grid-cols-[1fr_160px_1fr]">
                         <div class="sub-bar-home">
                             <div class="grid grid-cols-5 gap-2 h-auto min-h-0 text-3xl font-bold text-white players-on-court">
-                                <PlayerSelectBlock v-for="player in data.homeStartingPlayers" :key="player.id" :player="player" @click="removeHomePlayer(player)" />
+                                <PlayerSelectBlock v-for="player in data.homeStartingPlayers" :key="player.id" :player="player" :game="game" @click="removeHomePlayer(player)" />
 
                                 <PlayerEmptyBlock v-for="player in missingHomePlayerNumber()" class="opacity-30 pointer-events-none" />
                             </div>
@@ -114,7 +114,7 @@ const startGame = async function () {
                             <div class="space-y-4 home-controls">
                                 <h2 class="text-sm text-center text-white uppercase">Odaberi početnu petorku</h2>
                                 <div class="grid grid-cols-5 auto-rows-min gap-2 grid-min-rows players-on-bench starting-players-on-bench">
-                                    <PlayerSelectBlock v-for="player in game.home_players" :key="player.id" :player="player" @click="addHomePlayer(player)"
+                                    <PlayerSelectBlock v-for="player in game.home_players" :key="player.id" :player="player" :game="game" @click="addHomePlayer(player)"
                                         :class="{ hidden: helpers.pluck(data.homeStartingPlayers, 'id').includes(player.id) }" />
                                 </div>
                             </div>
@@ -138,7 +138,7 @@ const startGame = async function () {
 
                         <div class="sub-bar-away">
                             <div class="grid grid-cols-5 gap-2 h-auto min-h-0 text-3xl font-bold text-white players-on-court">
-                                <PlayerSelectBlock v-for="player in data.awayStartingPlayers" :key="player.id" :player="player" @click="removeAwayPlayer(player)" />
+                                <PlayerSelectBlock v-for="player in data.awayStartingPlayers" :key="player.id" :player="player" :game="game" @click="removeAwayPlayer(player)" />
 
                                 <PlayerEmptyBlock v-for="player in missingAwayPlayerNumber()" class="opacity-30 pointer-events-none" />
                             </div>
@@ -148,7 +148,7 @@ const startGame = async function () {
                             <div class="space-y-4 away-controls">
                                 <h2 class="text-sm text-center text-white uppercase">Odaberi početnu petorku</h2>
                                 <div class="grid grid-cols-5 auto-rows-min gap-2 grid-min-rows players-on-bench starting-players-on-bench">
-                                    <PlayerSelectBlock v-for="player in game.away_players" :key="player.id" :player="player" @click="addAwayPlayer(player)"
+                                    <PlayerSelectBlock v-for="player in game.away_players" :key="player.id" :player="player" :game="game" @click="addAwayPlayer(player)"
                                         :class="{ hidden: helpers.pluck(data.awayStartingPlayers, 'id').includes(player.id) }" />
                                 </div>
                             </div>

@@ -174,8 +174,10 @@ export default {
     },
 
     getPlayerStat: function (game, player, stat) {
-        // console.log('Game', game.player_stats['player__' + player.id]['score']);
-        // return 69;
+        if (!game.player_stats || !game.player_stats['player__' + player.id]) {
+            return 0;
+        }
+
         return game.player_stats['player__' + player.id][stat];
     },
 

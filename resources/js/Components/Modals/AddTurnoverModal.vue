@@ -65,7 +65,7 @@ function isActive(player) {
                             <div class="text-center">
                                 <h3 class="mb-3 text-sm text-center uppercase">IZUBIO LOPTU</h3>
                                 <div class="grid grid-cols-2 gap-4 items-start sm:grid-cols-3 lg:grid-cols-4">
-                                    <PlayerSelectBlock :player="player" :active="isActive(player)" v-for="player in players" :key="'playersc-' + player.id"
+                                    <PlayerSelectBlock :player="player" :game="game" :active="isActive(player)" v-for="player in players" :key="'playersc-' + player.id"
                                         @click="selectPlayer(player)" />
                                 </div>
                             </div>

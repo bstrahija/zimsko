@@ -106,7 +106,7 @@ function checkScore() {
                             <div class="text-center">
                                 <h3 class="mb-3 text-sm text-center uppercase">Pogađa</h3>
                                 <div class="grid grid-cols-2 gap-4 md:grid-cols-3">
-                                    <PlayerSelectBlock :player="player" :active="isActive(player)" v-for="player in players" :key="'playersc-' + player.id"
+                                    <PlayerSelectBlock :player="player" :game="game" :active="isActive(player)" v-for="player in players" :key="'playersc-' + player.id"
                                         @click="selectPlayer(player)" />
                                 </div>
                             </div>
@@ -131,7 +131,7 @@ function checkScore() {
                             <div v-if="data.type > 1">
                                 <h3 class="mb-3 text-sm text-center uppercase">Asistira</h3>
                                 <div class="grid grid-cols-2 gap-4 md:grid-cols-3">
-                                    <PlayerSelectBlock :player="player" :active="isActiveAssist(player)" v-for="player in players" :key="'playeras-' + player.id"
+                                    <PlayerSelectBlock :player="player" :game="game" :active="isActiveAssist(player)" v-for="player in players" :key="'playeras-' + player.id"
                                         @click="selectAssistPlayer(player)" :class="{ hidden: player.id === data.selectedPlayer?.id }" />
                                 </div>
                             </div>

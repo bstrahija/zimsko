@@ -1,5 +1,12 @@
 <script setup>
+import { inject } from 'vue';
+const helpers = inject('helpers');
+
 defineProps({
+    game: {
+        type: Object,
+        required: true,
+    },
     player: {
         type: Object,
         required: true,
@@ -14,11 +21,11 @@ defineProps({
         :class="{ 'opacity-50': !active, 'active': active }">
         <div>
             <div class="flex absolute top-1 left-1 z-40 justify-center items-center w-4 h-4 font-bold text-white rounded-full opacity-70 text-3xs bg-green-600/80">
-                {{ player.stats.score }}
+                {{ helpers.getPlayerStat(game, player, 'score') }}
             </div>
 
             <div class="flex absolute top-1 right-1 z-40 justify-center items-center w-4 h-4 font-bold text-white rounded-full opacity-70 text-3xs bg-red-600/80">
-                {{ player.stats.fouls }}
+                {{ helpers.getPlayerStat(game, player, 'fouls') }}
             </div>
 
             <div class="z-30 text-sm font-bold shadow-lg md:text-lg lg:text-2xl xl:text-3xl player-number">

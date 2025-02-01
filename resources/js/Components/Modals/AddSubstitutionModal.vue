@@ -130,7 +130,7 @@ async function save() {
                                 <div class="text-center">
                                     <h3 class="mb-3 text-sm text-center uppercase">IZLAZE</h3>
                                     <div class="grid grid-cols-2 gap-4 md:grid-cols-3">
-                                        <PlayerSelectBlock :player="player" :active="isActiveOut(player)" v-for="player in players" :key="'playersc-' + player.id"
+                                        <PlayerSelectBlock :player="player" :game="game" :active="isActiveOut(player)" v-for="player in players" :key="'playersc-' + player.id"
                                             @click="selectPlayerOut(player)" />
                                     </div>
                                 </div>
@@ -145,8 +145,8 @@ async function save() {
                                 <div>
                                     <h3 class="mb-3 text-sm text-center uppercase">ULAZE</h3>
                                     <div class="grid grid-cols-2 gap-4 md:grid-cols-3">
-                                        <PlayerSelectBlock :player="player" :active="isActiveIn(player)" v-for="player in playersOnBench" :key="'playeras-' + player.id"
-                                            @click="selectPlayerIn(player)" :class="{ hidden: player.id === data.selectedPlayer?.id }" />
+                                        <PlayerSelectBlock :player="player" :game="game" :active="isActiveIn(player)" v-for="player in playersOnBench"
+                                            :key="'playeras-' + player.id" @click="selectPlayerIn(player)" :class="{ hidden: player.id === data.selectedPlayer?.id }" />
                                     </div>
                                 </div>
                             </div>

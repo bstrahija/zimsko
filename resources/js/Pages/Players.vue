@@ -91,7 +91,8 @@ const save = async function () {
                     <div class="grid gap-4 score-controls grid-cols-[1fr_100px_1fr] md:grid-cols-[1fr_160px_1fr]">
                         <div class="home-controls">
                             <div class="grid grid-cols-4 auto-rows-min gap-2 xl:grid-cols-5 grid-min-rows players-on-bench starting-players-on-bench">
-                                <PlayerSelectBlock v-for="player in data.homePlayers" :key="'home-selected-' + player.id" :player="player" @click="removeHomePlayer(player)" />
+                                <PlayerSelectBlock v-for="player in data.homePlayers" :key="'home-selected-' + player.id" :player="player" :game="game"
+                                    @click="removeHomePlayer(player)" />
                             </div>
                         </div>
 
@@ -108,7 +109,8 @@ const save = async function () {
 
                         <div class="away-controls">
                             <div class="grid grid-cols-4 auto-rows-min gap-2 xl:grid-cols-5 grid-min-rows players-on-bench starting-players-on-bench">
-                                <PlayerSelectBlock v-for="player in data.awayPlayers" :key="'away-selected-' + player.id" :player="player" @click="removeAwayPlayer(player)" />
+                                <PlayerSelectBlock v-for="player in data.awayPlayers" :key="'away-selected-' + player.id" :player="player" :game="game"
+                                    @click="removeAwayPlayer(player)" />
                             </div>
                         </div>
                     </div>
@@ -121,7 +123,7 @@ const save = async function () {
                                 Dostupni igrači ({{ game.available_home_players.length - helpers.pluck(data.homePlayers, 'id').length }})
                             </h2>
                             <div class="grid grid-cols-4 auto-rows-min gap-2 xl:grid-cols-5 lg:grid-cols-5 grid-min-rows players-on-bench starting-players-on-bench">
-                                <PlayerSelectBlock v-for="player in game.available_home_players" :key="'home-available-' + player.id" :player="player"
+                                <PlayerSelectBlock v-for="player in game.available_home_players" :key="'home-available-' + player.id" :player="player" :game="game"
                                     @click="addHomePlayer(player)" :class="{ hidden: helpers.pluck(data.homePlayers, 'id').includes(player.id) }" />
                             </div>
                         </div>
@@ -133,7 +135,7 @@ const save = async function () {
                                 Dostupni igrači ({{ game.available_away_players.length - helpers.pluck(data.awayPlayers, 'id').length }})
                             </h2>
                             <div class="grid grid-cols-4 auto-rows-min gap-2 xl:grid-cols-5 grid-min-rows players-on-bench starting-players-on-bench">
-                                <PlayerSelectBlock v-for="player in game.available_away_players" :key="'away-available-' + player.id" :player="player"
+                                <PlayerSelectBlock v-for="player in game.available_away_players" :key="'away-available-' + player.id" :player="player" :game="game"
                                     @click="addAwayPlayer(player)" :class="{ hidden: helpers.pluck(data.awayPlayers, 'id').includes(player.id) }" />
                             </div>
                         </div>
