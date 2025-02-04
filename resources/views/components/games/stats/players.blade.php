@@ -56,8 +56,17 @@
                         @endif
 
                         @if (isset($player['stats'][$type . '_percent']) || $type === 'score')
-                            <td class="px-4 py-3 text-sm text-right max-w-1">
-                                {{ $type === 'score' ? $player['stats']['field_goals_percent'] : $player['stats'][$type . '_percent'] }}%
+                            <td class="px-4 py-3 text-sm text-right max-w-1 text-nowrap">
+                                @if (isset($player['stats'][$type . '_made']))
+                                    {{ $player['stats'][$type . '_made'] }}
+                                    /
+                                    {{ $player['stats'][$type] }}
+                                    <small>({{ $player['stats'][$type . '_percent'] ?: 0 }}%)</small>
+                                @else
+                                    {{ $type === 'score' ? $player['stats']['field_goals_percent'] : $player['stats'][$type . '_percent'] }}%
+                                @endif
+
+
                             </td>
                         @endif
                     </tr>
