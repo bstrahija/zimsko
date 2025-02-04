@@ -20,6 +20,8 @@
             font-size: 12px;
         }
     </style>
+
+    @vite(['resources/css/report.css'])
 </head>
 
 <body class="bg-white">

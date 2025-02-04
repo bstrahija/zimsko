@@ -35,7 +35,6 @@
                 } elseif ($item['type'] === 'game_ended') {
                     $icon = 'o-hand-raised';
                     $itemBgColor = 'bg-purple-200/80';
-
                     $itemColor = 'text-purple-600/80';
                 } elseif ($item['type'] === 'game_started' || $item['type'] === 'game_starting_players' || $item['type'] === 'game_initialized') {
                     $icon = 'o-hand-raised';

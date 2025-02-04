@@ -17,9 +17,29 @@ class ReportsController extends Controller
 {
     public function game(string $slug)
     {
-        $game = Game::with('event', 'homeTeam', 'awayTeam', 'homePlayers', 'awayPlayers', 'referees')->where('slug', $slug)->firstOrFail();
+        $game    = Game::where('slug', $slug)->firstOrFail();
+        $live     = new \App\Services\LiveScore($game);
+        $live     = $live->toOptimizedData();
+        // dd($live['game']);
 
-        $pdf = Pdf::loadView('reports.game', ['game' => $game]);
+        // Merge players and order by points
+        $live['game']['players'] = [];
+        foreach (['home', 'away'] as $side) {
+            foreach ($live['game'][$side . '_players'] as $player) {
+                $player['team'] = $live['game'][$side . '_team'];
+                $player['number'] = $player['pivot']['number'];
+                $player['position'] = $player['pivot']['position'];
+                $player['stats'] = isset($live['game']['player_stats']['player__' . $player['id']]) ? $live['game']['player_stats']['player__' . $player['id']] :  [];
+                $player['score'] = $player['stats']['score'];
+                $live['game']['players'][] = $player;
+            }
+        }
+        $live['game']['players'] = collect($live['game']['players'])->sortByDesc('score')->values()->all();
+
+        // dd($live);
+        // dd($live['game']['players']);
+
+        // $pdf = Pdf::loadView('reports.game', ['game' => $live['game']]);
 
         // dd($pdf->output());
         // return $pdf->download('report.pdf');
@@ -28,6 +48,6 @@ class ReportsController extends Controller
         //     ->format('a4')
         //     ->save('invoice.pdf');
 
-        return view('reports.game', ['game' => $game]);
+        return view('reports.game', ['game' => $live['game']]);
     }
 }
