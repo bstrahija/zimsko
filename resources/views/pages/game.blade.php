@@ -11,13 +11,24 @@
                 @else
                     <x-games.score :game="$game" />
 
-                    <x-games.stats :game="$game" :live="$live" />
 
-                    <x-games.log-stream :game="$game" :live="$live" />
+
+                    @if ($game->scheduled_at->year === 2025)
+                        <x-games.stats :game="$game" :live="$live" />
+
+                        <x-games.log-stream :game="$game" :live="$live" />
+                    @else
+                        <x-games.leaders :game="$game" :live="$live" :scorers="$scorers" />
+                    @endif
                 @endif
             </div>
 
-            <x-global.sidebar class="md:col-span-12 lg:col-span-4" />
+            <x-global.sidebar class="md:col-span-12 lg:col-span-4">
+
+                {{-- <x-ui.card class="mb-8" title="{{ $game->title }}">
+                    <a href="{{ route('reports.game', $game->slug) }}" target="_blank">Izvještaj</a>
+                </x-ui.card> --}}
+            </x-global.sidebar>
         </div>
     </div>
 @endsection

@@ -6,6 +6,7 @@ use App\Http\Controllers\LiveController;
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\PlayersController;
 use App\Http\Controllers\PostsController;
+use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\TeamsController;
 use Illuminate\Support\Facades\Route;
 
@@ -23,6 +24,9 @@ Route::get('utakmice/{slug}', [GamesController::class, 'show'])->name('games.sho
 Route::get('ekipe',           [TeamsController::class, 'index'])->name('teams');
 Route::get('ekipe/{slug}',    [TeamsController::class, 'show'])->name('teams.show');
 Route::get('igraci/{slug}',   [PlayersController::class, 'show'])->name('players.show');
+
+// Reports
+Route::get('izvestaji/utakmica/{slug}', [ReportsController::class, 'game'])->name('reports.game');
 
 // Testing
 Route::get('globetka', [PagesController::class, 'globetka'])->name('globetka');

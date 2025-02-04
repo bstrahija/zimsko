@@ -46,7 +46,7 @@
                         <x-games.details :game="$lastGame" />
                     </x-ui.card>
                 @endif
-                </x-sidebar>
+            </x-global.sidebar>
         </div>
     </div>
 @endsection
