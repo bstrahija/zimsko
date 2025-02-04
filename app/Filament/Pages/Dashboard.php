@@ -48,13 +48,13 @@ class Dashboard extends \Filament\Pages\Dashboard
     {
         return [
             \Schmeits\FilamentUmami\Widgets\UmamiWidgetStatsGrouped::class,
-            // PulseServers::class,
-            // PulseCache::class,
-            // PulseUsage::class,
-            // PulseExceptions::class,
-            // PulseQueues::class,
-            // PulseSlowQueries::class,
-            // PulseSlowRequests::class,
+            PulseServers::class,
+            PulseExceptions::class,
+            PulseCache::class,
+            PulseSlowQueries::class,
+            PulseUsage::class,
+            PulseSlowRequests::class,
+            PulseQueues::class,
             // PulseSlowOutGoingRequests::class
         ];
     }
