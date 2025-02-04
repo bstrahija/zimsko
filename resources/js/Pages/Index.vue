@@ -60,6 +60,20 @@ const generateStats = async function () {
         data.saving = false
     }
 }
+
+const goToGame = function (game) {
+    if (game.status === 'in_progress') {
+        router.visit('live/' + game.id + '/score', {
+            preserveState: true,
+            preserveScroll: true,
+        })
+    } else {
+        router.visit('live/' + game.id, {
+            preserveState: true,
+            preserveScroll: true,
+        })
+    }
+}
 </script>
 
 <template>
@@ -129,13 +143,13 @@ const generateStats = async function () {
                         </thead>
                         <tbody>
                             <tr v-for="game in games" :key="game.id" class="border-b cursor-pointer border-slate-600 hover:bg-slate-700">
-                                <td class="px-4 py-3 text-gray-300" @click="router.visit('live/' + game.id)">{{ game.event ? game.event.title : 'N/A' }}</td>
-                                <td class="px-4 py-3 text-gray-300" @click="router.visit('live/' + game.id)">{{ game.title }}</td>
-                                <td class="px-4 py-3 text-gray-300" @click="router.visit('live/' + game.id)">
+                                <td class="px-4 py-3 text-gray-300" @click="goToGame(game)">{{ game.event ? game.event.title : 'N/A' }}</td>
+                                <td class="px-4 py-3 text-gray-300" @click="goToGame(game)">{{ game.title }}</td>
+                                <td class="px-4 py-3 text-gray-300" @click="goToGame(game)">
                                     {{ game.home_score }} - {{ game.away_score }}
                                 </td>
-                                <td class="px-4 py-3 text-gray-300" @click="router.visit('live/' + game.id)">{{ game.scheduled_at }}</td>
-                                <td class="px-4 py-3 text-gray-300" @click="router.visit('live/' + game.id)">
+                                <td class="px-4 py-3 text-gray-300" @click="goToGame(game)">{{ game.scheduled_at }}</td>
+                                <td class="px-4 py-3 text-gray-300" @click="goToGame(game)">
                                     <span class="px-2 py-1 text-xs font-medium whitespace-nowrap rounded-full opacity-80" :class="{
                                         'bg-slate-600 text-slate-100': game.status === 'completed',
                                         'bg-green-500 text-green-100 animate-pulse': game.status === 'in_progress',
