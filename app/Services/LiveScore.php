@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Jobs\GenerateTotalStats;
+use App\Models\Event;
 use App\Models\Game;
 use App\Models\GameLog;
 use App\Models\Team;
@@ -321,6 +323,9 @@ class LiveScore
 
         // Update main game stats
         $this->updateMainStats($log);
+
+        // We also need to update total stats, which we defer to the queue
+        GenerateTotalStats::dispatch(Event::current());
 
         // And update the log collection
         $this->updateLog();

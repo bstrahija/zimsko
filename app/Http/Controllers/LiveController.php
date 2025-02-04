@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\LiveScoreUpdated;
 use App\Http\Controllers\Controller;
+use App\Jobs\GenerateTotalStats;
 use App\Models\Event;
 use App\Models\Game;
 use App\Models\GameLog;
@@ -588,5 +589,12 @@ class LiveController extends Controller
         }
 
         return $this->live;
+    }
+
+    public function generateStats()
+    {
+        GenerateTotalStats::dispatch(Event::current());
+
+        return redirect()->route('live');
     }
 }

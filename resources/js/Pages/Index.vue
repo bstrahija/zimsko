@@ -52,6 +52,14 @@ const deleteGame = async function (game) {
         data.saving = false
     }
 }
+
+const generateStats = async function () {
+    if (confirm('Da li ste sigurni da zelite generirati statistiku?')) {
+        data.saving = true
+        await router.post('/live/generate-stats');
+        data.saving = false
+    }
+}
 </script>
 
 <template>
@@ -160,6 +168,11 @@ const deleteGame = async function (game) {
                         <p class="text-center">Nije pronađena nijedna utakmica.</p>
                     </div>
 
+                    <div class="pt-6 text-center">
+                        <a href="#" class="btn btn-error" @click.prevent="generateStats()">
+                            Generiraj statistiku
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>

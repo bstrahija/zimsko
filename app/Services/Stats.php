@@ -9,6 +9,7 @@ use App\Models\Player;
 use App\Models\Stat;
 use App\Models\Team;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 class Stats
 {
@@ -254,13 +255,20 @@ class Stats
      * @param  GameLive $gameLive
      * @return void
      */
-    public static function generateTotalForTeams($generateForEvents = false, $generateForGames = false): void
+    public static function generateTotalForTeams($generateForEvents = false, $generateForGames = false, Event $event = null): void
     {
         $events = Event::all();
 
         if ($generateForEvents) {
-            foreach ($events as $event) {
+            if ($event) {
+                Log::debug('-- Generating total team stats for event: ' . $event->slug);
                 self::generateFromEventForTeams(event: $event, generateForGames: $generateForGames);
+            } else {
+                Log::debug('-- Generating total team stats for all events.');
+                foreach ($events as $event) {
+                    Log::debug('-- -- Generating total team stats for event: ' . $event->slug);
+                    self::generateFromEventForTeams(event: $event, generateForGames: $generateForGames);
+                }
             }
         }
 
@@ -316,13 +324,20 @@ class Stats
         }
     }
 
-    public static function generateTotalForPlayers($generateForEvents = false, $generateForGames = false)
+    public static function generateTotalForPlayers($generateForEvents = false, $generateForGames = false, $event = null)
     {
         $events = Event::with(['games'])->get();
 
         if ($generateForEvents) {
-            foreach ($events as $event) {
+            if ($event) {
+                Log::debug('-- Generating total player stats for event: ' . $event->slug);
                 self::generateFromEventForPlayers(event: $event, generateForGames: $generateForGames);
+            } else {
+                Log::debug('-- Generating total player stats for all events.');
+                foreach ($events as $event) {
+                    Log::debug('-- -- Generating total player stats for event: ' . $event->slug);
+                    self::generateFromEventForPlayers(event: $event, generateForGames: $generateForGames);
+                }
             }
         }
 

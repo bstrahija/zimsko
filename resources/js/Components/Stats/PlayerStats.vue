@@ -166,14 +166,14 @@ const getSortedPlayers = () => {
                     <td class="px-4 py-4 text-sm font-bold text-right" v-if="type === 'score'">{{ player.stats.score_p3 || '-' }}</td>
                     <td class="px-4 py-4 text-sm font-bold text-right" v-if="type === 'score'">{{ player.stats.score_p4 || '-' }}</td>
                     <td class="px-4 py-4 text-lg font-bold text-right" v-if="type === 'score'">{{ player.stats.score || '-' }}</td>
-                    <td class="px-4 py-4 text-sm text-lg text-right" v-if="type === 'score'">{{ player.stats.field_goals_percent }}%</td>
+                    <td class="px-4 py-4 text-sm text-right" v-if="type === 'score'">{{ player.stats.field_goals_percent }}%</td>
 
                     <td class="px-4 py-4 text-lg font-bold text-right" v-if="type === 'rebounds'">{{ player.stats.rebounds || '-' }}</td>
-                    <td class="px-4 py-4 text-sm text-lg text-right" v-if="type === 'rebounds'">{{ player.stats.defensive_rebounds || '-' }}</td>
-                    <td class="px-4 py-4 text-sm text-lg text-right" v-if="type === 'rebounds'">{{ player.stats.offensive_rebounds || '-' }}</td>
+                    <td class="px-4 py-4 text-sm text-right" v-if="type === 'rebounds'">{{ player.stats.defensive_rebounds || '-' }}</td>
+                    <td class="px-4 py-4 text-sm text-right" v-if="type === 'rebounds'">{{ player.stats.offensive_rebounds || '-' }}</td>
 
                     <td class="px-4 py-4 text-lg font-bold text-right" v-if="type === 'three_points'">{{ player.stats.three_points_made }}/{{ player.stats.three_points }}</td>
-                    <td class="px-4 py-4 text-sm text-lg text-right" v-if="type === 'three_points'">{{ player.stats.three_points_percent }}%</td>
+                    <td class="px-4 py-4 text-sm text-right" v-if="type === 'three_points'">{{ player.stats.three_points_percent }}%</td>
 
                     <td class="px-4 py-4 text-lg font-bold text-right" v-if="type === 'assists'">{{ player.stats.assists || '-' }}</td>
 

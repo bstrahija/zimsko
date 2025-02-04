@@ -63,6 +63,7 @@ Route::get('live', [LiveController::class, 'index'])->name('live')->middleware('
 
 // Create/Edit a game
 Route::get('live/create',                   [LiveController::class, 'create'])->name('live.create')->middleware('auth');
+Route::post('live/generate-stats',           [LiveController::class, 'generateStats'])->name('live.generate_stats')->middleware('auth');
 Route::get('live/{game}',                   [LiveController::class, 'details'])->name('live.details')->middleware('auth');
 Route::delete('live/{game}',                [LiveController::class, 'destroy'])->name('live.delete')->middleware('auth');
 Route::post('live/{game}/details',          [LiveController::class, 'detailsStore'])->name('live.details.store')->middleware('auth');
