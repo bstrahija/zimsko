@@ -66,6 +66,8 @@
     <script defer src="https://cloud.umami.is/script.js" data-website-id="efe2fff4-3192-4870-9a3a-d56d04f56341"></script>
 
     @vite(['resources/js/app.js'])
+
+    @livewireStyles
 </head>
 
 <body class="bg-slate-100">
@@ -77,13 +79,13 @@
         <div class="wrapper">
             <hr class="my-12">
 
-            <x-sponsors />
+            <x-global.sponsors />
         </div>
 
-        <x-footer />
+        <x-global.footer />
     </div>
 
-    <livewire:assets />
+    @livewireScripts
 </body>
 
 </html>

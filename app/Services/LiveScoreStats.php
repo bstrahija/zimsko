@@ -145,6 +145,7 @@ trait LiveScoreStats
                 $player->setStats('score_p' . $period, $this->getPlayerStat(player: $player, types: ['player_score', 'player_score_with_assist'], period: $period));
             }
         }
+
         // die();
     }
 

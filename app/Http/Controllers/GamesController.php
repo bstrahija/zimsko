@@ -10,41 +10,32 @@ class GamesController extends Controller
 {
     public function results()
     {
-        return view('games.results');
+        return view('pages.results');
     }
 
     public function schedule()
     {
-        $games = Game::where('status', 'scheduled')->where('scheduled_at', '>', now())->orderBy('scheduled_at')->paginate(30);
-        // dump(now());
-        // dd($games);
+        $games = Game::where('status', 'scheduled')
+            ->with(['homeTeam', 'awayTeam', 'homeTeam.media', 'awayTeam.media'])
+            ->where('scheduled_at', '>', now())
+            ->orderBy('scheduled_at')->paginate(30);
 
-        return view('games.schedule', ['games' => $games]);
+        return view('pages.schedule', ['games' => $games]);
     }
 
     public function show($slug)
     {
         $game    = Game::where('slug', $slug)->firstOrFail();
         $scorers = Leaderboards::getPlayerLeaderboardForGame($game, 'score', 100);
+        $live     = new \App\Services\LiveScore($game);
+        $live     = $live->toOptimizedData();
 
-        return view('games.show', [
+        // return view('pages.empty');
+
+        return view('pages.game', [
             'game'    => $game,
             'scorers' => $scorers,
+            'live'    => $live,
         ]);
-    }
-
-    public function live()
-    {
-        // Find live game and redirect to it
-        $game = Game::where('status', 'in_progress')->first();
-
-        return redirect()->route('games.live.show', $game->slug);
-    }
-
-    public function liveShow($slug)
-    {
-        $game = Game::where('slug', $slug)->where('status', 'in_progress')->firstOrFail();
-
-        return view('games.live', ['game' => $game]);
     }
 }

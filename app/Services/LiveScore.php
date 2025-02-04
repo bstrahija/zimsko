@@ -314,6 +314,11 @@ class LiveScore
         // Update the stats
         $this->updateLiveStats($log);
 
+        // Also update all player stats
+        foreach ($this->game->players as $player) {
+            $this->updatePlayerLiveStats($player);
+        }
+
         // Update main game stats
         $this->updateMainStats($log);
 
@@ -414,13 +419,31 @@ class LiveScore
             'log'  => $this->logStream(),
         ];
 
+        // Add number and position
+        $allPlayers = collect([]);
+        foreach ($this->players as &$player) {
+            $playerData = $player->toArray();
+
+            $playerData['number']   = $playerData['pivot']['number'];
+            $playerData['position'] = $playerData['pivot']['position'];
+
+            $allPlayers->push($playerData);
+        }
+
         // We need to adjust some data
         foreach (['home_starting_players', 'away_starting_players', 'home_players_on_court', 'away_players_on_court'] as $type) {
             if (isset($data['game'][$type]) && $data['game'][$type]) {
                 $players = [];
                 foreach ($data['game'][$type] as $key => $playerId) {
-                    $player = $this->findPlayer($playerId);
-                    if ($player) $players[] = $player->toArray();
+                    $player = $allPlayers->where('id', $playerId)->first();
+
+                    if ($player) {
+                        // Add number and position
+                        $player['number']   = $player['pivot']['number'];
+                        $player['position'] = $player['pivot']['position'];
+
+                        $players[] = $player;
+                    }
                 }
                 $data['game'][$type] = $players;
             } else {
@@ -428,7 +451,7 @@ class LiveScore
             }
         }
 
-        // // Add some team data
+        // Add some team data
         $data['game']['available_home_players'] = $this->availableHomePlayers?->toArray();
         $data['game']['available_away_players'] = $this->availableAwayPlayers?->toArray();
         $data['game']['home_players']           = $this->homePlayers?->toArray();
@@ -441,6 +464,14 @@ class LiveScore
         $data['game']['away_players_on_bench']  = $this->awayPlayers?->diff($this->awayPlayersOnCourt)->values()->toArray();
         unset($data['game']['home_team']['players']);
         unset($data['game']['away_team']['players']);
+
+        // We move the stats to a separate array
+        $data['game']['player_stats'] = [];
+        foreach ([$data['game']['home_players'], $data['game']['away_players']] as $players) {
+            foreach ($players as $player) {
+                $data['game']['player_stats']['player__' . $player['id']] = $player['stats'];
+            }
+        }
 
         return $data;
     }
@@ -458,14 +489,6 @@ class LiveScore
     public function optimizeData(array $data): array
     {
         unset($data['game']['created_at'], $data['game']['updated_at'], $data['game']['deleted_at']);
-
-        // We move the stats to a separate array
-        $data['game']['player_stats'] = [];
-        foreach ([$data['game']['home_players'], $data['game']['away_players']] as $players) {
-            foreach ($players as $player) {
-                $data['game']['player_stats']['player__' . $player['id']] = $player['stats'];
-            }
-        }
 
         // Remove unnecessary data
         foreach (
@@ -492,13 +515,13 @@ class LiveScore
                     $data['game'][$type][$key]['nickname'],
                     $data['game'][$type][$key]['body'],
                     $data['game'][$type][$key]['birthday'],
-                    $data['game'][$type][$key]['pivot'],
                     $data['game'][$type][$key]['media'],
                     $data['game'][$type][$key]['external_id'],
                     $data['game'][$type][$key]['status'],
                 );
             }
         }
+
 
         return $data;
     }

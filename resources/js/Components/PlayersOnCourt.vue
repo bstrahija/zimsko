@@ -10,6 +10,7 @@ import IconAssist from './Icons/IconAssist.vue';
 import IconFoul from './Icons/IconFoul.vue';
 import IconTurnover from './Icons/IconTurnover.vue';
 import IconBlock from './Icons/IconBlock.vue';
+import IconTechnical from './Icons/IconTechnical.vue';
 
 const props = defineProps({
     game: { type: Object, required: true },
@@ -87,7 +88,7 @@ const addStat = (stat, type) => {
 
             <div class="action-box" v-if="activePlayer === player" :class="{ 'active': activePlayer === player }">
                 <div class="absolute -top-[22px] py-1 w-full text-center text-white bg-cyan-500/90 text-3xs">
-                    #{{ player.number }} {{ player.name }}
+                    #{{ player?.pivot?.number }} {{ player.name }}
                 </div>
 
                 <div class="grid grid-cols-3">
@@ -153,13 +154,18 @@ const addStat = (stat, type) => {
                 </div>
 
 
-                <div class="grid grid-cols-2 bg-black">
-                    <button class="py-2 action-pos-6 hover:bg-rose-500 bg-rose-500/70" @click="addStat('turnover')">
+                <div class="grid grid-cols-3 bg-black">
+                    <button class="py-2 action-pos-6 hover:bg-rose-500 bg-rose-400/70" @click="addStat('turnover')">
                         <IconTurnover />
                         <small>TO</small>
                     </button>
 
-                    <button class="py-2 action-pos-7 hover:bg-rose-500 bg-rose-500/70" @click="addStat('foul')">
+                    <button class="py-2 action-pos-6 hover:bg-rose-500 bg-rose-800/70" @click="addStat('foul', 'tf')">
+                        <IconTechnical />
+                        <small>TEH</small>
+                    </button>
+
+                    <button class="py-2 action-pos-7 hover:bg-rose-500 bg-rose-600/70" @click="addStat('foul')">
                         <IconFoul />
                         <small>FOUL</small>
                     </button>

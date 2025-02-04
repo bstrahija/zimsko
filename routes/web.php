@@ -9,8 +9,32 @@ use App\Http\Controllers\PostsController;
 use App\Http\Controllers\TeamsController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [PagesController::class, 'index'])->name('home');
-Route::get('history', [PagesController::class, 'history'])->name('history');
+// Auth
+Route::redirect('login', 'admin/login')->name('login');
+
+// Pages
+Route::get('/',               [PagesController::class, 'index'])->name('home');
+Route::get('kontakt',         [PagesController::class, 'contact'])->name('contact');
+Route::get('novosti',         [PostsController::class, 'index'])->name('news');
+Route::get('novosti/{slug}',  [PostsController::class, 'show'])->name('news.show');
+Route::get('rezultati',       [GamesController::class, 'results'])->name('results');
+Route::get('raspored',        [GamesController::class, 'schedule'])->name('schedule');
+Route::get('utakmice/{slug}', [GamesController::class, 'show'])->name('games.show');
+Route::get('ekipe',           [TeamsController::class, 'index'])->name('teams');
+Route::get('ekipe/{slug}',    [TeamsController::class, 'show'])->name('teams.show');
+Route::get('igraci/{slug}',   [PlayersController::class, 'show'])->name('players.show');
+
+// Testing
+Route::get('globetka', [PagesController::class, 'globetka'])->name('globetka');
+
+
+
+
+
+
+
+
+/*Route::get('history', [PagesController::class, 'history'])->name('history');
 Route::get('kontakt', [PagesController::class, 'contact'])->name('contact');
 Route::post('kontakt', [PagesController::class, 'contactSubmit'])->name('contact.submit');
 Route::redirect('login', 'admin/login')->name('login');
@@ -20,8 +44,8 @@ Route::get('novosti/{slug}', [PostsController::class, 'show'])->name('news.show'
 Route::get('rezultati', [GamesController::class, 'results'])->name('results');
 Route::get('utakmice/{slug}', [GamesController::class, 'show'])->name('games.show');
 Route::get('raspored', [GamesController::class, 'schedule'])->name('schedule');
-Route::get('uzivo', [GamesController::class, 'live'])->name('games.live');
-Route::get('uzivo/{slug}', [GamesController::class, 'liveShow'])->name('games.live.show');
+// Route::get('uzivo', [GamesController::class, 'live'])->name('games.live');
+// Route::get('uzivo/{slug}', [GamesController::class, 'liveShow'])->name('games.live.show');
 Route::get('ekipe', [TeamsController::class, 'index'])->name('teams');
 Route::get('ekipe/{team}', [TeamsController::class, 'show'])->name('teams.show');
 Route::get('igraci/{player}', [TeamsController::class, 'showPlayer'])->name('teams.players.show');
@@ -29,15 +53,6 @@ Route::get('galerije', [GalleriesController::class, 'index'])->name('galleries')
 Route::get('galerije/{gallery}', [GalleriesController::class, 'show'])->name('galleries.show');
 Route::get('globetka', [PagesController::class, 'globetka'])->name('globetka');
 
-/**
- * Concepts (delete later)
- */
-
-// Route::get('/concept/001', function () { return view('concept.001'); });
-Route::view('/concept/001', 'concept.001')->name('concept.001');
-Route::view('/concept/002', 'concept.002')->name('concept.002');
-Route::view('live/concept', 'live.concept')->name('live.concept')->middleware('auth');
-Route::view('live/concept01', 'live.concept01')->name('live.concept1')->middleware('auth');
 
 /**
  * Live score

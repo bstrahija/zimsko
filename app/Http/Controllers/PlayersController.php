@@ -7,8 +7,10 @@ use Illuminate\Http\Request;
 
 class PlayersController extends Controller
 {
-    public function show(Player $player)
+    public function show($slug)
     {
-        return view('players.show');
+        $player   = Player::where('slug', $slug)->with(['media', 'teams'])->firstOrFail();
+
+        return view('pages.player', ['player' => $player, 'team' => $player->team, 'lastGame' => $player->lastGame()]);
     }
 }

@@ -15,7 +15,7 @@ class TeamsController extends Controller
         $event = Event::current();
         $teams = $event->teams()->orderBy('title')->get();
 
-        return view('teams.index', ['teams' => $teams]);
+        return view('pages.teams', ['teams' => $teams]);
     }
 
     public function show($slug, Request $request)
@@ -24,7 +24,7 @@ class TeamsController extends Controller
         $lastGame = $team->lastGame();
         $nextGame = $team->nextGame();
 
-        return view('teams.show', ['team' => $team, 'lastGame' => $lastGame, 'nextGame' => $nextGame]);
+        return view('pages.team', ['team' => $team, 'lastGame' => $lastGame, 'nextGame' => $nextGame]);
     }
 
     public function showPlayer($slug)
@@ -34,6 +34,6 @@ class TeamsController extends Controller
         $player   = Player::where('slug', $slug)->with(['media', 'teams'])->firstOrFail();
         $lastGame = $player->lastGame();
 
-        return view('players.show', ['player' => $player, 'team' => $player->team, 'lastGame' => $lastGame]);
+        return view('pages.player', ['player' => $player, 'team' => $player->team, 'lastGame' => $lastGame]);
     }
 }

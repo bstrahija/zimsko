@@ -41,7 +41,7 @@
             @endif
 
             <div class="aspect-square h-[600px] {{ $bgLogo }} absolute -top-[25px] -left-[150px] z-10">
-                <x-ui.logo-basket class="w-[950px] mx-6 aspect-square" />
+                <x-global.logo-basket class="w-[950px] mx-6 aspect-square" />
             </div>
         </div>
     @endif

@@ -145,8 +145,8 @@ const getSortedPlayers = () => {
                     <td class="px-4 py-4 w-1" width="1%">{{ player.number }}</td>
                     <td class="px-4 py-4">
                         <div class="flex gap-3 items-center">
-                            <div v-if="player?.data?.photo" class="overflow-hidden mt-2 w-8 rounded-full opacity-60 aspect-square">
-                                <img :src="player.data.photo" alt="">
+                            <div v-if="player?.photo" class="overflow-hidden mt-2 w-8 rounded-full opacity-60 aspect-square">
+                                <img :src="player.photo" alt="">
                             </div>
                             <div v-else>
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="w-8 h-8 opacity-50">
@@ -169,8 +169,8 @@ const getSortedPlayers = () => {
                     <td class="px-4 py-4 text-sm text-lg text-right" v-if="type === 'score'">{{ player.stats.field_goals_percent }}%</td>
 
                     <td class="px-4 py-4 text-lg font-bold text-right" v-if="type === 'rebounds'">{{ player.stats.rebounds || '-' }}</td>
-                    <td class="px-4 py-4 text-sm text-lg text-right" v-if="type === 'rebounds'">{{ player.stats.offensive_rebounds || '-' }}</td>
                     <td class="px-4 py-4 text-sm text-lg text-right" v-if="type === 'rebounds'">{{ player.stats.defensive_rebounds || '-' }}</td>
+                    <td class="px-4 py-4 text-sm text-lg text-right" v-if="type === 'rebounds'">{{ player.stats.offensive_rebounds || '-' }}</td>
 
                     <td class="px-4 py-4 text-lg font-bold text-right" v-if="type === 'three_points'">{{ player.stats.three_points_made }}/{{ player.stats.three_points }}</td>
                     <td class="px-4 py-4 text-sm text-lg text-right" v-if="type === 'three_points'">{{ player.stats.three_points_percent }}%</td>

@@ -30,28 +30,12 @@ class LiveGame extends Component
     {
         $this->game = Game::where('slug', $this->slug)->first();
         $live       = new LiveScore($this->game);
-        $this->live = $live->toData()['game'];
-        $this->log  = $live->logStream();
+        $this->live = $live->toOptimizedData();
     }
 
     public function updateLiveScore()
     {
         $this->loadGame();
-    }
-
-    public function getSortedPlayerStats(string $type)
-    {
-        $players = array_merge($this->live['home_players'], $this->live['away_players']);
-
-        $sorted = collect($players)
-            ->sortByDesc(function ($player) use ($type) {
-                return $player['stats'][$type] ?? 0;
-            })
-            ->take(15)
-            ->values()
-            ->all();
-
-        return $sorted;
     }
 
     public function render()

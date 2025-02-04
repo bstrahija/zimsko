@@ -19,7 +19,9 @@ class Leaderboards
         $leaderboard = (new Leaderboard)->setEvent($event);
 
         // First get the stats
-        $stats = Stat::where(['event_id' => $event->id, 'for' => 'team', 'type' => 'event'])->with(['team', 'team.media'])->get();
+        $stats = Stat::where(['event_id' => $event->id, 'for' => 'team', 'type' => 'event'])
+            ->orderBy('score', 'desc')
+            ->with(['team', 'team.media'])->get();
 
         // The add to leaderboard
         if ($stats && $stats->count()) {
@@ -109,7 +111,7 @@ class Leaderboards
 
         // Get all stat rows
         $rows = Stat::where('event_id', $event->id)
-            ->with(['player', 'team'])
+            ->with(['player', 'player.media', 'team', 'team.media'])
             ->where('for', 'player')
             ->where('type', 'event')
             ->orderBy($orderBy, 'desc')
@@ -136,7 +138,7 @@ class Leaderboards
 
         // Get all stat rows
         $rows = Stat::where('game_id', $game->id)
-            ->with(['player', 'team'])
+            ->with(['player', 'team', 'player.media', 'team.media'])
             ->where('for', 'player')
             ->where('type', 'game')
             ->orderBy($orderBy, 'desc')

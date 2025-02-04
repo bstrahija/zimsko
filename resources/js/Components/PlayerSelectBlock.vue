@@ -29,7 +29,8 @@ defineProps({
             </div>
 
             <div class="z-30 text-sm font-bold shadow-lg md:text-lg lg:text-2xl xl:text-3xl player-number">
-                {{ player.number ? player.number : '-' }}
+
+                {{ player?.pivot?.number ? player.pivot.number : '-' }}
             </div>
 
             <small class="block relative z-20 font-medium text-center opacity-60 text-3xs lg:text-2xs xl:text-xs line-clamp-2 player-name">
@@ -37,8 +38,8 @@ defineProps({
             </small>
         </div>
 
-        <div v-if="player?.data?.photo" class="absolute inset-0 z-10 opacity-20">
-            <img :src="player.data.photo" alt="" class="object-cover w-full h-full">
+        <div v-if="player?.photo" class="absolute inset-0 z-10 opacity-20">
+            <img :src="player.photo" alt="" class="object-cover w-full h-full">
         </div>
     </button>
 </template>

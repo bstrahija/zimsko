@@ -70,8 +70,12 @@ const save = async function () {
         <Head title="Zimsko Live Score | Igrači" />
 
         <div class="flex relative justify-center min-h-[98svh]">
+
             <div class="w-full space-y-2 max-w-[1920px] transition-all" :class="{ 'opacity-90': data.saving }">
                 <div class="bg-slate-900/95 p-6 rounded-lg border-5 border-cyan-400/50 shadow-[0_0_15px_rgba(6,182,212,0.5)] h-full grid-bg">
+                    <!-- <p><small>
+                            <pre>{{ data.homePlayers }}</pre>
+                        </small></p> -->
                     <LiveTopBar :title="game.title" :backUrl="'/live/' + game.id" :game="game" />
 
                     <div class="grid gap-4 mb-4 score-top grid-cols-[1fr_100px_1fr] md:grid-cols-[1fr_160px_1fr]">

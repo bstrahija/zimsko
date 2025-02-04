@@ -32,7 +32,7 @@ const props = defineProps({
     },
 });
 
-const { game, players, playerIn, playerOut } = toRefs(props);
+const { game, players, playerIn, playerOut, playersOnBench } = toRefs(props);
 
 const data = reactive({
     selectedPlayersOut: [],
@@ -42,21 +42,33 @@ const data = reactive({
 });
 
 onMounted(() => {
-    console.log("===");
-    if (playerIn && playerIn.value) data.selectedPlayersIn.push(playerIn.value);
-    if (playerOut && playerOut.value) data.selectedPlayersOut.push(playerOut.value);
+    // console.log("===");
+    // if (playerIn && playerIn.value) data.selectedPlayersIn.push(playerIn.value);
+    // if (playerOut && playerOut.value) data.selectedPlayersOut.push(playerOut.value);
 
-    // Check if any player fouled out
-    players.value.forEach(player => {
-        if (player.stats.fouls >= 5) {
-            data.playerFouledOut = player;
+    // let playersOnCourt = players.value.filter(player => !props.playersOnBench.some(player2 => player2.id === player.id));
 
-            // Always to "Out" list
-            if (data.playerFouledOut) {
-                data.selectedPlayersOut.push(data.playerFouledOut);
-            }
-        }
-    });
+    // console.log('Players on court', playersOnCourt.length);
+
+    // // Check if any player fouled out
+    // playersOnCourt.forEach(player => {
+    //     if (player.stats.fouls >= 5) {
+    //         data.playerFouledOut = player;
+
+    //         console.log('Bench', props.playersOnBench);
+    //         console.log('Fouled out', data.playerFouledOut);
+    //         console.log('Player', player);
+    //         console.log(props.playersOnBench.includes(data.playerFouledOut));
+
+
+
+
+    //         // Always to "Out" list
+    //         if (data.playerFouledOut) {
+    //             // data.selectedPlayersOut.push(data.playerFouledOut);
+    //         }
+    //     }
+    // });
 });
 
 function selectPlayerOut(player) {
@@ -84,6 +96,7 @@ function isActiveIn(player) {
 }
 
 const canBeSaved = function () {
+    console.log(data.selectedPlayersOut.length + ' :: ' + data.selectedPlayersIn.length);
     return (data.selectedPlayersOut.length > 0 && data.selectedPlayersIn.length > 0)
         && (data.selectedPlayersOut.length === data.selectedPlayersIn.length);
 }

@@ -471,6 +471,11 @@ class LiveController extends Controller
 
         $this->live($game)->nextPeriod();
 
+        // Also update all player stats
+        foreach ($game->players as $player) {
+            $this->live($game)->updatePlayerLiveStats($player);
+        }
+
         // Sync with game
         $game = $this->syncGame($game);
 
@@ -493,6 +498,7 @@ class LiveController extends Controller
 
         // Sync with game
         $game = $this->syncGame($game);
+
 
         // Clear the cache
         Cache::clear();
@@ -524,13 +530,19 @@ class LiveController extends Controller
 
     public function deleteLog(GameLog $log)
     {
-        if ($log->type === 'completed') {
+        Log::debug("Deleting log. Game: {$log->game->id} Log: {$log->type}", ['section' => 'LIVE', 'game_id' => $log->game->id]);
+
+        if ($log->type === 'completed' || $log->type === 'game_ended') {
+            Log::debug("Reversing completed game. Game: {$log->game->id}", ['section' => 'LIVE', 'game_id' => $log->game->id]);
             $log->game->update(['status' => 'in_progress']);
         } elseif ($log->type === 'game_started') {
+            Log::debug("Reversing started game. Game: {$log->game->id}", ['section' => 'LIVE', 'game_id' => $log->game->id]);
             $log->game->update(['status' => 'scheduled']);
         } elseif ($log->type === 'period_started') {
+            Log::debug("Reversing period started. Game: {$log->game->id}", ['section' => 'LIVE', 'game_id' => $log->game->id]);
             $log->game->update(['period' => $log->period - 1]);
         } elseif ($log->type === 'substitution') {
+            Log::debug("Reversing substitution. Game: {$log->game->id}", ['section' => 'LIVE', 'game_id' => $log->game->id]);
             // We need to revert the substitution
             $this->live($log->game)->substitution(playersIn: [$log->player_2_id], playersOut: [$log->player_id], addLog: false);
         }

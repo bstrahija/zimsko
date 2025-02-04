@@ -31,7 +31,7 @@ defineProps({
             </div>
 
             <div class="z-30 font-mono text-sm font-bold shadow-lg md:text-lg lg:text-xl xl:text-3xl">
-                {{ player.number ? player.number : '-' }}
+                {{ player?.pivot?.number ? player.pivot.number : '-' }}
             </div>
 
             <small class="block relative z-20 font-medium text-center opacity-60 text-3xs lg:text-2xs xl:text-xs line-clamp-2">

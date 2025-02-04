@@ -11,13 +11,13 @@ class PostsController extends Controller
     {
         $posts = Post::paginate(10);
 
-        return view('posts.index', ['posts' => $posts]);
+        return view('pages.posts', ['posts' => $posts]);
     }
 
     public function show($slug)
     {
         $post = Post::where('slug', $slug)->firstOrFail();
 
-        return view('posts.show', ['post' => $post]);
+        return view('pages.post', ['post' => $post]);
     }
 }

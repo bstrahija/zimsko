@@ -219,7 +219,7 @@ class Team extends Model implements HasMedia
     {
         $where = [
             'for' => 'team',
-            'type' => 'total',
+            'type' => $event ? 'event' : 'total',
             'team_id' => $this->id
         ];
 

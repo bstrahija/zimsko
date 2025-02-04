@@ -158,27 +158,26 @@ export default {
     },
 
     checkPlayersForFouls: function (game) {
-        let allPlayersOnCourt = this.playersOnCourt(game, game.home_team).concat(this.playersOnCourt(game, game.away_team));
-
-        this.playersOnCourt(game, game.home_team).forEach((player) => {
-            if (player.stats.fouls >= 5) {
-                this.addSubstitution(game, game.home_team, null, player);
-            }
-        });
-
-        this.playersOnCourt(game, game.away_team).forEach((player) => {
-            if (player.stats.fouls >= 5) {
-                this.addSubstitution(game, game.away_team, null, player);
-            }
-        });
+        // let allPlayersOnCourt = this.playersOnCourt(game, game.home_team).concat(this.playersOnCourt(game, game.away_team));
+        // console.log('Check fouls', allPlayersOnCourt);
+        // this.playersOnCourt(game, game.home_team).forEach((player) => {
+        //     if (player.stats.fouls >= 5) {
+        //         this.addSubstitution(game, game.home_team, null, player);
+        //     }
+        // });
+        // this.playersOnCourt(game, game.away_team).forEach((player) => {
+        //     if (player.stats.fouls >= 5) {
+        //         this.addSubstitution(game, game.away_team, null, player);
+        //     }
+        // });
     },
 
     getPlayerStat: function (game, player, stat) {
-        if (!game.player_stats || !game.player_stats['player__' + player.id]) {
+        if (!game?.player_stats || !game.player_stats['player__' + player.id]) {
             return 0;
         }
 
-        return game.player_stats['player__' + player.id][stat];
+        return game?.player_stats['player__' + player.id][stat];
     },
 
     pluck: function (arr, key) {

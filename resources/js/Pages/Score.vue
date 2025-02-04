@@ -25,11 +25,11 @@ onMounted(() => {
             });
         });
 
-    // helpers.checkPlayersForFouls(props.game);
+    helpers.checkPlayersForFouls(props.game);
 });
 
 router.on('success', (event) => {
-    // helpers.checkPlayersForFouls(props.game);
+    helpers.checkPlayersForFouls(props.game);
 })
 </script>
 

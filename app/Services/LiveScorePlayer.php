@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\GameLog;
+use App\Models\GamePlayer;
 use App\Models\Player;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
@@ -42,6 +43,7 @@ trait LiveScorePlayer
 
             // Now update the score
             $this->updateLiveStats(log: $log);
+            $this->updatePlayerLiveStats(player: $player);
         }
     }
 
@@ -68,6 +70,7 @@ trait LiveScorePlayer
 
             // Now update the score
             $this->updateLiveStats(log: $log);
+            $this->updatePlayerLiveStats(player: $player);
         }
     }
 
@@ -118,6 +121,7 @@ trait LiveScorePlayer
 
             // Now update the score
             $this->updateLiveStats(log: $log);
+            $this->updatePlayerLiveStats(player: $player);
         }
     }
 
@@ -146,6 +150,7 @@ trait LiveScorePlayer
 
             // Now update the score
             $this->updateLiveStats(log: $log);
+            $this->updatePlayerLiveStats(player: $player);
         }
     }
 
@@ -179,6 +184,7 @@ trait LiveScorePlayer
 
             // Now update the score
             $this->updateLiveStats(log: $log);
+            $this->updatePlayerLiveStats(player: $player);
         }
     }
 
@@ -223,6 +229,7 @@ trait LiveScorePlayer
 
             // Now update the score
             $this->updateLiveStats(log: $log);
+            $this->updatePlayerLiveStats(player: $player);
         }
     }
 
@@ -256,6 +263,7 @@ trait LiveScorePlayer
 
             // Now update the score
             $this->updateLiveStats(log: $log);
+            $this->updatePlayerLiveStats(player: $player);
         }
     }
 
@@ -282,6 +290,7 @@ trait LiveScorePlayer
 
             // Now update the score
             $this->updateLiveStats(log: $log);
+            $this->updatePlayerLiveStats(player: $player);
         }
     }
 
@@ -397,6 +406,55 @@ trait LiveScorePlayer
             'home_score' => $homeScore,
             'away_score' => $awayScore,
         ]);
+    }
+
+    public function updatePlayerLiveStats(Player $player)
+    {
+        // First get all player log items
+        $logs = GameLog::where('game_id', $this->game->id)
+            ->where('player_id', $player->id)
+            ->get();
+
+        $data = [
+            'score'              => $logs->where('type', 'player_score')->sum('amount'),
+            'score_p1'           => $logs->where('type', 'player_score')->where('period', 1)->sum('amount'),
+            'score_p2'           => $logs->where('type', 'player_score')->where('period', 2)->sum('amount'),
+            'score_p3'           => $logs->where('type', 'player_score')->where('period', 3)->sum('amount'),
+            'score_p4'           => $logs->where('type', 'player_score')->where('period', 4)->sum('amount'),
+            'score_p5'           => $logs->where('type', 'player_score')->where('period', 5)->sum('amount'),
+            'score_p6'           => $logs->where('type', 'player_score')->where('period', 6)->sum('amount'),
+            'score_p7'           => $logs->where('type', 'player_score')->where('period', 7)->sum('amount'),
+            'score_p8'           => $logs->where('type', 'player_score')->where('period', 8)->sum('amount'),
+            'score_p9'           => $logs->where('type', 'player_score')->where('period', 9)->sum('amount'),
+            'score_p10'          => $logs->where('type', 'player_score')->where('period', 10)->sum('amount'),
+            'assists'            => $logs->where('type', 'player_assist')->sum('amount'),
+            'steals'             => $logs->where('type', 'player_steal')->sum('amount'),
+            'blocks'             => $logs->where('type', 'player_block')->sum('amount'),
+            'rebounds'           => $logs->where('type', 'player_rebound')->sum('amount'),
+            'offensive_rebounds' => $logs->where('type', 'player_rebound')->where('subtype', 'off')->sum('amount'),
+            'defensive_rebounds' => $logs->where('type', 'player_rebound')->where('subtype', 'def')->sum('amount'),
+            'turnovers'          => $logs->where('type', 'player_turnover')->sum('amount'),
+            'fouls'              => $logs->where('type', 'player_foul')->sum('amount'),
+            'personal_fouls'     => $logs->where('type', 'player_foul')->where('subtype', 'pf')->sum('amount'),
+            'technical_fouls'    => $logs->where('type', 'player_foul')->where('subtype', 'tf')->sum('amount'),
+            'flagrant_fouls'     => $logs->where('type', 'player_foul')->where('subtype', 'ff')->sum('amount'),
+            'three_points'       => $logs->where('type', 'player_score')->where('subtype', '3pt')->count() + $logs->where('type', 'player_miss')->where('subtype', '3pt')->count(),
+            'three_points_made'  => $logs->where('type', 'player_score')->where('subtype', '3pt')->count(),
+            'two_points'         => $logs->where('type', 'player_score')->where('subtype', '2pt')->count() + $logs->where('type', 'player_miss')->where('subtype', '2pt')->count(),
+            'two_points_made'    => $logs->where('type', 'player_score')->where('subtype', '2pt')->count(),
+            'free_throws'        => $logs->where('type', 'player_score')->where('subtype', '1pt')->count() + $logs->where('type', 'player_miss')->where('subtype', '1pt')->count(),
+            'free_throws_made'   => $logs->where('type', 'player_score')->where('subtype', '1pt')->count(),
+        ];
+
+        // Add field goals
+        $data['field_goals']      = $data['three_points'] + $data['two_points'];
+        $data['field_goals_made'] = $data['three_points_made'] + $data['two_points_made'];
+
+        // Update the database
+        GamePlayer::updateOrCreate([
+            'game_id'  => $this->game->id,
+            'player_id' => $player->id,
+        ], $data);
     }
 
     public function findPlayer(int $playerId): ?Player

@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('type')->default('game')->nullable()->index();
             $table->string('for')->default('team')->nullable()->index();
-            $table->foreignId('event_id')->nullable()->cascadeOnDelete();
-            $table->foreignId('game_id')->nullable()->cascadeOnDelete();
-            $table->foreignId('team_id')->nullable()->cascadeOnDelete();
-            $table->foreignId('player_id')->nullable()->cascadeOnDelete();
+            $table->foreignId('event_id')->nullable()->index()->cascadeOnDelete();
+            $table->foreignId('game_id')->nullable()->index()->cascadeOnDelete();
+            $table->foreignId('team_id')->nullable()->index()->cascadeOnDelete();
+            $table->foreignId('player_id')->nullable()->index()->cascadeOnDelete();
             $table->integer('games')->default(1);
 
             // Get main columns

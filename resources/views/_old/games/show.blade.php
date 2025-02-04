@@ -9,9 +9,11 @@
                 @if ($game->status === 'in_progress')
                     <livewire:live-game :game="$game" />
                 @else
-                    <x-ui.card class="mb-8" title="Rezultat" subtitle="{{ $game->event->title }} | {{ $game->title }}">
-                        <x-basket.game-details :game="$game" />
-                    </x-ui.card>
+                    <x-games.score :game="$game" />
+
+                    <x-games.stats :game="$game" :live="$live" />
+
+                    <x-games.log-stream :game="$game" :log="$log" />
 
                     <x-ui.card class="mb-8" title="Najbolji strijelci">
                         @if ($scorers && $scorers->count())

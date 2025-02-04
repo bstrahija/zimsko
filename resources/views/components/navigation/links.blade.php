@@ -9,7 +9,7 @@
         </svg>
     </x-navigation.link>
     <div class="hidden absolute z-50 py-2 w-48 bg-white rounded-md shadow-xl group-hover:block">
-        @foreach (\App\Models\Event::current()->teams()->orderBy('title')->get() as $team)
+        @foreach (\App\Services\Helpers::currentTeams() as $team)
             <a href="{{ route('teams.show', $team->slug) }}" class="flex px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                 <span class="flex mr-2 w-6"><img src="{{ $team->logo() }}" alt="" class="max-h-6 max-w-6"></span>
                 {{ $team->title }}
@@ -18,7 +18,6 @@
     </div>
 </li>
 <li><x-navigation.link href="https://www.facebook.com/ZimskoPrvenstvoCK/photos_albums" target="_blank">Galerije</x-navigation.link></li>
-<!-- <li><x-navigation.link href="{{ route('history') }}">Povijest</x-navigation.link></li> -->
 <li><x-navigation.link href="{{ route('contact') }}">Kontakt</x-navigation.link></li>
 
 @if (auth()->check())
