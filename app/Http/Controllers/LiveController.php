@@ -593,7 +593,7 @@ class LiveController extends Controller
 
     public function generateStats()
     {
-        GenerateTotalStats::dispatch(Event::current());
+        GenerateTotalStats::dispatch();
 
         return redirect()->route('live');
     }
