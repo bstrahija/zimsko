@@ -14,6 +14,7 @@ use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Pages\Dashboard\Concerns\HasFiltersAction;
 use Filament\Support\Enums\ActionSize;
+use Illuminate\Support\Facades\Auth;
 use Schmeits\FilamentUmami\Concerns\HasFilter;
 
 class Dashboard extends \Filament\Pages\Dashboard
@@ -46,16 +47,24 @@ class Dashboard extends \Filament\Pages\Dashboard
 
     public function getWidgets(): array
     {
-        return [
+        $widgets = [
             \Schmeits\FilamentUmami\Widgets\UmamiWidgetStatsGrouped::class,
-            PulseServers::class,
-            PulseExceptions::class,
-            PulseCache::class,
-            PulseSlowQueries::class,
-            PulseUsage::class,
-            PulseSlowRequests::class,
-            PulseQueues::class,
-            // PulseSlowOutGoingRequests::class
         ];
+
+        // Only some user see the Pulse widgets
+        if (Auth::user()->email === 'bstrahija@gmail.com') {
+            $widgets = array_merge($widgets, [
+                PulseServers::class,
+                PulseExceptions::class,
+                PulseCache::class,
+                PulseSlowQueries::class,
+                PulseUsage::class,
+                PulseSlowRequests::class,
+                PulseQueues::class,
+                // PulseSlowOutGoingRequests::class
+            ]);
+        }
+
+        return $widgets;
     }
 }
