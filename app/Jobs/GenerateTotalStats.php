@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Legacy\SyncGames;
 use App\Models\Event;
+use App\Services\Cache;
 use App\Services\Stats;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Model;
@@ -32,5 +33,7 @@ class GenerateTotalStats implements ShouldQueue
         Stats::generateTotalForPlayers(generateForEvents: true, generateForGames: true, event: $this->event);
         $time = microtime(true) - $start;
         Log::debug('Done generating total stats (queued). Elapsed: ' . $time . 's');
+        Cache::clear();
+        Log::debug('Cache cleared');
     }
 }
