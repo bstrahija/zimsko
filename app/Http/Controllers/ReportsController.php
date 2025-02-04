@@ -20,7 +20,6 @@ class ReportsController extends Controller
         $game    = Game::where('slug', $slug)->firstOrFail();
         $live     = new \App\Services\LiveScore($game);
         $live     = $live->toOptimizedData();
-        // dd($live['game']);
 
         // Merge players and order by points
         $live['game']['players'] = [];
@@ -36,18 +35,14 @@ class ReportsController extends Controller
         }
         $live['game']['players'] = collect($live['game']['players'])->sortByDesc('score')->values()->all();
 
-        // dd($live);
-        // dd($live['game']['players']);
+        $pdf = Pdf::loadView('reports.game', ['game' => $live['game']]);
 
-        // $pdf = Pdf::loadView('reports.game', ['game' => $live['game']]);
-
-        // dd($pdf->output());
-        // return $pdf->download('report.pdf');
+        return $pdf->download('report.pdf');
 
         // Pdf::view('reports.game', ['game' => $game])
         //     ->format('a4')
         //     ->save('invoice.pdf');
 
-        return view('reports.game', ['game' => $live['game']]);
+        // return view('reports.game', ['game' => $live['game']]);
     }
 }
