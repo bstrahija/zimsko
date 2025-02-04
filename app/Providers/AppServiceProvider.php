@@ -3,9 +3,11 @@
 namespace App\Providers;
 
 use App\Models\Event;
+use App\Models\User;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Vite;
@@ -34,6 +36,10 @@ class AppServiceProvider extends ServiceProvider
         Model::unguard();
 
         Url::forceScheme('https');
+
+        Gate::define('viewPulse', function (User $user) {
+            return $user && $user->hasRole(['superadmin', 'admin']);
+        });
 
         Vite::usePrefetchStrategy('aggressive');
     }
