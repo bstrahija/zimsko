@@ -17,7 +17,7 @@ let props = defineProps({
 
 onMounted(() => {
     const channel = window.Echo.channel(`zimsko-local`)
-        .listen('LiveScoreUpdated', (e) => {
+        .listen('\\App\\LiveScore\\Events\\LiveScoreUpdated', (e) => {
             router.visit('/live/' + props.game.id + '/score', {
                 only: ['game', 'log'],
                 preserveState: true,

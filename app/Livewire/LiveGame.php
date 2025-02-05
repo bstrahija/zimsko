@@ -2,9 +2,8 @@
 
 namespace App\Livewire;
 
-use App\Models\Event;
 use App\Models\Game;
-use App\Services\LiveScore;
+use App\LiveScore\LiveScore as LiveScoreService;
 use Livewire\Component;
 
 class LiveGame extends Component
@@ -18,7 +17,7 @@ class LiveGame extends Component
     public $slug;
 
     // Special Syntax: ['echo:{channel},{event}' => '{method}']
-    protected $listeners = ['echo:live-score,LiveScoreUpdated' => 'updateLiveScore'];
+    protected $listeners = ['echo:live-score,\App\LiveScore\Events\LiveScoreUpdated' => 'updateLiveScore'];
 
     public function mount()
     {
@@ -29,7 +28,7 @@ class LiveGame extends Component
     public function loadGame()
     {
         $this->game = Game::where('slug', $this->slug)->first();
-        $live       = new LiveScore($this->game);
+        $live       = LiveScoreService::build($this->game);
         $this->live = $live->toOptimizedData();
     }
 

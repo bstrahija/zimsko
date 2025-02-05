@@ -35,7 +35,7 @@ Route::get('globetka', [PagesController::class, 'globetka'])->name('globetka');
 // Manage live games
 Route::get('live',             [LiveGamesController::class, 'index'])->name('live.games.index')->middleware('auth');
 Route::get('live/create',      [LiveGamesController::class, 'create'])->name('live.games.create')->middleware('auth');
-Route::get('live/{game}/edit', [LiveGamesController::class, 'edit'])->name('live.games.show')->middleware('auth');
+Route::get('live/{game}/edit', [LiveGamesController::class, 'edit'])->name('live.games.edit')->middleware('auth');
 Route::put('live/{game}',      [LiveGamesController::class, 'update'])->name('live.games.update')->middleware('auth');
 Route::delete('live/{game}',   [LiveGamesController::class, 'destroy'])->name('live.games.delete')->middleware('auth');
 

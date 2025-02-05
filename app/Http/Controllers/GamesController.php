@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\LiveScore\LiveScore;
 use App\Models\Game;
 use App\Services\Leaderboards;
 use Illuminate\Http\Request;
@@ -27,8 +28,7 @@ class GamesController extends Controller
     {
         $game    = Game::where('slug', $slug)->firstOrFail();
         $scorers = Leaderboards::getPlayerLeaderboardForGame($game, 'score', 100);
-        $live     = new \App\Services\LiveScore($game);
-        $live     = $live->toOptimizedData();
+        $live    = LiveScore::build($game);
 
         // return view('pages.empty');
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\LiveScore\LiveScore;
 use App\Models\Event;
 use App\Models\Game;
 use App\Models\GamePlayer;
@@ -17,9 +18,9 @@ class ReportsController extends Controller
 {
     public function game(string $slug)
     {
-        $game    = Game::where('slug', $slug)->firstOrFail();
-        $live     = new \App\Services\LiveScore($game);
-        $live     = $live->toOptimizedData();
+        $game = Game::where('slug', $slug)->firstOrFail();
+        $live = LiveScore::build($game);
+        $live = $live->toOptimizedData();
 
         // Merge players and order by points
         $live['game']['players'] = [];

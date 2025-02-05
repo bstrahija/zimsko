@@ -75,7 +75,7 @@ window.sendNotification = function (message) {
 
 const channel = window.Echo.channel('live-score');
 
-channel.listen('LiveScoreUpdated', (e, obj) => {
+channel.listen('\\App\\LiveScore\\Events\\LiveScoreUpdated', (e, obj) => {
     console.log(e.event, e.data);
 
     if (e.event === 'startGame') {

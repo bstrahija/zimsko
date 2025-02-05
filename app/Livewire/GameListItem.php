@@ -3,8 +3,6 @@
 namespace App\Livewire;
 
 use App\Models\Event;
-use App\Models\GameLive;
-use App\Services\LiveScore as LiveScoreService;
 use Livewire\Component;
 
 class GameListItem extends Component
@@ -14,7 +12,7 @@ class GameListItem extends Component
     public $game;
 
     // Special Syntax: ['echo:{channel},{event}' => '{method}']
-    protected $listeners = ['echo:live-score,LiveScoreUpdated' => 'updateLiveScore'];
+    protected $listeners = ['echo:live-score,\App\LiveScore\Events\LiveScoreUpdated' => 'updateLiveScore'];
 
     public function mount()
     {
