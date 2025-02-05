@@ -65,8 +65,6 @@
                                 @else
                                     {{ $type === 'score' ? $player['stats']['field_goals_percent'] : $player['stats'][$type . '_percent'] }}%
                                 @endif
-
-
                             </td>
                         @endif
                     </tr>

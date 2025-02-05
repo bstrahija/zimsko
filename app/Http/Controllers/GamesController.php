@@ -28,7 +28,7 @@ class GamesController extends Controller
     {
         $game    = Game::where('slug', $slug)->firstOrFail();
         $scorers = Leaderboards::getPlayerLeaderboardForGame($game, 'score', 100);
-        $live    = LiveScore::build($game);
+        $live    = LiveScore::build($game)->toOptimizedData();
 
         // return view('pages.empty');
 

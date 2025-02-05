@@ -45,45 +45,48 @@
 
             <div class="p-3 mb-4 {{ $itemBgColor }} rounded-lg shadow-sm transition-all duration-300 hover:shadow-md">
                 <div class="flex justify-between text-sm text-gray-700">
-                    <div class="flex justify-start items-center">
+                    <div class="flex justify-start items-top">
                         <strong class="mr-2">
-                            {{ $item['home_score'] }}
+                            <span class="{{ $item['home_score'] > $item['away_score'] ? 'text-green-600' : '' }}">{{ $item['home_score'] }}</span>
                             :
-                            {{ $item['away_score'] }}
+                            <span class="{{ $item['away_score'] > $item['home_score'] ? 'text-green-600' : '' }}">{{ $item['away_score'] }}</span>
                         </strong>
 
                         @if ($icon)
                             <x-ui.icon icon="{{ $icon }}" class="size-5 mr-1 {{ $itemColor }}" />
                         @endif
 
-                        <span>
-                            {{ $item['message'] }}
-                        </span>
+                        <div>
+                            <span>
+                                {{ $item['message'] }}
+                            </span>
 
-                        @if ($item['type'] === 'game_starting_players')
-                            @php
-                                $homeStarting = $game->homePlayers->whereIn('id', $game->home_starting_players)->values();
-                                $awayStarting = $game->awayPlayers->whereIn('id', $game->away_starting_players)->values();
-                            @endphp
+                            @if ($item['type'] === 'game_starting_players')
+                                @php
+                                    $homeStarting = $game->homePlayers->whereIn('id', $game->home_starting_players)->values();
+                                    $awayStarting = $game->awayPlayers->whereIn('id', $game->away_starting_players)->values();
+                                @endphp
 
-                            @if ($homeStarting)
-                                <h3 class="mt-2 font-semibold">{{ $game->homeTeam->title }}</h3>
-                                <ul class="text-xs">
-                                    @foreach ($homeStarting as $player)
-                                        <li>{{ $player->name }}</li>
-                                    @endforeach
-                                </ul>
+
+                                @if ($homeStarting)
+                                    <h3 class="mt-2 font-semibold">{{ $game->homeTeam->title }}</h3>
+                                    <ul class="text-xs">
+                                        @foreach ($homeStarting as $player)
+                                            <li>{{ $player->name }}</li>
+                                        @endforeach
+                                    </ul>
+                                @endif
+
+                                @if ($awayStarting)
+                                    <h3 class="mt-2 font-semibold">{{ $game->awayTeam->title }}</h3>
+                                    <ul class="text-xs">
+                                        @foreach ($awayStarting as $player)
+                                            <li>{{ $player->name }}</li>
+                                        @endforeach
+                                    </ul>
+                                @endif
                             @endif
-
-                            @if ($awayStarting)
-                                <h3 class="mt-2 font-semibold">{{ $game->awayTeam->title }}</h3>
-                                <ul class="text-xs">
-                                    @foreach ($awayStarting as $player)
-                                        <li>{{ $player->name }}</li>
-                                    @endforeach
-                                </ul>
-                            @endif
-                        @endif
+                        </div>
                     </div>
 
                     <div>
