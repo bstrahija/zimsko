@@ -27,9 +27,10 @@ const data = reactive({
     gameId: null,
 });
 
-const save = async function () {
+const save = function () {
+    data.action = 'turnover';
     data.gameId = game.value.id;
-    await router.post('/live/' + data.gameId + '/turnover', data);
+    router.put('/live/' + data.gameId + '/score', data);
 
     $vfm.hideAll();
 };

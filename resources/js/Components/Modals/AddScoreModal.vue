@@ -41,9 +41,10 @@ onMounted(() => {
     }
 });
 
-const save = async function () {
+const save = function () {
+    data.action = 'score';
     data.gameId = game.value.id;
-    await router.post('/live/' + data.gameId + '/score', data);
+    router.put('/live/' + data.gameId + '/score', data);
     $vfm.hideAll();
 };
 

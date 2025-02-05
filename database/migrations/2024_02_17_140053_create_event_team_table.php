@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::disableForeignKeyConstraints();
 
         Schema::create('event_team', function (Blueprint $table) {
-            $table->foreignId('event_id')->cascadeOnDelete();
-            $table->foreignId('team_id')->cascadeOnDelete();
+            $table->foreignId('event_id')->index()->cascadeOnDelete();
+            $table->foreignId('team_id')->index()->cascadeOnDelete();
         });
 
         Schema::enableForeignKeyConstraints();

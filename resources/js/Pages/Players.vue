@@ -56,7 +56,7 @@ function canBeSaved() {
 
 const save = async function () {
     data.saving = true
-    await router.post('/live/' + props.game.id + '/players', {
+    await router.put('/live/' + props.game.id + '/players', {
         'home_players': data.homePlayers,
         'away_players': data.awayPlayers,
     });

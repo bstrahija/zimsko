@@ -64,14 +64,15 @@ function canBeSaved() {
 
 const save = async function () {
     data.saving = true
-    await router.post('/live/' + props.game.id + '/players-starting', props.game);
+    alert('/live/' + props.game.id + '/starting-players');
+    await router.put('/live/' + props.game.id + '/starting-players', props.game);
     data.saving = false
 };
 
 const startGame = async function () {
     // if (confirm('Da li ste sigurni da zelite zapoceti utakmicu?')) {
     data.saving = true
-    await router.post('/live/' + props.game.id + '/players-starting?start=1', props.game);
+    await router.put('/live/' + props.game.id + '/starting-players?start=1', props.game);
     data.saving = false
     // }
 };

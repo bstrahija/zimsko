@@ -55,8 +55,6 @@ onUnmounted(() => {
 });
 
 const addStat = (stat, type) => {
-    console.log(stat, type, activePlayer.value.id)
-
     if (props.game.status !== 'in_progress') {
         alert('Započnite utakmicu da bi upisivali statistiku!');
         return;
@@ -69,8 +67,7 @@ const addStat = (stat, type) => {
             action: stat,
             type: type
         }
-        router.post('/live/' + props.game.id + '/multi', data);
-        console.log(data)
+        router.put('/live/' + props.game.id + '/score', data);
     } else {
         helpers.addSubstitution(props.game, props.team, activePlayer.value);
     }

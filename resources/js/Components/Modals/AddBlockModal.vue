@@ -33,9 +33,10 @@ const data = reactive({
     gameId: null,
 });
 
-const save = async function () {
+const save = function () {
+    data.action = 'block';
     data.gameId = game.value.id;
-    await router.post('/live/' + data.gameId + '/block', data);
+    router.put('/live/' + data.gameId + '/score', data);
     $vfm.hideAll();
 };
 
@@ -80,7 +81,7 @@ function isActiveBlocked(player) {
                             <div class="text-center">
                                 <h3 class="mb-3 text-sm text-center uppercase">Blokira</h3>
                                 <div class="grid grid-cols-2 gap-4 md:grid-cols-3">
-                                    <PlayerSelectBlock :player="player" :active="isActive(player)" v-for="player in players" :key="'playersc-' + player.id"
+                                    <PlayerSelectBlock :player="player" :game="game" :active="isActive(player)" v-for="player in players" :key="'playersc-' + player.id"
                                         @click="selectPlayer(player)" />
                                 </div>
                             </div>
@@ -95,8 +96,8 @@ function isActiveBlocked(player) {
                             <div class="text-center">
                                 <h3 class="mb-3 text-sm text-center uppercase">BLOKIRAN</h3>
                                 <div class="grid grid-cols-2 gap-4 md:grid-cols-3">
-                                    <PlayerSelectBlock :player="player" :active="isActiveBlocked(player)" v-for="player in opponentPlayers" :key="'playersc-' + player.id"
-                                        @click="selectBlockedPlayer(player)" />
+                                    <PlayerSelectBlock :player="player" :game="game" :active="isActiveBlocked(player)" v-for="player in opponentPlayers"
+                                        :key="'playersc-' + player.id" @click="selectBlockedPlayer(player)" />
                                 </div>
                             </div>
                         </div>

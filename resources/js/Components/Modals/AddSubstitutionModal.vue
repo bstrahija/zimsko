@@ -101,9 +101,10 @@ const canBeSaved = function () {
         && (data.selectedPlayersOut.length === data.selectedPlayersIn.length);
 }
 
-async function save() {
+function save() {
     data.gameId = game.value.id;
-    await router.post('/live/' + data.gameId + '/substitution', data);
+    data.action = 'substitution';
+    router.put('/live/' + data.gameId + '/score', data);
 
     $vfm.hideAll();
 }

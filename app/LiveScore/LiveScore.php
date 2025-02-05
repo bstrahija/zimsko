@@ -1,17 +1,20 @@
 <?php
 
-namespace App\Services;
+namespace App\LiveScore;
 
-use App\Jobs\GenerateTotalStats;
-use App\Models\Event;
+use App\LiveScore\Traits\LogData;
+use App\LiveScore\Traits\StatsData;
 use App\Models\Game;
 use App\Models\GameLog;
+use App\Models\Player;
 use App\Models\Team;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Fluent;
 
 class LiveScore
 {
-    use LiveScoreLog, LiveScorePlayer, LiveScoreStats;
+    use StatsData, LogData;
 
     protected Game $game;
 
@@ -37,11 +40,11 @@ class LiveScore
 
     protected ?Collection $awayStartingPlayers;
 
-    protected ?Collection $playersOnCourt;
+    public ?Collection $playersOnCourt;
 
-    protected ?Collection $homePlayersOnCourt;
+    public ?Collection $homePlayersOnCourt;
 
-    protected ?Collection $awayPlayersOnCourt;
+    public ?Collection $awayPlayersOnCourt;
 
     protected int $homeTimeoutsLeft;
 
@@ -50,6 +53,8 @@ class LiveScore
     protected int $homeFoulsLeft;
 
     protected int $awayFoulsLeft;
+
+    protected static ?LiveScore $live = null;
 
     public function __construct(Game|int $game, $loadPlayers = true)
     {
@@ -73,6 +78,30 @@ class LiveScore
         $this->initGame();
     }
 
+    /**
+     * Add game stats from the request
+     *
+     * @param  Request $request
+     * @return void
+     */
+    public function addStatFromRequest(Request $request): void
+    {
+        $action = $request->input('action');
+        $data   = static::formatRequestData($request);
+
+        if ($action && $data) {
+            if ($action === 'score')            app(Actions\AddScore::class)->handle(gameId: $this->game->id, playerId: $data->player_id, amount: $data->amount, otherPlayerId: $data->player_2_id);
+            elseif ($action === 'miss')         app(Actions\AddMiss::class)->handle(gameId: $this->game->id, playerId: $data->player_id, amount: $data->amount);
+            elseif ($action === 'assist')       app(Actions\AddAssist::class)->handle(gameId: $this->game->id, playerId: $data->player_id);
+            elseif ($action === 'rebound')      app(Actions\AddRebound::class)->handle(gameId: $this->game->id, playerId: $data->player_id, type: $data->subtype);
+            elseif ($action === 'steal')        app(Actions\AddSteal::class)->handle(gameId: $this->game->id, playerId: $data->player_id, otherPlayerId: $data->player_2_id);
+            elseif ($action === 'block')        app(Actions\AddBlock::class)->handle(gameId: $this->game->id, playerId: $data->player_id, otherPlayerId: $data->player_2_id);
+            elseif ($action === 'turnover')     app(Actions\AddTurnover::class)->handle(gameId: $this->game->id, playerId: $data->player_id);
+            elseif ($action === 'foul')         app(Actions\AddFoul::class)->handle(gameId: $this->game->id, playerId: $data->player_id, type: $data->subtype, otherPlayerId: $data->player_2_id);
+            elseif ($action === 'substitution') app(Actions\Substitution::class)->handle(gameId: $this->game->id, playersIn: $data->players_in, playersOut: $data->players_out);
+        }
+    }
+
     public function initGame()
     {
         // This simply creates the game live model
@@ -91,9 +120,15 @@ class LiveScore
         ]);
 
         // And update the log collection
-        $this->updateLog();
+        // TODO: Clean this up
+        $this->refreshLog();
     }
 
+    /**
+     * Load the players for the game
+     *
+     * @return void
+     */
     public function loadPlayers()
     {
         // Initialize players
@@ -119,12 +154,12 @@ class LiveScore
         $this->getPlayersBySide('home');
         $this->getPlayersBySide('away');
 
-        // // Init starting players
+        // Init starting players
         $this->startingPlayers     = new Collection();
         $this->homeStartingPlayers = new Collection();
         $this->awayStartingPlayers = new Collection();
 
-        // // Init players on court
+        // Init players on court
         $this->playersOnCourt     = new Collection();
         $this->homePlayersOnCourt = new Collection();
         $this->awayPlayersOnCourt = new Collection();
@@ -133,6 +168,11 @@ class LiveScore
         $this->game->setRelations(['referees' => $this->game->referees]);
     }
 
+    /**
+     * Setup the players and add them to the proper collections
+     *
+     * @return void
+     */
     function setupPlayers()
     {
         // Add players if we have any
@@ -168,6 +208,13 @@ class LiveScore
         }
     }
 
+    /**
+     * Save stating players to the DB (IDs)
+     *
+     * @param array $homePlayerIds
+     * @param array $awayPlayerIds
+     * @return void
+     */
     public function addStartingPlayers(array $homePlayerIds, array $awayPlayerIds)
     {
         GameLog::query()->updateOrCreate([
@@ -200,6 +247,11 @@ class LiveScore
         $this->playersOnCourt = $this->homePlayersOnCourt->merge($this->awayPlayersOnCourt);
     }
 
+    /**
+     * Start the game, set status and setup the players to start
+     *
+     * @return void
+     */
     public function startGame($writeToLog = true)
     {
         $this->currentPeriod = 1;
@@ -221,138 +273,63 @@ class LiveScore
         $this->setupPlayers();
 
         // And update the log collection
-        $this->updateLog();
+        $this->refreshLog();
     }
 
-    public function timeout(string $teamId, ?string $occurredAt = '00:00:00')
+    /**
+     * Load game model with all required relations to avoid n+1
+     *
+     * @param  Game|int $game
+     * @return Game
+     */
+    public function loadGame(Game|int $game): Game
     {
-        // Find the team
-        $team         = ($teamId === $this->homeTeam->id) ? $this->homeTeam : $this->awayTeam;
-        $timeoutsLeft = ($teamId === $this->homeTeam->id) ? $this->homeTimeoutsLeft : $this->awayTimeoutsLeft;
-
-        // We need to check if we have timeouts left
-        if ($timeoutsLeft <= 0) {
-            return false;
-        }
-
-        // And also update the timeouts left
-        $timeoutsLeft--;
-        ($teamId === $this->homeTeam->id) ? $this->homeTimeoutsLeft = $timeoutsLeft : $this->awayTimeoutsLeft = $timeoutsLeft;
-
-        $log = $this->addLog([
-            'type'        => 'timeout',
-            'subtype'     => 'team_timeout',
-            'team_id'     => $team->id,
-            'period'      => $this->currentPeriod,
-            'occurred_at' => $occurredAt,
-        ]);
-
-        // Now update the stats
-        $this->updateLiveStats(log: $log);
-    }
-
-    public function updateGame()
-    {
-        // This will write the data to the DB
-    }
-
-    public function currentPeriod()
-    {
-        return $this->currentPeriod;
-    }
-
-    public function setPeriod($period)
-    {
-        $this->currentPeriod = $period;
-    }
-
-    public function nextPeriod()
-    {
-        // We need to reset the timeouts and fouls
-        $this->homeTimeoutsLeft = config('live.team_timeouts_per_period');
-        $this->awayTimeoutsLeft = config('live.team_timeouts_per_period');
-        $this->homeFoulsLeft    = config('live.team_fouls_per_period');
-        $this->awayFoulsLeft    = config('live.team_fouls_per_period');
-
-        $this->currentPeriod++;
-
-        // Update the game live model
-        $this->game->update([
-            'period' => $this->currentPeriod,
-        ]);
-
-        // And add a log that the period has started
-        $log = $this->addLog([
-            'type'        => 'period_started',
-            'period'      => $this->currentPeriod,
-            'occurred_at' => '00:00:00',
-        ]);
-
-        // Now update the stats
-        $this->updateLiveStats(log: $log);
-    }
-
-    public function previousPeriod()
-    {
-        $this->currentPeriod--;
-    }
-
-    public function endGame()
-    {
-        // $lastPeriod = 4; // Check if this is correct (could be overtime, or game suspended before)
-
-        $this->game->update(['status' => 'completed']);
-
-        // We also need to update the log
-        $log = GameLog::query()->updateOrCreate([
-            'game_id'      => $this->game->id,
-            'type'         => 'game_ended',
-        ], [
-            'period'        => $this->game->period,
-            'occurred_at'   => '00:32:00',
-            'occurred_at_p' => '00:08:00',
-        ]);
-
-        // Update the stats
-        $this->updateLiveStats($log);
-
-        // Also update all player stats
-        foreach ($this->game->players as $player) {
-            $this->updatePlayerLiveStats($player);
-        }
-
-        // Update main game stats
-        $this->updateMainStats($log);
-
-        // We also need to update total stats, which we defer to the queue
-        GenerateTotalStats::dispatch(Event::current());
-
-        // And update the log collection
-        $this->updateLog();
-    }
-
-    public function resetGame()
-    {
-        // Clear the log
-        GameLog::where('game_id', $this->game->id)->delete();
-
-        $data = [
-            'status'                => 'scheduled',
-            'period'                => 1,
-            'home_starting_players' => [],
-            'home_players_on_court' => [],
-            'away_starting_players' => [],
-            'away_players_on_court' => [],
+        $requiredRelations = [
+            'homeTeam',
+            'awayTeam',
+            'homeTeam.media',
+            'awayTeam.media',
+            'homeTeam.activePlayers',
+            'homeTeam.activePlayers.media',
+            'awayTeam.activePlayers',
+            'awayTeam.activePlayers.media',
+            'referees',
+            'referees.media',
         ];
 
-        // Reset stats
-        foreach (config('stats.columns') as $column) {
-            foreach (['home', 'away'] as $side) {
-                $data[$side . '_' . $column['id']] = 0;
+        // Load if needed
+        if (is_int($game)) {
+            $this->game = Game::find($game)->with($requiredRelations)->first();
+        } else {
+            $this->game = Game::where('id', $game->id)->with($requiredRelations)->first();
+        }
+
+        return $this->game;
+    }
+
+    /**
+     * Find player by ID
+     *
+     * @param int $playerId
+     * @return null|Player
+     */
+    public function findPlayer(int $playerId): ?Player
+    {
+        return $this->players->where('id', $playerId)->first();
+    }
+
+    public function getPlayersBySide(string $side = 'home'): Collection
+    {
+        $this->{$side . 'Players'} = new Collection;
+        // $this->game->players->where('relations.pivot.team_id', $this->game->home_team_id)->toArray()
+
+        foreach ($this->players as $player) {
+            if ($player->pivot->team_id === $this->{$side . 'Team'}->id) {
+                $this->{$side . 'Players'}->push($player);
             }
         }
 
-        $this->game->update($data);
+        return $this->{$side . 'Players'};
     }
 
     public function game(): Game
@@ -360,53 +337,28 @@ class LiveScore
         return $this->game;
     }
 
-    public function log(): Collection
-    {
-        return $this->log;
-    }
-
-    public function homeTeam()
-    {
-        return $this->homeTeam;
-    }
-
-    public function awayTeam()
-    {
-        return $this->awayTeam;
-    }
-
-    public function players()
-    {
-        return $this->players;
-    }
-
-    public function homePlayers()
+    public function homePlayers(): Collection
     {
         return $this->homePlayers;
     }
 
-    public function awayPlayers()
+    public function awayPlayers(): Collection
     {
         return $this->awayPlayers;
     }
 
-    public function playersOnCourt()
+    /**
+     * Simply return the current period
+     *
+     * @return int
+     */
+    public function currentPeriod(): int
     {
-        return $this->playersOnCourt;
-    }
-
-    public function homePlayersOnCourt()
-    {
-        return $this->homePlayersOnCourt;
-    }
-
-    public function awayPlayersOnCourt()
-    {
-        return $this->awayPlayersOnCourt;
+        return $this->currentPeriod;
     }
 
     /**
-     * Optimized data for frontend JSON
+     * Array representation of all live score data for the game
      *
      * @return array
      */
@@ -482,7 +434,7 @@ class LiveScore
     }
 
     /**
-     * Optimized data
+     * Optimizes the data for Inertia
      *
      * @return array
      */
@@ -491,6 +443,12 @@ class LiveScore
         return $this->optimizeData($this->toData());
     }
 
+    /**
+     * Optimize the data for Inertia
+     *
+     * @param  array $data
+     * @return array
+     */
     public function optimizeData(array $data): array
     {
         unset($data['game']['created_at'], $data['game']['updated_at'], $data['game']['deleted_at']);
@@ -527,46 +485,95 @@ class LiveScore
             }
         }
 
-
         return $data;
     }
 
-    /**
-     * Update stats for main game, this is usually done at the end of the game
-     *
-     * @param  GameLog $log
-     * @return void
-     */
-    public function updateMainStats(GameLog $log)
+    public static function formatRequestData(Request $request): Fluent
     {
-        $this->game->update([
-            'home_score' => $log->home_score,
-            'away_score' => $log->away_score,
-        ]);
-    }
-
-    public function loadGame(Game|int $game): Game
-    {
-        $requiredRelations = [
-            'homeTeam',
-            'awayTeam',
-            'homeTeam.media',
-            'awayTeam.media',
-            'homeTeam.activePlayers',
-            'homeTeam.activePlayers.media',
-            'awayTeam.activePlayers',
-            'awayTeam.activePlayers.media',
-            'referees',
-            'referees.media',
+        // Default type and amount
+        $data = [
+            'type'   => 'player_' . $request->input('action'),
+            'amount' => 1,
         ];
 
-        // Load if needed
-        if (is_int($game)) {
-            $this->game = Game::find($game)->with($requiredRelations)->first();
-        } else {
-            $this->game = Game::where('id', $game->id)->with($requiredRelations)->first();
+        // Get player and team data
+        if ($request->input('selectedPlayer')) {
+            $data['player_id'] = $request->input('selectedPlayer')['id'];
+            $data['team_id'] = $request->input('teamId');
         }
 
-        return $this->game;
+        // Handle score and miss
+        if ($request->input('action') === 'score' || $request->input('action') === 'miss') {
+            $data['amount']  = $request->input('type');
+            $data['subtype'] = $request->input('type') . 'pt';
+        }
+
+        // Handle substitution
+        if ($request->input('action') === 'substitution') {
+            unset($data['amount']);
+            $data['type']        = 'substitution';
+            $playersInIds        = array_column($request->input('selectedPlayersIn'), 'id');
+            $playersOutIds       = array_column($request->input('selectedPlayersOut'), 'id');
+            $data['players_in']  = $playersInIds;
+            $data['players_out'] = $playersOutIds;
+        }
+
+        // Handle others
+        if ($request->input('action') === 'assist')   $data['subtype'] = 'ast';
+        if ($request->input('action') === 'assist')   $data['subtype'] = 'ast';
+        if ($request->input('action') === 'rebound')  $data['subtype'] = $request->input('type');
+        if ($request->input('action') === 'steal')    $data['subtype'] = 'stl';
+        if ($request->input('action') === 'turnover') $data['subtype'] = 'to';
+        if ($request->input('action') === 'foul')     $data['subtype'] = 'pf';
+        if ($request->input('action') === 'foul' && $request->input('type') === 'tf') $data['subtype'] = 'tf';
+        if ($request->input('action') === 'foul' && $request->input('type') === 'ff') $data['subtype'] = 'ff';
+
+        return fluent($data);
+    }
+
+    /**
+     * Get all scores from the log and updates them
+     *
+     * @return void
+     */
+    public function updateLogScore()
+    {
+        // TODO: maybe we don't need this method
+    }
+
+    public function updateGameDataFromLog()
+    {
+        // Make sure we have the latest log entr4ies
+        $this->refreshLog();
+
+        // Update with last log
+        $this->game->update([
+            'home_score' => $this->log->sortByDesc('id')->first()?->home_score ?: 0,
+            'away_score' => $this->log->sortByDesc('id')->first()?->away_score ?: 0,
+        ]);
+
+        // Also update periods
+        $periodScores = [];
+        foreach (['home', 'away'] as $side) {
+            foreach (range(1, 10) as $period) {
+                $periodScores[$side . '_score_p' . $period] = $this->log->where('type', 'player_score')->where('team_side', $side)->where('period', $period)->sum('amount') ?: 0;
+            }
+        }
+        $this->game->update($periodScores);
+    }
+
+    /**
+     * Helper for building new instances
+     *
+     * @param  Game $game
+     * @return LiveScore
+     */
+    public static function build(Game $game): LiveScore
+    {
+        if (! self::$live) {
+            self::$live = new LiveScore($game);
+        }
+
+        return self::$live;
     }
 }

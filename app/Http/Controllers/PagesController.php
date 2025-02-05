@@ -33,6 +33,8 @@ class PagesController extends Controller
         // Stats::generateTotalForTeams(generateForEvents: true, generateForGames: true);
         // Stats::generateTotalForPlayers(generateForEvents: true, generateForGames: true);
 
+        // $game = Game
+
         // Get the latest games
         $upcomingGames      = Game::where(['event_id' => $currentEvent->id])->where(function ($query) {
             $query->where('status', 'scheduled');
@@ -51,6 +53,8 @@ class PagesController extends Controller
         $leaderboard        = Helpers::leaderboard();
         $leaderboardPoints  = Helpers::leaderboardPoints();
         $leaderboard3Point  = Helpers::leaderboardThreePoints();
+
+        // dump($leaderboardPoints);
 
         // return view('pages.empty');
 

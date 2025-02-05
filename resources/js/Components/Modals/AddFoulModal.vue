@@ -44,9 +44,10 @@ onMounted(() => {
     }
 })
 
-const save = async function () {
+const save = function () {
+    data.action = 'foul';
     data.gameId = game.value.id;
-    await router.post('/live/' + data.gameId + '/foul', data);
+    router.put('/live/' + data.gameId + '/score', data);
 
     $vfm.hideAll();
 };
@@ -100,7 +101,7 @@ function setType(type) {
                             <div class="text-center">
                                 <h3 class="mb-3 text-sm text-center uppercase">PREKRŠAJ OD</h3>
                                 <div class="grid grid-cols-2 gap-4 md:grid-cols-3">
-                                    <PlayerSelectBlock :player="player" :active="isActive(player)" v-for="player in players" :key="'playersc-' + player.id"
+                                    <PlayerSelectBlock :player="player" :game="game" :active="isActive(player)" v-for="player in players" :key="'playersc-' + player.id"
                                         @click="selectPlayer(player)" />
                                 </div>
                             </div>
@@ -125,8 +126,8 @@ function setType(type) {
                             <div v-if="data.type !== 'tf'">
                                 <h3 class="mb-3 text-sm text-center uppercase">Prekršaj na</h3>
                                 <div class="grid grid-cols-2 gap-4 md:grid-cols-3">
-                                    <PlayerSelectBlock :player="player" :active="isActiveFouled(player)" v-for="player in opponentPlayers" :key="'playeras-' + player.id"
-                                        @click="selectFouledPlayer(player)" :class="{ hidden: player.id === data.selectedPlayer?.id }" />
+                                    <PlayerSelectBlock :player="player" :game="game" :active="isActiveFouled(player)" v-for="player in opponentPlayers"
+                                        :key="'playeras-' + player.id" @click="selectFouledPlayer(player)" :class="{ hidden: player.id === data.selectedPlayer?.id }" />
                                 </div>
                             </div>
                         </div>

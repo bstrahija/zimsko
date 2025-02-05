@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Events;
+namespace App\LiveScore\Events;
 
 use App\Services\LiveScore;
 use Illuminate\Broadcasting\Channel;
@@ -12,21 +12,21 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class LiveScoreUpdated implements ShouldBroadcastNow
+class StatsAddedToLog implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $event = null;
+    public $gameId = null;
 
     public $data;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(string $event = null, $data = null)
+    public function __construct(int $gameId = null, array $data = null)
     {
-        $this->event = $event;
-        $this->data  = $data;
+        $this->gameId = $gameId;
+        $this->data   = $data;
     }
 
     /**
@@ -36,9 +36,6 @@ class LiveScoreUpdated implements ShouldBroadcastNow
      */
     public function broadcastOn(): array
     {
-        return [
-            new Channel('live-score'),
-            new Channel('zimsko-local'),
-        ];
+        return [];
     }
 }

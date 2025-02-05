@@ -53,11 +53,11 @@ const setType = (type) => {
                                     <div class="col-span-2 bg-gradient-to-br bg-slate-800 from-slate-800 to-slate-900">
                                         <ul class="p-2 space-y-2">
                                             <li class="relative" v-for="(statType, i) in data.statTypes">
-                                                <a href="#" @click="setType(statType.value)"
-                                                    class="block p-3 text-sm font-medium text-white rounded-md transition-all duration-200 hover:bg-slate-700/50 hover:shadow-md"
+                                                <button @click="setType(statType.value)"
+                                                    class="block p-3 w-full text-sm font-medium text-white rounded-md transition-all duration-200 hover:bg-slate-700/50 hover:shadow-md"
                                                     :class="{ 'bg-slate-700/50 shadow-md': data.statType === statType.value }">
                                                     {{ statType.label }}
-                                                </a>
+                                                </button>
                                                 <div v-if="i !== 10" class="my-1 h-px bg-gradient-to-r from-transparent to-transparent opacity-30 via-slate-600"></div>
                                             </li>
                                         </ul>

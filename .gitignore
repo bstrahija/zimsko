@@ -10,6 +10,7 @@
 /storage/pail
 /storage/media-library
 /vendor
+_bak
 .env
 .env.backup
 .env.production

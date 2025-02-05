@@ -33,9 +33,10 @@ const data = reactive({
     gameId: null,
 });
 
-const save = async function () {
+const save = function () {
+    data.action = 'steal';
     data.gameId = game.value.id;
-    await router.post('/live/' + data.gameId + '/steal', data);
+    router.put('/live/' + data.gameId + '/score', data);
     $vfm.hideAll();
 };
 

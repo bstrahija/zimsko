@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('game_player', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('event_id')->cascadeOnDelete();
-            $table->foreignId('game_id')->cascadeOnDelete();
-            $table->foreignId('player_id')->cascadeOnDelete();
-            $table->foreignId('team_id')->cascadeOnDelete();
+            $table->foreignId('event_id')->index()->cascadeOnDelete();
+            $table->foreignId('game_id')->index()->cascadeOnDelete();
+            $table->foreignId('player_id')->index()->cascadeOnDelete();
+            $table->foreignId('team_id')->index()->cascadeOnDelete();
 
             // Get number columns
             foreach (config('stats.columns') as $column) {

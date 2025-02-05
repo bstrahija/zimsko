@@ -1,12 +1,17 @@
 <?php
 
-namespace App\Services;
+namespace App\LiveScore\Traits;
 
 use App\Models\Player;
 use App\Models\Team;
 
-trait LiveScoreStats
+trait StatsData
 {
+    /**
+     * Find team stats in the log table and add them the team object
+     *
+     * @return void
+     */
     public function addTeamStats()
     {
         if ($this->homeTeam && $this->awayTeam) {
@@ -71,6 +76,16 @@ trait LiveScoreStats
         }
     }
 
+    /**
+     * Take a specific stat from the log table and return for the purpose of syncing to other tables
+     *
+     * @param Team $team
+     * @param array $types
+     * @param array $subtypes
+     * @param mixed $period
+     * @param string $method
+     * @return int
+     */
     public function getTeamStat(Team $team, array $types, array $subtypes = [], $period = null, $method = 'sum'): int
     {
         // First let's filter by main type
@@ -99,6 +114,11 @@ trait LiveScoreStats
         return 0;
     }
 
+    /**
+     * Add player stats from the log table to the player objects
+     *
+     * @return void
+     */
     public function addPlayerStats()
     {
         foreach ($this->players as $player) {
@@ -149,6 +169,16 @@ trait LiveScoreStats
         // die();
     }
 
+    /**
+     * Get a specific stat from the log table for the purpose of syncing to other tables
+     *
+     * @param Player $player
+     * @param array $types
+     * @param array $subtypes
+     * @param mixed $period
+     * @param string $method
+     * @return int
+     */
     public function getPlayerStat(Player $player, array $types, array $subtypes = [], $period = null, $method = 'sum'): int
     {
         // First let's filter by main type

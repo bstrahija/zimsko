@@ -60,8 +60,7 @@ const remove = () => {
             <IconTechnical class="inline mr-1 h-6 text-red-600" v-if="log.type === 'player_foul' && log.subtype === 'tf'" />
             <IconSteal class="inline mr-1 h-6" v-if="log.type === 'player_steal'" />
             <IconRebound class="inline mr-1 h-6" v-if="log.type === 'player_rebound'" />
-            {{ log.period }}.
-            {{ (log.period <= 4 ? 'Četvrtina' : 'Produžetak') }} &mdash; {{ log.home_score }}:{{ log.away_score }} </h3>
+            {{ log.period <= 4 ? log.period : log.period - 4 }}. {{ (log.period <= 4 ? 'Četvrtina' : 'Produžetak') }} &mdash; {{ log.home_score }}:{{ log.away_score }} </h3>
 
                 <div class="text-xs text-gray-300">
                     <div v-if="log.type === 'game_starting_players'">

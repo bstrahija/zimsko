@@ -1,0 +1,129 @@
+<?php
+
+namespace App\Services;
+
+use App\Models\Event;
+use App\Models\Game;
+use App\Models\GameLive;
+use App\Models\Player;
+use App\Models\Stat;
+use App\Models\Team;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
+
+trait StatsPlayers
+{
+    /**
+     * Generate DB data from a game
+     * Usually called after a game is finished
+     * TODO: Think about if we also update stats for the parent event, and maybe also total stats
+     *
+     * @param GameLive $gameLive
+     * @return void
+     */
+    public static function generateFromGameForPlayers(Game $game): void
+    {
+        // Clean up any existing stats for player in this game
+        // Stat::where('game_id', $game->id)->where('for', 'player')->delete();
+
+        if ($game->status === 'completed') {
+            foreach (['home' => $game->homePlayers, 'away' => $game->awayPlayers] as $side => $players) {
+                foreach ($players as $player) {
+                    $statData = [];
+
+                    // Prepare the data (legacy data has no detailed stats like assists, rebounds, etc.)
+                    foreach (config('stats.columns') as $column) {
+                        $statData[$column['id']] = $player->pivot->{$column['id']};
+                    }
+
+                    // Create the record
+                    Stat::query()->updateOrCreate([
+                        'type'      => 'game',
+                        'for'       => 'player',
+                        'event_id'  => $game->event_id,
+                        'game_id'   => $game->id,
+                        'player_id' => $player->id,
+                        'team_id'   => $side === 'home' ? $game->homeTeam->id : $game->awayTeam->id,
+                    ], $statData);
+                }
+            }
+        }
+    }
+
+    /**
+     * Generate stats for all games in specific event
+     *
+     * @param  Event $event
+     * @return void
+     */
+    public static function generateFromEventForPlayers(Event $event, $generateForGames = false)
+    {
+        // Clean out everything
+        // Stat::where(['event_id' => $event->id, 'for' => 'player', 'type' => 'event'])->delete();
+
+        if ($generateForGames) {
+            foreach ($event->games as $game) {
+                self::generateFromGameForPlayers($game);
+            }
+        }
+
+        // Once we have data for all games, we generate for the event
+        $playerEventStats = [];
+        $rows             = Stat::where('event_id', $event->id)->where('for', 'player')->where('type', 'game')->get();
+
+        foreach ($rows as $row) {
+            // Check if we already have stats for this player
+            if (! isset($playerEventStats[$row->player_id])) {
+                $playerEventStats[$row->player_id] = ['games' => 0];
+
+                foreach (config('stats.columns') as $column) {
+                    $playerEventStats[$row->player_id][$column['id']] = 0;
+                }
+
+                foreach (config('stats.calculated_columns') as $column) {
+                    $playerEventStats[$row->player_id][$column['id']] = 0;
+                }
+            }
+
+            // Add the team
+            $playerEventStats[$row->player_id]['team_id'] = $row->team_id;
+
+            // Now we add games
+            $playerEventStats[$row->player_id]['games']++;
+
+            // Add stats
+            foreach (config('stats.columns') as $column) {
+                $playerEventStats[$row->player_id][$column['id']] += $row[$column['id']];
+            }
+
+            // Here we do calculations for all the calculated columns
+            foreach (config('stats.calculated_columns') as $column) {
+                if ($column['method'] === 'avg') {
+                    $playerEventStats[$row->player_id][$column['id']] = $playerEventStats[$row->player_id]['games'] ? round($playerEventStats[$row->player_id][str_replace('_avg', '', $column['id'])] / $playerEventStats[$row->player_id]['games'], 2) : 0;
+                } elseif ($column['method'] === 'percent') {
+                    $attemptColumn = str_replace('_percent', '', $column['id']);
+                    $madeColumn    = $attemptColumn . '_made';
+                    $attempted     = $playerEventStats[$row->player_id][$attemptColumn];
+                    $made          = $playerEventStats[$row->player_id][$madeColumn];
+                    $playerEventStats[$row->player_id][$column['id']] = $attempted ? round($made / $attempted * 100, 2) : 0;
+                } elseif ($column['method'] === 'efficiency') {
+                    $playerEventStats[$row->player_id][$column['id']] = Stats::calculateEfficiency($playerEventStats[$row->player_id]);
+                }
+            }
+        }
+
+        // Write the to the DB
+        foreach ($playerEventStats as $playerId => $stats) {
+            $teamId = $stats['team_id'];
+            unset($stats['team_id']);
+
+            Stat::query()->updateOrCreate([
+                'type'      => 'event',
+                'for'       => 'player',
+                'event_id'  => $event->id,
+                'player_id' => $playerId,
+                'team_id'   => $teamId,
+            ], $stats);
+        }
+    }
+}

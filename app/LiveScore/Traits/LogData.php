@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Services;
+namespace App\LiveScore\Traits;
 
 use App\Models\GameLog;
 use App\Models\Player;
 use Illuminate\Support\Collection;
 
-trait LiveScoreLog
+trait LogData
 {
     protected ?Collection $log;
 
@@ -25,6 +25,17 @@ trait LiveScoreLog
             $team         = $isInHomeTeam ? $this->homeTeam : $this->awayTeam;
         }
 
+        // Also get the scores from the last log entry and update them if needed
+        $lastLog   = $this->log->sortByDesc('id')->first();
+        $homeScore = $lastLog->home_score;
+        $awayScore = $lastLog->away_score;
+
+        // Now update the scores
+        if ($data['type'] === 'player_score' || $data['type'] === 'player_score_with_assist') {
+            $homeScore += $isInHomeTeam  ? $data['amount'] : 0;
+            $awayScore += !$isInHomeTeam ? $data['amount'] : 0;
+        }
+
         // Create log entry
         $item                = new GameLog();
         $item->game_id       = $this->game->id;
@@ -38,11 +49,18 @@ trait LiveScoreLog
         $item->team_name     = isset($team) && $team ? $team->title : null;
         $item->team_side     = isset($isInHomeTeam) ? ($isInHomeTeam ? 'home' : 'away') : null;
         $item->amount        = $data['amount'] ?? null;
-        $item->period        = $data['period'] ?? 'q1';
+        $item->period        = $data['period'] ?? $this->currentPeriod();
         $item->occurred_at   = $data['occurred_at'] ?? '00:00:00';
+        $item->home_score    = $homeScore ?? 0;
+        $item->away_score    = $awayScore ?? 0;
         $item->save();
 
         return $item;
+    }
+
+    public function log(): Collection
+    {
+        return $this->log;
     }
 
     /**
@@ -106,9 +124,13 @@ trait LiveScoreLog
 
     public function logMessageForPeriod(GameLog $log, $type = 'start'): string
     {
-        $message = ($type === 'start' ? 'Počela je ' : 'Završila je') . ' ' . $log->period;
-        $message .= ($log->period <= 4 ? ' četvrtina: ' : ' produžetak: ');
-        $message .= $log->created_at->format('d.m. h:i:s');
+        if ($log->period <= 4) {
+            $message = ($type === 'start' ? 'Počela je ' : 'Završila je') . ' ' . $log->period;
+            $message .= '. četvrtina: ' . $log->created_at->format('d.m. h:i:s');
+        } else {
+            $message = ($type === 'start' ? 'Počeo je ' : 'Završio je') . ' ' . ($log->period - 4);
+            $message .= '. produžetak: ' . $log->created_at->format('d.m. h:i:s');
+        }
 
         return $message;
     }
@@ -246,7 +268,7 @@ trait LiveScoreLog
         return $message;
     }
 
-    public function updateLog()
+    public function refreshLog()
     {
         $this->log = GameLog::where('game_id', $this->game->id)
             ->orderBy('period', 'desc')

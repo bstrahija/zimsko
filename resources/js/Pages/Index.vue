@@ -38,7 +38,7 @@ const filterResults = () => {
 };
 
 const scoreUrl = function (game) {
-    let url = 'live/' + game.id;
+    let url = 'live/' + game.id + '/edit';
 
     if (game.status === 'in_progress') url = 'live/' + game.id + '/score';
 
@@ -68,7 +68,7 @@ const goToGame = function (game) {
             preserveScroll: true,
         })
     } else {
-        router.visit('live/' + game.id, {
+        router.visit('live/' + game.id + '/edit', {
             preserveState: true,
             preserveScroll: true,
         })
@@ -183,9 +183,9 @@ const goToGame = function (game) {
                     </div>
 
                     <div class="pt-6 text-center">
-                        <a href="#" class="btn btn-error" @click.prevent="generateStats()">
+                        <button class="btn btn-error" @click.prevent="generateStats()">
                             Generiraj statistiku
-                        </a>
+                        </button>
                     </div>
                 </div>
             </div>

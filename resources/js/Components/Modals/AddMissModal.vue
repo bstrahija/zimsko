@@ -30,9 +30,10 @@ const data = reactive({
     gameId: null,
 });
 
-const save = async function () {
+const save = function () {
+    data.action = 'miss';
     data.gameId = game.value.id;
-    await router.post('/live/' + data.gameId + '/miss', data);
+    router.put('/live/' + data.gameId + '/score', data);
 
     $vfm.hideAll();
 };
@@ -72,7 +73,7 @@ function setScore(score) {
                             <div class="space-y-3">
                                 <h3 class="text-sm text-center uppercase">PROMAŠUJE</h3>
                                 <div class="grid grid-cols-2 gap-4 items-start sm:grid-cols-3 lg:grid-cols-4">
-                                    <PlayerSelectBlock :player="player" v-for="player in players" @click="selectPlayer(player)" :active="isActive(player)" />
+                                    <PlayerSelectBlock :player="player" :game="game" v-for="player in players" @click="selectPlayer(player)" :active="isActive(player)" />
                                 </div>
                             </div>
 

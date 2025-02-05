@@ -1,7 +1,7 @@
 <script setup>
 import { onMounted, reactive, watch } from 'vue';
 import Layout from './Layout.vue';
-import { Head, Link, router } from '@inertiajs/vue3';
+import { Head, Link, router, useForm } from '@inertiajs/vue3';
 import LiveTopBar from '../Components/LiveTopBar.vue';
 
 let props = defineProps({
@@ -12,7 +12,7 @@ let props = defineProps({
 });
 
 let selectedEvent = reactive({})
-const form = reactive({
+const form = useForm({
     saving: false,
     homeTeamId: '',
     awayTeamId: '',
@@ -92,7 +92,7 @@ function canContinue() {
 
 const save = async function () {
     form.saving = true
-    await router.post('/live/' + props.game.id + '/details', form);
+    await router.put('/live/' + props.game.id, form);
     form.saving = false
 };
 </script>
