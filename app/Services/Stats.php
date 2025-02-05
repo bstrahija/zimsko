@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Log;
 
 class Stats
 {
-    use StatsPlayers, StatsTeams;
+    use StatsPlayers, StatsTeams, StatsForLogs;
 
     /**
      * Calculate efficiency rating by specific formula

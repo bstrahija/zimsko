@@ -17,26 +17,26 @@ const props = defineProps({
 
 const { game, log } = toRefs(props);
 
-const nextPeriod = async function () {
+const nextPeriod = function () {
     if (confirm('Da li ste sigurni da želite zavrsiti period?')) {
-        await router.put('/live/' + props.game.id + '/next-period');
+        router.put('/live/' + props.game.id + '/next-period');
 
         $vfm.hideAll();
     }
 }
 
-const startGame = async function () {
+const startGame = function () {
     if (confirm('Da li ste sigurni da želite započeti utakmicu?')) {
-        let response = await router.put('/live/' + props.game.id + '/start');
+        let response = router.put('/live/' + props.game.id + '/start');
         console.log(response);
 
         $vfm.hideAll();
     }
 }
 
-const endGame = async function () {
+const endGame = function () {
     if (confirm('Da li ste sigurni da želite zavrsiti utakmicu?')) {
-        await router.put('/live/' + props.game.id + '/end');
+        router.put('/live/' + props.game.id + '/end');
 
         $vfm.hideAll();
     }

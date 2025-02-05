@@ -53,3 +53,4 @@ Route::put('live/{game}/next-period', [LiveScoreController::class, 'nextPeriod']
 Route::put('live/{game}/end',         [LiveScoreController::class, 'endGame'])->name('live.score.end')->middleware('auth');
 Route::post('live/{game}/reset-game', [LiveScoreController::class, 'resetGame'])->name('live.score.reset_game')->middleware('auth');
 Route::delete('live/log/{log}',       [LiveScoreController::class, 'deleteLogEntry'])->name('live.log.delete')->middleware('auth');
+Route::post('live/generate-stats',    [LiveScoreController::class, 'generateStats'])->name('live.generate_stats')->middleware('auth');

@@ -161,6 +161,6 @@ class Leaderboards
 
     public static function getPlayer3PointLeaderboardForEvent(Event $event, $limit = 10): Leaderboard
     {
-        return self::getPlayerLeaderboardForEvent($event, 'three_points', $limit);
+        return self::getPlayerLeaderboardForEvent($event, 'three_points_made', $limit);
     }
 }

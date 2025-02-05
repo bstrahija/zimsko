@@ -2,6 +2,7 @@
 
 namespace App\LiveScore\Http;
 
+use App\Jobs\GenerateTotalStats;
 use App\LiveScore\Actions\DeleteLogEntry;
 use App\LiveScore\Actions\EndGame;
 use App\LiveScore\Actions\NextPeriod;
@@ -9,9 +10,11 @@ use App\LiveScore\Actions\ResetGame;
 use App\LiveScore\Actions\StartGame;
 use App\LiveScore\Events\LiveScoreUpdated;
 use App\LiveScore\LiveScore;
+use App\Models\Event;
 use App\Models\Game;
 use App\Models\GameLog;
 use App\Services\Cache;
+use App\Services\Stats;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -98,5 +101,11 @@ final class ScoreController extends BaseController
 
         // Simply create log entry with the request data
         $live->addStatFromRequest($request);
+    }
+
+    public function generateStats(Request $request)
+    {
+        $event = $request->get('event') ? Event::find($request->get('event')) : Event::current();
+        GenerateTotalStats::dispatch($event);
     }
 }

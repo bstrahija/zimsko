@@ -2,6 +2,7 @@
 
 namespace App\LiveScore\Actions;
 
+use App\Jobs\GenerateTotalStats;
 use App\LiveScore\Events\LiveScoreUpdated;
 use App\LiveScore\Events\StatsAddedToLog;
 use App\LiveScore\LiveScore;
@@ -39,6 +40,7 @@ class EndGame
             // Trigger the events
             StatsAddedToLog::dispatch($gameId, []);
             LiveScoreUpdated::dispatch('endGame', ['gameId' => $gameId]);
+            GenerateTotalStats::dispatch($game->event);
         });
     }
 }

@@ -69,9 +69,9 @@ function setType(type) {
     data.type = type
 }
 
-const save = async function () {
+const save = function () {
     data.gameId = game.value.id;
-    await router.post('/live/' + data.gameId + '/multi', data);
+    router.post('/live/' + data.gameId + '/multi', data);
     $vfm.hideAll();
     // data.gameId = game.value.id;
     // await router.post('/live/' + data.gameId + '/foul', data);
@@ -224,8 +224,8 @@ function isActiveOther(player) {
                                 <div v-if="data.action === 'substitution'">
                                     <h3 class="mb-3 text-sm text-center uppercase">Ulazi</h3>
                                     <div class="grid grid-cols-2 gap-4 md:grid-cols-3">
-                                        <PlayerSelectBlock :player="player" :game="game" :active="isActiveOther(player)" v-for="player in playersOnBench" :key="'playerbc-' + player.id"
-                                            @click="selectOtherPlayer(player)" :class="{ hidden: player.id === data.selectedPlayer?.id }" />
+                                        <PlayerSelectBlock :player="player" :game="game" :active="isActiveOther(player)" v-for="player in playersOnBench"
+                                            :key="'playerbc-' + player.id" @click="selectOtherPlayer(player)" :class="{ hidden: player.id === data.selectedPlayer?.id }" />
                                     </div>
                                 </div>
                             </div>

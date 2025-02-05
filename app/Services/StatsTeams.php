@@ -162,9 +162,6 @@ trait StatsTeams
             }
         }
 
-
-        die();
-
         // Once we have data for all games, we generate for the event
         $teamTotalStats = [];
         $rows           = Stat::where('for', 'team')->where('type', 'event')->get();

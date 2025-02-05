@@ -16,7 +16,7 @@ const toggleDropdown = function () {
 
 }
 
-const resetGame = async function () {
+const resetGame = function () {
     if (confirm("Jeste li sigurni? Izgubit će te svu statistiku!")) {
         router.post('/live/' + props.game.id + '/reset-game');
     }

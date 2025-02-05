@@ -45,18 +45,20 @@ const scoreUrl = function (game) {
     return url
 }
 
-const deleteGame = async function (game) {
+const deleteGame = function (game) {
     if (confirm('Da li ste sigurni da zelite obrisati ovu utakmicu?')) {
         data.saving = true
-        await router.delete('/live/' + game.id);
+        router.delete('/live/' + game.id);
         data.saving = false
     }
 }
 
-const generateStats = async function () {
+const generateStats = function () {
     if (confirm('Da li ste sigurni da zelite generirati statistiku?')) {
         data.saving = true
-        await router.post('/live/generate-stats');
+        router.post('/live/generate-stats', {
+            'event': props.eventId
+        });
         data.saving = false
     }
 }
