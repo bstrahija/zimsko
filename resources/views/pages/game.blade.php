@@ -11,12 +11,14 @@
                 @else
                     <x-games.score :game="$game" />
 
-
-
                     @if ($game->scheduled_at->year === 2025)
-                        <x-games.stats :game="$game" :live="$live" />
+                        @if ($game->status === 'completed')
+                            <x-games.stats :game="$game" :live="$live" />
 
-                        <x-games.log-stream :game="$game" :live="$live" />
+                            <x-games.log-stream :game="$game" :live="$live" />
+                        @else
+                            <x-games.compare-teams :game="$game" :live="$live" />
+                        @endif
                     @else
                         <x-games.leaders :game="$game" :live="$live" :scorers="$scorers" />
                     @endif

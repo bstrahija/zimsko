@@ -28,13 +28,20 @@
                 } elseif ($item['type'] === 'player_foul') {
                     $icon = 'o-exclamation-triangle';
                     $itemColor = 'text-red-600/80';
+                    if ($item['subtype'] === 'tf' || $item['subtype'] === 'ff') {
+                        $itemBgColor = 'bg-red-400/50';
+                    }
                 } elseif ($item['type'] === 'substitution') {
                     $icon = 'o-arrow-path-rounded-square';
                     $itemBgColor = 'bg-sky-200/80';
                     $itemColor = 'text-sky-600/80';
+                } elseif ($item['type'] === 'timeout') {
+                    $icon = 'o-clock';
+                    $itemBgColor = 'bg-sky-200/60';
+                    $itemColor = 'text-sky-600/80';
                 } elseif ($item['type'] === 'game_ended') {
                     $icon = 'o-hand-raised';
-                    $itemBgColor = 'bg-purple-200/80';
+                    $itemBgColor = 'bg-purple-200/60';
                     $itemColor = 'text-purple-600/80';
                 } elseif ($item['type'] === 'game_started' || $item['type'] === 'game_starting_players' || $item['type'] === 'game_initialized') {
                     $icon = 'o-hand-raised';

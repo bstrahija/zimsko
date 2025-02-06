@@ -46,7 +46,6 @@ class ResetGame
             // Clear the cache
             Cache::clear();
 
-
             // Trigger the events
             StatsAddedToLog::dispatch($gameId, []);
             LiveScoreUpdated::dispatch('resetGame', ['gameId' => $game->id]);

@@ -60,7 +60,9 @@ const addStat = (stat, type) => {
         return;
     }
 
-    if (stat !== 'substitution') {
+    if (stat === 'substitution') {
+        helpers.addSubstitution(props.game, props.team, null, activePlayer.value);
+    } else {
         let data = {
             teamId: props.team.id,
             selectedPlayer: activePlayer.value,
@@ -68,8 +70,6 @@ const addStat = (stat, type) => {
             type: type
         }
         router.put('/live/' + props.game.id + '/score', data);
-    } else {
-        helpers.addSubstitution(props.game, props.team, activePlayer.value);
     }
 
     hideIcons();

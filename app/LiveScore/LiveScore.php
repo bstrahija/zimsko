@@ -99,6 +99,7 @@ class LiveScore
             elseif ($action === 'turnover')     app(Actions\AddTurnover::class)->handle(gameId: $this->game->id, playerId: $data->player_id);
             elseif ($action === 'foul')         app(Actions\AddFoul::class)->handle(gameId: $this->game->id, playerId: $data->player_id, type: $data->subtype, otherPlayerId: $data->player_2_id);
             elseif ($action === 'substitution') app(Actions\Substitution::class)->handle(gameId: $this->game->id, playersIn: $data->players_in, playersOut: $data->players_out);
+            elseif ($action === 'timeout')      app(Actions\Timeout::class)->handle(gameId: $this->game->id, teamId: $data->team_id);
         }
     }
 
@@ -516,6 +517,12 @@ class LiveScore
             $playersOutIds       = array_column($request->input('selectedPlayersOut'), 'id');
             $data['players_in']  = $playersInIds;
             $data['players_out'] = $playersOutIds;
+        }
+
+        // Handle timeouts
+        if ($request->input('action') === 'timeout') {
+            $data['action']  = 'timeout';
+            $data['team_id'] = $request->input('team_id');
         }
 
         // Handle others
