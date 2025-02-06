@@ -1,4 +1,4 @@
-<x-ui.card class="mb-8 col" title="Igrači" subtitle="Vodeće igrači tokom turnira">
+<x-ui.card class="mb-8 col" title="Igrači" subtitle="Vodeći igrači tokom turnira">
     <div x-data="{ activeTab: 'score' }" class="mb-6">
         <div class="flex overflow-x-auto flex-wrap">
             @php
