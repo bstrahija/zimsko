@@ -8,7 +8,7 @@ use App\Models\Post;
 use App\Models\Team;
 use App\Services\Helpers;
 use App\Services\Leaderboards;
-use App\Services\Stats;
+use App\Stats\Stats;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 
@@ -23,7 +23,6 @@ class PagesController extends Controller
      */
     public function index()
     {
-
         // Get data for home page
         $lastEvent          = Event::last()->toArray();
         $currentEvent       = Event::current() ?: ($lastEvent ?: null);

@@ -10,7 +10,7 @@ use App\Models\Player;
 use App\Models\Team;
 use App\Models\TeamPlayer;
 use App\Services\Leaderboards;
-use App\Services\Stats;
+use App\Stats\Stats;
 use Carbon\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
 

@@ -1,19 +1,10 @@
 <?php
 
-namespace App\Services;
-
-use App\Models\Event;
-use App\Models\Game;
-use App\Models\GameLive;
-use App\Models\Player;
-use App\Models\Stat;
-use App\Models\Team;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
+namespace App\Stats;
 
 class Stats
 {
-    use StatsPlayers, StatsTeams, StatsForLogs;
+    use StatsPlayers, StatsTeams, StatsForLeaderboards, StatsForLogs;
 
     /**
      * Calculate efficiency rating by specific formula

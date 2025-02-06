@@ -14,7 +14,7 @@ use App\Models\Event;
 use App\Models\Game;
 use App\Models\GameLog;
 use App\Services\Cache;
-use App\Services\Stats;
+use App\Stats\Stats;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;

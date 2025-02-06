@@ -3,7 +3,7 @@
 namespace App\Legacy;
 
 use App\Models\Event;
-use App\Services\Stats;
+use App\Stats\Stats;
 use Illuminate\Support\Facades\DB;
 
 class SyncStats

@@ -6,7 +6,7 @@ use App\Legacy\Sync;
 use App\Legacy\Sync3pts;
 use App\Legacy\SyncStats as SyncStatsLegacy;
 use App\Models\Event;
-use App\Services\Stats;
+use App\Stats\Stats;
 use Illuminate\Console\Command;
 
 class SyncPlayerStats extends Command

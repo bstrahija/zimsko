@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Stats;
 
 use App\Models\Event;
 use App\Models\Game;
@@ -91,13 +91,13 @@ trait StatsForLogs
 
                     // Scoring stats
                     $stat['field_goals_made']   = $log->where('player_id', $player->id)->where('type', 'player_score')->where('amount', '>', 1)->count() ?: 0;
-                    $stat['field_goals']        = $game->{$side . '_field_goals_made'} + $log->where('player_id', $player->id)->where('type', 'player_miss')->where('amount', '>', 1)->count() ?: 0;
+                    $stat['field_goals']        = $stat['field_goals_made'] + $log->where('player_id', $player->id)->where('type', 'player_miss')->where('amount', '>', 1)->count() ?: 0;
                     $stat['free_throws_made']   = $log->where('player_id', $player->id)->where('type', 'player_score')->where('amount', 1)->count() ?: 0;
-                    $stat['free_throws']        = $game->{$side . '_free_throws_made'} + $log->where('player_id', $player->id)->where('type', 'player_miss')->where('amount', 1)->count() ?: 0;
+                    $stat['free_throws']        = $stat['free_throws_made'] + $log->where('player_id', $player->id)->where('type', 'player_miss')->where('amount', 1)->count() ?: 0;
                     $stat['two_points_made']    = $log->where('player_id', $player->id)->where('type', 'player_score')->where('amount', 2)->count() ?: 0;
-                    $stat['two_points']         = $game->{$side . '_two_points_made'} + $log->where('player_id', $player->id)->where('type', 'player_miss')->where('amount', 2)->count() ?: 0;
+                    $stat['two_points']         = $stat['two_points_made'] + $log->where('player_id', $player->id)->where('type', 'player_miss')->where('amount', 2)->count() ?: 0;
                     $stat['three_points_made']  = $log->where('player_id', $player->id)->where('type', 'player_score')->where('amount', 3)->count() ?: 0;
-                    $stat['three_points']       = $game->{$side . '_three_points_made'} + $log->where('player_id', $player->id)->where('type', 'player_miss')->where('amount', 3)->count() ?: 0;
+                    $stat['three_points']       = $stat['three_points_made'] + $log->where('player_id', $player->id)->where('type', 'player_miss')->where('amount', 3)->count() ?: 0;
 
                     // Other stats
                     $stat['assists']            = $log->where('player_id', $player->id)->where('type', 'player_assist')->count() ?: 0;

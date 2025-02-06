@@ -5,7 +5,7 @@ namespace App\Jobs;
 use App\Legacy\SyncGames;
 use App\Models\Event;
 use App\Services\Cache;
-use App\Services\Stats;
+use App\Stats\Stats;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Queue\Queueable;

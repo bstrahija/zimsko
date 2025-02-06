@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Stats;
 
 use App\Models\Event;
 use App\Models\Game;
@@ -130,6 +130,9 @@ trait StatsTeams
 
         // Write the to the DB
         foreach ($teamEventStats as $teamId => $stats) {
+            unset($stats['field_goals_missed']);
+            unset($stats['free_throws_missed']);
+
             Stat::query()->updateOrCreate([
                 'type'      => 'event',
                 'for'       => 'team',
@@ -206,6 +209,9 @@ trait StatsTeams
 
         // Write the to the DB
         foreach ($teamTotalStats as $teamId => $stats) {
+            unset($stats['field_goals_missed']);
+            unset($stats['free_throws_missed']);
+
             Stat::query()->updateOrCreate([
                 'type'      => 'total',
                 'for'       => 'team',
@@ -275,6 +281,9 @@ trait StatsTeams
 
         // Write the to the DB
         foreach ($playerTotalStats as $playerId => $stats) {
+            unset($stats['field_goals_missed']);
+            unset($stats['free_throws_missed']);
+
             Stat::query()->updateOrCreate([
                 'type'      => 'total',
                 'for'       => 'player',

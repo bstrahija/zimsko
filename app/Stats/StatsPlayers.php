@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Stats;
 
 use App\Models\Event;
 use App\Models\Game;
@@ -29,12 +29,41 @@ trait StatsPlayers
         if ($game->status === 'completed') {
             foreach (['home' => $game->homePlayers, 'away' => $game->awayPlayers] as $side => $players) {
                 foreach ($players as $player) {
-                    $statData = [];
+                    $statData = ['games' => 0];
+
+                    // Now we add games
+                    $statData['games']++;
 
                     // Prepare the data (legacy data has no detailed stats like assists, rebounds, etc.)
                     foreach (config('stats.columns') as $column) {
                         $statData[$column['id']] = $player->pivot->{$column['id']};
                     }
+
+                    // Here we do calculations for all the calculated columns
+                    foreach (config('stats.calculated_columns') as $column) {
+                        if ($column['method'] === 'avg') {
+                            $statData[$column['id']] = $statData['games'] ? round($statData[str_replace('_avg', '', $column['id'])] / $statData['games'], 2) : 0;
+                        } elseif ($column['method'] === 'miss') {
+                            $attemptColumn = str_replace('_missed', '', $column['id']);
+                            $madeColumn    = $attemptColumn . '_made';
+                            $attempted     = $statData[$attemptColumn];
+                            $made          = $statData[$madeColumn];
+                            $statData[$column['id']] = $attempted - $made;
+                        } elseif ($column['method'] === 'percent') {
+                            $attemptColumn = str_replace('_percent', '', $column['id']);
+                            $madeColumn    = $attemptColumn . '_made';
+                            $attempted     = $statData[$attemptColumn];
+                            $made          = $statData[$madeColumn];
+                            $statData[$column['id']] = $attempted ? round($made / $attempted * 100, 2) : 0;
+                        }
+                    }
+
+                    // Calculate efficiency after all other
+                    $statData['efficiency'] = Stats::calculateEfficiency($statData);
+
+                    // Remove some things
+                    unset($statData['field_goals_missed']);
+                    unset($statData['free_throws_missed']);
 
                     // Create the record
                     Stat::query()->updateOrCreate([
@@ -116,6 +145,8 @@ trait StatsPlayers
         foreach ($playerEventStats as $playerId => $stats) {
             $teamId = $stats['team_id'];
             unset($stats['team_id']);
+            unset($stats['field_goals_missed']);
+            unset($stats['free_throws_missed']);
 
             Stat::query()->updateOrCreate([
                 'type'      => 'event',

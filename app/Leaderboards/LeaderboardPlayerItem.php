@@ -4,7 +4,7 @@ namespace App\Leaderboards;
 
 use App\Models\Player;
 use App\Models\Team;
-use App\Services\Stats;
+use App\Stats\Stats;
 
 class LeaderboardPlayerItem
 {

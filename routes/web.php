@@ -15,16 +15,18 @@ use Illuminate\Support\Facades\Route;
 Route::redirect('login', 'admin/login')->name('login');
 
 // Pages
-Route::get('/',               [PagesController::class, 'index'])->name('home');
-Route::get('kontakt',         [PagesController::class, 'contact'])->name('contact');
-Route::get('novosti',         [PostsController::class, 'index'])->name('news');
-Route::get('novosti/{slug}',  [PostsController::class, 'show'])->name('news.show');
-Route::get('rezultati',       [GamesController::class, 'results'])->name('results');
-Route::get('raspored',        [GamesController::class, 'schedule'])->name('schedule');
-Route::get('utakmice/{slug}', [GamesController::class, 'show'])->name('games.show');
-Route::get('ekipe',           [TeamsController::class, 'index'])->name('teams');
-Route::get('ekipe/{slug}',    [TeamsController::class, 'show'])->name('teams.show');
+Route::get('/',               [PagesController::class,   'index'])->name('home');
+Route::get('kontakt',         [PagesController::class,   'contact'])->name('contact');
+Route::post('kontakt',        [PagesController::class,   'contactSubmit'])->name('contact.submit');
+Route::get('novosti',         [PostsController::class,   'index'])->name('news');
+Route::get('novosti/{slug}',  [PostsController::class,   'show'])->name('news.show');
+Route::get('rezultati',       [GamesController::class,   'results'])->name('results');
+Route::get('raspored',        [GamesController::class,   'schedule'])->name('schedule');
+Route::get('utakmice/{slug}', [GamesController::class,   'show'])->name('games.show');
+Route::get('ekipe',           [TeamsController::class,   'index'])->name('teams');
+Route::get('ekipe/{slug}',    [TeamsController::class,   'show'])->name('teams.show');
 Route::get('igraci/{slug}',   [PlayersController::class, 'show'])->name('players.show');
+Route::get('statistika',      [GamesController::class,   'stats'])->name('stats');
 
 // Reports
 Route::get('izvestaji/utakmica/{slug}', [ReportsController::class, 'game'])->name('reports.game');

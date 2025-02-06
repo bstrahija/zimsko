@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Event;
 use App\Models\Player;
 use App\Models\Team;
-use App\Services\Stats;
+use App\Stats\Stats;
 use Illuminate\Http\Request;
 
 class TeamsController extends Controller

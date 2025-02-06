@@ -17,6 +17,7 @@
         @endforeach
     </div>
 </li>
+<li><x-navigation.link href="{{ route('stats') }}">Statistika</x-navigation.link></li>
 <li><x-navigation.link href="https://www.facebook.com/ZimskoPrvenstvoCK/photos_albums" target="_blank">Galerije</x-navigation.link></li>
 <li><x-navigation.link href="{{ route('contact') }}">Kontakt</x-navigation.link></li>
 
