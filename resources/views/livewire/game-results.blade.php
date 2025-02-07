@@ -1,7 +1,7 @@
 <div>
     <div class="grid grid-cols-1 lg:grid-cols-[1fr_260px] mb-8">
         <h1 class="mb-4 text-2xl font-bold text-left font-condensed text-secondary md:text-3xl">
-            Rezulatati utakmica
+            Rezultati utakmica
         </h1>
 
         <div class="inline-block relative text-right">
@@ -20,8 +20,6 @@
             </div>
         </div>
     </div>
-
-    <hr>
 
     <div class="grid gap-4">
         @if (!$results || !count($results))

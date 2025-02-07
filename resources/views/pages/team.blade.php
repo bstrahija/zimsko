@@ -26,9 +26,9 @@
                         </x-ui.card>
                     @endif
 
-                    <x-ui.card class="overflow-x-auto mb-8" title="Poeni" subtitle="Povijest poena tokom svih utakmica">
+                    {{-- <x-ui.card class="overflow-x-auto mb-8" title="Poeni" subtitle="Povijest poena tokom svih utakmica">
                         <x-charts.team-points :team="$team" />
-                    </x-ui.card>
+                    </x-ui.card> --}}
 
                     <x-ui.card class="overflow-x-auto" title="Igrači">
                         <x-teams.players :team="$team" />

@@ -23,14 +23,13 @@ class TeamsController extends Controller
         $team     = Team::where('slug', $slug)->with(['activePlayers', 'activePlayers.media', 'coaches'])->firstOrFail();
         $lastGame = $team->lastGame();
         $nextGame = $team->nextGame();
+        $stats    = []; // Stats::generateTotalForTeams(generateForEvents: true, generateForGames: true);
 
         return view('pages.team', ['team' => $team, 'lastGame' => $lastGame, 'nextGame' => $nextGame]);
     }
 
     public function showPlayer($slug)
     {
-        // Stats::generateTotalForPlayers(generateForEvents: true, generateForGames: true);
-
         $player   = Player::where('slug', $slug)->with(['media', 'teams'])->firstOrFail();
         $lastGame = $player->lastGame();
 

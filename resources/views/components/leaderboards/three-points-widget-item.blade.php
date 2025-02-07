@@ -1,6 +1,6 @@
 <tr class="border-b hover:bg-gray-100">
     <td class="px-2 py-5">
-        <a href="{{ route('teams.show', $item->team->slug ?? ($item->player->team->slug ?? '')) }}" class="flex gap-2 items-center text-xs">
+        <a href="{{ route('players.show', $item->player->slug ?? ($item->player->team->slug ?? '')) }}" class="flex gap-2 items-center text-xs">
             <small class="mr-3 text-gray-500">{{ $position + 1 }}</small>
 
             @if ($item->player->photo())
