@@ -7,6 +7,11 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
+/**
+ * This event triggers actions in the LiveScoreProvider
+ *
+ * @package App\LiveScore\Events
+ */
 class StatsAddedToLog implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
