@@ -17,7 +17,7 @@ class EndGame
     public function handle(int $gameId, ?array $location = null, ?string $occurredAt = '00:00:00')
     {
         DB::transaction(function () use ($gameId, $location, $occurredAt) {
-            Log::debug("Starting game. Game: {$gameId}", ['section' => 'LIVE', 'game_id' => $gameId]);
+            Log::debug("Ending game. Game: {$gameId}", ['section' => 'LIVE', 'game_id' => $gameId]);
 
             $game = Game::find($gameId);
             $live = LiveScore::build($game);
@@ -26,12 +26,17 @@ class EndGame
             // Update the game
             $live->game()->update(['status' => 'completed']);
 
+            // Get the last log entry
+            $log = $live->log()->sortByDesc('id')->first();
+
             // We also need to update the log
             GameLog::query()->updateOrCreate([
-                'game_id'      => $gameId,
-                'type'         => 'game_ended',
+                'game_id' => $gameId,
+                'type'    => 'game_ended',
             ], [
-                'period'        => $game->period,
+                'home_score' => $log?->home_score,
+                'away_score' => $log?->away_score,
+                'period'     => $game->period,
             ]);
 
             // And update the log collection
