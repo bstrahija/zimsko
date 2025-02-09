@@ -1,4 +1,4 @@
-<x-ui.card class="mb-8" title="Rezultat" subtitle="{{ $game->event->title }} | {{ $game->title }}">
+<x-ui.card class="mb-8" title="{{ $game->status === 'completed' ? 'Rezultat' : 'Najava' }}" subtitle="{{ $game->event->title }} | {{ $game->title }}">
     <div class="flex flex-col pt-2" x-data="{ open: false }">
         <div class="flex flex-col items-center mb-4 sm:flex-row sm:justify-between">
             <div class="flex flex-col items-center mb-4 sm:w-1/4 sm:mb-0">
