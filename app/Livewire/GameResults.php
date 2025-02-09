@@ -21,7 +21,7 @@ class GameResults extends Component
 
     public function mount()
     {
-        $this->events        = Event::orderByDesc('scheduled_at')
+        $this->events = Event::orderByDesc('scheduled_at')
             ->whereNot('slug', 'zimsko-2019')
             ->whereNot('slug', 'zimsko-2021')
             ->whereNot('slug', 'LIKE', '%test%')
@@ -46,7 +46,7 @@ class GameResults extends Component
         if ($this->selectedEvent->id === Event::current()->id) {
             $results = $this->selectedEvent->games()
                 ->where('status', 'completed')
-                ->orderBy('scheduled_at')
+                ->orderByDesc('scheduled_at')
                 ->with(['homeTeam', 'awayTeam', 'homeTeam.media', 'awayTeam.media'])
                 ->paginate(25);
         } else {

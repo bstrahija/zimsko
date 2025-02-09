@@ -16,12 +16,8 @@
 
     <style>
         body {
-            font-family: sans-serif;
             font-size: 12px;
-        }
-
-        body {
-            font-family: Arial, sans-serif;
+            font-family: Verdana, 'DejaVu Sans', 'Times New Roman', Arial, Helvetica, sans-serif;
             line-height: 1.4;
             color: #333;
             background-color: #f9fbfd;
@@ -173,8 +169,6 @@
             }
         }
     </style>
-
-    @vite(['resources/css/report.css'])
 </head>
 
 <body class="bg-white">

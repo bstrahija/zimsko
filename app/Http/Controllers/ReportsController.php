@@ -36,14 +36,23 @@ class ReportsController extends Controller
         }
         $live['game']['players'] = collect($live['game']['players'])->sortByDesc('score')->values()->all();
 
-        $pdf = Pdf::loadView('reports.game', ['game' => $live['game']]);
+        // $html = view('reports.game', ['game' => $live['game']])->render();
+        // $html = mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8');
+        // dd($html);
 
-        return $pdf->download('report.pdf');
+        $pdf = Pdf::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])
+            ->setOption('encoding', 'UTF-8')
+            ->loadView('reports.game', ['game' => $live['game']]);
+
+        // return $pdf->download('report-' . $game->slug . '.pdf');
+        return response()->streamDownload(function () use ($pdf) {
+            echo $pdf->stream();
+        }, 'report-' . $game->slug . '.pdf');
 
         // Pdf::view('reports.game', ['game' => $game])
         //     ->format('a4')
         //     ->save('invoice.pdf');
 
-        // return view('reports.game', ['game' => $live['game']]);
+        return view('reports.game', ['game' => $live['game']]);
     }
 }

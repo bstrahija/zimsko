@@ -4,17 +4,17 @@
             <thead class="bg-gray-50 border-b border-gray-200">
                 <tr>
                     <th class="px-4 py-3 w-1 font-medium text-gray-500">#</th>
-                    <th class="px-4 py-3 font-medium text-gray-500">Igrač</th>
+                    <th class="px-4 py-3 font-medium text-gray-500 w-[60%]">Igrač</th>
 
                     <th class="px-4 py-3 font-medium text-right text-gray-500">Ukupno</th>
 
                     @if ($type === 'rebounds')
-                        <th class="px-4 py-3 font-medium text-right text-gray-500 max-w-1">Obrana</th>
-                        <th class="px-4 py-3 font-medium text-right text-gray-500 max-w-1">Napad</th>
+                        <th class="px-4 py-3 font-medium text-right text-gray-500">Obrana</th>
+                        <th class="px-4 py-3 font-medium text-right text-gray-500">Napad</th>
                     @endif
 
                     @if (in_array($type, ['score', 'three_points', 'field_goals', 'free_throws']))
-                        <th class="px-4 py-3 font-medium text-right text-gray-500 max-w-1">Postotak</th>
+                        <th class="px-4 py-3 font-medium text-right text-gray-500">Postotak</th>
                     @endif
                 </tr>
             </thead>

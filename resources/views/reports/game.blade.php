@@ -3,17 +3,27 @@
 @section('content')
     <div class="container">
         <header class="header">
-            <img src="{{ asset('img/logo_ball_black.png') }}" alt="League Logo">
+            {{-- <img src="../../img/logo_ball_black.png" alt="League Logo"> --}}
+            <h2>Zimsko Prvenstvo 2025</h2>
+            <p>{{ $game['title'] }} </p>
         </header>
         <div class="game-result">
             <div class="game-result-flex">
-                <h2 class="team-name">{{ $game['home_team']['title'] }}</h2>
-                <div class="score">
-                    {{ $game['home_score'] }}
-                    -
-                    {{ $game['away_score'] }}
-                </div>
-                <h2 class="team-name">{{ $game['away_team']['title'] }}</h2>
+                <table style="width: 100%;">
+                    <tr>
+                        <td class="team-name" style="text-align: left;">
+                            {{ $game['home_team']['title'] }}
+                        </td>
+                        <td class="score" style="text-align: center; white-space: nowrap;">
+                            {{ $game['home_score'] }}
+                            -
+                            {{ $game['away_score'] }}
+                        </td>
+                        <td style="text-align: right;" class="team-name">
+                            {{ $game['away_team']['title'] }}
+                        </td>
+                    </tr>
+                </table>
             </div>
         </div>
 
