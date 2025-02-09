@@ -20,12 +20,19 @@ class TeamsController extends Controller
 
     public function show($slug, Request $request)
     {
-        $team     = Team::where('slug', $slug)->with(['activePlayers', 'activePlayers.media', 'coaches'])->firstOrFail();
-        $lastGame = $team->lastGame();
-        $nextGame = $team->nextGame();
-        $stats    = []; // Stats::generateTotalForTeams(generateForEvents: true, generateForGames: true);
+        $team       = Team::where('slug', $slug)->with(['activePlayers', 'activePlayers.media', 'coaches'])->firstOrFail();
+        $lastGame   = $team->lastGame();
+        $nextGame   = $team->nextGame();
+        $teamStats   = Stats::teamEventStats($team->id);
+        $playerStats = collect(Stats::teamPlayerEventStats($team->id))->sortByDesc('score')->values()->all();
 
-        return view('pages.team', ['team' => $team, 'lastGame' => $lastGame, 'nextGame' => $nextGame]);
+        return view('pages.team', [
+            'team' => $team,
+            'lastGame' => $lastGame,
+            'nextGame' => $nextGame,
+            'teamStats' => $teamStats,
+            'playerStats' => $playerStats,
+        ]);
     }
 
     public function showPlayer($slug)

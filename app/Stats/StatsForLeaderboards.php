@@ -16,9 +16,40 @@ trait StatsForLeaderboards
 {
     public static function teamEventStats($teamId = null, $limit = 20): array
     {
-        $stats = Stat::with(['team', 'team.media'])->where('for', 'team')->where('type', 'event')->where('event_id', Event::current()->id)->get();
+        $stats = Stat::with(['team', 'team.media'])->where('for', 'team')->where('type', 'event')->where('event_id', Event::current()->id);
 
-        return self::optimizeTeamDataForLeaderboards($stats);
+        if ($teamId) {
+            $stats = $stats->where('team_id', $teamId)->first();
+        } else {
+            $stats = $stats->get();
+        }
+
+        return $teamId ?
+            self::optimizeTeamDataItemForLeaderboards($stats) :
+            self::optimizeTeamDataForLeaderboards($stats);
+    }
+
+    public static function teamPlayerEventStats($teamId)
+    {
+        // Get the team
+        $team = Team::with(['activePlayers', 'activePlayers.media'])->find($teamId);
+
+        $stats = Stat::where('for', 'player')
+            ->where('type', 'event')
+            ->where('event_id', Event::current()->id)
+            ->where('team_id', $teamId)
+            ->get();
+
+        // Add player data
+        foreach ($team->players as $player) {
+            foreach ($stats as $stat) {
+                if ($stat->player_id == $player->id) {
+                    $stat->player = $player;
+                }
+            }
+        }
+
+        return self::optimizePlayerDataForLeaderboards($stats, 'all');
     }
 
     public static function playerEventStats($playerId = null, $limit = 20): array
@@ -99,23 +130,37 @@ trait StatsForLeaderboards
     {
         $optimizedItem = $item->toArray();
 
+        if (! is_array($optimizedItem['player'])) {
+            $optimizedItem['player'] = $optimizedItem['player']->toArray();
+        }
+
         // Add stuff
-        $optimizedItem['player_name']  = $item->player->name;
-        // $optimizedItem['player_photo'] = $optimizedItem['player']['photo'];
+        $optimizedItem['player_name']     = $item->player->name;
+        $optimizedItem['player_number']   = $item->player->number;
+        $optimizedItem['player_position'] = $item->player->position;
+        $optimizedItem['player_slug']     = $item->player->position;
+        $optimizedItem['player_photo']    = $item->player->photo();
 
         // Remove stuff
         unset($optimizedItem['player']);
-        $optimizedItem = Arr::only($optimizedItem, [
-            'id',
-            'player_photo',
-            'player_name',
-            $type,
-            $type . '_made',
-            $type . '_percent',
-            'field_goals_percent',
-            'offensive_rebounds',
-            'defensive_rebounds',
-        ]);
+        if ($type !== 'all') {
+            $optimizedItem = Arr::only($optimizedItem, [
+                'id',
+                'player_photo',
+                'player_name',
+                'player_number',
+                'player_position',
+                'player_slug',
+                $type,
+                $type . '_made',
+                $type . '_percent',
+                'field_goals_percent',
+                'offensive_rebounds',
+                'defensive_rebounds',
+            ]);
+        } else {
+            $optimizedItem = $optimizedItem;
+        }
 
         return $optimizedItem;
     }
