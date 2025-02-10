@@ -24,10 +24,7 @@
                             <a href="{{ route('teams.show', $item->team->slug) }}" class="flex gap-2 items-center text-xs">
                                 <small class="mr-3 text-gray-500">{{ $position + 1 }}</small>
 
-
-                                <span class="inline-flex justify-center items-center w-8 h-8">
-                                    <img src="{{ $item->team->logo() }}" alt="{{ $item->team->title }}" class="max-w-full max-h-full">
-                                </span>
+                                <x-global.team-logo-for-tables :teamLogo="$item->team->logo()" :title="$item->team->title" />
 
                                 <span class="text-gray-800 whitespace-nowrap">{{ $item->title }}</span>
                             </a>
