@@ -26,47 +26,47 @@
         </div>
 
         <div x-show="activeTab === 'score'" class="mt-4">
-            <x-stats.players-tab type="score" :stats="Arr::get($stats, 'score', [])" />
+            <x-stats.players-tab type="score" :stats="Arr::get($stats, 'score', [])" :teams="$teams" />
         </div>
 
         <div x-show="activeTab === 'three_points'" class="mt-4">
-            <x-stats.players-tab type="three_points" :stats="Arr::get($stats, 'three_points', [])" />
+            <x-stats.players-tab type="three_points" :stats="Arr::get($stats, 'three_points', [])" :teams="$teams" />
         </div>
 
         <div x-show="activeTab === 'field_goals'" class="mt-4">
-            <x-stats.players-tab type="field_goals" :stats="Arr::get($stats, 'field_goals', [])" />
+            <x-stats.players-tab type="field_goals" :stats="Arr::get($stats, 'field_goals', [])" :teams="$teams" />
         </div>
 
         <div x-show="activeTab === 'free_throws'" class="mt-4">
-            <x-stats.players-tab type="free_throws" :stats="Arr::get($stats, 'free_throws', [])" />
+            <x-stats.players-tab type="free_throws" :stats="Arr::get($stats, 'free_throws', [])" :teams="$teams" />
         </div>
 
         <div x-show="activeTab === 'assists'" class="mt-4">
-            <x-stats.players-tab type="assists" :stats="Arr::get($stats, 'assists', [])" />
+            <x-stats.players-tab type="assists" :stats="Arr::get($stats, 'assists', [])" :teams="$teams" />
         </div>
 
         <div x-show="activeTab === 'rebounds'" class="mt-4">
-            <x-stats.players-tab type="rebounds" :stats="Arr::get($stats, 'rebounds', [])" />
+            <x-stats.players-tab type="rebounds" :stats="Arr::get($stats, 'rebounds', [])" :teams="$teams" />
         </div>
 
         <div x-show="activeTab === 'steals'" class="mt-4">
-            <x-stats.players-tab type="steals" :stats="Arr::get($stats, 'steals', [])" />
+            <x-stats.players-tab type="steals" :stats="Arr::get($stats, 'steals', [])" :teams="$teams" />
         </div>
 
         <div x-show="activeTab === 'blocks'" class="mt-4">
-            <x-stats.players-tab type="blocks" :stats="Arr::get($stats, 'blocks', [])" />
+            <x-stats.players-tab type="blocks" :stats="Arr::get($stats, 'blocks', [])" :teams="$teams" />
         </div>
 
         <div x-show="activeTab === 'fouls'" class="mt-4">
-            <x-stats.players-tab type="fouls" :stats="Arr::get($stats, 'fouls', [])" />
+            <x-stats.players-tab type="fouls" :stats="Arr::get($stats, 'fouls', [])" :teams="$teams" />
         </div>
 
         <div x-show="activeTab === 'turnovers'" class="mt-4">
-            <x-stats.players-tab type="turnovers" :stats="Arr::get($stats, 'turnovers', [])" />
+            <x-stats.players-tab type="turnovers" :stats="Arr::get($stats, 'turnovers', [])" :teams="$teams" />
         </div>
 
         <div x-show="activeTab === 'efficiency'" class="mt-4">
-            <x-stats.players-tab type="efficiency" :stats="Arr::get($stats, 'efficiency', [])" />
+            <x-stats.players-tab type="efficiency" :stats="Arr::get($stats, 'efficiency', [])" :teams="$teams" />
         </div>
     </div>
 </x-ui.card>

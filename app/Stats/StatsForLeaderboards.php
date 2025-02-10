@@ -35,6 +35,7 @@ trait StatsForLeaderboards
         $team = Team::with(['activePlayers', 'activePlayers.media'])->find($teamId);
 
         $stats = Stat::where('for', 'player')
+            ->with(['player', 'player.media'])
             ->where('type', 'event')
             ->where('event_id', Event::current()->id)
             ->where('team_id', $teamId)
@@ -104,7 +105,8 @@ trait StatsForLeaderboards
 
         // Add stuff
         $optimizedItem['team_title'] = $item->team->title;
-        // $optimizedItem['team_logo']  = $optimizedItem['team']['media'][1]['original_url'];
+        $optimizedItem['team_logo']  = $item->team->logo();
+        $optimizedItem['team_slug']  = $item->team->slug;
 
         // Remove stuff
         unset($optimizedItem['team']);
@@ -135,10 +137,11 @@ trait StatsForLeaderboards
         }
 
         // Add stuff
+        $optimizedItem['team_id']         = $item->team_id;
         $optimizedItem['player_name']     = $item->player->name;
         $optimizedItem['player_number']   = $item->player->number;
         $optimizedItem['player_position'] = $item->player->position;
-        $optimizedItem['player_slug']     = $item->player->position;
+        $optimizedItem['player_slug']     = $item->player->slug;
         $optimizedItem['player_photo']    = $item->player->photo();
 
         // Remove stuff
@@ -146,6 +149,7 @@ trait StatsForLeaderboards
         if ($type !== 'all') {
             $optimizedItem = Arr::only($optimizedItem, [
                 'id',
+                'team_id',
                 'player_photo',
                 'player_name',
                 'player_number',

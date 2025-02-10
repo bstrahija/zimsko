@@ -57,11 +57,11 @@ class Event extends Model
         $query->where('status', 'active');
     }
 
-    public static function current(): ?Event
+    public static function current(array $with = []): ?Event
     {
         if (! static::$currentEvent) {
             $settingsEventId      = Settings::get('general.current_event_id', null);
-            static::$currentEvent = $settingsEventId ? Event::find($settingsEventId) : Event::last();
+            static::$currentEvent = $settingsEventId ? Event::with($with)->find($settingsEventId) : Event::last();
         }
 
         return static::$currentEvent;

@@ -42,16 +42,4 @@ class GamesController extends Controller
             'live'    => $live,
         ]);
     }
-
-    public function stats()
-    {
-        // Let's get all player stats for current event (players and teams)
-        $teamStats   = Stats::teamEventStats();
-        $playerStats = Stats::playerEventStats();
-
-        return view('pages.stats', [
-            'playerStats' => $playerStats,
-            'teamStats' => $teamStats
-        ]);
-    }
 }

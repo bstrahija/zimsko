@@ -11,4 +11,10 @@ class Cache extends FacadesCache
     {
         return DB::table('cache')->where('key', 'like', 'event_leaderboard.%')->delete();
     }
+
+    public static function forgetStats()
+    {
+        return DB::table('cache')->where('key', 'like', 'player_event_stats.%')->delete();
+        return DB::table('cache')->where('key', 'like', 'team_event_stats.%')->delete();
+    }
 }

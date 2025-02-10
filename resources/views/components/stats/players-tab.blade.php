@@ -20,9 +20,18 @@
             </thead>
             <tbody class="divide-y divide-gray-100">
                 @foreach ($stats as $index => $stat)
+                    @php
+                        $team = isset($stat['team_id']) ? $teams->where('id', $stat['team_id'])->first() : null;
+                    @endphp
+
                     <tr class="transition-colors duration-200 hover:bg-gray-50">
                         <td class="px-4 py-3 text-sm font-semibold text-gray-600">{{ $index + 1 }}.</td>
-                        <td class="px-4 py-3 text-sm">{{ $stat['player_name'] }}</td>
+                        <td class="px-4 py-3 text-sm">
+                            <a href="{{ route('players.show', $stat['player_slug']) }}" class="flex items-center">
+                                <img src="{{ $stat['player_photo'] ?: $team->logo() }}" alt="" class="mr-3 w-8 h-8 rounded-full">
+                                <span class="font-medium text-gray-900">{{ $stat['player_name'] }}</span>
+                            </a>
+                        </td>
 
                         <td class="px-4 py-3 text-sm font-semibold text-right text-gray-800">
                             @if (isset($stat[$type . '_made']))

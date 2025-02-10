@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Event;
 use App\Models\Player;
 use App\Models\Team;
+use App\Services\Cache;
 use App\Stats\Stats;
 use Illuminate\Http\Request;
 
@@ -23,14 +24,14 @@ class TeamsController extends Controller
         $team       = Team::where('slug', $slug)->with(['activePlayers', 'activePlayers.media', 'coaches'])->firstOrFail();
         $lastGame   = $team->lastGame();
         $nextGame   = $team->nextGame();
-        $teamStats   = Stats::teamEventStats($team->id);
-        $playerStats = collect(Stats::teamPlayerEventStats($team->id))->sortByDesc('score')->values()->all();
+        $teamStats   = Cache::remember('team_event_stats.' . Event::current()->id . '.' . $team->id, (60 * 60 * 24), fn() => Stats::teamEventStats($team->id));
+        $playerStats = Cache::remember('player_event_stats.' . Event::current()->id . '.' . $team->id, (60 * 60 * 24), fn() => collect(Stats::teamPlayerEventStats($team->id))->sortByDesc('score')->values()->all());
 
         return view('pages.team', [
-            'team' => $team,
-            'lastGame' => $lastGame,
-            'nextGame' => $nextGame,
-            'teamStats' => $teamStats,
+            'team'        => $team,
+            'lastGame'    => $lastGame,
+            'nextGame'    => $nextGame,
+            'teamStats'   => $teamStats,
             'playerStats' => $playerStats,
         ]);
     }

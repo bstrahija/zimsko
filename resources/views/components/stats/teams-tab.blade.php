@@ -49,7 +49,12 @@
                 @foreach ($stats as $index => $stat)
                     <tr class="transition-colors duration-200 hover:bg-gray-50">
                         <td class="px-4 py-3 text-sm font-semibold text-gray-600">{{ $index + 1 }}.</td>
-                        <td class="px-4 py-3 text-sm">{{ $stat['team_title'] }}</td>
+                        <td class="px-4 py-3 text-sm">
+                            <a href="{{ route('teams.show', $stat['team_slug']) }}" class="flex items-center">
+                                <img src="{{ $stat['team_logo'] ?: $team->logo() }}" alt="" class="mr-3 w-8 h-8 rounded-full">
+                                <span class="font-medium text-gray-900">{{ $stat['team_title'] }}</span>
+                            </a>
+                        </td>
 
                         <td class="px-4 py-3 text-sm font-semibold text-right text-gray-800">
                             @if (isset($stat[$type . '_made']))
