@@ -34,7 +34,7 @@
                         @endif
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-100">
+                <tbody class="divide-y divide-gray-200">
                     @foreach ($stats as $index => $stat)
                         <tr class="transition-colors duration-200 hover:bg-gray-50">
                             <td class="px-4 py-3 text-sm font-semibold text-gray-600">{{ $stat['player_number'] }}</td>

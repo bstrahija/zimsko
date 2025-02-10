@@ -45,7 +45,7 @@
                     @endif
                 </tr>
             </thead>
-            <tbody class="divide-y divide-gray-100">
+            <tbody class="divide-y divide-gray-200">
                 @foreach ($stats as $index => $stat)
                     <tr class="transition-colors duration-200 hover:bg-gray-50">
                         <td class="px-2 py-3 pr-4 pl-0 text-xs font-semibold text-gray-600 text-py-3">{{ $index + 1 }}.</td>

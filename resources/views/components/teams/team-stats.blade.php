@@ -1,6 +1,6 @@
 <table class="w-full text-sm text-left text-gray-700">
     <tbody class="divide-y divide-gray-100">
-        <tr class="bg-gray-50 transition-colors duration-200 hover:bg-gray-100">
+        <tr class="bg-gray-50 transition-colors duration-200 hover:bg-gray-200">
             <th class="px-4 py-3 text-sm">UTAKMICA:</th>
             <td class="px-4 py-3 text-sm font-semibold text-right text-gray-800" colspan="2">
                 {{ $stats['games'] }}
@@ -33,7 +33,7 @@
                 {{ $stats['field_goals_percent'] }}%
             </td>
         </tr>
-        <tr class="transition-colors duration-200 hover:bg-gray-50">
+        <tr class="bg-gray-50 transition-colors duration-200 hover:bg-gray-10">
             <th class="px-4 py-3 text-sm">FT:</th>
             <td class="px-4 py-3 text-sm font-semibold text-right text-gray-800">
                 {{ $stats['free_throws_made'] }} / {{ $stats['free_throws'] }}
@@ -42,7 +42,7 @@
                 {{ $stats['free_throws_percent'] }}%
             </td>
         </tr>
-        <tr class="bg-gray-50 transition-colors duration-200 hover:bg-gray-100">
+        <tr class="transition-colors duration-200 hover:bg-gray-50">
             <th class="px-4 py-3 text-sm">AST:</th>
             <td class="px-4 py-3 text-sm font-semibold text-right text-gray-800">
                 {{ $stats['assists'] }}
@@ -61,7 +61,7 @@
                 <small>D:</small> {{ $stats['offensive_rebounds'] }}
             </td>
         </tr>
-        <tr class="bg-gray-50 transition-colors duration-200 hover:bg-gray-100">
+        <tr class="transition-colors duration-200 hover:bg-gray-50">
             <th class="px-4 py-3 text-sm">STL:</th>
             <td class="px-4 py-3 text-sm font-semibold text-right text-gray-800">
                 {{ $stats['steals'] }}
@@ -79,7 +79,7 @@
                 <small>AVG:</small> {{ $stats['blocks_avg'] }}
             </td>
         </tr>
-        <tr class="bg-gray-50 transition-colors duration-200 hover:bg-gray-100">
+        <tr class="transition-colors duration-200 hover:bg-gray-50">
             <th class="px-4 py-3 text-sm">FOUL:</th>
             <td class="px-4 py-3 text-sm font-semibold text-right text-gray-800">
                 {{ $stats['fouls'] }}
@@ -97,7 +97,7 @@
                 <small>AVG:</small> {{ $stats['turnovers_avg'] }}
             </td>
         </tr>
-        <tr class="bg-gray-50 transition-colors duration-200 hover:bg-gray-100">
+        <tr class="transition-colors duration-200 hover:bg-gray-50">
             <th class="px-4 py-3 text-sm">EFF:</th>
             <td class="px-4 py-3 text-sm font-semibold text-right text-gray-800" colspan="2">
                 {{ $stats['efficiency'] }}

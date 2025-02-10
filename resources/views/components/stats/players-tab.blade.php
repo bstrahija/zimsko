@@ -18,7 +18,7 @@
                     @endif
                 </tr>
             </thead>
-            <tbody class="divide-y divide-gray-100">
+            <tbody class="divide-y divide-gray-200">
                 @foreach ($stats as $index => $stat)
                     @php
                         $team = isset($stat['team_id']) ? $teams->where('id', $stat['team_id'])->first() : null;
