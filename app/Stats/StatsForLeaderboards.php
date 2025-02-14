@@ -29,7 +29,7 @@ trait StatsForLeaderboards
             self::optimizeTeamDataForLeaderboards($stats);
     }
 
-    public static function teamPlayerEventStats($teamId)
+    public static function teamPlayerEventStats(int $teamId): array
     {
         // Get the team
         $team = Team::with(['activePlayers', 'activePlayers.media'])->find($teamId);
@@ -53,7 +53,7 @@ trait StatsForLeaderboards
         return self::optimizePlayerDataForLeaderboards($stats, 'all');
     }
 
-    public static function playerEventStats($playerId = null, $limit = 20): array
+    public static function playersEventStats($playerId = null, $limit = 20): array
     {
         $stats = [
             'score'        => self::playerEventStatsSingle('score',        'score',               'desc', 20),

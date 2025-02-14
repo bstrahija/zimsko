@@ -287,4 +287,24 @@ class Team extends Model implements HasMedia
             ->saveSlugsTo('slug')
             ->doNotGenerateSlugsOnUpdate();
     }
+
+    public function latestGames($limit = 10)
+    {
+        return $this->games()
+            ->with(['homeTeam', 'awayTeam', 'homeTeam.media', 'awayTeam.media'])
+            ->where('status', 'completed')
+            ->orderBy('scheduled_at', 'desc')
+            ->limit($limit)
+            ->get();
+    }
+
+    public function latestGamesWithStats($limit = 10)
+    {
+        $games = $this->latestGames($limit);
+
+        return $games->map(fn(Game $game) => [
+            'game'  => $game,
+            'stats' => $game->stats()->where('for', 'team')->where('team_id', $this->id)->first(),
+        ]);
+    }
 }

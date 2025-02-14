@@ -21,11 +21,11 @@ class TeamsController extends Controller
 
     public function show($slug, Request $request)
     {
-        $team       = Team::where('slug', $slug)->with(['activePlayers', 'activePlayers.media', 'coaches'])->firstOrFail();
-        $lastGame   = $team->lastGame();
-        $nextGame   = $team->nextGame();
+        $team        = Team::where('slug', $slug)->with(['activePlayers', 'activePlayers.media', 'coaches'])->firstOrFail();
+        $lastGame    = $team->lastGame();
+        $nextGame    = $team->nextGame();
         $teamStats   = Cache::remember('team_event_stats.' . Event::current()->id . '.' . $team->id, (60 * 60 * 24), fn() => Stats::teamEventStats($team->id));
-        $playerStats = Cache::remember('player_event_stats.' . Event::current()->id . '.' . $team->id, (60 * 60 * 24), fn() => collect(Stats::teamPlayerEventStats($team->id))->sortByDesc('score')->values()->all());
+        $playerStats = Cache::remember('players_event_stats.' . Event::current()->id . '.' . $team->id, (60 * 60 * 24), fn() => collect(Stats::teamPlayerEventStats($team->id))->sortByDesc('score')->values()->all());
 
         return view('pages.team', [
             'team'        => $team,

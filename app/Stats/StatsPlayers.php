@@ -157,4 +157,20 @@ trait StatsPlayers
             ], $stats);
         }
     }
+
+    public static function playerEventStats(int $playerId, Event $event = null): array
+    {
+        if (! $event) {
+            $event = Event::current();
+        }
+
+        $stats = Stat::where('for', 'player')
+            ->with(['player', 'player.media'])
+            ->where('type', 'event')
+            ->where('event_id', Event::current()->id)
+            ->where('player_id', $playerId)
+            ->first();
+
+        return $stats->toArray();
+    }
 }

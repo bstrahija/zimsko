@@ -21,9 +21,13 @@
                         @endif
                     </x-ui.card>
 
-                    <x-ui.card class="" title="Poeni">
-                        <x-charts.player-points :player="$player" />
+                    <x-ui.card class="mb-8 card" title="Statistika" subtitle="Statistika tokom turnira">
+                        <x-players.player-stats :stats="$stats" :player="$player" />
                     </x-ui.card>
+
+                    {{-- <x-ui.card class="" title="Poeni">
+                        <x-charts.player-points :player="$player" />
+                    </x-ui.card> --}}
                 </div>
             </div>
 

@@ -19,7 +19,7 @@ class StatsController extends Controller
         // Let's get all player stats for current event (players and teams)
         $teams       = Event::current(['teams', 'teams.media'])->teams;
         $teamStats   = Cache::remember('team_event_stats.leaders.' .   Event::current()->id, (60 * 60 * 24), fn() => Stats::teamEventStats());
-        $playerStats = Cache::remember('player_event_stats.leaders.' . Event::current()->id, (60 * 60 * 24), fn() => Stats::playerEventStats());
+        $playerStats = Cache::remember('player_event_stats.leaders.' . Event::current()->id, (60 * 60 * 24), fn() => Stats::playersEventStats());
 
         return view('pages.stats', [
             'teams'       => $teams,

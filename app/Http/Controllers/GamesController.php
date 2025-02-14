@@ -7,6 +7,7 @@ use App\Models\Event;
 use App\Models\Game;
 use App\Models\Stat;
 use App\Models\Team;
+use App\Services\Cache;
 use App\Services\Leaderboards;
 use App\Stats\Stats;
 use Illuminate\Http\Request;
@@ -30,16 +31,27 @@ class GamesController extends Controller
 
     public function show($slug)
     {
-        $game    = Game::where('slug', $slug)->firstOrFail();
-        $scorers = Leaderboards::getPlayerLeaderboardForGame($game, 'score', 100);
-        $live    = LiveScore::build($game)->toOptimizedData();
+        $game = Game::where('slug', $slug)->firstOrFail();
 
-        // return view('pages.empty');
+        // Let's cache if game is over
+        if (! $game->isCompleted()) {
+            $scorers = Cache::remember('game_scorers.'    . $game->id, (60 * 60 * 24 * 30), fn() => Leaderboards::getPlayerLeaderboardForGame($game, 'score', 100));
+            $live    = Cache::remember('game_live_score.' . $game->id, (60 * 60 * 24 * 30), fn() => LiveScore::build($game)->toOptimizedData());
+        } else {
+            $scorers = Leaderboards::getPlayerLeaderboardForGame($game, 'score', 100);
+            $live    = LiveScore::build($game)->toOptimizedData();
+        }
+
+        // Also get latest games for both teams
+        $homeGames = $game->homeTeam->latestGames();
+        $awayGames = $game->awayTeam->latestGames();
 
         return view('pages.game', [
-            'game'    => $game,
-            'scorers' => $scorers,
-            'live'    => $live,
+            'game'      => $game,
+            'scorers'   => $scorers,
+            'live'      => $live,
+            'homeGames' => $homeGames,
+            'awayGames' => $awayGames,
         ]);
     }
 }
