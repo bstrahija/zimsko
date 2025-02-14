@@ -46,10 +46,16 @@ class GamesController extends Controller
         $homeGames = $game->homeTeam->latestGames();
         $awayGames = $game->awayTeam->latestGames();
 
+        // Let's also get wins against apponent
+        $homeWins = $game->homeTeam->winsAgainst($game->awayTeam->id);
+        $awayWins = $game->awayTeam->winsAgainst($game->homeTeam->id);
+
         return view('pages.game', [
             'game'      => $game,
             'scorers'   => $scorers,
             'live'      => $live,
+            'homeWins'  => $homeWins,
+            'awayWins'  => $awayWins,
             'homeGames' => $homeGames,
             'awayGames' => $awayGames,
         ]);
