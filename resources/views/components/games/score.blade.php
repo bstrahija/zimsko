@@ -39,7 +39,7 @@
                 </div>
             </div>
         @else
-            <div class="mb-2 mb-3 text-sm text-gray-500 md:hidden">
+            <div class="mb-3 text-sm text-gray-500 md:hidden">
                 <h2 class="mb-1 font-bold text-center">{{ $game->title }}</h2>
                 <small class="block text-center">{{ $game->scheduled_at->format('d.m.Y. H:i') }}</small>
             </div>

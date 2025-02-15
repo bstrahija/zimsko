@@ -26,6 +26,7 @@ class TeamsController extends Controller
         $nextGame    = $team->nextGame();
         $teamStats   = Cache::remember('team_event_stats.' . Event::current()->id . '.' . $team->id, (60 * 60 * 24), fn() => Stats::teamEventStats($team->id));
         $playerStats = Cache::remember('players_event_stats.' . Event::current()->id . '.' . $team->id, (60 * 60 * 24), fn() => collect(Stats::teamPlayerEventStats($team->id))->sortByDesc('score')->values()->all());
+        $latestGames = Cache::remember('team_latest_games.limit_15.' . $team->id, (60 * 60 * 24 * 30), fn() => $team->latestGames(15));
 
         return view('pages.team', [
             'team'        => $team,
@@ -33,6 +34,7 @@ class TeamsController extends Controller
             'nextGame'    => $nextGame,
             'teamStats'   => $teamStats,
             'playerStats' => $playerStats,
+            'latestGames' => $latestGames
         ]);
     }
 

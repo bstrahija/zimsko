@@ -34,6 +34,8 @@
                         <x-teams.player-stats :stats="$playerStats" :team="$team" />
                     </x-ui.card>
 
+                    <x-games.team-latest-games-column :team="$team" :games="$latestGames" />
+
                     {{-- <x-ui.card class="overflow-x-auto mb-8" title="Poeni" subtitle="Povijest poena tokom svih utakmica">
                         <x-charts.team-points :team="$team" />
                     </x-ui.card> --}}
