@@ -17,6 +17,8 @@
 
                             <x-games.log-stream :game="$game" :live="$live" />
                         @else
+                            <x-games.compare-teams :game="$game" :live="$live" :homeWins="$homeWins" :awayWins="$awayWins" />
+
                             <x-games.team-games-between :game="$game" :live="$live" :games="$gamesBetween" />
 
                             <x-games.team-latest-games :game="$game" :live="$live" :homeGames="$homeGames" :awayGames="$awayGames" />
