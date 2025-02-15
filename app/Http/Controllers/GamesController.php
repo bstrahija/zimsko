@@ -42,18 +42,22 @@ class GamesController extends Controller
             $live    = LiveScore::build($game)->toOptimizedData();
         }
 
+        // Get games between teams
+        $gamesBetween = Cache::remember('games_between.' . $game->homeTeam->id . '-' . $game->awayTeam->id, (60 * 60 * 24 * 30), fn() => $game->homeTeam->gamesAgainst($game->awayTeam->id));
+
         // Also get latest games for both teams
-        $homeGames = $game->homeTeam->latestGames();
-        $awayGames = $game->awayTeam->latestGames();
+        $homeGames = Cache::remember('team_latest_games.' . $game->homeTeam->id, (60 * 60 * 24 * 30), fn() => $game->homeTeam->latestGames());
+        $awayGames = Cache::remember('team_latest_games.' . $game->homeTeam->id, (60 * 60 * 24 * 30), fn() => $game->awayTeam->latestGames());
 
         // Let's also get wins against apponent
-        $homeWins = $game->homeTeam->winsAgainst($game->awayTeam->id);
-        $awayWins = $game->awayTeam->winsAgainst($game->homeTeam->id);
+        $homeWins = Cache::remember('team_latest_games_wins.' . $game->homeTeam->id, (60 * 60 * 24 * 30), fn() => $game->homeTeam->winsAgainst($game->awayTeam->id));
+        $awayWins = Cache::remember('team_latest_games_wins.' . $game->homeTeam->id, (60 * 60 * 24 * 30), fn() => $game->awayTeam->winsAgainst($game->homeTeam->id));
 
         return view('pages.game', [
             'game'      => $game,
             'scorers'   => $scorers,
             'live'      => $live,
+            'gamesBetween' => $gamesBetween,
             'homeWins'  => $homeWins,
             'awayWins'  => $awayWins,
             'homeGames' => $homeGames,

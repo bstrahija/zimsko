@@ -326,4 +326,18 @@ class Team extends Model implements HasMedia
 
         return $wins;
     }
+
+    public function gamesAgainst(int $opponentId)
+    {
+        return Game::with(['homeTeam', 'awayTeam', 'homeTeam.media', 'awayTeam.media'])
+            ->where(function ($query) use ($opponentId) {
+                $query->where(function ($q) use ($opponentId) {
+                    $q->where('home_team_id', $this->id)
+                        ->where('away_team_id', $opponentId);
+                })->orWhere(function ($q) use ($opponentId) {
+                    $q->where('home_team_id', $opponentId)
+                        ->where('away_team_id', $this->id);
+                });
+            })->orderBy('scheduled_at', 'desc')->where('status', 'completed')->get();
+    }
 }
