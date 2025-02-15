@@ -50,8 +50,8 @@ class GamesController extends Controller
         $awayGames = Cache::remember('team_latest_games.' . $game->homeTeam->id, (60 * 60 * 24 * 30), fn() => $game->awayTeam->latestGames());
 
         // Let's also get wins against apponent
-        $homeWins = Cache::remember('team_latest_games_wins.' . $game->homeTeam->id, (60 * 60 * 24 * 30), fn() => $game->homeTeam->winsAgainst($game->awayTeam->id));
-        $awayWins = Cache::remember('team_latest_games_wins.' . $game->homeTeam->id, (60 * 60 * 24 * 30), fn() => $game->awayTeam->winsAgainst($game->homeTeam->id));
+        $homeWins = Cache::remember('team_latest_games_wins.' . $game->homeTeam->id . '-' . $game->awayTeam->id, (60 * 60 * 24 * 30), fn() => $game->homeTeam->winsAgainst($game->awayTeam->id));
+        $awayWins = Cache::remember('team_latest_games_wins.' . $game->awayTeam->id . '-' . $game->homeTeam->id, (60 * 60 * 24 * 30), fn() => $game->awayTeam->winsAgainst($game->homeTeam->id));
 
         return view('pages.game', [
             'game'      => $game,
