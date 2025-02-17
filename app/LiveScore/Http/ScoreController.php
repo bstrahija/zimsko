@@ -18,6 +18,7 @@ use App\Stats\Stats;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
@@ -66,9 +67,11 @@ final class ScoreController extends BaseController
      * @return void
      * @throws BindingResolutionException
      */
-    public function nextPeriod(Game $game): void
+    public function nextPeriod(Game $game)
     {
         app(NextPeriod::class)->handle($game->id);
+
+        return Inertia::location(route('live.players.on_court.index', $game->id));
     }
 
     public function resetGame(Game $game)

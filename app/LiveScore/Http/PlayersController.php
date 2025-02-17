@@ -95,10 +95,19 @@ final class PlayersController extends BaseController
         // Add to log
         Log::debug("Home starting five. Game: {$game->id}, Players: " . @json_encode($homePlayerIds), ['section' => 'LIVE', 'game_id' => $game->id]);
         Log::debug("Away starting five. Game: {$game->id}, Players: " . @json_encode($awayPlayerIds), ['section' => 'LIVE', 'game_id' => $game->id]);
-        LiveScore::build($game)->addStartingPlayers(
-            homePlayerIds: $homePlayerIds,
-            awayPlayerIds: $awayPlayerIds
-        );
+
+        // If the game is in progress, we make substitutions
+        if ($game->status !== 'in_progress') {
+            LiveScore::build($game)->addStartingPlayers(
+                homePlayerIds: $homePlayerIds,
+                awayPlayerIds: $awayPlayerIds
+            );
+        } else {
+            LiveScore::build($game)->updatePlayersOnCourt(
+                homePlayerIds: $homePlayerIds,
+                awayPlayerIds: $awayPlayerIds
+            );
+        }
 
         if ($startGame) {
             // We need to check the current live game status, if it's already started, don't add to log
@@ -107,6 +116,38 @@ final class PlayersController extends BaseController
         }
 
         return to_route('live.players.starting.index', $game->id);
+    }
+
+    public function onCourtIndex(Game $game): InertiaResponse
+    {
+        $data = LiveScore::build($game)->toData();
+
+        return Inertia::render('PlayersOnCourt', $data);
+    }
+
+    /**
+     * Update the starting players for a game
+     *
+     * @param  Game $game
+     * @return RedirectResponse
+     */
+    public function onCourtUpdate(Game $game, Request $request): RedirectResponse
+    {
+        $live          = LiveScore::build($game);
+        $homePlayerIds = $request->input('home_players_on_court');
+        $awayPlayerIds = $request->input('away_players_on_court');
+
+        // Add to log
+        Log::debug("Home five players. Game: {$game->id}, Players: " . @json_encode($homePlayerIds), ['section' => 'LIVE', 'game_id' => $game->id]);
+        Log::debug("Away five players. Game: {$game->id}, Players: " . @json_encode($awayPlayerIds), ['section' => 'LIVE', 'game_id' => $game->id]);
+
+        // If the game is in progress, we make substitutions
+        LiveScore::build($game)->updatePlayersOnCourt(
+            homePlayerIds: $homePlayerIds,
+            awayPlayerIds: $awayPlayerIds
+        );
+
+        return to_route('live.score.show', $game->id);
     }
 
     public function updateNumbers(Game $game, Request $request): RedirectResponse

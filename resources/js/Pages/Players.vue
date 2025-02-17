@@ -82,7 +82,7 @@ const save = async function () {
                     <!-- <p><small>
                             <pre>{{ data.homePlayers }}</pre>
                         </small></p> -->
-                    <LiveTopBar :title="game.title" :backUrl="'/live/' + game.id" :game="game" />
+                    <LiveTopBar :title="game.title" :backUrl="'/live/' + game.id + '/edit'" :game="game" />
 
                     <div class="grid gap-4 mb-4 score-top grid-cols-[1fr_100px_1fr] md:grid-cols-[1fr_160px_1fr]">
                         <div class="space-y-4 home-team-top">

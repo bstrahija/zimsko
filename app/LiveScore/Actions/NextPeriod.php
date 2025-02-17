@@ -31,6 +31,9 @@ class NextPeriod
                 'period'      => $live->currentPeriod() + 1,
             ]);
 
+            // Also clear out the players on court
+            $live->game()->update(['home_players_on_court' => [], 'away_players_on_court' => []]);
+
             // Trigger the events
             StatsAddedToLog::dispatch($gameId, []);
             LiveScoreUpdated::dispatch('nextPeriod', ['gameId' => $game->id]);

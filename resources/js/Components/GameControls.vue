@@ -17,9 +17,18 @@ const props = defineProps({
 
 const { game, log } = toRefs(props);
 
-const nextPeriod = function () {
+const nextPeriod = async function () {
     if (confirm('Da li ste sigurni da želite zavrsiti period?')) {
-        router.put('/live/' + props.game.id + '/next-period');
+        // alert('Period završen 1');
+        let response = await router.visit('/live/' + props.game.id + '/next-period', {
+            method: 'put',
+            onFinish: page => {
+                setTimeout(() => {
+                    router.visit('/live/' + props.game.id + '/players-on-court')
+                }, 500);
+
+            }
+        })
 
         $vfm.hideAll();
     }
@@ -43,7 +52,7 @@ const endGame = function () {
 }
 
 function backToPlayers() {
-    router.visit('/live/' + props.game.id + '/starting-players');
+    router.visit('/live/' + props.game.id + '/players-on-court');
 }
 
 const showStats = function () {
@@ -57,7 +66,7 @@ const showStats = function () {
             Slijedeći period
         </button>
 
-        <button class="btn btn-warning text-3xs md:text-2xs xl:text-xs" @click="endGame" v-if="game.status === 'in_progress'">
+        <button class="btn btn-error text-3xs md:text-2xs xl:text-xs" @click="endGame" v-if="game.status === 'in_progress'">
             Završi utakmicu
         </button>
 
@@ -65,7 +74,7 @@ const showStats = function () {
             Započni utakmicu
         </button>
 
-        <button class="btn btn-error text-3xs md:text-2xs xl:text-xs" @click="backToPlayers">
+        <button class="btn btn-warning text-3xs md:text-2xs xl:text-xs" @click="backToPlayers">
             IGRAČI
         </button>
 

@@ -255,6 +255,28 @@ class LiveScore
         $this->playersOnCourt = $this->homePlayersOnCourt->merge($this->awayPlayersOnCourt);
     }
 
+    public function updatePlayersOnCourt(array $homePlayerIds, array $awayPlayerIds)
+    {
+        $this->game->update(['home_players_on_court' => $homePlayerIds, 'away_players_on_court' => $awayPlayerIds]);
+
+        // Reset the players
+        $this->playersOnCourt     = new Collection();
+        $this->homePlayersOnCourt = new Collection();
+        $this->awayPlayersOnCourt = new Collection();
+
+        foreach ($homePlayerIds as $playerId) {
+            $this->homePlayersOnCourt->push($this->findPlayer($playerId));
+        }
+        $this->game->update(['home_players_on_court' => $this->homePlayersOnCourt->pluck('id')->toArray()]);
+        foreach ($awayPlayerIds as $playerId) {
+            $this->awayPlayersOnCourt->push($this->findPlayer($playerId));
+        }
+        $this->game->update(['away_players_on_court' => $this->awayPlayersOnCourt->pluck('id')->toArray()]);
+
+        // And fill the props
+        $this->playersOnCourt = $this->homePlayersOnCourt->merge($this->awayPlayersOnCourt);
+    }
+
     /**
      * Start the game, set status and setup the players to start
      *

@@ -19,7 +19,8 @@ let props = defineProps({
 
 <template>
     <div class="bg-slate-900/95 p-6 rounded-lg border-5 border-cyan-400/50 shadow-[0_0_15px_rgba(6,182,212,0.5)] h-full grid-bg">
-        <LiveTopBar :title="game.title" :game="game" :backUrl="'/live/' + game.id + '/players-starting'" />
+        <LiveTopBar v-if="game.status === 'in_progress'" :title="game.title" :game="game" :backUrl="'/live/' + game.id + '/players-on-court'" />
+        <LiveTopBar v-else :title="game.title" :game="game" :backUrl="'/live/' + game.id + '/starting-players'" />
 
         <!-- <p><small>
                 <pre>{{ game.home_players_on_court }}</pre>
