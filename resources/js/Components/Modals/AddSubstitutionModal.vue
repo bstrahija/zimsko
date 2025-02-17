@@ -124,7 +124,6 @@ function save() {
                     </div>
 
                     <div class="px-8 py-6 modal-body">
-                        <p><small>{{ playerIn }}</small></p>
                         <div class="grid">
                             <div v-if="data.playerFouledOut"
                                 class="flex text-xs uppercase justify-center items-center px-2 py-1 mx-auto mb-4 text-red-300 rounded-md border border-red-700 shadow-sm bg-red-900/50 max-w-[800px]">

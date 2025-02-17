@@ -47,6 +47,7 @@ Route::get('live/{game}/players',          [LivePlayersController::class, 'index
 Route::put('live/{game}/players',          [LivePlayersController::class, 'update'])->name('live.players.update')->middleware('auth');
 Route::get('live/{game}/starting-players', [LivePlayersController::class, 'startingIndex'])->name('live.players.starting.index')->middleware('auth');
 Route::put('live/{game}/starting-players', [LivePlayersController::class, 'startingUpdate'])->name('live.players.starting.update')->middleware('auth');
+Route::put('live/{game}/player-numbers',   [LivePlayersController::class, 'updateNumbers'])->name('live.players.numbers.update')->middleware('auth');
 
 // Manage live game stats
 Route::get('live/{game}/score',       [LiveScoreController::class, 'show'])->name('live.score.show')->middleware('auth');

@@ -7,6 +7,8 @@ import PlayerEmptyBlock from '../Components/PlayerEmptyBlock.vue';
 import Pretty from '../Components/Pretty.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import LiveTopBar from '../Components/LiveTopBar.vue';
+import PlayerNumbersModal from '../Components/Modals/PlayerNumbersModal.vue';
+import { $vfm } from 'vue-final-modal';
 
 const helpers = inject('helpers');
 
@@ -43,7 +45,7 @@ const removeAwayPlayer = (player) => {
 }
 
 function backToDetails() {
-    router.visit('/live/' + props.game.id + '');
+    router.visit('/live/' + props.game.id + '/edit');
 }
 
 function canBeSaved() {
@@ -52,6 +54,10 @@ function canBeSaved() {
     }
 
     return true
+}
+
+function editNumbers() {
+    $vfm.show({ component: PlayerNumbersModal, bind: { game: props.game } });
 }
 
 const save = async function () {
@@ -104,6 +110,10 @@ const save = async function () {
                             <button class="w-full btn btn-secondary" @click="save" :class="{ 'opacity-50': !canBeSaved(), 'pointer-events-none': !canBeSaved() }"
                                 :disabled="!canBeSaved()">
                                 DALJE NA PETORKE
+                            </button>
+
+                            <button class="block w-full btn btn-primary" @click="editNumbers">
+                                BROJEVI
                             </button>
 
                             <button class="block w-full btn btn-error" @click="backToDetails">

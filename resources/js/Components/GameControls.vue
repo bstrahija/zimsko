@@ -57,7 +57,7 @@ const showStats = function () {
             Slijedeći period
         </button>
 
-        <button class="btn btn-error text-3xs md:text-2xs xl:text-xs" @click="endGame" v-if="game.status === 'in_progress'">
+        <button class="btn btn-warning text-3xs md:text-2xs xl:text-xs" @click="endGame" v-if="game.status === 'in_progress'">
             Završi utakmicu
         </button>
 
@@ -65,8 +65,8 @@ const showStats = function () {
             Započni utakmicu
         </button>
 
-        <button class="btn btn-error text-3xs md:text-2xs xl:text-xs" @click="backToPlayers" v-if="game.status !== 'in_progress' && game.status !== 'ended'">
-            Natrag
+        <button class="btn btn-error text-3xs md:text-2xs xl:text-xs" @click="backToPlayers">
+            IGRAČI
         </button>
 
         <button class="btn btn-primary text-3xs md:text-2xs xl:text-xs" @click="showStats" v-if="game.status !== 'scheduled'">

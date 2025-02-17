@@ -106,7 +106,7 @@ trait LogData
                 else if ($log->type === 'player_rebound')           $message = $this->logMessageForPlayerRebound($log);
                 else if ($log->type === 'player_steal')             $message = $this->logMessageForPlayerSteal($log);
                 else if ($log->type === 'player_turnover')          $message = $this->logMessageForPlayerTurnover($log);
-                else if ($log->type === 'team_technical')           $message = $this->logMessageForTeamTechnical($log);
+                else if ($log->type === 'team_technical_foul')      $message = $this->logMessageForTeamTechnical($log);
                 else if ($log->type === 'substitution')             $message = $this->logMessageForPlayerSubstitution($log);
                 else if ($log->type === 'timeout')                  $message = 'Pozvan timeout: ' . $log->team_name;
                 else                                                $message = $log->type;

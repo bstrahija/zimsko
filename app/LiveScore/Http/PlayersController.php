@@ -5,6 +5,7 @@ namespace App\LiveScore\Http;
 use App\LiveScore\LiveScore;
 use App\Models\Game;
 use App\Models\GamePlayer;
+use App\Models\PlayerTeam;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -88,12 +89,10 @@ final class PlayersController extends BaseController
     {
         $live          = LiveScore::build($game);
         $startGame     = (bool) $request->input('start');
-        $homePlayers   = $request->input('home_starting_players');
-        $homePlayerIds = collect($homePlayers)->pluck('id')->toArray();
-        $awayPlayers   = $request->input('away_starting_players');
-        $awayPlayerIds = collect($awayPlayers)->pluck('id')->toArray();
+        $homePlayerIds = $request->input('home_starting_players');
+        $awayPlayerIds = $request->input('away_starting_players');
 
-        // Get the request data
+        // Add to log
         Log::debug("Home starting five. Game: {$game->id}, Players: " . @json_encode($homePlayerIds), ['section' => 'LIVE', 'game_id' => $game->id]);
         Log::debug("Away starting five. Game: {$game->id}, Players: " . @json_encode($awayPlayerIds), ['section' => 'LIVE', 'game_id' => $game->id]);
         LiveScore::build($game)->addStartingPlayers(
@@ -107,6 +106,23 @@ final class PlayersController extends BaseController
             return to_route('live.score.show', $game->id);
         }
 
-        return to_route('live.players.starting', $game->id);
+        return to_route('live.players.starting.index', $game->id);
+    }
+
+    public function updateNumbers(Game $game, Request $request): RedirectResponse
+    {
+        if ($request->input('home_players') && $request->input('home_team_id')) {
+            foreach ($request->input('home_players') as $player) {
+                PlayerTeam::where('player_id', $player['id'])->where('team_id', $request->input('home_team_id'))->update(['number' => $player['number']]);
+            }
+        }
+
+        if ($request->input('away_players') && $request->input('away_team_id')) {
+            foreach ($request->input('away_players') as $player) {
+                PlayerTeam::where('player_id', $player['id'])->where('team_id', $request->input('away_team_id'))->update(['number' => $player['number']]);
+            }
+        }
+
+        return to_route('live.players.index', $game->id);
     }
 }

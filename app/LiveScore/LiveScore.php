@@ -88,6 +88,7 @@ class LiveScore
     {
         $action = $request->input('action');
         $data   = static::formatRequestData($request);
+        dump($data);
 
         if ($action && $data) {
             if ($action === 'score')            app(Actions\AddScore::class)->handle(gameId: $this->game->id, playerId: $data->player_id, amount: $data->amount, otherPlayerId: $data->player_2_id);
@@ -97,7 +98,7 @@ class LiveScore
             elseif ($action === 'steal')        app(Actions\AddSteal::class)->handle(gameId: $this->game->id, playerId: $data->player_id, otherPlayerId: $data->player_2_id);
             elseif ($action === 'block')        app(Actions\AddBlock::class)->handle(gameId: $this->game->id, playerId: $data->player_id, otherPlayerId: $data->player_2_id);
             elseif ($action === 'turnover')     app(Actions\AddTurnover::class)->handle(gameId: $this->game->id, playerId: $data->player_id);
-            elseif ($action === 'foul')         app(Actions\AddFoul::class)->handle(gameId: $this->game->id, playerId: $data->player_id, type: $data->subtype, otherPlayerId: $data->player_2_id);
+            elseif ($action === 'foul')         app(Actions\AddFoul::class)->handle(gameId: $this->game->id, teamId: $data->team_id, playerId: $data->player_id, type: $data->subtype, otherPlayerId: $data->player_2_id);
             elseif ($action === 'substitution') app(Actions\Substitution::class)->handle(gameId: $this->game->id, playersIn: $data->players_in, playersOut: $data->players_out);
             elseif ($action === 'timeout')      app(Actions\Timeout::class)->handle(gameId: $this->game->id, teamId: $data->team_id);
         }
@@ -218,17 +219,23 @@ class LiveScore
      */
     public function addStartingPlayers(array $homePlayerIds, array $awayPlayerIds)
     {
-        GameLog::query()->updateOrCreate([
-            'game_id'      => $this->game->id,
-            'type'         => 'game_starting_players',
-        ], [
-            'period'        => 1,
-            'occurred_at'   => '00:00:00',
-            'occurred_at_p' => '00:00:00',
-        ]);
+        if (! $this->game->status !== 'in_progress') {
+            GameLog::query()->updateOrCreate([
+                'game_id'      => $this->game->id,
+                'type'         => 'game_starting_players',
+            ], [
+                'period'        => 1,
+                'occurred_at'   => '00:00:00',
+                'occurred_at_p' => '00:00:00',
+            ]);
+        }
 
         // Also update the live game model
         $this->game->update(['home_starting_players' => $homePlayerIds, 'away_starting_players' => $awayPlayerIds]);
+
+        if (! $this->game->status === 'in_progress') {
+            $this->game->update(['home_players_on_court' => $homePlayerIds, 'away_players_on_court' => $awayPlayerIds]);
+        }
 
         // Reset the players
         $this->playersOnCourt     = new Collection();
@@ -534,6 +541,13 @@ class LiveScore
         if ($request->input('action') === 'foul')     $data['subtype'] = 'pf';
         if ($request->input('action') === 'foul' && $request->input('type') === 'tf') $data['subtype'] = 'tf';
         if ($request->input('action') === 'foul' && $request->input('type') === 'ff') $data['subtype'] = 'ff';
+
+        // Handle team technical foul
+        if ($request->input('action') === 'foul' && $request->input('type') === 'tf' && $request->input('teamId') && ! $request->input('selectedPlayer')) {
+            $data['team_id'] = $request->input('teamId');
+            $data['type'] = 'team_technical_foul';
+            $data['subtype'] = 'tf';
+        }
 
         return fluent($data);
     }

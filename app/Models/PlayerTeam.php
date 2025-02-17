@@ -10,6 +10,8 @@ class PlayerTeam extends Model
 {
     protected $table = 'player_team';
 
+    public $timestamps = false;
+
     public function player(): BelongsTo
     {
         return $this->belongsTo(Player::class);

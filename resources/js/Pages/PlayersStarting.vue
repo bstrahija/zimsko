@@ -64,15 +64,24 @@ function canBeSaved() {
 
 const save = async function () {
     data.saving = true
-    alert('/live/' + props.game.id + '/starting-players');
-    await router.put('/live/' + props.game.id + '/starting-players', props.game);
+    let players = {
+        home_starting_players: data.homeStartingPlayers.map(player => player.id),
+        away_starting_players: data.awayStartingPlayers.map(player => player.id),
+    };
+    // console.log(players);
+    await router.put('/live/' + props.game.id + '/starting-players', players);
     data.saving = false
 };
 
 const startGame = async function () {
     // if (confirm('Da li ste sigurni da zelite zapoceti utakmicu?')) {
     data.saving = true
-    await router.put('/live/' + props.game.id + '/starting-players?start=1', props.game);
+    let players = {
+        home_starting_players: data.homeStartingPlayers.map(player => player.id),
+        away_starting_players: data.awayStartingPlayers.map(player => player.id),
+    };
+    // console.log(players);
+    await router.put('/live/' + props.game.id + '/starting-players?start=1', players);
     data.saving = false
     // }
 };
