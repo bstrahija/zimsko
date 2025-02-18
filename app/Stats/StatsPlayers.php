@@ -158,7 +158,7 @@ trait StatsPlayers
         }
     }
 
-    public static function playerEventStats(int $playerId, Event $event = null): array
+    public static function playerEventStats(int $playerId, Event $event = null): ?array
     {
         if (! $event) {
             $event = Event::current();
@@ -171,6 +171,6 @@ trait StatsPlayers
             ->where('player_id', $playerId)
             ->first();
 
-        return $stats->toArray();
+        return $stats ? $stats->toArray() : null;
     }
 }

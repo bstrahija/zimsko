@@ -22,7 +22,6 @@ let data = reactive({
     homePlayersOnCourt: props.game.home_players_on_court,
     awayPlayersOnCourt: props.game.away_players_on_court,
 });
-console.log(data);
 
 function missingHomePlayerNumber() {
     return 5 - data.homePlayersOnCourt.length;
