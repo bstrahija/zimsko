@@ -4,6 +4,7 @@
             @php
                 $tabs = [
                     'team' => 'Ekipe',
+                    'box' => 'Box',
                     'score' => 'Poeni',
                     '3pt' => '3PT',
                     'fg' => 'FG',
@@ -28,6 +29,10 @@
 
         <div x-show="activeTab === 'team'" class="mt-4">
             <x-games.stats.teams :game="$live['game']" />
+        </div>
+
+        <div x-show="activeTab === 'box'" class="mt-4">
+            <x-games.stats.box :game="$live['game']" />
         </div>
 
         <div x-show="activeTab === 'score'" class="mt-4">

@@ -74,13 +74,24 @@ trait StatsForLeaderboards
 
     public static function playerEventStatsSingle($type, $column, $order = 'desc', $limit = 20)
     {
-        $stats = Stat::with(['player', 'player.media'])
-            ->where('for', 'player')
-            ->where('type', 'event')
-            ->where('event_id', Event::current()->id)
-            ->take($limit)
-            ->orderBy($column, $order)
-            ->get();
+        if ($type === 'free_throws') {
+            $stats = Stat::with(['player', 'player.media'])
+                ->where('for', 'player')
+                ->where('type', 'event')
+                ->where('event_id', Event::current()->id)
+                ->take($limit)
+                ->orderByRaw($type . '_percent DESC, ' . $type . '_made DESC')
+                ->get();
+        } else {
+            $stats = Stat::with(['player', 'player.media'])
+                ->where('for', 'player')
+                ->where('type', 'event')
+                ->where('event_id', Event::current()->id)
+                ->take($limit)
+                ->orderBy($column, $order)
+                ->get();
+        }
+
 
         return self::optimizePlayerDataForLeaderboards($stats, $type);
     }

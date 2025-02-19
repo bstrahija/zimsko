@@ -55,13 +55,27 @@ final class Helpers
             $player['stats'] = $live['game']['player_stats']['player__' . $player['id']];
         }
 
-        $sorted = collect($players)
-            ->sortByDesc(function ($player) use ($live, $type) {
-                return $player['stats'][$type] ?? 0;
-            })
-            ->take($limit)
-            ->values()
-            ->all();
+        if ($type === 'free_throws') {
+            $sorted = collect($players)
+                ->sortByDesc(function ($player) use ($live, $type) {
+                    $percent = $player['stats']['free_throws_percent'] ?? 0;
+                    $made = $player['stats']['free_throws_made'] ?? 0;
+                    return [$percent, $made];
+                })
+                ->take($limit)
+                ->values()
+                ->all();
+        } else {
+            $sorted = collect($players)
+                ->sortByDesc(function ($player) use ($live, $type) {
+                    return $player['stats'][$type] ?? 0;
+                })
+                ->take($limit)
+                ->values()
+                ->all();
+        }
+
+
 
         return $sorted;
     }
