@@ -2,10 +2,40 @@
     // Here we need to sort the stats by the provided type
     if ($type === 'score') {
         $stats = collect($stats)->sortByDesc($type)->values();
+    } elseif ($type === 'free_throws') {
+        $stats = collect($stats)
+            ->sort(function ($a, $b) {
+                if ($a['free_throws'] >= 10 && $b['free_throws'] < 10) {
+                    return -1;
+                } elseif ($a['free_throws'] < 10 && $b['free_throws'] >= 10) {
+                    return 1;
+                }
+
+                if ($a['free_throws_percent'] == $b['free_throws_percent']) {
+                    return $b['free_throws_made'] <=> $a['free_throws_made'];
+                }
+
+                return $b['free_throws_percent'] <=> $a['free_throws_percent'];
+            })
+            ->values();
     } elseif ($type === 'three_points') {
         $stats = collect($stats)->sortByDesc('three_points_made')->values();
     } elseif ($type === 'field_goals') {
-        $stats = collect($stats)->sortByDesc('field_goals_made')->values();
+        $stats = collect($stats)
+            ->sort(function ($a, $b) {
+                if ($a['field_goals'] >= 10 && $b['field_goals'] < 10) {
+                    return -1;
+                } elseif ($a['field_goals'] < 10 && $b['field_goals'] >= 10) {
+                    return 1;
+                }
+
+                if ($a['field_goals_percent'] == $b['field_goals_percent']) {
+                    return $b['field_goals_made'] <=> $a['field_goals_made'];
+                }
+
+                return $b['field_goals_percent'] <=> $a['field_goals_percent'];
+            })
+            ->values();
     } elseif ($type === 'rebounds') {
         $stats = collect($stats)->sortByDesc('rebounds')->values();
     } elseif ($type === 'assists') {
