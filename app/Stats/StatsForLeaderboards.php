@@ -79,8 +79,10 @@ trait StatsForLeaderboards
                 ->where('for', 'player')
                 ->where('type', 'event')
                 ->where('event_id', Event::current()->id)
+                ->orderByRaw("CASE WHEN {$type}_made >= 5 THEN 0 ELSE 1 END")
+                ->orderByRaw("{$type}_percent DESC")
+                ->orderByRaw("{$type}_made DESC")
                 ->take($limit)
-                ->orderByRaw($type . '_percent DESC, ' . $type . '_made DESC')
                 ->get();
         } else {
             $stats = Stat::with(['player', 'player.media'])
