@@ -20,21 +20,23 @@
 
                 <tr class="border-b last:border-b-0">
                     <td class="py-3">
-                        <div class="flex items-center">
+                        <a href="{{ route('games.show', $game->slug) }}" class="flex items-center">
                             <img src="{{ $opponent->logo() }}" class="mr-2 w-6 h-6 rounded-full">
                             {{ $opponent->title }}
-                        </div>
+                        </a>
                     </td>
                     <td class="py-3 text-right">
-                        @if ($team->id === $game->home_team_id)
-                            <span class="{{ $game->home_score > $game->away_score ? 'text-green-500 font-semibold' : 'text-gray-500' }}">{{ $game->home_score }}</span>
-                            -
-                            <span class="{{ $game->away_score > $game->home_score ? 'text-red-500 font-semibold' : 'text-gray-500' }}">{{ $game->away_score }}</span>
-                        @else
-                            <span class="{{ $game->away_score > $game->home_score ? 'text-green-500 font-semibold' : 'text-gray-500' }}">{{ $game->away_score }}</span>
-                            -
-                            <span class="{{ $game->home_score > $game->away_score ? 'text-red-500 font-semibold' : 'text-gray-500' }}">{{ $game->home_score }}</span>
-                        @endif
+                        <a href="{{ route('games.show', $game->slug) }}">
+                            @if ($team->id === $game->home_team_id)
+                                <span class="{{ $game->home_score > $game->away_score ? 'text-green-500 font-semibold' : 'text-gray-500' }}">{{ $game->home_score }}</span>
+                                -
+                                <span class="{{ $game->away_score > $game->home_score ? 'text-red-500 font-semibold' : 'text-gray-500' }}">{{ $game->away_score }}</span>
+                            @else
+                                <span class="{{ $game->away_score > $game->home_score ? 'text-green-500 font-semibold' : 'text-gray-500' }}">{{ $game->away_score }}</span>
+                                -
+                                <span class="{{ $game->home_score > $game->away_score ? 'text-red-500 font-semibold' : 'text-gray-500' }}">{{ $game->home_score }}</span>
+                            @endif
+                        </a>
                     </td>
                     <td class="py-3 text-right">
                         @if ($isWin)
