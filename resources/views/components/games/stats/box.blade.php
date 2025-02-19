@@ -24,7 +24,8 @@
                     @foreach ($game[$side . '_players'] as $index => $player)
                         <tr class="{{ $index % 2 === 0 ? 'bg-white' : 'bg-gray-50' }} border-b hover:bg-gray-100">
                             <td class="sticky left-0 z-10 px-2 py-2 font-medium text-gray-900 whitespace-nowrap {{ $index % 2 === 0 ? 'bg-white' : 'bg-gray-50' }}">
-                                {{ $player['name'] }}</td>
+                                <a href="{{ route('players.show', $player['slug']) }}">{{ $player['name'] }}
+                            </td></a>
                             <td class="px-2 py-2 text-center text-nowrap">
                                 {{ $game['player_stats']['player__' . $player['id']]['field_goals_made'] }}-{{ $game['player_stats']['player__' . $player['id']]['field_goals'] }}
                             </td>
