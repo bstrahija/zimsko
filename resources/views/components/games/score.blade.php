@@ -75,29 +75,49 @@
                         <div
                             class="p-2 bg-gray-100 rounded-md border-t-4 {{ $game->period === 1 && $game->status === 'in_progress' ? 'border-primary' : 'border-gray-400 opacity-60' }}">
                             <div class="font-semibold">Q1</div>
-                            <div>{{ $game->home_score_p1 }} - {{ $game->away_score_p1 }}</div>
+                            <div>
+                                <span class="{{ $game->home_score_p1 > $game->away_score_p1 ? 'text-green-600 font-semibold' : '' }}">{{ $game->home_score_p1 }} </span>
+                                -
+                                <span class="{{ $game->away_score_p1 > $game->home_score_p1 ? 'text-green-600 font-semibold' : '' }}">{{ $game->away_score_p1 }}</span>
+                            </div>
                         </div>
                         <div
                             class="p-2 bg-gray-100 rounded-md border-t-4 {{ $game->period === 2 && $game->status === 'in_progress' ? 'border-primary' : 'border-gray-400 opacity-60' }}">
                             <div class="font-semibold">Q2</div>
-                            <div>{{ $game->home_score_p2 }} - {{ $game->away_score_p2 }}</div>
+                            <div>
+                                <span class="{{ $game->home_score_p2 > $game->away_score_p2 ? 'text-green-600 font-semibold' : '' }}">{{ $game->home_score_p2 }} </span>
+                                -
+                                <span class="{{ $game->away_score_p2 > $game->home_score_p2 ? 'text-green-600 font-semibold' : '' }}">{{ $game->away_score_p2 }}</span>
+                            </div>
                         </div>
                         <div
                             class="p-2 bg-gray-100 rounded-md border-t-4 {{ $game->period === 3 && $game->status === 'in_progress' ? 'border-primary' : 'border-gray-400 opacity-60' }}">
                             <div class="font-semibold">Q3</div>
-                            <div>{{ $game->home_score_p3 }} - {{ $game->away_score_p3 }}</div>
+                            <div>
+                                <span class="{{ $game->home_score_p3 > $game->away_score_p3 ? 'text-green-600 font-semibold' : '' }}">{{ $game->home_score_p3 }} </span>
+                                -
+                                <span class="{{ $game->away_score_p3 > $game->home_score_p3 ? 'text-green-600 font-semibold' : '' }}">{{ $game->away_score_p3 }}</span>
+                            </div>
                         </div>
                         <div
                             class="p-2 bg-gray-100 rounded-md border-t-4 {{ $game->period === 4 && $game->status === 'in_progress' ? 'border-primary' : 'border-gray-400 opacity-60' }}">
                             <div class="font-semibold">Q4</div>
-                            <div>{{ $game->home_score_p4 }} - {{ $game->away_score_p4 }}</div>
+                            <div>
+                                <span class="{{ $game->home_score_p4 > $game->away_score_p4 ? 'text-green-600 font-semibold' : '' }}">{{ $game->home_score_p4 }} </span>
+                                -
+                                <span class="{{ $game->away_score_p4 > $game->home_score_p4 ? 'text-green-600 font-semibold' : '' }}">{{ $game->away_score_p4 }}</span>
+                            </div>
                         </div>
 
                         <!-- Also check for overtime -->
                         @if ($game->home_score_p5 || $game->away_score_p5)
                             <div class="p-2 bg-gray-100 rounded-md">
                                 <div class="font-semibold">OT</div>
-                                <div>{{ $game->home_score_p5 }} - {{ $game->away_score_p5 }}</div>
+                                <div>
+                                    <span class="{{ $game->home_score_p5 > $game->away_score_p5 ? 'text-green-600 font-semibold' : '' }}">{{ $game->home_score_p5 }} </span>
+                                    -
+                                    <span class="{{ $game->away_score_p5 > $game->home_score_p5 ? 'text-green-600 font-semibold' : '' }}">{{ $game->away_score_p5 }}</span>
+                                </div>
                             </div>
                         @endif
                     </div>
