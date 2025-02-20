@@ -84,9 +84,12 @@ trait LogData
                     'amount'        => $log->amount,
                     'home_score'    => $log->home_score,
                     'away_score'    => $log->away_score,
+                    'team_id'       => $log->team_id,
                     'team_name'     => $log->team_name,
                     'team_side'     => $log->team_side,
+                    'player_id'     => $log->player_id,
                     'player_name'   => $log->player_name,
+                    'created_at'    => $log->created_at->format('Y-m-d H:i:s'),
                 ];
 
                 // Let's build up a message
