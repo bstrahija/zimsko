@@ -51,11 +51,6 @@ class GameLog extends Model
         return $this->belongsTo(Game::class);
     }
 
-    public function gameLive(): BelongsTo
-    {
-        return $this->belongsTo(GameLive::class);
-    }
-
     public function player(): BelongsTo
     {
         return $this->belongsTo(Player::class);

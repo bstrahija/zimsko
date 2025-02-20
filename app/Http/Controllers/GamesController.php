@@ -34,7 +34,7 @@ class GamesController extends Controller
         $game = Game::where('slug', $slug)->firstOrFail();
 
         // Let's cache if game is over
-        if (! $game->isCompleted()) {
+        if ($game->isCompleted()) {
             $scorers = Cache::remember('game_scorers.'    . $game->id, (60 * 60 * 24 * 30), fn() => Leaderboards::getPlayerLeaderboardForGame($game, 'score', 100));
             $live    = Cache::remember('game_live_score.' . $game->id, (60 * 60 * 24 * 30), fn() => LiveScore::build($game)->toOptimizedData());
         } else {
