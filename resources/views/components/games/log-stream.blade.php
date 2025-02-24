@@ -129,7 +129,7 @@
             <div class="p-3 mb-4 {{ $itemBgColor }} rounded-lg shadow-sm transition-all duration-300 hover:shadow-md">
                 <div class="flex justify-between text-xs font-medium text-gray-700">
                     <div class="flex justify-start items-top">
-                        <strong class="mr-2">
+                        <strong class="mr-2 text-nowrap">
                             <span class="{{ $item['home_score'] > $item['away_score'] ? 'text-green-600' : 'font-normal' }}">{{ $item['home_score'] }}</span>
                             :
                             <span class="{{ $item['away_score'] > $item['home_score'] ? 'text-green-600' : 'font-normal' }}">{{ $item['away_score'] }}</span>
@@ -173,7 +173,7 @@
                         </div>
                     </div>
 
-                    <div>
+                    <div class="ml-2 text-2xs">
                         @if ($item['period'] <= 4)
                             Q{{ $item['period'] }}
                         @else
