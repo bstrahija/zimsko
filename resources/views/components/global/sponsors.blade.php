@@ -9,7 +9,8 @@
             <a href="https://www.dot-studio.hr" target="_blank"><img src="{{ asset('img/sponsors/sponsor_dot.jpg') }}" alt="Dot Studio" class="h-12"></a>
             <a href="https://www.cakovec.hr/" target="_blank"><img src="{{ asset('img/sponsors/sponsor_grad.png') }}" alt="Grad Čakovec" class="h-12"></a>
             <a href="https://www.hespo.hr/" target="_blank"><img src="{{ asset('img/sponsors/sponsor_hespo.webp') }}" alt="Hespo" class="h-12"></a>
-            <a href="https://www.geoplan.hr/" target="_blank"><img src="{{ asset('img/sponsors/sponsor_geoplan.png') }}" alt="Geoplan" class="h-12"></a>
+            <a href="#" target="_blank"><img src="{{ asset('img/sponsors/sponsor_geoplan.png') }}" alt="Geoplan" class="h-12"></a>
+            <a href="https://www.primabiro.hr/" target="_blank"><img src="{{ asset('img/sponsors/sponsor_prima.jpg') }}" alt="Geoplan" class="h-8"></a>
         </div>
     </x-ui.card>
 </div>
