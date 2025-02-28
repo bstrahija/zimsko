@@ -38,18 +38,18 @@
                             Upiši svoje podatke
                         </x-ui.button>
 
-                        <p>{{ $firstName }}</p>
+                        {{-- <p>{{ $firstName }}</p>
                         <p>{{ $lastName }}</p>
                         <p>{{ $email }}</p>
-                        <p>{{ $teamId }}</p>
-                        <p>
+                        <p>{{ $teamId }}</p> --}}
+                        {{-- <p>
                             @php
                                 dump($order);
                                 dump($productIds);
                                 dump($sizes);
                                 dump($quantities);
                             @endphp
-                        </p>
+                        </p> --}}
                     </form>
                 @endif
             @else

@@ -34,6 +34,17 @@ class Product extends Model implements HasMedia
         return $this->getFirstMediaUrl('photos', $size);
     }
 
+    public function imageOther($size = 'thumb')
+    {
+        $media = $this->getMedia('photos');
+
+        if (isset($media[1])) {
+            return $media[1]->getUrl($size);
+        }
+
+        return null;
+    }
+
     public function getUrlAttribute()
     {
         return route('products.show', $this->slug);
