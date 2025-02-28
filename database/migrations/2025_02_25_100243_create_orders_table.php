@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('country')->index()->default('hr');
             $table->string('post_code')->nullable();
             $table->float('price')->default(0);
-            $table->foreignId('team_id')->nullable()->constrained('teams')->index()->cascadeOnDelete();
+            $table->foreignId('team_id')->nullable()->index()->cascadeOnDelete();
             $table->string('status', 50)->default('pending')->index();
             $table->json('data')->nullable();
             $table->timestamps();
