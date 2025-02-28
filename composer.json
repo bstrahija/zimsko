@@ -17,6 +17,7 @@
         "cms-multi/filament-clear-cache": "^2.0",
         "codeat3/blade-forkawesome": "^1.10",
         "dotswan/filament-laravel-pulse": "^1.1",
+        "dutchcodingcompany/livewire-recaptcha": "^1.0",
         "filament/filament": "^3.2",
         "filament/spatie-laravel-media-library-plugin": "^3.2",
         "filament/spatie-laravel-settings-plugin": "^3.2",
@@ -40,7 +41,6 @@
         "wireui/heroicons": "^2.7"
     },
     "require-dev": {
-        "aaronfrancis/solo": "^0.2.2",
         "barryvdh/laravel-debugbar": "^3.14",
         "fakerphp/faker": "^1.23",
         "larastan/larastan": "^3.0",
@@ -50,7 +50,8 @@
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.1",
         "pestphp/pest": "^3.4",
-        "pestphp/pest-plugin-laravel": "^3.0"
+        "pestphp/pest-plugin-laravel": "^3.0",
+        "soloterm/solo": "^0.4.0"
     },
     "autoload": {
         "psr-4": {

@@ -114,15 +114,17 @@ trait StatsForLeaderboards
 
     public static function optimizeTeamDataItemForLeaderboards($item): array
     {
-        $optimizedItem = $item->toArray();
+        $optimizedItem = $item ? $item->toArray() : [];
 
-        // Add stuff
-        $optimizedItem['team_title'] = $item->team->title;
-        $optimizedItem['team_logo']  = $item->team->logo();
-        $optimizedItem['team_slug']  = $item->team->slug;
+        if ($item) {
+            // Add stuff
+            $optimizedItem['team_title'] = $item->team->title;
+            $optimizedItem['team_logo']  = $item->team->logo();
+            $optimizedItem['team_slug']  = $item->team->slug;
 
-        // Remove stuff
-        unset($optimizedItem['team']);
+            // Remove stuff
+            unset($optimizedItem['team']);
+        }
 
         return $optimizedItem;
     }
