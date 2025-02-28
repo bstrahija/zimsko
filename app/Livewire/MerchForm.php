@@ -68,7 +68,7 @@ class MerchForm extends Component
         $this->lastName  = session('merch.lastName');
         $this->email     = session('merch.email');
         $this->phone     = session('merch.phone');
-        $this->teamId    = session('merch.teamId');
+        // $this->teamId    = session('merch.teamId');
     }
 
     public function submit()
