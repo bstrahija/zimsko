@@ -3,10 +3,10 @@
         <div class="flex flex-col items-center">
             <h2 class="mb-6 text-2xl font-semibold">{{ $product->title }}</h2>
             <figure class="overflow-hidden mb-6">
-                <a href="{{ $product->url }}" class="grid grid-cols-2 gap-4 w-full">
+                <span class="grid grid-cols-2 gap-4 w-full">
                     <img src="{{ $product->image() }}" alt="{{ $product->title }}" class="object-cover w-full h-64 transition-transform duration-300 hover:scale-110">
                     <img src="{{ $product->imageOther() }}" alt="{{ $product->title }}" class="object-cover w-full h-64 transition-transform duration-300 hover:scale-110">
-                </a>
+                </span>
             </figure>
             <div class="grid grid-cols-2 gap-4 w-full">
                 <div class="relative">
