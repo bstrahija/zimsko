@@ -4,6 +4,7 @@ use App\Http\Controllers\GamesController;
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\PlayersController;
 use App\Http\Controllers\PostsController;
+use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\StatsController;
 use App\Http\Controllers\TeamsController;
@@ -28,6 +29,12 @@ Route::get('ekipe',           [TeamsController::class,   'index'])->name('teams'
 Route::get('ekipe/{slug}',    [TeamsController::class,   'show'])->name('teams.show');
 Route::get('igraci/{slug}',   [PlayersController::class, 'show'])->name('players.show');
 Route::get('statistika',      [StatsController::class,   'index'])->name('stats');
+
+// Merch/shop
+Route::get('donacije',                 [ProductsController::class, 'index'])->name('products.index');
+Route::get('donacije/potvrda/{order}', [ProductsController::class, 'order'])->name('products.order');
+Route::get('donacije/{product}',       [ProductsController::class, 'show'])->name('products.show');
+Route::get('orders/export',            [ProductsController::class, 'orders'])->name('orders.export')->middleware('auth');
 
 // Reports
 Route::get('izvestaji/utakmica/{slug}', [ReportsController::class, 'game'])->name('reports.game');

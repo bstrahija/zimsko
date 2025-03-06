@@ -46,11 +46,11 @@
 @endphp
 
 @if ($tag === 'a')
-    <a href="{{ $href ?? '#' }}" {{ $disabled ? 'disabled' : '' }} class="{{ $classes }} {{ $class ?? '' }}">
+    <a href="{{ $href ?? '#' }}" {{ $disabled ? 'disabled' : '' }} class="{{ $classes }} {{ $class ?? '' }}" {{ $attributes }}>
         {{ $slot }}
     </a>
 @else
-    <button {{ $disabled ? 'disabled' : '' }} class="{{ $classes }} {{ $class ?? '' }}">
+    <button {{ $disabled ? 'disabled' : '' }} class="{{ $classes }} {{ $class ?? '' }}" {{ $attributes }}>
         {{ $slot }}
     </button>
 @endif

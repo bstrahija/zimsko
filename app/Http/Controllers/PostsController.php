@@ -11,7 +11,8 @@ class PostsController extends Controller
     {
         $posts = Post::paginate(10);
 
-        return view('pages.posts', ['posts' => $posts]);
+        return redirect()->to(\App\Services\Settings::get('general.facebook'));
+        // return view('pages.posts', ['posts' => $posts]);
     }
 
     public function show($slug)
