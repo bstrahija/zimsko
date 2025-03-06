@@ -49,8 +49,12 @@ class ProductsController extends Controller
     public function orders()
     {
         $products = Product::all();
-        $orders   = Order::orderBy('first_name')->with(['orderItems', 'orderItems.product'])->get();
         $summary  = [];
+        $orders   = Order::orderBy('first_name')
+            ->with(['orderItems', 'orderItems.product'])
+            ->where('status', 'confirmed')
+            ->orWhere('status', 'completed')
+            ->get();
 
         foreach ($products as $product) {
             $items   = OrderItem::where('product_id', $product->id)
