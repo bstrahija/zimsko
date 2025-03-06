@@ -25,7 +25,8 @@
                 <div class="grid grid-cols-1 gap-10 lg:grid-cols-3 lg:gap-10 xl:gap-10">
                     <x-leaderboards.points-widget :leaderboard="$leaderboardPoints" />
                     <x-leaderboards.three-points-widget :leaderboard="$leaderboard3Point" />
-                    <x-games.slideshow-widget />
+                    {{-- <x-games.slideshow-widget /> --}}
+                    <x-global.merch-widget />
                 </div>
             </div>
         </section>
