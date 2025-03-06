@@ -4,8 +4,12 @@
             <h2 class="mb-6 text-2xl font-semibold">{{ $product->title }}</h2>
             <figure class="overflow-hidden mb-6">
                 <span class="grid grid-cols-2 gap-4 w-full">
-                    <img src="{{ $product->image() }}" alt="{{ $product->title }}" class="object-cover w-full h-64 transition-transform duration-300 hover:scale-110">
-                    <img src="{{ $product->imageOther() }}" alt="{{ $product->title }}" class="object-cover w-full h-64 transition-transform duration-300 hover:scale-110">
+                    <a href="{{ $product->image('') }}" target="_blank" class="lightbox" data-pswp-width="1000" data-pswp-height="1150">
+                        <img src="{{ $product->image() }}" alt="{{ $product->title }}" class="object-cover w-full h-64 transition-transform duration-300 hover:scale-110">
+                    </a>
+                    <a href="{{ $product->imageOther('') }}" target="_blank" class="lightbox" data-pswp-width="1000" data-pswp-height="1100">
+                        <img src="{{ $product->imageOther() }}" alt="{{ $product->title }}" class="object-cover w-full h-64 transition-transform duration-300 hover:scale-110">
+                    </a>
                 </span>
             </figure>
             <div class="grid grid-cols-2 gap-4 w-full">
@@ -33,7 +37,6 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                         </svg>
                     </div>
-
                 </div>
             </div>
         </div>
