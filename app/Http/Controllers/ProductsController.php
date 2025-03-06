@@ -57,7 +57,12 @@ class ProductsController extends Controller
             ->get();
 
         foreach ($products as $product) {
-            $items   = OrderItem::where('product_id', $product->id)
+            $items = OrderItem::where('product_id', $product->id)
+                ->whereHas('order', function ($query) {
+                    $query->where('status', 'confirmed')
+                        ->orWhere('status', 'completed');
+                })
+                ->with('order')
                 ->get()
                 ->groupBy('variation')
                 ->map(function ($group) {
@@ -70,6 +75,30 @@ class ProductsController extends Controller
             ];
         }
 
-        return view('products.orders', ['orders' => $orders, 'summary' => $summary]);
+        // Let's also get number of votes for teams
+        $votes = Order::select('team_id', \DB::raw('count(*) as count'))
+            ->with('team')
+            ->whereNotNull('team_id')
+            ->where(function ($query) {
+                $query->where('status', 'confirmed')
+                    ->orWhere('status', 'completed');
+            })
+            ->groupBy('team_id')
+            ->orderBy('count', 'desc')
+            ->get()
+            ->map(function ($order) {
+                return [
+                    'count' => $order->count,
+                    'title' => $order->team->title,
+                    'team_id' => $order->team_id,
+                    'team' => $order->team
+                ];
+            });
+
+        return view('products.orders', [
+            'orders'  => $orders,
+            'summary' => $summary,
+            'votes'   => $votes
+        ]);
     }
 }
