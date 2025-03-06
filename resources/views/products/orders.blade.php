@@ -28,7 +28,7 @@
                         @foreach ($orders as $index => $order)
                             <tr>
                                 <td class="px-3 py-4 text-xs text-gray-800 whitespace-nowrap print:hidden">{{ $order->id }}</td>
-                                <td class="px-3 py-4 text-xs text-gray-800 whitespace-nowrap">{{ $order->name }}<br><small>{{ $order->email }}</small></td>
+                                <td class="px-3 py-4 text-xs text-gray-800 whitespace-nowrap">{{ $order->name }}<br><small>{{ $order->email }}<br>{{ $order->phone }}</small></td>
                                 <td class="px-3 py-4 text-xs text-gray-800 whitespace-nowrap">
                                     <ul>
                                         @foreach ($order->orderItems as $orderItem)
@@ -70,6 +70,31 @@
                         </div>
                     @endforeach
 
+                </div>
+            </div>
+
+            <div class="mt-8 max-w-[800px]">
+                <h2 class="mb-4 text-xl font-bold">Glasovi za ekipe</h2>
+
+                <div class="overflow-hidden bg-white rounded-lg shadow-sm">
+                    <table class="w-full text-sm table-auto">
+                        <thead>
+                            <tr class="border-b border-gray-200">
+                                <th class="px-4 py-3 font-medium tracking-wider text-left text-gray-500 uppercase">Ekipa</th>
+                                <th class="px-4 py-3 font-medium tracking-wider text-right text-gray-500 uppercase">Glasovi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            @foreach ($votes as $position => $vote)
+                                <tr class="transition-colors hover:bg-gray-50">
+                                    <td class="px-4 py-3 font-medium">{{ $position + 1 }}. {{ $vote['title'] }}</td>
+                                    <td class="px-4 py-3 text-right">
+                                        <span class="px-3 py-1 text-sm font-bold rounded-full bg-secondary">{{ $vote['count'] }}</span>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
