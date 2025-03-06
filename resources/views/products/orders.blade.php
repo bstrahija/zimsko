@@ -17,7 +17,7 @@
                     <thead class="bg-gray-50">
                         <tr>
                             <th class="px-3 py-3 text-xs font-medium tracking-wider text-left text-gray-800 uppercase print:hidden">ID</th>
-                            <th class="px-3 py-3 text-xs font-medium tracking-wider text-left text-gray-800 uppercase">Ime</th>
+                            <th class="px-3 py-3 text-xs font-medium tracking-wider text-left text-gray-800 uppercase">Ime/Email</th>
                             <th class="px-3 py-3 text-xs font-medium tracking-wider text-left text-gray-800 uppercase">Količina</th>
                             <th class="px-3 py-3 text-xs font-medium tracking-wider text-left text-gray-800 uppercase">Datum</th>
                             <th class="px-3 py-3 text-xs font-medium tracking-wider text-left text-gray-800 uppercase">Ekipa</th>
@@ -28,7 +28,7 @@
                         @foreach ($orders as $index => $order)
                             <tr>
                                 <td class="px-3 py-4 text-xs text-gray-800 whitespace-nowrap print:hidden">{{ $order->id }}</td>
-                                <td class="px-3 py-4 text-xs text-gray-800 whitespace-nowrap">{{ $order->name }}</td>
+                                <td class="px-3 py-4 text-xs text-gray-800 whitespace-nowrap">{{ $order->name }}<br><small>{{ $order->email }}</small></td>
                                 <td class="px-3 py-4 text-xs text-gray-800 whitespace-nowrap">
                                     <ul>
                                         @foreach ($order->orderItems as $orderItem)
