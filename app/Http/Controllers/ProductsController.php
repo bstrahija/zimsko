@@ -15,6 +15,7 @@ use App\Stats\Stats;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class ProductsController extends Controller
 {
@@ -76,7 +77,7 @@ class ProductsController extends Controller
         }
 
         // Let's also get number of votes for teams
-        $votes = Order::select('team_id', \DB::raw('count(*) as count'))
+        $votes = Order::select('team_id', DB::raw('count(*) as count'))
             ->with('team')
             ->whereNotNull('team_id')
             ->where(function ($query) {
