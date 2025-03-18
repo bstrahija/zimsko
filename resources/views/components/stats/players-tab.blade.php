@@ -13,6 +13,10 @@
                         <th class="px-4 py-3 font-medium text-right text-gray-500">Napad</th>
                     @endif
 
+                    @if (in_array($type, ['score', 'three_points', 'free_throws', 'assists', 'steals', 'blocks', 'fouls', 'turnovers', 'rebounds']))
+                        <th class="px-4 py-3 font-medium text-right text-gray-500">AVG</th>
+                    @endif
+
                     @if (in_array($type, ['score', 'three_points', 'field_goals', 'free_throws']))
                         <th class="px-4 py-3 font-medium text-right text-gray-500">Postotak</th>
                     @endif
@@ -44,6 +48,16 @@
                         @if ($type === 'rebounds')
                             <td class="px-4 py-3 text-xs text-right max-w-1">{{ $stat['offensive_rebounds'] }}</td>
                             <td class="px-4 py-3 text-xs text-right max-w-1">{{ $stat['defensive_rebounds'] }}</td>
+                        @endif
+
+                        @if (in_array($type, ['score', 'three_points', 'free_throws', 'assists', 'steals', 'blocks', 'fouls', 'turnovers', 'rebounds']))
+                            <td class="px-4 py-3 font-medium text-right text-gray-500">
+                                @if (isset($stat[$type . '_made']))
+                                    {{ $stat['games'] ? round($stat[$type . '_made'] / $stat['games'], 1) : 0 }}
+                                @else
+                                    {{ $stat['games'] ? round($stat[$type] / $stat['games'], 1) : 0 }}
+                                @endif
+                            </td>
                         @endif
 
                         @if (isset($stat[$type . '_percent']) || $type === 'score')

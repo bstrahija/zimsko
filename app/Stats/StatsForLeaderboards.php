@@ -94,7 +94,6 @@ trait StatsForLeaderboards
                 ->get();
         }
 
-
         return self::optimizePlayerDataForLeaderboards($stats, $type);
     }
 
@@ -176,6 +175,7 @@ trait StatsForLeaderboards
                 'field_goals_percent',
                 'offensive_rebounds',
                 'defensive_rebounds',
+                'games',
             ]);
         } else {
             $optimizedItem = $optimizedItem;
