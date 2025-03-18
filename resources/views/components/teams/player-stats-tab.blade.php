@@ -22,6 +22,10 @@
 
                     <th class="px-4 py-3 font-medium text-right text-gray-500">Ukupno</th>
 
+                    @if ($type === 'score')
+                        <th class="px-4 py-3 font-medium text-right text-gray-500">U</th>
+                    @endif
+
                     @if ($type === 'rebounds')
                         <th class="px-4 py-3 font-medium text-right text-gray-500">Obrana</th>
                         <th class="px-4 py-3 font-medium text-right text-gray-500">Napad</th>
@@ -39,15 +43,15 @@
             <tbody class="divide-y divide-gray-200">
                 @foreach ($stats as $index => $stat)
                     <tr class="transition-colors duration-200 hover:bg-gray-50">
-                        <td class="px-4 py-3 text-sm font-semibold text-gray-600">{{ $stat['player_number'] }}</td>
-                        <td class="px-4 py-3 text-sm">
+                        <td class="px-4 py-3 text-xs font-semibold text-gray-600">{{ $stat['player_number'] }}</td>
+                        <td class="px-4 py-3 text-xs">
                             <a href="{{ route('players.show', $stat['player_slug']) }}" class="flex items-center">
                                 <img src="{{ $stat['player_photo'] ?: $team->logo() }}" alt="" class="mr-3 w-8 h-8 rounded-full">
                                 <span class="font-medium text-gray-900">{{ $stat['player_name'] }}</span>
                             </a>
                         </td>
 
-                        <td class="px-4 py-3 text-sm font-semibold text-right text-gray-800">
+                        <td class="px-4 py-3 text-xs font-semibold text-right text-gray-800">
                             @if (isset($stat[$type . '_made']))
                                 {{ $stat[$type . '_made'] }}/{{ $stat[$type] }}
                             @else
@@ -55,13 +59,19 @@
                             @endif
                         </td>
 
+                        @if ($type === 'score')
+                            <td class="px-4 py-3 text-xs text-right max-w-1" title="Odigrano utakmica">
+                                {{ $stat['games'] }}
+                            </td>
+                        @endif
+
                         @if ($type === 'rebounds')
-                            <td class="px-4 py-3 text-sm text-right max-w-1">{{ $stat['offensive_rebounds'] }}</td>
-                            <td class="px-4 py-3 text-sm text-right max-w-1">{{ $stat['defensive_rebounds'] }}</td>
+                            <td class="px-4 py-3 text-xs text-right max-w-1">{{ $stat['offensive_rebounds'] }}</td>
+                            <td class="px-4 py-3 text-xs text-right max-w-1">{{ $stat['defensive_rebounds'] }}</td>
                         @endif
 
                         @if (in_array($type, ['score', 'three_points', 'free_throws', 'assists', 'steals', 'blocks', 'fouls', 'turnovers', 'rebounds']))
-                            <td class="px-4 py-3 text-sm text-right max-w-1 text-nowrap">
+                            <td class="px-4 py-3 text-xs text-right max-w-1 text-nowrap">
                                 @if (isset($stat[$type . '_made']))
                                     {{ $stat['games'] ? round($stat[$type . '_made'] / $stat['games'], 1) : 0 }}
                                 @else
@@ -71,7 +81,7 @@
                         @endif
 
                         @if (isset($stat[$type . '_percent']) || $type === 'score')
-                            <td class="px-4 py-3 text-sm text-right max-w-1 text-nowrap">
+                            <td class="px-4 py-3 text-xs text-right max-w-1 text-nowrap">
                                 @if (isset($stat[$type . '_made']))
                                     {{ $stat[$type . '_made'] }}
                                     /
