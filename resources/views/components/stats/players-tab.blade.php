@@ -51,7 +51,7 @@
                         @endif
 
                         @if (in_array($type, ['score', 'three_points', 'free_throws', 'assists', 'steals', 'blocks', 'fouls', 'turnovers', 'rebounds']))
-                            <td class="px-4 py-3 font-medium text-right text-gray-500">
+                            <td class="px-4 py-3 text-xs text-right max-w-1 text-nowrap">
                                 @if (isset($stat[$type . '_made']))
                                     {{ $stat['games'] ? round($stat[$type . '_made'] / $stat['games'], 1) : 0 }}
                                 @else
