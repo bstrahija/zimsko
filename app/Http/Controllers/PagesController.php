@@ -42,7 +42,7 @@ class PagesController extends Controller
         $latestGames        = Game::where(['status' => 'completed', 'event_id' => $currentEvent->id])
             ->with(['homeTeam', 'awayTeam', 'homeTeam.media', 'awayTeam.media', 'round', 'event'])->orderByDesc('scheduled_at')->limit(6)->get();
 
-        // // If we don't have games for current event, show past event
+        // If we don't have games for current event, show past event
         if (! $latestGames || ! $latestGames->count()) {
             $latestGames = Game::where(['status' => 'completed', 'event_id' => $pastEvent->id])
                 ->with(['homeTeam', 'awayTeam', 'homeTeam.media', 'awayTeam.media', 'round', 'event'])->orderByDesc('scheduled_at')->limit(6)->get();
