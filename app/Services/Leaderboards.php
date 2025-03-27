@@ -37,9 +37,9 @@ class Leaderboards
                         'wins'            => $item['wins'],
                         'losses'          => $item['loses'],
                         'games'           => $item['games'],
-                        'score'           => $item['score'],
+                        'score'           => 0,
                         'opponentScore'   => 0,
-                        'scoreDifference' => 0,
+                        'scoreDifference' => $item['score'],
                         'team'            => $team,
                     ]));
                 }
