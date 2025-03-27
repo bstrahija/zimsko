@@ -29,6 +29,7 @@ class Event extends Model
     protected $casts = [
         'external_id'  => 'integer',
         'data'         => 'array',
+        'leaderboard'  => 'array',
         'scheduled_at' => 'timestamp',
     ];
 

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->longText('body')->nullable();
             $table->string('status', 50)->default('active')->index();
             $table->json('data')->nullable();
+            $table->json('leaderboard')->nullable();
             $table->timestamp('scheduled_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
