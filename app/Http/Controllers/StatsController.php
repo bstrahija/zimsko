@@ -22,7 +22,7 @@ class StatsController extends Controller
         $teamStats   = Cache::remember('team_event_stats.leaders.' .   Event::current()->id, (60 * 60 * 24), fn() => Stats::teamEventStats());
         $playerStats = Cache::remember('player_event_stats.leaders.' . Event::current()->id, (60 * 60 * 24), fn() => Stats::playersEventStats());
         $officials = DB::table('games')
-            ->where('event_id', 2)
+            ->where('games.event_id', Event::current()->id)
             ->join('game_official', 'games.id', '=', 'game_official.game_id')
             ->join('officials', 'game_official.official_id', '=', 'officials.id')
             ->select('officials.first_name', 'officials.last_name', DB::raw('COUNT(*) as games_officiated'))
