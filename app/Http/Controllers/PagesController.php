@@ -11,6 +11,7 @@ use App\Services\Leaderboards;
 use App\Stats\Stats;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 class PagesController extends Controller
 {
