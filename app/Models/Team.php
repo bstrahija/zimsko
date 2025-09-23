@@ -75,7 +75,7 @@ class Team extends Model implements HasMedia
     ];
 
     protected $casts = [
-        'id' => 'integer',
+        'id'          => 'integer',
         'external_id' => 'integer',
         'data'        => 'object',
     ];
@@ -126,7 +126,7 @@ class Team extends Model implements HasMedia
 
     public function lastGame(): ?Game
     {
-        return Game::where(fn($query) => $query->where('home_team_id', $this->id)->orWhere('away_team_id', $this->id))
+        return Game::where(fn ($query) => $query->where('home_team_id', $this->id)->orWhere('away_team_id', $this->id))
             ->where('status', 'completed')
             ->orderBy('scheduled_at', 'desc')
             ->first();
@@ -134,7 +134,7 @@ class Team extends Model implements HasMedia
 
     public function nextGame(): ?Game
     {
-        return Game::where(fn($query) => $query->where('home_team_id', $this->id)->orWhere('away_team_id', $this->id))
+        return Game::where(fn ($query) => $query->where('home_team_id', $this->id)->orWhere('away_team_id', $this->id))
             ->where('status', 'scheduled')
             ->orderBy('scheduled_at', 'asc')
             ->first();
@@ -173,13 +173,13 @@ class Team extends Model implements HasMedia
     public function stats(): Attribute
     {
         return new Attribute(
-            get: fn() => $this->statsData,
+            get: fn () => $this->statsData,
         );
     }
 
     public function games()
     {
-        return Game::where(fn($query) => $query->where('home_team_id', $this->id)->orWhere('away_team_id', $this->id))
+        return Game::where(fn ($query) => $query->where('home_team_id', $this->id)->orWhere('away_team_id', $this->id))
             ->whereNot('status', 'tmp')
             ->whereNot('status', 'archived')
             ->whereNot('status', 'draft');
@@ -187,7 +187,7 @@ class Team extends Model implements HasMedia
 
     public function completedGames()
     {
-        return Game::where(fn($query) => $query->where('home_team_id', $this->id)->orWhere('away_team_id', $this->id))
+        return Game::where(fn ($query) => $query->where('home_team_id', $this->id)->orWhere('away_team_id', $this->id))
             ->where('status', 'completed');
     }
 
@@ -201,13 +201,13 @@ class Team extends Model implements HasMedia
         return $this->hasMany(Game::class, 'away_team_id');
     }
 
-    public function gameCount(Event $event = null): int
+    public function gameCount(?Event $event = null): int
     {
         if ($event) {
-            return Game::query()->where('status', 'completed')->where(fn($query) => $query->where('home_team_id', $this->id)->orWhere('away_team_id', $this->id))->where('event_id', $event->id)->count();
+            return Game::query()->where('status', 'completed')->where(fn ($query) => $query->where('home_team_id', $this->id)->orWhere('away_team_id', $this->id))->where('event_id', $event->id)->count();
         }
 
-        return Game::query()->where('status', 'completed')->where(fn($query) => $query->where('home_team_id', $this->id))->orWhere('away_team_id', $this->id)->count();
+        return Game::query()->where('status', 'completed')->where(fn ($query) => $query->where('home_team_id', $this->id))->orWhere('away_team_id', $this->id)->count();
     }
 
     public function gameCountCurrent(): int
@@ -215,12 +215,12 @@ class Team extends Model implements HasMedia
         return $this->gameCount(Event::current());
     }
 
-    public function points(Event $event = null): int
+    public function points(?Event $event = null): int
     {
         $where = [
-            'for' => 'team',
-            'type' => $event ? 'event' : 'total',
-            'team_id' => $this->id
+            'for'     => 'team',
+            'type'    => $event ? 'event' : 'total',
+            'team_id' => $this->id,
         ];
 
         if ($event) {
@@ -237,10 +237,10 @@ class Team extends Model implements HasMedia
         return $this->points(Event::current());
     }
 
-    public function pointsAverage(Event $event = null): float
+    public function pointsAverage(?Event $event = null): float
     {
         $points = $this->points($event);
-        $games = $this->gameCount($event);
+        $games  = $this->gameCount($event);
 
         return $games ? round($points / $games, 1) : 0;
     }
@@ -302,7 +302,7 @@ class Team extends Model implements HasMedia
     {
         $games = $this->latestGames($limit);
 
-        return $games->map(fn(Game $game) => [
+        return $games->map(fn (Game $game) => [
             'game'  => $game,
             'stats' => $game->stats()->where('for', 'team')->where('team_id', $this->id)->first(),
         ]);

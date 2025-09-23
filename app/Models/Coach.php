@@ -15,7 +15,7 @@ use Spatie\Sluggable\SlugOptions;
 
 class Coach extends Model implements HasMedia
 {
-    use HasFactory, HasSlug, SoftDeletes, InteractsWithMedia;
+    use HasFactory, HasSlug, InteractsWithMedia, SoftDeletes;
 
     protected $casts = [
         'external_id' => 'integer',
@@ -35,13 +35,11 @@ class Coach extends Model implements HasMedia
 
     public function registerMediaConversions(?Media $media = null): void
     {
-        $this
-            ->addMediaConversion('thumb')
+        $this->addMediaConversion('thumb')
             ->fit(Fit::Contain, 300, 300)
             ->nonQueued();
 
-        $this
-            ->addMediaConversion('preview')
+        $this->addMediaConversion('preview')
             ->fit(Fit::Contain, 600, 600)
             ->nonQueued();
     }
