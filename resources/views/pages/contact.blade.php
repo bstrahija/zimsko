@@ -18,18 +18,21 @@
                             @csrf
                             <div class="mb-4">
                                 <label for="name" class="block mb-2">Ime</label>
-                                <input type="text" id="name" name="name" required class="px-3 py-2 w-full rounded border">
+                                <input type="text" id="name" name="name" required
+                                    class="px-3 py-2 w-full rounded border">
                             </div>
                             <div class="mb-4">
                                 <label for="email" class="block mb-2">Email</label>
-                                <input type="email" id="email" name="email" required class="px-3 py-2 w-full rounded border">
+                                <input type="email" id="email" name="email" required
+                                    class="px-3 py-2 w-full rounded border">
                             </div>
                             <div class="mb-4">
                                 <label for="message" class="block mb-2">Poruka</label>
                                 <textarea id="message" name="message" required class="px-3 py-2 w-full rounded border" rows="4"></textarea>
                             </div>
 
-                            <x-ui.button type="submit" variant="secondary" size="lg" class="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600">Pošalji</x-ui.button>
+                            <x-ui.button type="submit" variant="secondary" size="lg"
+                                class="px-4 py-2 text-white bg-blue-500 rounded hover:bg-blue-600">Pošalji</x-ui.button>
                         </form>
                     </x-ui.card>
                 </div>
@@ -37,7 +40,8 @@
                 <x-ui.card class="mb-8" title="Naša lokacija">
                     <div class="w-full h-96">
                         <iframe width="100%" height="100%" frameborder="0" style="border:0"
-                            src="https://www.google.com/maps/embed/v1/place?key=AIzaSyC-468CEeERV42L2CsxGySC7ps0wOsUFp4&q=Ekonomska+skola+cakovec" allowfullscreen>
+                            src="https://www.google.com/maps/embed/v1/place?key=AIzaSyC-468CEeERV42L2CsxGySC7ps0wOsUFp4&q=Ekonomska+skola+cakovec"
+                            allowfullscreen>
                         </iframe>
                     </div>
                 </x-ui.card>

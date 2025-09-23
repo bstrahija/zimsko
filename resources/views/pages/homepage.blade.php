@@ -14,7 +14,8 @@
             </div>
         </section>
 
-        <section class="pt-24 pb-24 mb-16 bg-center bg-cover md:pt-30 md:pb-32 md:mb-24 lg:mb-32" style="background-image: url('{{ asset('img/bg2.jpg') }}');">
+        <section class="pt-24 pb-24 mb-16 bg-center bg-cover md:pt-30 md:pb-32 md:mb-24 lg:mb-32"
+            style="background-image: url('{{ asset('img/bg2.jpg') }}');">
             <div class="wrapper">
                 <div class="flex justify-center items-center mb-10 text-center">
                     <a href="{{ route('home') }}" class="inline-block transition-transform hover:scale-105">
