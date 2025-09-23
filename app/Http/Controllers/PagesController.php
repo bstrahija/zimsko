@@ -5,13 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Event;
 use App\Models\Game;
 use App\Models\Post;
-use App\Models\Team;
 use App\Services\Helpers;
-use App\Services\Leaderboards;
-use App\Stats\Stats;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 
 class PagesController extends Controller
 {
@@ -20,15 +16,15 @@ class PagesController extends Controller
      *
      * This page displays the latest news, articles, games and leaderboards.
      *
-     * @return \Illuminate\Contracts\View\View
+     * @return View
      */
     public function index()
     {
         // Get data for home page
-        $lastEvent          = Event::last()->toArray();
-        $currentEvent       = Event::current() ?: ($lastEvent ?: null);
-        $pastEvent          = Event::whereNot('id', $currentEvent->id)->whereNot('slug', 'LIKE', '%c-liga%')->orderBy('scheduled_at', 'desc')->first();
-        $latestArticles     = Post::orderBy('published_at', 'desc')->take(3)->get();
+        $lastEvent      = Event::last()->toArray();
+        $currentEvent   = Event::current() ?: ($lastEvent ?: null);
+        $pastEvent      = Event::whereNot('id', $currentEvent->id)->whereNot('slug', 'LIKE', '%c-liga%')->orderBy('scheduled_at', 'desc')->first();
+        $latestArticles = Post::orderBy('published_at', 'desc')->take(3)->get();
 
         // Stats::generateTotalForTeams(generateForEvents: true, generateForGames: true);
         // Stats::generateTotalForPlayers(generateForEvents: true, generateForGames: true);
@@ -36,11 +32,11 @@ class PagesController extends Controller
         // $game = Game
 
         // Get the latest games
-        $upcomingGames      = Game::where(['event_id' => $currentEvent->id])->where(function ($query) {
+        $upcomingGames = Game::where(['event_id' => $currentEvent->id])->where(function ($query) {
             $query->where('status', 'scheduled');
             $query->orWhere('status', 'in_progress');
         })->with(['homeTeam', 'awayTeam', 'homeTeam.media', 'awayTeam.media', 'round', 'event'])->orderBy('scheduled_at')->limit(6)->get();
-        $latestGames        = Game::where(['status' => 'completed', 'event_id' => $currentEvent->id])
+        $latestGames = Game::where(['status' => 'completed', 'event_id' => $currentEvent->id])
             ->with(['homeTeam', 'awayTeam', 'homeTeam.media', 'awayTeam.media', 'round', 'event'])->orderByDesc('scheduled_at')->limit(6)->get();
 
         // If we don't have games for current event, show past event
@@ -50,9 +46,9 @@ class PagesController extends Controller
         }
 
         // And the leaderboards (should be cached)
-        $leaderboard        = Helpers::leaderboard();
-        $leaderboardPoints  = Helpers::leaderboardPoints();
-        $leaderboard3Point  = Helpers::leaderboardThreePoints();
+        $leaderboard       = Helpers::leaderboard();
+        $leaderboardPoints = Helpers::leaderboardPoints();
+        $leaderboard3Point = Helpers::leaderboardThreePoints();
 
         // dump($leaderboardPoints);
 
@@ -69,7 +65,7 @@ class PagesController extends Controller
         ]);
     }
 
-    public function contact()
+    public function contact(): View
     {
         return view('pages.contact');
     }
@@ -77,20 +73,5 @@ class PagesController extends Controller
     public function contactSubmit(Request $request)
     {
         return back()->with('success', 'Poruka je poslana!');
-    }
-
-    public function globetka()
-    {
-        $team = Team::where('slug', 'kk-globetka-cakovec')->firstOrfail();
-
-        // Gel all globetka games
-        $games = Game::where('home_team_id', $team->id)
-            ->orWhere('away_team_id', $team->id)
-            ->orderBy('scheduled_at', 'desc')
-            ->paginate(100);
-
-        return view('globetka.index', [
-            'games' => $games,
-        ]);
     }
 }
