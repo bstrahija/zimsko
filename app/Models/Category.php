@@ -12,9 +12,9 @@ class Category extends Model
     use HasFactory, SoftDeletes;
 
     protected $casts = [
-        'id'          => 'integer',
+        'id' => 'integer',
         'external_id' => 'integer',
-        'data'        => 'array',
+        'data' => 'array',
     ];
 
     public function posts(): HasMany
