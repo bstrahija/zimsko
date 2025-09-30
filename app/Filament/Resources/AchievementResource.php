@@ -10,6 +10,7 @@ use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
 
 class AchievementResource extends Resource
@@ -51,15 +52,42 @@ class AchievementResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->modifyQueryUsing(fn (EloquentBuilder $query) => $query->with(['event', 'team', 'player']))
             ->columns([
-                Tables\Columns\TextColumn::make('slug')
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('event.title')
-                    ->numeric()
+                    ->label('Event')
+                    ->searchable()
                     ->sortable(),
+
+                // Config type as string (resolved via Achievement::getTitleAttribute())
+                Tables\Columns\TextColumn::make('title')
+                    ->label('Type')
+                    ->searchable()
+                    ->sortable(),
+
+                Tables\Columns\TextColumn::make('team.title')
+                    ->label('Team')
+                    ->searchable()
+                    ->sortable(),
+
+                // Player full name via computed accessor `name` on Player model
+                Tables\Columns\TextColumn::make('player.name')
+                    ->label('Player')
+                    ->searchable(),
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('event')
+                    ->label('Event')
+                    ->relationship('event', 'title')
+                    ->searchable()
+                    ->preload(),
+
+                Tables\Filters\SelectFilter::make('type')
+                    ->label('Type')
+                    ->options(fn () => collect(config('achievements'))
+                        ->mapWithKeys(fn ($cfg, $key) => [$key => $cfg['title'] ?? $key])
+                        ->all())
+                    ->searchable(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
