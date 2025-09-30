@@ -2,22 +2,19 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\TrophyResource\Pages;
-use App\Filament\Resources\TrophyResource\RelationManagers;
+use App\Filament\Resources\AchievementResource\Pages;
+use App\Models\Achievement;
 use App\Models\Player;
-use App\Models\Trophy;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class TrophyResource extends Resource
+class AchievementResource extends Resource
 {
-    protected static ?string $model = Trophy::class;
+    protected static ?string $model = Achievement::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -41,11 +38,10 @@ class TrophyResource extends Resource
                     ->required(),
                 Forms\Components\Select::make('player_id')
                     ->relationship('player', 'first_name')
-                    ->getOptionLabelFromRecordUsing(fn(Model $record) => "{$record->first_name} {$record->last_name}")
-                    ->getSearchResultsUsing(fn(string $search) => Player::where('first_name', 'like', "%{$search}%")->orWhere('last_name', 'like', "%{$search}%")->limit(50)->pluck('name', 'id'))
+                    ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->first_name} {$record->last_name}")
+                    ->getSearchResultsUsing(fn (string $search) => Player::where('first_name', 'like', "%{$search}%")->orWhere('last_name', 'like', "%{$search}%")->limit(50)->pluck('first_name', 'id'))
 
                     ->searchable()
-
 
                     ->columnSpan(1)
                     ->required(),
@@ -56,7 +52,11 @@ class TrophyResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('slug')
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('event.title')
+                    ->numeric()
+                    ->sortable(),
             ])
             ->filters([
                 //
@@ -81,9 +81,9 @@ class TrophyResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListTrophies::route('/'),
-            'create' => Pages\CreateTrophy::route('/create'),
-            'edit' => Pages\EditTrophy::route('/{record}/edit'),
+            'index'  => Pages\ListAchievements::route('/'),
+            'create' => Pages\CreateAchievement::route('/create'),
+            'edit'   => Pages\EditAchievement::route('/{record}/edit'),
         ];
     }
 }
