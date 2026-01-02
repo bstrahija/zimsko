@@ -3,19 +3,15 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\GameResource\Pages;
-use App\Filament\Resources\GameResource\RelationManagers;
 use App\Models\Event;
 use App\Models\Game;
 use App\Models\GamePlayer;
 use App\Models\Player;
 use App\Models\Round;
 use App\Models\Team;
-use App\Validation\CheckGameScores;
 use Closure;
 use Filament\Forms;
-use Filament\Forms\Components\CheckboxList;
 use Filament\Forms\Components\Fieldset;
-use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Section;
@@ -25,14 +21,10 @@ use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Livewire\Attributes\Layout;
-use Livewire\Component as Livewire;
 
 class GameResource extends Resource
 {
@@ -59,31 +51,23 @@ class GameResource extends Resource
                             ->icon('heroicon-o-chart-bar')
                             ->columns('2')
                             ->schema(self::scoreSchema())
-                            ->disabled(function (Forms\Get $get) {
-                                return ! $get('id');
-                            }),
+                            ->disabled(fn (Forms\Get $get) => ! $get('id')),
                         Tabs\Tab::make('Players')
                             ->columns('2')
                             ->icon('heroicon-o-user-group')
-                            ->disabled(function (Forms\Get $get) {
-                                return ! $get('id');
-                            })
+                            ->disabled(fn (Forms\Get $get) => ! $get('id'))
                             ->schema([
                                 self::playerRepeater('home'),
                                 self::playerRepeater('away'),
                                 Forms\Components\Actions::make([
                                     Forms\Components\Actions\Action::make('Load players')
-                                        ->label(function (Forms\Get $get) {
-                                            return ! $get('id') ? 'Save as draft to enable loading players' : 'Re-load players';
-                                        })
+                                        ->label(fn (Forms\Get $get) => ! $get('id') ? 'Save as draft to enable loading players' : 'Re-load players')
                                         ->requiresConfirmation()
                                         ->modalDescription('This action will load the players for the game and remove the current data.')
-                                        ->disabled(function (Forms\Get $get) {
-                                            return ! $get('id');
-                                        })
+                                        ->disabled(fn (Forms\Get $get) => ! $get('id'))
                                         ->action(function (Forms\Get $get, Forms\Set $set) {
                                             self::loadPlayers($get, $set);
-                                        })
+                                        }),
                                 ]),
                             ]),
                         Tabs\Tab::make('Referees')
@@ -94,20 +78,16 @@ class GameResource extends Resource
                                     ->multiple()
                                     ->relationship(
                                         name: 'referees',
-                                        modifyQueryUsing: fn(Builder $query) => $query->orderBy('first_name')->orderBy('last_name'),
+                                        modifyQueryUsing: fn (Builder $query) => $query->orderBy('first_name')->orderBy('last_name'),
                                     )
-                                    ->getOptionLabelFromRecordUsing(fn(Model $record) => "{$record->first_name} {$record->last_name}")
+                                    ->getOptionLabelFromRecordUsing(fn (Model $record) => "{$record->first_name} {$record->last_name}")
                                     ->searchable(['first_name', 'last_name']),
                             ])
-                            ->disabled(function (Forms\Get $get) {
-                                return ! $get('id');
-                            }),
+                            ->disabled(fn (Forms\Get $get) => ! $get('id')),
                         Tabs\Tab::make('Gallery')
                             ->icon('heroicon-o-photo')
                             ->schema([]),
                     ]),
-
-
 
             ]);
     }
@@ -162,7 +142,7 @@ class GameResource extends Resource
                         ->relationship('event', 'title'),
                     Forms\Components\Select::make('round_id')
                         ->columnSpanFull()
-                        ->placeholder(fn(Forms\Get $get): string => empty($get('event_id')) ? 'First select event' : 'Select an option')
+                        ->placeholder(fn (Forms\Get $get): string => empty($get('event_id')) ? 'First select event' : 'Select an option')
                         ->options(function (Forms\Get $get) {
                             return Round::where('event_id', $get('event_id'))->pluck('title', 'id');
                         })
@@ -198,11 +178,11 @@ class GameResource extends Resource
                 })
                 ->schema([
                     Forms\Components\TextInput::make('home_score')->label('Final Score')->required()->numeric()->columnSpanFull()->default(0)->rules([
-                        fn(Get $get): Closure => function (string $attribute, $value, Closure $fail) use ($get) {
+                        fn (Get $get): Closure => function (string $attribute, $value, Closure $fail) use ($get) {
                             $quarterScores = $get('home_score_p1') + $get('home_score_p2') + $get('home_score_p3') + $get('home_score_p4') + $get('home_score_p5') + $get('home_score_p6') + $get('home_score_p7') + $get('home_score_p8');
 
                             if ($quarterScores !== $value) {
-                                $fail("The quarter scores do not match the total score.");
+                                $fail('The quarter scores do not match the total score.');
                             }
                         },
                     ]),
@@ -231,11 +211,11 @@ class GameResource extends Resource
                 })
                 ->schema([
                     Forms\Components\TextInput::make('away_score')->label('Final Score')->required()->numeric()->columnSpanFull()->default(0)->rules([
-                        fn(Get $get): Closure => function (string $attribute, $value, Closure $fail) use ($get) {
+                        fn (Get $get): Closure => function (string $attribute, $value, Closure $fail) use ($get) {
                             $quarterScores = $get('away_score_p1') + $get('away_score_p2') + $get('away_score_p3') + $get('away_score_p4') + $get('away_score_p5') + $get('away_score_p6') + $get('away_score_p7') + $get('away_score_p8');
 
                             if ($quarterScores !== $value) {
-                                $fail("The quarter scores do not match the total score.");
+                                $fail('The quarter scores do not match the total score.');
                             }
                         },
                     ]),
@@ -349,7 +329,9 @@ class GameResource extends Resource
 
     public static function updateTitle(Get $get, Set $set): ?string
     {
-        if ($get('title')) return $get('title');
+        if ($get('title')) {
+            return $get('title');
+        }
 
         // Try generating a title
         $homeTeam = Team::find($get('home_team_id'));
@@ -377,13 +359,13 @@ class GameResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
-                    ->color(fn($state) => match ($state) {
-                        'scheduled' => 'warning',
+                    ->color(fn ($state) => match ($state) {
+                        'scheduled'   => 'warning',
                         'in_progress' => 'success',
-                        'finished' => 'gray',
-                        'cancelled' => 'error',
-                        'completed' => 'gray',
-                        'tmp' => 'error',
+                        'finished'    => 'gray',
+                        'cancelled'   => 'error',
+                        'completed'   => 'gray',
+                        'tmp'         => 'error',
                     })
                     ->searchable(),
                 Tables\Columns\TextColumn::make('scheduled_at')
@@ -430,9 +412,9 @@ class GameResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListGames::route('/'),
+            'index'  => Pages\ListGames::route('/'),
             'create' => Pages\CreateGame::route('/create'),
-            'edit' => Pages\EditGame::route('/{record}/edit'),
+            'edit'   => Pages\EditGame::route('/{record}/edit'),
         ];
     }
 }

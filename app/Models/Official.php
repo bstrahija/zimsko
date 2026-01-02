@@ -40,7 +40,7 @@ class Official extends Model implements HasMedia
 
     public function getNameAttribute()
     {
-        return $this->first_name . ' ' . $this->last_name;
+        return $this->first_name.' '.$this->last_name;
     }
 
     public function scopeActive(Builder $query): void
