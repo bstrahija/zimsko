@@ -23,24 +23,13 @@ class OfficialResource extends Resource
 
     public static function form(Form $form): Form
     {
-        return $form->schema([
-            Forms\Components\TextInput::make('first_name')->required(),
-            Forms\Components\TextInput::make('last_name')->required(),
-            SpatieMediaLibraryFileUpload::make('photo')->collection('photos'),
-        ]);
+        return $form->schema([Forms\Components\TextInput::make('first_name')->required(), Forms\Components\TextInput::make('last_name')->required(), SpatieMediaLibraryFileUpload::make('photo')->collection('photos')]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
-            ->columns([
-                Tables\Columns\TextColumn::make('first_name')->searchable(),
-                Tables\Columns\TextColumn::make('last_name')->searchable(),
-                Tables\Columns\TextColumn::make('type')->searchable(),
-                Tables\Columns\TextColumn::make('created_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('deleted_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true),
-            ])
+            ->columns([Tables\Columns\TextColumn::make('first_name')->searchable(), Tables\Columns\TextColumn::make('last_name')->searchable(), Tables\Columns\TextColumn::make('type')->searchable(), Tables\Columns\TextColumn::make('created_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true), Tables\Columns\TextColumn::make('updated_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true), Tables\Columns\TextColumn::make('deleted_at')->dateTime()->sortable()->toggleable(isToggledHiddenByDefault: true)])
             ->filters([
                 //
             ])
