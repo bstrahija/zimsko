@@ -8,12 +8,10 @@ use App\LiveScore\Actions\EndGame;
 use App\LiveScore\Actions\NextPeriod;
 use App\LiveScore\Actions\ResetGame;
 use App\LiveScore\Actions\StartGame;
-use App\LiveScore\Events\LiveScoreUpdated;
 use App\LiveScore\LiveScore;
 use App\Models\Event;
 use App\Models\Game;
 use App\Models\GameLog;
-use App\Services\Cache;
 use App\Stats\Stats;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Http\RedirectResponse;
@@ -27,9 +25,6 @@ final class ScoreController extends BaseController
 {
     /**
      * Display panel for adding game stats
-     *
-     * @param  Game $game
-     * @return InertiaResponse
      */
     public function show(Game $game): InertiaResponse
     {
@@ -40,9 +35,6 @@ final class ScoreController extends BaseController
 
     /**
      * Start the game
-     *
-     * @param  Game $game
-     * @return void
      */
     public function startGame(Game $game): void
     {
@@ -51,9 +43,6 @@ final class ScoreController extends BaseController
 
     /**
      * End game
-     *
-     * @param  Game $game
-     * @return void
      */
     public function endGame(Game $game): void
     {
@@ -63,8 +52,8 @@ final class ScoreController extends BaseController
     /**
      * Go to next period
      *
-     * @param Game $game
-     * @return void
+     * @return Response|RedirectResponse
+     *
      * @throws BindingResolutionException
      */
     public function nextPeriod(Game $game)
@@ -83,22 +72,16 @@ final class ScoreController extends BaseController
 
     /**
      * Delete log entry
-     *
-     * @param  GameLog $log
-     * @return void
      */
-    public function deleteLogEntry(GameLog $log)
+    public function deleteLogEntry(GameLog $log): void
     {
         app(DeleteLogEntry::class)->handle($log->id);
     }
 
     /**
      * Update game stats from the panel
-     *
-     * @param  Game $game
-     * @param  Request $request
      */
-    public function update(Game $game, Request $request)
+    public function update(Game $game, Request $request): void
     {
         $live = LiveScore::build($game);
 
@@ -106,7 +89,7 @@ final class ScoreController extends BaseController
         $live->addStatFromRequest($request);
     }
 
-    public function generateStats(Request $request)
+    public function generateStats(Request $request): void
     {
         $event = $request->get('event') ? Event::find($request->get('event')) : Event::current();
         GenerateTotalStats::dispatch($event);

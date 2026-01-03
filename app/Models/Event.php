@@ -65,6 +65,11 @@ class Event extends Model
         return $this->hasMany(Stat::class);
     }
 
+    public function achievements(): HasMany
+    {
+        return $this->hasMany(Achievement::class);
+    }
+
     public function scopeActive(Builder $query): void
     {
         $query->where('status', 'active');

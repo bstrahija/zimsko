@@ -3,20 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\LiveScore\LiveScore;
-use App\Models\Event;
 use App\Models\Game;
-use App\Models\GamePlayer;
-use App\Models\Player;
-use App\Models\Team;
-use App\Models\TeamPlayer;
-use App\Services\Leaderboards;
-use App\Stats\Stats;
-use Carbon\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ReportsController extends Controller
 {
-    public function game(string $slug)
+    public function game(string $slug): StreamedResponse
     {
         $game = Game::where('slug', $slug)->firstOrFail();
         $live = LiveScore::build($game);
@@ -29,7 +22,7 @@ class ReportsController extends Controller
                 $player['team'] = $live['game'][$side . '_team'];
                 $player['number'] = $player['pivot']['number'];
                 $player['position'] = $player['pivot']['position'];
-                $player['stats'] = isset($live['game']['player_stats']['player__' . $player['id']]) ? $live['game']['player_stats']['player__' . $player['id']] :  [];
+                $player['stats'] = $live['game']['player_stats']['player__' . $player['id']] ?? [];
                 $player['score'] = $player['stats']['score'];
                 $live['game']['players'][] = $player;
             }
@@ -48,11 +41,5 @@ class ReportsController extends Controller
         return response()->streamDownload(function () use ($pdf) {
             echo $pdf->stream();
         }, 'report-' . $game->slug . '.pdf');
-
-        // Pdf::view('reports.game', ['game' => $game])
-        //     ->format('a4')
-        //     ->save('invoice.pdf');
-
-        return view('reports.game', ['game' => $live['game']]);
     }
 }

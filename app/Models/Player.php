@@ -56,7 +56,7 @@ class Player extends Model implements HasMedia
         'field_goals_missed'      => 0,
         'field_goals_percent'     => 0,
         'opponent_score'          => 0,
-        'efficiency'              => 0,   // (PTS + REB + AST + STL + BLK − ((FGA − FGM) + (FTA − FTM) + TO))
+        'efficiency'              => 0, // (PTS + REB + AST + STL + BLK − ((FGA − FGM) + (FTA − FTM) + TO))
         'fouls'                   => 0,
         'current_period_fouls'    => 0,
         'technical_fouls'         => 0,
@@ -83,16 +83,7 @@ class Player extends Model implements HasMedia
         'score_p10'               => 0,
     ];
 
-    protected $fillable = [
-        'first_name',
-        'last_name',
-        'slug',
-        'height',
-        'weight',
-        'birthday',
-        'data',
-        'external_id',
-    ];
+    protected $fillable = ['first_name', 'last_name', 'slug', 'height', 'weight', 'birthday', 'data', 'external_id'];
 
     protected $casts = [
         'external_id' => 'integer',
@@ -112,12 +103,12 @@ class Player extends Model implements HasMedia
         });
     }
 
-    public function getNameAttribute()
+    public function getNameAttribute(): string
     {
         return "{$this->first_name} {$this->last_name}";
     }
 
-    public function getNumberAttribute()
+    public function getNumberAttribute(): ?string
     {
         if (isset($this->pivot) && isset($this->pivot->number) && $this->pivot->number) {
             return $this->pivot->number;
@@ -128,15 +119,13 @@ class Player extends Model implements HasMedia
         return null;
     }
 
-    public function getPositionAttribute()
+    public function getPositionAttribute(): ?string
     {
         if (isset($this->pivot) && isset($this->pivot->position) && $this->pivot->position) {
             return $this->pivot->position;
-        } else {
-            return PlayerTeam::where('player_id', $this->id)->first()?->position;
         }
 
-        return null;
+        return PlayerTeam::where('player_id', $this->id)->first()?->position;
     }
 
     public static function findByTeamAndNumber($teamId, $number)
@@ -227,13 +216,11 @@ class Player extends Model implements HasMedia
 
     public function registerMediaConversions(?Media $media = null): void
     {
-        $this
-            ->addMediaConversion('thumb')
+        $this->addMediaConversion('thumb')
             ->fit(Fit::Contain, 300, 300)
             ->nonQueued();
 
-        $this
-            ->addMediaConversion('preview')
+        $this->addMediaConversion('preview')
             ->fit(Fit::Contain, 600, 600)
             ->nonQueued();
     }

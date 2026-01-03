@@ -2,36 +2,40 @@
 
 namespace App\Models;
 
-use App\Services\Cache;
 use Illuminate\Database\Eloquent\Concerns\HasTimestamps;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
-/** @package App\Models */
+/**
+ * @property string $title
+ * @property string $slug
+ * @property string $status
+ * @property int $home_score
+ * @property int $away_score
+ * @property int $home_team_id
+ * @property int $away_team_id
+ */
 class Game extends Model
 {
     use HasFactory, HasSlug, HasTimestamps, SoftDeletes;
 
     protected $keyType = 'string';
 
-    const STATUS_OPTIONS = [
+    public const array STATUS_OPTIONS = [
         'draft'       => 'Draft',
         'scheduled'   => 'Scheduled',
         'in_progress' => 'In Progress',
         'completed'   => 'Completed',
     ];
 
-    const TYPE_OPTIONS = [
+    public const array TYPE_OPTIONS = [
         'regular'       => 'Regular',
         'quarter_final' => 'Quarter Final',
         'semi_final'    => 'Semi Final',
@@ -43,6 +47,8 @@ class Game extends Model
     protected $guarded = [];
 
     protected $casts = [
+        'id'                    => 'integer',
+        'home_team_id'          => 'integer',
         'external_id'           => 'integer',
         'data'                  => 'array',
         'scheduled_at'          => 'datetime',
@@ -50,6 +56,8 @@ class Game extends Model
         'away_starting_players' => 'array',
         'home_players_on_court' => 'array',
         'away_players_on_court' => 'array',
+        'home_score'            => 'integer',
+        'away_score'            => 'integer',
     ];
 
     public function event(): BelongsTo
@@ -84,14 +92,16 @@ class Game extends Model
 
     public function homePlayers(): BelongsToMany
     {
-        return $this->belongsToMany(Player::class)->where('team_id', $this->home_team_id)
+        return $this->belongsToMany(Player::class)
+            ->where('team_id', $this->home_team_id)
             ->with('media')
             ->withPivot(array_merge(['event_id', 'team_id'], array_column(config('stats.columns'), 'id')));
     }
 
     public function awayPlayers(): BelongsToMany
     {
-        return $this->belongsToMany(Player::class)->where('team_id', $this->away_team_id)
+        return $this->belongsToMany(Player::class)
+            ->where('team_id', $this->away_team_id)
             ->with('media')
             ->withPivot(array_merge(['event_id', 'team_id'], array_column(config('stats.columns'), 'id')));
     }
@@ -126,12 +136,12 @@ class Game extends Model
         return $this->home_score === $this->away_score;
     }
 
-    public function winner(): ?Team
+    public function winner(): ?Model
     {
         return $this->home_score > $this->away_score ? $this->homeTeam : $this->awayTeam;
     }
 
-    public function loser(): ?Team
+    public function loser(): ?Model
     {
         return $this->home_score < $this->away_score ? $this->homeTeam : $this->awayTeam;
     }
@@ -150,7 +160,7 @@ class Game extends Model
 
         if ($exists) {
             foreach (range(2, 20) as $index) {
-                $slug   = Str::slug($this->title) . '-' . $index;
+                $slug = Str::slug($this->title) . '-' . $index;
                 $exists = Game::query()->where('id', '!=', $this->id)->where('slug', $slug)->first();
 
                 if (! $exists) {
@@ -170,13 +180,10 @@ class Game extends Model
      */
     public function getSlugOptions(): SlugOptions
     {
-        return SlugOptions::create()
-            ->generateSlugsFrom('title')
-            ->saveSlugsTo('slug')
-            ->doNotGenerateSlugsOnUpdate();
+        return SlugOptions::create()->generateSlugsFrom('title')->saveSlugsTo('slug')->doNotGenerateSlugsOnUpdate();
     }
 
-    protected function serializeDate($date)
+    protected function serializeDate($date): string
     {
         return $date->format('Y-m-d H:i:s');
     }

@@ -11,9 +11,9 @@ use Illuminate\Support\Facades\Log;
 
 class NextPeriod
 {
-    public function handle(int $gameId, ?array $location = null, ?string $occurredAt = '00:00:00')
+    public function handle(int $gameId, ?array $location = null, ?string $occurredAt = '00:00:00'): void
     {
-        DB::transaction(function () use ($gameId, $location, $occurredAt) {
+        DB::transaction(function () use ($gameId) {
             Log::debug("Next period. Game: {$gameId}", ['section' => 'LIVE', 'game_id' => $gameId]);
 
             // Build live game
@@ -27,8 +27,8 @@ class NextPeriod
 
             // And add a log that the period has started
             $live->addLog([
-                'type'        => 'period_started',
-                'period'      => $live->currentPeriod() + 1,
+                'type' => 'period_started',
+                'period' => $live->currentPeriod() + 1,
             ]);
 
             // Also clear out the players on court
