@@ -15,11 +15,16 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
+/**
+ * @property int $id
+ * @property string $first_name
+ * @property string $last_name
+ */
 class Player extends Model implements HasMedia
 {
     use HasFactory, HasSlug, InteractsWithMedia, SoftDeletes;
 
-    const POSITION_OPTIONS = [
+    public const array POSITION_OPTIONS = [
         'point-guard'    => 'Point Guard',
         'shooting-guard' => 'Shooting Guard',
         'small-forward'  => 'Small Forward',
@@ -109,7 +114,7 @@ class Player extends Model implements HasMedia
 
     public function getNameAttribute()
     {
-        return $this->first_name . ' ' . $this->last_name;
+        return "{$this->first_name} {$this->last_name}";
     }
 
     public function getNumberAttribute()
