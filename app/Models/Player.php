@@ -112,7 +112,7 @@ class Player extends Model implements HasMedia
         });
     }
 
-    public function getNameAttribute()
+    public function getNameAttribute(): string
     {
         return "{$this->first_name} {$this->last_name}";
     }
