@@ -7,6 +7,7 @@
             <h2>Zimsko Prvenstvo 2025</h2>
             <p>{{ $game['title'] }} </p>
         </header>
+
         <div class="game-result">
             <div class="game-result-flex">
                 <table style="width: 100%;">

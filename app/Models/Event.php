@@ -12,6 +12,22 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
+/**
+ * Event model.
+ *
+ * @property int $id
+ * @property string $title
+ * @property string $slug
+ * @property string $body
+ * @property int|null $external_id
+ * @property array|null $data
+ * @property array|null $leaderboard
+ * @property \Illuminate\Support\Carbon|null $scheduled_at
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @mixin \Eloquent
+ */
 class Event extends Model
 {
     use HasFactory, HasSlug, SoftDeletes;
@@ -20,11 +36,7 @@ class Event extends Model
 
     public static $lastEvent;
 
-    protected $fillable = [
-        'title',
-        'slug',
-        'body',
-    ];
+    protected $fillable = ['title', 'slug', 'body'];
 
     protected $casts = [
         'external_id'  => 'integer',
@@ -76,7 +88,7 @@ class Event extends Model
     public static function last(): ?Event
     {
         if (! static::$lastEvent) {
-            static::$lastEvent = Event::orderBy('scheduled_at', 'desc')->first();
+            static::$lastEvent = Event::query()->orderBy('scheduled_at', 'desc')->first();
         }
 
         return static::$lastEvent;
@@ -87,10 +99,7 @@ class Event extends Model
      */
     public function getSlugOptions(): SlugOptions
     {
-        return SlugOptions::create()
-            ->generateSlugsFrom('title')
-            ->saveSlugsTo('slug')
-            ->doNotGenerateSlugsOnUpdate();
+        return SlugOptions::create()->generateSlugsFrom('title')->saveSlugsTo('slug')->doNotGenerateSlugsOnUpdate();
     }
 
     protected function serializeDate($date)
