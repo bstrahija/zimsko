@@ -17,14 +17,14 @@ use Spatie\Sluggable\SlugOptions;
 
 class Player extends Model implements HasMedia
 {
-    use HasFactory, HasSlug, SoftDeletes, InteractsWithMedia;
+    use HasFactory, HasSlug, InteractsWithMedia, SoftDeletes;
 
     const POSITION_OPTIONS = [
-        'point-guard'     => 'Point Guard',
-        'shooting-guard'  => 'Shooting Guard',
-        'small-forward'   => 'Small Forward',
-        'power-forward'   => 'Power Forward',
-        'center'          => 'Center',
+        'point-guard'    => 'Point Guard',
+        'shooting-guard' => 'Shooting Guard',
+        'small-forward'  => 'Small Forward',
+        'power-forward'  => 'Power Forward',
+        'center'         => 'Center',
     ];
 
     public $statsData = [
@@ -107,7 +107,6 @@ class Player extends Model implements HasMedia
         });
     }
 
-
     public function getNameAttribute()
     {
         return $this->first_name . ' ' . $this->last_name;
@@ -167,7 +166,7 @@ class Player extends Model implements HasMedia
         return $this->getFirstMediaUrl('photos', $size);
     }
 
-    public function gameCount(Event $event = null): int
+    public function gameCount(?Event $event = null): int
     {
         if ($event) {
             return GamePlayer::query()->where('player_id', $this->id)->where('event_id', $event->id)->count();
@@ -181,12 +180,12 @@ class Player extends Model implements HasMedia
         return $this->gameCount(Event::current());
     }
 
-    public function points(Event $event = null): int
+    public function points(?Event $event = null): int
     {
         $where = [
-            'for' => 'player',
-            'type' => 'total',
-            'player_id' => $this->id
+            'for'       => 'player',
+            'type'      => 'total',
+            'player_id' => $this->id,
         ];
 
         if ($event) {
@@ -203,10 +202,10 @@ class Player extends Model implements HasMedia
         return $this->points(Event::current());
     }
 
-    public function pointsAverage(Event $event = null): float
+    public function pointsAverage(?Event $event = null): float
     {
         $points = $this->points($event);
-        $games = $this->gameCount($event);
+        $games  = $this->gameCount($event);
 
         return $games ? round($points / $games, 1) : 0;
     }
@@ -248,7 +247,7 @@ class Player extends Model implements HasMedia
     public function stats(): Attribute
     {
         return new Attribute(
-            get: fn() => $this->statsData,
+            get: fn () => $this->statsData,
         );
     }
 
