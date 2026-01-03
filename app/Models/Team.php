@@ -207,7 +207,7 @@ class Team extends Model implements HasMedia
             return Game::query()->where('status', 'completed')->where(fn ($query) => $query->where('home_team_id', $this->id)->orWhere('away_team_id', $this->id))->where('event_id', $event->id)->count();
         }
 
-        return Game::query()->where('status', 'completed')->where(fn ($query) => $query->where('home_team_id', $this->id))->orWhere('away_team_id', $this->id)->count();
+        return Game::query()->where('status', 'completed')->where(fn ($query) => $query->where('home_team_id', $this->id)->orWhere('away_team_id', $this->id))->count();
     }
 
     public function gameCountCurrent(): int
