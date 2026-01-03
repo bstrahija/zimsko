@@ -15,14 +15,11 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
-/**
- *Method
- */
 class Player extends Model implements HasMedia
 {
     use HasFactory, HasSlug, InteractsWithMedia, SoftDeletes;
 
-    public const array POSITION_OPTIONS = [
+    const POSITION_OPTIONS = [
         'point-guard'    => 'Point Guard',
         'shooting-guard' => 'Shooting Guard',
         'small-forward'  => 'Small Forward',
@@ -54,7 +51,7 @@ class Player extends Model implements HasMedia
         'field_goals_missed'      => 0,
         'field_goals_percent'     => 0,
         'opponent_score'          => 0,
-        'efficiency'              => 0, // (PTS + REB + AST + STL + BLK − ((FGA − FGM) + (FTA − FTM) + TO))
+        'efficiency'              => 0,   // (PTS + REB + AST + STL + BLK − ((FGA − FGM) + (FTA − FTM) + TO))
         'fouls'                   => 0,
         'current_period_fouls'    => 0,
         'technical_fouls'         => 0,
@@ -81,7 +78,16 @@ class Player extends Model implements HasMedia
         'score_p10'               => 0,
     ];
 
-    protected $fillable = ['first_name', 'last_name', 'slug', 'height', 'weight', 'birthday', 'data', 'external_id'];
+    protected $fillable = [
+        'first_name',
+        'last_name',
+        'slug',
+        'height',
+        'weight',
+        'birthday',
+        'data',
+        'external_id',
+    ];
 
     protected $casts = [
         'external_id' => 'integer',
@@ -101,12 +107,12 @@ class Player extends Model implements HasMedia
         });
     }
 
-    public function getNameAttribute(): string
+    public function getNameAttribute()
     {
         return $this->first_name . ' ' . $this->last_name;
     }
 
-    public function getNumberAttribute(): ?string
+    public function getNumberAttribute()
     {
         if (isset($this->pivot) && isset($this->pivot->number) && $this->pivot->number) {
             return $this->pivot->number;
@@ -117,13 +123,15 @@ class Player extends Model implements HasMedia
         return null;
     }
 
-    public function getPositionAttribute(): ?string
+    public function getPositionAttribute()
     {
         if (isset($this->pivot) && isset($this->pivot->position) && $this->pivot->position) {
             return $this->pivot->position;
+        } else {
+            return PlayerTeam::where('player_id', $this->id)->first()?->position;
         }
 
-        return PlayerTeam::where('player_id', $this->id)->first()?->position;
+        return null;
     }
 
     public static function findByTeamAndNumber($teamId, $number)
@@ -158,7 +166,7 @@ class Player extends Model implements HasMedia
         return $this->getFirstMediaUrl('photos', $size);
     }
 
-    public function gameCount(?Event $event): int
+    public function gameCount(?Event $event = null): int
     {
         if ($event) {
             return GamePlayer::query()->where('player_id', $this->id)->where('event_id', $event->id)->count();
@@ -172,7 +180,7 @@ class Player extends Model implements HasMedia
         return $this->gameCount(Event::current());
     }
 
-    public function points(?Event $event): int
+    public function points(?Event $event = null): int
     {
         $where = [
             'for'       => 'player',
@@ -214,11 +222,13 @@ class Player extends Model implements HasMedia
 
     public function registerMediaConversions(?Media $media = null): void
     {
-        $this->addMediaConversion('thumb')
+        $this
+            ->addMediaConversion('thumb')
             ->fit(Fit::Contain, 300, 300)
             ->nonQueued();
 
-        $this->addMediaConversion('preview')
+        $this
+            ->addMediaConversion('preview')
             ->fit(Fit::Contain, 600, 600)
             ->nonQueued();
     }
@@ -236,7 +246,9 @@ class Player extends Model implements HasMedia
 
     public function stats(): Attribute
     {
-        return new Attribute(get: fn () => $this->statsData);
+        return new Attribute(
+            get: fn () => $this->statsData,
+        );
     }
 
     public function setStats($key, $value)
