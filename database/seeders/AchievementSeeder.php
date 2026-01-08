@@ -57,7 +57,11 @@ class AchievementSeeder extends Seeder
         Achievement::create(['type' => 'top-turnovers',   'event_id' => 8, 'player_id' => 126, 'team_id' => 5,  'slug' => 'top-turnovers-zimsko-2025']);
         Achievement::create(['type' => 'top-efficiency',  'event_id' => 8, 'player_id' => 126, 'team_id' => 5,  'slug' => 'top-efficiency-zimsko-2025']);
         Achievement::create(['type' => 'top-free-throws', 'event_id' => 8, 'player_id' => 76,  'team_id' => 6,  'slug' => 'top-free-throws-zimsko-2025']);
-        // @TODO: Najbolja petorka, Mali Medo, Danc, Nefco, Stef, Kraja
+        Achievement::create(['type' => 'top-five',        'event_id' => 8, 'player_id' => 109, 'team_id' => 8,  'slug' => 'top-five-zimsko-2025']);
+        Achievement::create(['type' => 'top-five',        'event_id' => 8, 'player_id' => 126, 'team_id' => 5, 'slug' => 'top-five-zimsko-2025']);
+        Achievement::create(['type' => 'top-five',        'event_id' => 8, 'player_id' => 106, 'team_id' => 8,  'slug' => 'top-five-zimsko-2025']);
+        Achievement::create(['type' => 'top-five',        'event_id' => 8, 'player_id' => 11,  'team_id' => 1,  'slug' => 'top-five-zimsko-2025']);
+        Achievement::create(['type' => 'top-five',        'event_id' => 8, 'player_id' => 134, 'team_id' => 10, 'slug' => 'top-five-zimsko-2025']);
 
         // 2025 - Teams
         Achievement::create(['type' => 'team-top-score',       'event_id' => 8, 'team_id' => 1, 'slug' => 'team-top-score-zimsko-2025']);
@@ -89,7 +93,7 @@ class AchievementSeeder extends Seeder
         Achievement::create(['type' => 'mvp-f4',          'event_id' => 2, 'player_id' => 127, 'team_id' => 10, 'slug' => 'mvp-zimsko-2024']);
         Achievement::create(['type' => 'top-score',       'event_id' => 2, 'player_id' => 11,  'team_id' => 1,   'slug' => 'top-score-zimsko-2024']);
         Achievement::create(['type' => 'oldest-player',   'event_id' => 2, 'player_id' => 66,  'team_id' => 5,   'slug' => 'oldest-player-zimsko-2024']);
-        // Achievement::create(['type' => 'youngest-player', 'event_id' => 2, 'player_id' => 0, 'team_id' => 8,  'slug' => 'top-score-zimsko-2024']);
+        // Achievement::create(['type' => 'youngest-player', 'event_id' => 2, 'player_id' => 0, 'team_id' => 8,  'slug' => 'youngest-player-2024']);
         Achievement::create(['type' => 'top-five',        'event_id' => 2, 'player_id' => 11,  'team_id' => 1,  'slug' => 'top-five-zimsko-2024']);
         Achievement::create(['type' => 'top-five',        'event_id' => 2, 'player_id' => 126, 'team_id' => 10, 'slug' => 'top-five-zimsko-2024']);
         Achievement::create(['type' => 'top-five',        'event_id' => 2, 'player_id' => 82,  'team_id' => 6,  'slug' => 'top-five-zimsko-2024']);
@@ -118,36 +122,45 @@ class AchievementSeeder extends Seeder
         // =============================
 
         // 2022 - Teams
-        //         8. mjesto - Fiškal Stoperi
-        // 7. mjesto - AGM Basket
-        // 6. mjesto - Pozoji
-        // 5. mjesto - Hespo Medina Škrinja
-        // 4. mjesto - Basket Case
-        // 3. mjesto - Park´s
-        // 2. mjesto - PPČ
-        // 1. mjesto - Agrow Basket
+        Achievement::create(['type' => 'champion',   'event_id' => 4, 'team_id' => 1,  'slug' => 'champion-zimsko-2022']);
+        Achievement::create(['type' => '2nd-place',  'event_id' => 4, 'team_id' => 8,  'slug' => '2nd-place-zimsko-2022']);
+        Achievement::create(['type' => '3rd-place',  'event_id' => 4, 'team_id' => 10, 'slug' => '3rd-place-zimsko-2022']);
+        Achievement::create(['type' => '4th-place',  'event_id' => 4, 'team_id' => 6,  'slug' => '4th-place-zimsko-2022']);
+        Achievement::create(['type' => '5th-place',  'event_id' => 4, 'team_id' => 11, 'slug' => '5th-place-zimsko-2022']);
+        Achievement::create(['type' => '6th-place',  'event_id' => 4, 'team_id' => 2,  'slug' => '6th-place-zimsko-2022']);
+        Achievement::create(['type' => '7th-place',  'event_id' => 4, 'team_id' => 4,  'slug' => '7th-place-zimsko-2022']);
+        Achievement::create(['type' => '8th-place',  'event_id' => 4, 'team_id' => 5,  'slug' => '8th-place-zimsko-2022']);
 
         // 2022 - Players
-        //         🏀 𝗠𝗩𝗣 𝗽𝗼 𝗶𝘇𝗯𝗼𝗿𝘂 𝘁𝗿𝗲𝗻𝗲𝗿𝗮 - Luka Prprović (Agrow Basket)
-        // 🏀 𝗡𝗮𝗷𝗯𝗼𝗹𝗷𝗶 𝘀𝘁𝗿𝗶𝗷𝗲𝗹𝗮𝗰 - Darko Terek - 22.14 PPG (Park´s)
-        // 🏀 𝗡𝗮𝗷𝘀𝘁𝗮𝗿𝗶𝗷𝗶 𝗶𝗴𝗿𝗮𝗰̌ - Duško Lajtman (62 g., Fiškal Stoperi)
-        // 🏀 𝗡𝗮𝗷𝘀𝗶𝗺𝗽𝗮𝘁𝗶𝗰̌𝗻𝗶𝗷𝗮 𝗲𝗸𝗶𝗽𝗮 - Stoperi Fiškal
+        Achievement::create(['type' => 'mvp',           'event_id' => 4, 'player_id' => 5,   'team_id' => 1,  'slug' => 'mvp-zimsko-2022']);
+        Achievement::create(['type' => 'top-score',     'event_id' => 4, 'player_id' => 123, 'team_id' => 10, 'slug' => 'top-score-zimsko-2022']);
+        Achievement::create(['type' => 'oldest-player', 'event_id' => 4, 'player_id' => 66,  'team_id' => 5,  'slug' => 'oldest-player-zimsko-2022']);
+        Achievement::create(['type' => 'fan-favorites', 'event_id' => 4, 'team_id' => 5,     'slug' => 'fan-favorites-zimsko-2022']);
 
         // =============================
 
         // 2020 - Teams
-        // 1. Parks, 2. BC, 3. Katruze, 4. PPC, 5. AGM, 6. Stoperi
+        Achievement::create(['type' => 'champion',   'event_id' => 5, 'team_id' => 10, 'slug' => 'champion-zimsko-2020']);
+        Achievement::create(['type' => '2nd-place',  'event_id' => 5, 'team_id' => 6,  'slug' => '2nd-place-zimsko-2020']);
+        Achievement::create(['type' => '3rd-place',  'event_id' => 5, 'team_id' => 2,  'slug' => '3rd-place-zimsko-2020']);
+        Achievement::create(['type' => '4th-place',  'event_id' => 5, 'team_id' => 8,  'slug' => '4th-place-zimsko-2020']);
+        Achievement::create(['type' => '5th-place',  'event_id' => 5, 'team_id' => 4,  'slug' => '5th-place-zimsko-2020']);
+        Achievement::create(['type' => '6th-place',  'event_id' => 5, 'team_id' => 5,  'slug' => '6th-place-zimsko-2020']);
 
         // 2020 - Players
-        // Top Score - Mali Medo
+        Achievement::create(['type' => 'top-score', 'event_id' => 5, 'player_id' => 126,  'team_id' => 10,   'slug' => 'top-score-zimsko-2020']);
 
         // =============================
 
         // 2019 - Teams
-        // 1. Parks, 2. BC, 3.Stoperi, 4.Spitza, 5. PPC
+        Achievement::create(['type' => 'champion',   'event_id' => 6, 'team_id' => 10, 'slug' => 'champion-zimsko-2019']);
+        Achievement::create(['type' => '2nd-place',  'event_id' => 6, 'team_id' => 6,  'slug' => '2nd-place-zimsko-2019']);
+        Achievement::create(['type' => '3rd-place',  'event_id' => 6, 'team_id' => 5,  'slug' => '3rd-place-zimsko-2019']);
+        Achievement::create(['type' => '4th-place',  'event_id' => 6, 'team_id' => 13, 'slug' => '4th-place-zimsko-2019']);
+        Achievement::create(['type' => '5th-place',  'event_id' => 6, 'team_id' => 8,  'slug' => '5th-place-zimsko-2019']);
 
         // 2019 - Players
-        // Top Score - Mali Medo
+        Achievement::create(['type' => 'top-score', 'event_id' => 6, 'player_id' => 126,  'team_id' => 10,   'slug' => 'top-score-zimsko-2019']);
 
     }
 }

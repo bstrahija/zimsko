@@ -160,7 +160,7 @@ class Game extends Model
 
         if ($exists) {
             foreach (range(2, 20) as $index) {
-                $slug = Str::slug($this->title) . '-' . $index;
+                $slug   = Str::slug($this->title) . '-' . $index;
                 $exists = Game::query()->where('id', '!=', $this->id)->where('slug', $slug)->first();
 
                 if (! $exists) {
