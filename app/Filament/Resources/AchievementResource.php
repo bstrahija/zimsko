@@ -37,6 +37,10 @@ class AchievementResource extends Resource
                 ->columnSpan(2)
                 ->preload()
                 ->required(),
+            Forms\Components\TextInput::make('slug')
+                ->label('Slug')
+                ->columnSpan(2)
+                ->required(),
             Forms\Components\Select::make('team_id')
                 ->relationship('team', 'title')
                 ->searchable()
@@ -79,14 +83,22 @@ class AchievementResource extends Resource
             ])
             ->defaultPaginationPageOption(25)
             ->paginationPageOptions([25, 50, 100])
-            ->filters([Tables\Filters\SelectFilter::make('event')
-                ->label('Event')
-                ->relationship('event', 'title')
-                ->searchable()
-                ->preload(), Tables\Filters\SelectFilter::make('type')
-                ->label('Type')
-                ->options(fn () => collect(config('achievements'))
-                    ->mapWithKeys(fn ($cfg, $key) => [$key => $cfg['title'] ?? $key])->all())->searchable()])
+            ->filters([
+                Tables\Filters\SelectFilter::make('event')
+                    ->label('Event')
+                    ->relationship('event', 'title')
+                    ->searchable()
+                    ->preload(),
+                Tables\Filters\SelectFilter::make('team')
+                    ->label('Team')
+                    ->relationship('team', 'title')
+                    ->searchable()
+                    ->preload(),
+                Tables\Filters\SelectFilter::make('type')
+                    ->label('Type')
+                    ->options(fn () => collect(config('achievements'))
+                        ->mapWithKeys(fn ($cfg, $key) => [$key => $cfg['title'] ?? $key])->all())->searchable(),
+            ])
             ->actions([Tables\Actions\EditAction::make()])
             ->bulkActions([Tables\Actions\BulkActionGroup::make([Tables\Actions\DeleteBulkAction::make()])]);
     }
