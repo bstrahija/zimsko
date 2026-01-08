@@ -26,19 +26,23 @@
                         </x-ui.card>
                     @endif
 
-                    <x-ui.card class="mb-8 card" title="Statistika" subtitle="Statistika tokom turnira">
-                        <x-teams.team-stats :stats="$teamStats" :team="$team" />
-                    </x-ui.card>
+                    @if ($teamStats)
+                        <x-ui.card class="card mb-8" title="Statistika" subtitle="Statistika tokom turnira">
+                            <x-teams.team-stats :stats="$teamStats" :team="$team" />
+                        </x-ui.card>
+                    @endif
 
-                    <x-ui.card class="mb-8 card" title="Igrači" subtitle="Svi igrači u ekipi">
+                    {{-- <x-ui.card class="card mb-8" title="Igrači" subtitle="Svi igrači u ekipi">
                         <x-teams.player-stats :stats="$playerStats" :team="$team" />
-                    </x-ui.card>
+                    </x-ui.card> --}}
+
+                    <livewire:team.player-stats :team="$team" />
 
                     <x-games.team-latest-games-column :team="$team" :games="$latestGames" />
 
-                    {{-- <x-ui.card class="overflow-x-auto mb-8" title="Poeni" subtitle="Povijest poena tokom svih utakmica">
+                    <x-ui.card class="mb-8 overflow-x-auto" title="Poeni" subtitle="Povijest poena tokom svih utakmica">
                         <x-charts.team-points :team="$team" />
-                    </x-ui.card> --}}
+                    </x-ui.card>
 
                     {{-- <x-ui.card class="overflow-x-auto" title="Igrači">
                         <x-teams.players :team="$team" />

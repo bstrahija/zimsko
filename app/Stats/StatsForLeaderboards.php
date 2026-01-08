@@ -3,14 +3,11 @@
 namespace App\Stats;
 
 use App\Models\Event;
-use App\Models\Game;
-use App\Models\GameLive;
 use App\Models\Player;
 use App\Models\Stat;
 use App\Models\Team;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 
 trait StatsForLeaderboards
 {
@@ -29,44 +26,74 @@ trait StatsForLeaderboards
             self::optimizeTeamDataForLeaderboards($stats);
     }
 
-    public static function teamPlayerEventStats(int $teamId): array
+    public static function teamPlayerEventStats(int $teamId, ?int $eventId = null): array
     {
+        // Lets create an empty stat for missing players
+        $emptyStat = Stat::empty();
+
         // Get the team
         $team = Team::with(['activePlayers', 'activePlayers.media'])->find($teamId);
 
-        $stats = Stat::where('for', 'player')
-            ->with(['player', 'player.media'])
-            ->where('type', 'event')
-            ->where('event_id', Event::current()->id)
-            ->where('team_id', $teamId)
-            ->get();
+        // Since players can change teams between events, we first need to get all current players for the selected team
+        $players = $team->players()->select('id')->pluck('id')->toArray();
 
-        // Add player data
-        foreach ($team->players as $player) {
-            foreach ($stats as $stat) {
-                if ($stat->player_id == $player->id) {
-                    $stat->player = $player;
-                }
-            }
+        if ($eventId) {
+            $stats = Stat::where('for', 'player')
+                ->with(['player', 'player.media'])
+                ->where('type', 'event')
+                ->where('event_id', $eventId)
+                ->whereIn('player_id', $players)
+                ->get();
+        } else {
+            $stats = Stat::where('for', 'player')
+                ->with(['player', 'player.media'])
+                ->where('type', 'total')
+                ->whereIn('player_id', $players)
+                ->get();
         }
 
-        return self::optimizePlayerDataForLeaderboards($stats, 'all');
+        // Add player data
+        $allStats = collect([]);
+        foreach ($team->players as $player) {
+            // Now let's find the stats for this player
+            $playerStats = null;
+
+            foreach ($stats as $stat) {
+                if ($stat->player_id == $player->id) {
+                    $playerStats         = $stat;
+                    $playerStats->player = $player;
+                }
+            }
+
+            // When no stats found, create empty one
+            if (! $playerStats) {
+                $playerStats            = clone $emptyStat;
+                $playerStats->player_id = $player->id;
+                $playerStats->player    = $player;
+                $playerStats->games     = 0;
+            }
+
+            // And push to main collection
+            $allStats->push($playerStats);
+        }
+
+        return self::optimizePlayerDataForLeaderboards($allStats, 'all');
     }
 
     public static function playersEventStats($playerId = null, $limit = 20): array
     {
         $stats = [
-            'score'        => self::playerEventStatsSingle('score',        'score',               'desc', 20),
-            'three_points' => self::playerEventStatsSingle('three_points', 'three_points_made',   'desc', 20),
-            'field_goals'  => self::playerEventStatsSingle('field_goals',  'field_goals_percent', 'desc', 20), //self::playerEventFieldGoals($limit),
-            'free_throws'  => self::playerEventStatsSingle('free_throws',  'free_throws_percent', 'desc', 20),
-            'assists'      => self::playerEventStatsSingle('assists',      'assists',             'desc', 20), //self::playerEventAssists($limit),
-            'rebounds'     => self::playerEventStatsSingle('rebounds',     'rebounds',            'desc', 20), //self::playerEventRebounds($limit),
-            'blocks'       => self::playerEventStatsSingle('blocks',       'blocks',              'desc', 20),
-            'steals'       => self::playerEventStatsSingle('steals',       'steals',              'desc', 20),
-            'fouls'        => self::playerEventStatsSingle('fouls',        'fouls',               'desc', 20),
-            'turnovers'    => self::playerEventStatsSingle('turnovers',    'turnovers',           'desc', 20),
-            'efficiency'   => self::playerEventStatsSingle('efficiency',   'efficiency',           'desc', 20),
+            'score'        => self::playerEventStatsSingle('score', 'score', 'desc', 20),
+            'three_points' => self::playerEventStatsSingle('three_points', 'three_points_made', 'desc', 20),
+            'field_goals'  => self::playerEventStatsSingle('field_goals', 'field_goals_percent', 'desc', 20), // self::playerEventFieldGoals($limit),
+            'free_throws'  => self::playerEventStatsSingle('free_throws', 'free_throws_percent', 'desc', 20),
+            'assists'      => self::playerEventStatsSingle('assists', 'assists', 'desc', 20), // self::playerEventAssists($limit),
+            'rebounds'     => self::playerEventStatsSingle('rebounds', 'rebounds', 'desc', 20), // self::playerEventRebounds($limit),
+            'blocks'       => self::playerEventStatsSingle('blocks', 'blocks', 'desc', 20),
+            'steals'       => self::playerEventStatsSingle('steals', 'steals', 'desc', 20),
+            'fouls'        => self::playerEventStatsSingle('fouls', 'fouls', 'desc', 20),
+            'turnovers'    => self::playerEventStatsSingle('turnovers', 'turnovers', 'desc', 20),
+            'efficiency'   => self::playerEventStatsSingle('efficiency', 'efficiency', 'desc', 20),
         ];
 
         return $stats;

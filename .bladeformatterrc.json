@@ -1,0 +1,9 @@
+{
+    "indentSize": 4,
+    "wrapAttributes": "preserve",
+    "indentInnerHtml": true,
+    "endWithNewLine": true,
+    "sortTailwindcssClasses": true,
+    "componentPrefix": ["x-", "livewire:"],
+    "phpVersion": "8.4"
+}
