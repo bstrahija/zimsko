@@ -31,4 +31,11 @@ class Stat extends Model
     {
         return $this->belongsTo(Event::class);
     }
+
+    public static function empty()
+    {
+        self::where('type', 'empty')->firstOrCreate(['type' => 'empty', 'for' => 'empty']);
+
+        return self::where('type', 'empty')->first();
+    }
 }
