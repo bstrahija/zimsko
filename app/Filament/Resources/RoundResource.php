@@ -14,9 +14,7 @@ use Filament\Tables;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use FilamentTiptapEditor\TiptapEditor;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Auth;
 
 class RoundResource extends Resource
@@ -46,7 +44,6 @@ class RoundResource extends Resource
                             ->hiddenOn(['create'])
                             ->required(),
                         TiptapEditor::make('body')
-                            ->required()
                             ->columnSpanFull(),
 
                     ]),
@@ -108,9 +105,9 @@ class RoundResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListRounds::route('/'),
+            'index'  => Pages\ListRounds::route('/'),
             'create' => Pages\CreateRound::route('/create'),
-            'edit' => Pages\EditRound::route('/{record}/edit'),
+            'edit'   => Pages\EditRound::route('/{record}/edit'),
         ];
     }
 
