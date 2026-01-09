@@ -357,6 +357,8 @@ class GameResource extends Resource
                 Tables\Columns\TextColumn::make('event.title')
                     ->numeric()
                     ->sortable(),
+                Tables\Columns\TextColumn::make('round.title')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('status')
                     ->badge()
                     ->color(fn ($state) => match ($state) {
