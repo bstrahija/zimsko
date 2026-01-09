@@ -11,14 +11,33 @@ use Illuminate\Support\Collection;
 
 trait StatsForLeaderboards
 {
-    public static function teamEventStats($teamId = null, $limit = 20): array
+    public static function teamEventStats($teamId = null, $limit = 20, ?int $eventId = null): array
     {
-        $stats = Stat::with(['team', 'team.media'])->where('for', 'team')->where('type', 'event')->where('event_id', Event::current()->id);
+        $eventId = $eventId ?: Event::current()->id;
+        $stats   = Stat::with(['team', 'team.media'])->where('for', 'team')->where('type', 'event')->where('event_id', $eventId);
 
         if ($teamId) {
             $stats = $stats->where('team_id', $teamId)->first();
         } else {
             $stats = $stats->get();
+
+            // If we get no stats at all, we need to return a list of teams with empty stats
+            if (! $stats || ! $stats->count()) {
+                $event = Event::find($eventId);
+                $teams = $event->teams;
+
+                foreach ($teams as $team) {
+                    $emptyStat           = Stat::empty();
+                    $emptyStat->team_id  = $team->id;
+                    $emptyStat->team     = $team;
+                    $emptyStat->event_id = $eventId;
+                    $emptyStat->for      = 'team';
+                    $emptyStat->type     = 'event';
+                    $emptyStat->games    = 0;
+
+                    $stats->push($emptyStat);
+                }
+            }
         }
 
         return $teamId ?
@@ -80,32 +99,34 @@ trait StatsForLeaderboards
         return self::optimizePlayerDataForLeaderboards($allStats, 'all');
     }
 
-    public static function playersEventStats($playerId = null, $limit = 20): array
+    public static function playersEventStats($playerId = null, $limit = 20, ?int $eventId = null): array
     {
         $stats = [
-            'score'        => self::playerEventStatsSingle('score', 'score', 'desc', 20),
-            'three_points' => self::playerEventStatsSingle('three_points', 'three_points_made', 'desc', 20),
-            'field_goals'  => self::playerEventStatsSingle('field_goals', 'field_goals_percent', 'desc', 20), // self::playerEventFieldGoals($limit),
-            'free_throws'  => self::playerEventStatsSingle('free_throws', 'free_throws_percent', 'desc', 20),
-            'assists'      => self::playerEventStatsSingle('assists', 'assists', 'desc', 20), // self::playerEventAssists($limit),
-            'rebounds'     => self::playerEventStatsSingle('rebounds', 'rebounds', 'desc', 20), // self::playerEventRebounds($limit),
-            'blocks'       => self::playerEventStatsSingle('blocks', 'blocks', 'desc', 20),
-            'steals'       => self::playerEventStatsSingle('steals', 'steals', 'desc', 20),
-            'fouls'        => self::playerEventStatsSingle('fouls', 'fouls', 'desc', 20),
-            'turnovers'    => self::playerEventStatsSingle('turnovers', 'turnovers', 'desc', 20),
-            'efficiency'   => self::playerEventStatsSingle('efficiency', 'efficiency', 'desc', 20),
+            'score'        => self::playerEventStatsSingle('score', 'score', 'desc', $limit, $eventId),
+            'three_points' => self::playerEventStatsSingle('three_points', 'three_points_made', 'desc', $limit, $eventId),
+            'field_goals'  => self::playerEventStatsSingle('field_goals', 'field_goals_percent', 'desc', $limit, $eventId), // self::playerEventFieldGoals($limit),
+            'free_throws'  => self::playerEventStatsSingle('free_throws', 'free_throws_percent', 'desc', $limit, $eventId),
+            'assists'      => self::playerEventStatsSingle('assists', 'assists', 'desc', $limit, $eventId), // self::playerEventAssists($limit),
+            'rebounds'     => self::playerEventStatsSingle('rebounds', 'rebounds', 'desc', $limit, $eventId), // self::playerEventRebounds($limit),
+            'blocks'       => self::playerEventStatsSingle('blocks', 'blocks', 'desc', $limit, $eventId),
+            'steals'       => self::playerEventStatsSingle('steals', 'steals', 'desc', $limit, $eventId),
+            'fouls'        => self::playerEventStatsSingle('fouls', 'fouls', 'desc', $limit, $eventId),
+            'turnovers'    => self::playerEventStatsSingle('turnovers', 'turnovers', 'desc', $limit, $eventId),
+            'efficiency'   => self::playerEventStatsSingle('efficiency', 'efficiency', 'desc', $limit, $eventId),
         ];
 
         return $stats;
     }
 
-    public static function playerEventStatsSingle($type, $column, $order = 'desc', $limit = 20)
+    public static function playerEventStatsSingle($type, $column, $order = 'desc', $limit = 20, ?int $eventId = null)
     {
+        $eventId = $eventId ?: Event::current()->id;
+
         if ($type === 'free_throws') {
             $stats = Stat::with(['player', 'player.media'])
                 ->where('for', 'player')
                 ->where('type', 'event')
-                ->where('event_id', Event::current()->id)
+                ->where('event_id', $eventId)
                 ->orderByRaw("CASE WHEN {$type}_made >= 5 THEN 0 ELSE 1 END")
                 ->orderByRaw("{$type}_percent DESC")
                 ->orderByRaw("{$type}_made DESC")
@@ -115,7 +136,7 @@ trait StatsForLeaderboards
             $stats = Stat::with(['player', 'player.media'])
                 ->where('for', 'player')
                 ->where('type', 'event')
-                ->where('event_id', Event::current()->id)
+                ->where('event_id', $eventId)
                 ->take($limit)
                 ->orderBy($column, $order)
                 ->get();

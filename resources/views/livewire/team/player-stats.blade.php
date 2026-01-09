@@ -11,6 +11,20 @@ new class extends Component {
 
     public $selectedEventId = null;
 
+    public $tabs = [
+        'score' => 'Igrači',
+        'three_points' => '3PT',
+        'field_goals' => 'FG',
+        'free_throws' => 'FT',
+        'assists' => 'AST',
+        'rebounds' => 'REB',
+        'steals' => 'STL',
+        'blocks' => 'BLK',
+        'fouls' => 'FOULS',
+        'turnovers' => 'TO',
+        'efficiency' => 'EFF',
+    ];
+
     public function mount()
     {
         // Set the initial selected event to the current event
@@ -37,32 +51,27 @@ new class extends Component {
 }; ?>
 
 <x-ui.card class="card mb-8" title="Igrači" subtitle="Svi igrači u ekipi">
-    <div>
-        <select wire:model.live="selectedEventId" class="mb-4 rounded border px-3 py-2">
+    <div class="relative inline-block text-right">
+        <select wire:model.live="selectedEventId"
+            class="appearance-none rounded-md border border-gray-300 bg-white px-4 py-2 pr-8 leading-tight text-gray-700 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500">
             <option value="">Svi događaji</option>
             @foreach ($this->events as $event)
                 <option value="{{ $event->id }}">{{ $event->title }}</option>
             @endforeach
         </select>
+
+        <div class="pointer-events-none absolute right-0 top-3 flex items-center px-2">
+            <svg class="h-4 w-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                fill="currentColor">
+                <path fill-rule="evenodd"
+                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                    clip-rule="evenodd" />
+            </svg>
+        </div>
     </div>
 
     <div x-data="{ activeTab: 'score' }" class="mb-6">
         <div class="flex flex-wrap overflow-x-auto">
-            @php
-                $tabs = [
-                    'score' => 'Igrači',
-                    'three_points' => '3PT',
-                    'field_goals' => 'FG',
-                    'free_throws' => 'FT',
-                    'assists' => 'AST',
-                    'rebounds' => 'REB',
-                    'steals' => 'STL',
-                    'blocks' => 'BLK',
-                    'fouls' => 'FOULS',
-                    'turnovers' => 'TO',
-                    'efficiency' => 'EFF',
-                ];
-            @endphp
             @foreach ($tabs as $key => $label)
                 <button @click="activeTab = '{{ $key }}'"
                     :class="{ 'border-primary': activeTab === '{{ $key }}', 'border-transparent': activeTab !== '{{ $key }}' }"

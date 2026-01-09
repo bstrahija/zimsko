@@ -6,9 +6,9 @@
     <div class="wrapper">
         <div class="grid grid-cols-1 gap-8 md:grid-cols-12">
             <div class="md:col-span-12 lg:col-span-8">
-                <x-stats.team-stats :stats="$teamStats" :teams="$teams" />
+                <livewire:stats.team-stats />
 
-                <x-stats.player-stats :stats="$playerStats" :teams="$teams" />
+                <livewire:stats.player-stats />
 
                 <x-stats.officials :$officials />
             </div>
