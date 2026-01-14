@@ -6,6 +6,7 @@ use App\Models\Event;
 use App\Models\Game;
 use App\Models\Post;
 use App\Services\Helpers;
+use App\Stats\Stats;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 
@@ -24,7 +25,17 @@ class PagesController extends Controller
         $lastEvent      = Event::last()->toArray();
         $currentEvent   = Event::current() ?: ($lastEvent ?: null);
         $pastEvent      = Event::whereNot('id', $currentEvent->id)->whereNot('slug', 'LIKE', '%c-liga%')->orderBy('scheduled_at', 'desc')->first();
-        $latestArticles = Post::orderBy('published_at', 'desc')->take(3)->get();
+        $latestArticles = Post::query()->orderBy('published_at', 'desc')->take(3)->get();
+
+        // $teamEventStats = Stats::teamEventStats(eventId: 10);
+        // dump($teamEventStats);
+        // $teamEventStats = Stats::teamEventStats(eventId: 8);
+        // dump($teamEventStats);
+
+        // $playerEventStats = Stats::playersEventStats(eventId: 10);
+        // dump($playerEventStats);
+        // $playerEventStats = Stats::playersEventStats(eventId: 8);
+        // dump($playerEventStats);
 
         // Stats::generateTotalForTeams(generateForEvents: true, generateForGames: true);
         // Stats::generateTotalForPlayers(generateForEvents: true, generateForGames: true);
@@ -32,7 +43,7 @@ class PagesController extends Controller
         // $game = Game
 
         // Get the latest games
-        $upcomingGames = Game::where(['event_id' => $currentEvent->id])
+        $upcomingGames = Game::query()->where(['event_id' => $currentEvent->id])
             ->where(function ($query) {
                 $query->where('status', 'scheduled');
                 $query->orWhere('status', 'in_progress');
@@ -41,7 +52,7 @@ class PagesController extends Controller
             ->orderBy('scheduled_at')
             ->limit(6)
             ->get();
-        $latestGames = Game::where(['status' => 'completed', 'event_id' => $currentEvent->id])
+        $latestGames = Game::query()->where(['status' => 'completed', 'event_id' => $currentEvent->id])
             ->with(['homeTeam', 'awayTeam', 'homeTeam.media', 'awayTeam.media', 'round', 'event'])
             ->orderByDesc('scheduled_at')
             ->limit(6)
@@ -49,7 +60,7 @@ class PagesController extends Controller
 
         // If we don't have games for current event, show past event
         if (! $latestGames || ! $latestGames->count()) {
-            $latestGames = Game::where(['status' => 'completed', 'event_id' => $pastEvent->id])
+            $latestGames = Game::query()->where(['status' => 'completed', 'event_id' => $pastEvent->id])
                 ->with(['homeTeam', 'awayTeam', 'homeTeam.media', 'awayTeam.media', 'round', 'event'])
                 ->orderByDesc('scheduled_at')
                 ->limit(6)

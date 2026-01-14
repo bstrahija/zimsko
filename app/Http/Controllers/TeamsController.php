@@ -21,7 +21,7 @@ class TeamsController extends Controller
 
     public function show($slug, Request $request)
     {
-        $team        = Team::where('slug', $slug)->with(['activePlayers', 'activePlayers.media', 'coaches'])->firstOrFail();
+        $team        = Team::query()->where('slug', $slug)->with(['activePlayers', 'activePlayers.media', 'coaches'])->firstOrFail();
         $lastGame    = $team->lastGame();
         $nextGame    = $team->nextGame();
         $teamStats   = Cache::remember('team_event_stats.' . Event::current()->id . '.' . $team->id, (60 * 60 * 24), fn () => Stats::teamEventStats($team->id));

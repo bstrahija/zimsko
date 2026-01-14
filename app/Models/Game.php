@@ -14,6 +14,8 @@ use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
 /**
+ * @property int $id
+ * @property int $event_id
  * @property string $title
  * @property string $slug
  * @property string $status
@@ -48,7 +50,10 @@ class Game extends Model
 
     protected $casts = [
         'id'                    => 'integer',
+        'event_id'              => 'integer',
+        'round_id'              => 'integer',
         'home_team_id'          => 'integer',
+        'away_team_id'          => 'integer',
         'external_id'           => 'integer',
         'data'                  => 'array',
         'scheduled_at'          => 'datetime',

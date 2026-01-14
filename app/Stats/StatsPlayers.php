@@ -4,12 +4,9 @@ namespace App\Stats;
 
 use App\Models\Event;
 use App\Models\Game;
-use App\Models\GameLive;
 use App\Models\Player;
 use App\Models\Stat;
 use App\Models\Team;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 
 trait StatsPlayers
 {
@@ -17,9 +14,6 @@ trait StatsPlayers
      * Generate DB data from a game
      * Usually called after a game is finished
      * TODO: Think about if we also update stats for the parent event, and maybe also total stats
-     *
-     * @param GameLive $gameLive
-     * @return void
      */
     public static function generateFromGameForPlayers(Game $game): void
     {
@@ -44,16 +38,16 @@ trait StatsPlayers
                         if ($column['method'] === 'avg') {
                             $statData[$column['id']] = $statData['games'] ? round($statData[str_replace('_avg', '', $column['id'])] / $statData['games'], 2) : 0;
                         } elseif ($column['method'] === 'miss') {
-                            $attemptColumn = str_replace('_missed', '', $column['id']);
-                            $madeColumn    = $attemptColumn . '_made';
-                            $attempted     = $statData[$attemptColumn];
-                            $made          = $statData[$madeColumn];
+                            $attemptColumn           = str_replace('_missed', '', $column['id']);
+                            $madeColumn              = $attemptColumn . '_made';
+                            $attempted               = $statData[$attemptColumn];
+                            $made                    = $statData[$madeColumn];
                             $statData[$column['id']] = $attempted - $made;
                         } elseif ($column['method'] === 'percent') {
-                            $attemptColumn = str_replace('_percent', '', $column['id']);
-                            $madeColumn    = $attemptColumn . '_made';
-                            $attempted     = $statData[$attemptColumn];
-                            $made          = $statData[$madeColumn];
+                            $attemptColumn           = str_replace('_percent', '', $column['id']);
+                            $madeColumn              = $attemptColumn . '_made';
+                            $attempted               = $statData[$attemptColumn];
+                            $made                    = $statData[$madeColumn];
                             $statData[$column['id']] = $attempted ? round($made / $attempted * 100, 2) : 0;
                         }
                     }
@@ -82,7 +76,6 @@ trait StatsPlayers
     /**
      * Generate stats for all games in specific event
      *
-     * @param  Event $event
      * @return void
      */
     public static function generateFromEventForPlayers(Event $event, $generateForGames = false)
@@ -130,10 +123,10 @@ trait StatsPlayers
                 if ($column['method'] === 'avg') {
                     $playerEventStats[$row->player_id][$column['id']] = $playerEventStats[$row->player_id]['games'] ? round($playerEventStats[$row->player_id][str_replace('_avg', '', $column['id'])] / $playerEventStats[$row->player_id]['games'], 2) : 0;
                 } elseif ($column['method'] === 'percent') {
-                    $attemptColumn = str_replace('_percent', '', $column['id']);
-                    $madeColumn    = $attemptColumn . '_made';
-                    $attempted     = $playerEventStats[$row->player_id][$attemptColumn];
-                    $made          = $playerEventStats[$row->player_id][$madeColumn];
+                    $attemptColumn                                    = str_replace('_percent', '', $column['id']);
+                    $madeColumn                                       = $attemptColumn . '_made';
+                    $attempted                                        = $playerEventStats[$row->player_id][$attemptColumn];
+                    $made                                             = $playerEventStats[$row->player_id][$madeColumn];
                     $playerEventStats[$row->player_id][$column['id']] = $attempted ? round($made / $attempted * 100, 2) : 0;
                 } elseif ($column['method'] === 'efficiency') {
                     $playerEventStats[$row->player_id][$column['id']] = Stats::calculateEfficiency($playerEventStats[$row->player_id]);
@@ -158,7 +151,7 @@ trait StatsPlayers
         }
     }
 
-    public static function playerEventStats(int $playerId, Event $event = null): ?array
+    public static function playerEventStats(int $playerId, ?Event $event = null): ?array
     {
         if (! $event) {
             $event = Event::current();
@@ -167,10 +160,57 @@ trait StatsPlayers
         $stats = Stat::where('for', 'player')
             ->with(['player', 'player.media'])
             ->where('type', 'event')
-            ->where('event_id', Event::current()->id)
+            ->where('event_id', $event->id)
             ->where('player_id', $playerId)
             ->first();
 
         return $stats ? $stats->toArray() : null;
+    }
+
+    /**
+     * Get aggregated stats for a player across all events
+     */
+    public static function playerAllEventsStats(int $playerId): ?array
+    {
+        $rows = Stat::where('for', 'player')
+            ->where('type', 'event')
+            ->where('player_id', $playerId)
+            ->get();
+
+        if ($rows->isEmpty()) {
+            return null;
+        }
+
+        $aggregated = ['games' => 0];
+
+        foreach (config('stats.columns') as $column) {
+            $aggregated[$column['id']] = 0;
+        }
+
+        foreach ($rows as $row) {
+            $aggregated['games'] += $row->games;
+
+            foreach (config('stats.columns') as $column) {
+                $aggregated[$column['id']] += $row->{$column['id']};
+            }
+        }
+
+        // Calculate averages and percentages
+        foreach (config('stats.calculated_columns') as $column) {
+            if ($column['method'] === 'avg') {
+                $baseColumn                = str_replace('_avg', '', $column['id']);
+                $aggregated[$column['id']] = $aggregated['games'] ? round($aggregated[$baseColumn] / $aggregated['games'], 2) : 0;
+            } elseif ($column['method'] === 'percent') {
+                $attemptColumn             = str_replace('_percent', '', $column['id']);
+                $madeColumn                = $attemptColumn . '_made';
+                $attempted                 = $aggregated[$attemptColumn];
+                $made                      = $aggregated[$madeColumn];
+                $aggregated[$column['id']] = $attempted ? round($made / $attempted * 100, 2) : 0;
+            } elseif ($column['method'] === 'efficiency') {
+                $aggregated[$column['id']] = Stats::calculateEfficiency($aggregated);
+            }
+        }
+
+        return $aggregated;
     }
 }
