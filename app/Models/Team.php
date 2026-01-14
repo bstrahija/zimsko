@@ -201,6 +201,11 @@ class Team extends Model implements HasMedia
         return $this->hasMany(Game::class, 'away_team_id');
     }
 
+    public function achievements(): HasMany
+    {
+        return $this->hasMany(Achievement::class);
+    }
+
     public function gameCount(?Event $event = null): int
     {
         if ($event) {

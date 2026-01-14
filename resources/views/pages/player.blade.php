@@ -15,15 +15,13 @@
                         @if ($lastGame)
                             <x-games.details :game="$lastGame" />
                         @else
-                            <div class="p-4 text-yellow-700 bg-yellow-100 border-l-4 border-yellow-500">
+                            <div class="border-l-4 border-yellow-500 bg-yellow-100 p-4 text-yellow-700">
                                 Nema utakmica.
                             </div>
                         @endif
                     </x-ui.card>
 
-                    <x-ui.card class="mb-8 card" title="Statistika" subtitle="Statistika tokom turnira">
-                        <x-players.player-stats :stats="$stats" :player="$player" />
-                    </x-ui.card>
+                    <livewire:player.stats :player="$player" />
 
                     {{-- <x-ui.card class="" title="Poeni">
                         <x-charts.player-points :player="$player" />
@@ -35,16 +33,18 @@
                 <x-ui.card class="mb-8" title="{{ $player->name }}" subtitle="Informacije">
                     <div class="grid gap-4">
                         @if ($player->photo())
-                            <div class="flex justify-center"><img src="{{ $player->photo('original') }}" alt="{{ $player->name }}" class="max-w-[160px] rounded-full"></div>
+                            <div class="flex justify-center"><img src="{{ $player->photo('original') }}"
+                                    alt="{{ $player->name }}" class="max-w-[160px] rounded-full"></div>
                         @endif
 
-                        <table class="text-xs text-left">
+                        <table class="text-left text-xs">
                             <tr class="border-b border-gray-200">
                                 <th class="py-2">Ekipa:</th>
                                 <td class="py-2">
                                     @if ($player->team)
                                         <a href="{{ route('teams.show', $player->team->slug) }}" class="flex gap-2">
-                                            <img src="{{ $player->team ? $player->team->logo('thumb') : '' }}" alt="" class="size-4">
+                                            <img src="{{ $player->team ? $player->team->logo('thumb') : '' }}"
+                                                alt="" class="size-4">
                                             {{ $player->team ? $player->team->title : '-' }}
                                         </a>
                                     @else
@@ -79,6 +79,9 @@
                         </table>
                     </div>
                 </x-ui.card>
+
+                <x-achievements.achievements-widget class="mb-8" title="Dostignuća" :subtitle="$player->name"
+                    :player="$player" />
             </x-global.sidebar>
         </div>
     </div>

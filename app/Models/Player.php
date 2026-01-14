@@ -156,6 +156,11 @@ class Player extends Model implements HasMedia
         return $this->belongsToMany(Game::class);
     }
 
+    public function achievements(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Achievement::class);
+    }
+
     public function getTeamAttribute()
     {
         return $this->teams()->first();

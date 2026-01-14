@@ -23,7 +23,7 @@ return [
     'top-blocks'      => ['title' => 'Najviše Blokada',      'description' => '',                   'image' => 'achievements/trophy-gold-2.png'],
     'top-steals'      => ['title' => 'Najviše Ukradenih',    'description' => '',                   'image' => 'achievements/trophy-gold-2.png'],
     'top-rebounds'    => ['title' => 'Najviše Skokova',      'description' => '',                   'image' => 'achievements/trophy-gold-2.png'],
-    'top-fouls'       => ['title' => 'Najviše Prekršaja',    'description' => '',                   'image' => 'achievements/trophy-gold-2.png'],
+    'top-fouls'       => ['title' => 'Najviše Prekršaja',    'description' => '',                   'image' => 'achievements/foul.png'],
     'top-turnovers'   => ['title' => 'Najviše Izgubljenih',  'description' => '',                   'image' => 'achievements/trophy-gold-2.png'],
     'top-efficiency'  => ['title' => 'Najefikasniji Igrač',  'description' => '',                   'image' => 'achievements/trophy-gold-2.png'],
     'top-free-throws' => ['title' => 'Najbolji u Bacanjima', 'description' => '',                   'image' => 'achievements/trophy-gold-2.png'],
@@ -43,5 +43,6 @@ return [
     'team-top-turnovers'   => ['title' => 'Najviše Izgubljenih',  'description' => '', 'image' => 'achievements/trophy-gold-2.png'],
     'team-top-efficiency'  => ['title' => 'Najefikasnija Ekipa',  'description' => '', 'image' => 'achievements/trophy-gold-2.png'],
     'team-top-free-throws' => ['title' => 'Najbolji u Bacanjima', 'description' => '', 'image' => 'achievements/trophy-gold-2.png'],
+    'fan-favorites'        => ['title' => 'Najsimpatičnija ekipa', 'description' => '', 'image' => 'achievements/trophy-gold-2.png'],
 
 ];

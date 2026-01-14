@@ -2,7 +2,7 @@
 
 @php
     if (!isset($lastGame)) {
-        $lastGame = $team->games()->orderBy('scheduled_at', 'desc')->first();
+        $lastGame = $team->games()->where('status', 'completed')->orderBy('scheduled_at', 'desc')->first();
     }
     if (!isset($nextGame)) {
         $nextGame = $team->games()->orderBy('scheduled_at', 'asc')->first();
@@ -54,6 +54,9 @@
                 <x-ui.card class="mb-8" title="{{ $team->title }}" icon="{{ $team->logo('original') }}">
                     <x-teams.details :team="$team" />
                 </x-ui.card>
+
+                <x-achievements.achievements-widget class="mb-8" title="Dostignuća" :subtitle="$team->title"
+                    :team="$team" />
 
                 @if ($lastGame)
                     <x-ui.card class="mb-8" title="Posljednja utakmica">
