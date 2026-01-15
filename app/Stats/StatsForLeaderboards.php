@@ -109,15 +109,15 @@ trait StatsForLeaderboards
         return self::optimizePlayerDataForLeaderboards($allStats, 'all');
     }
 
-    public static function playersEventStats($playerId = null, $limit = 20, ?int $eventId = null): array
+    public static function playersEventStats($playerId = null, $limit = 20, ?int $eventId = null, array $sortModes = []): array
     {
         $stats = [
-            'score'        => self::playerEventStatsSingle('score', 'score', 'desc', $limit, $eventId),
-            'three_points' => self::playerEventStatsSingle('three_points', 'three_points_made', 'desc', $limit, $eventId),
-            'field_goals'  => self::playerEventStatsSingle('field_goals', 'field_goals_percent', 'desc', $limit, $eventId), // self::playerEventFieldGoals($limit),
-            'free_throws'  => self::playerEventStatsSingle('free_throws', 'free_throws_percent', 'desc', $limit, $eventId),
-            'assists'      => self::playerEventStatsSingle('assists', 'assists', 'desc', $limit, $eventId), // self::playerEventAssists($limit),
-            'rebounds'     => self::playerEventStatsSingle('rebounds', 'rebounds', 'desc', $limit, $eventId), // self::playerEventRebounds($limit),
+            'score'        => self::playerEventStatsSingle('score', 'score', 'desc', $limit, $eventId, $sortModes['score'] ?? 'total'),
+            'three_points' => self::playerEventStatsSingle('three_points', 'three_points_made', 'desc', $limit, $eventId, $sortModes['three_points'] ?? 'percent'),
+            'field_goals'  => self::playerEventStatsSingle('field_goals', 'field_goals_percent', 'desc', $limit, $eventId, $sortModes['field_goals'] ?? 'percent'),
+            'free_throws'  => self::playerEventStatsSingle('free_throws', 'free_throws_percent', 'desc', $limit, $eventId, $sortModes['free_throws'] ?? 'percent'),
+            'assists'      => self::playerEventStatsSingle('assists', 'assists', 'desc', $limit, $eventId),
+            'rebounds'     => self::playerEventStatsSingle('rebounds', 'rebounds', 'desc', $limit, $eventId),
             'blocks'       => self::playerEventStatsSingle('blocks', 'blocks', 'desc', $limit, $eventId),
             'steals'       => self::playerEventStatsSingle('steals', 'steals', 'desc', $limit, $eventId),
             'fouls'        => self::playerEventStatsSingle('fouls', 'fouls', 'desc', $limit, $eventId),
@@ -128,22 +128,61 @@ trait StatsForLeaderboards
         return $stats;
     }
 
-    public static function playerEventStatsSingle($type, $column, $order = 'desc', $limit = 20, ?int $eventId = null)
+    public static function playerEventStatsSingle($type, $column, $order = 'desc', $limit = 20, ?int $eventId = null, string $sortBy = 'percent')
     {
         // When no eventId, use 'total' stats; otherwise use 'event' stats for specific event
         $statsType = $eventId ? 'event' : 'total';
 
-        if ($type === 'free_throws') {
+        // For score, support sorting by 'total', 'avg', or 'percent' (field_goals_percent)
+        if ($type === 'score') {
             $query = Stat::with(['player', 'player.media'])
                 ->where('for', 'player')
                 ->where('type', $statsType)
-                ->orderByRaw("CASE WHEN {$type}_made >= 5 THEN 0 ELSE 1 END")
-                ->orderByRaw("{$type}_percent DESC")
-                ->orderByRaw("{$type}_made DESC")
                 ->take($limit);
 
             if ($eventId) {
                 $query->where('event_id', $eventId);
+            }
+
+            if ($sortBy === 'avg') {
+                // Sort by average score per game (score / games)
+                $query->orderByRaw('CASE WHEN games > 0 THEN score / games ELSE 0 END DESC');
+            } elseif ($sortBy === 'percent') {
+                // Sort by field goals percentage with minimum threshold
+                $query->orderByRaw('CASE WHEN field_goals >= 20 THEN 0 ELSE 1 END')
+                    ->orderByRaw('field_goals_percent DESC')
+                    ->orderByRaw('field_goals_made DESC');
+            } else {
+                // Default: sort by total score
+                $query->orderByRaw('score DESC');
+            }
+
+            $stats = $query->get();
+        } elseif (in_array($type, ['free_throws', 'field_goals', 'three_points'])) {
+            // For percentage-based stats (FG, FT, 3PT), support sorting by 'made' or 'percent'
+            $query = Stat::with(['player', 'player.media'])
+                ->where('for', 'player')
+                ->where('type', $statsType)
+                ->take($limit);
+
+            if ($eventId) {
+                $query->where('event_id', $eventId);
+            }
+
+            if ($sortBy === 'made') {
+                // Sort by most made shots
+                $query->orderByRaw("{$type}_made DESC");
+            } else {
+                // Sort by percentage with minimum threshold
+                if ($type === 'free_throws') {
+                    $query->orderByRaw("CASE WHEN {$type}_made >= 5 THEN 0 ELSE 1 END");
+                } elseif ($type === 'field_goals') {
+                    $query->orderByRaw("CASE WHEN {$type} >= 20 THEN 0 ELSE 1 END");
+                } elseif ($type === 'three_points') {
+                    $query->orderByRaw("CASE WHEN {$type}_made >= 10 THEN 0 ELSE 1 END");
+                }
+                $query->orderByRaw("{$type}_percent DESC")
+                    ->orderByRaw("{$type}_made DESC");
             }
 
             $stats = $query->get();

@@ -36,7 +36,7 @@ new class extends Component {
     public function events()
     {
         // Only newer events can be selected, since older ones don"t have detailed stats
-        return Event::where('scheduled_at', '>', '2025-01-01 00:00:00')->orderByDesc('scheduled_at')->get();
+        return Event::query()->where('scheduled_at', '>', '2025-01-01 00:00:00')->orderByDesc('scheduled_at')->get();
     }
 
     #[Computed]

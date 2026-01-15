@@ -10,6 +10,19 @@ new class extends Component {
     #[Url(as: 'player_event')]
     public $selectedEventId = null;
 
+    // Sort modes for stats
+    #[Url(as: 'score_sort')]
+    public string $scoreSort = 'total';
+
+    #[Url(as: 'three_points_sort')]
+    public string $threePointsSort = 'percent';
+
+    #[Url(as: 'field_goals_sort')]
+    public string $fieldGoalsSort = 'percent';
+
+    #[Url(as: 'free_throws_sort')]
+    public string $freeThrowsSort = 'percent';
+
     public $tabs = [
         'score' => 'Poeni',
         'three_points' => '3PT',
@@ -30,6 +43,38 @@ new class extends Component {
         if (is_null($this->selectedEventId)) {
             $this->selectedEventId = Event::current()->id;
         }
+    }
+
+    public function toggleSort(string $stat, ?string $mode = null): void
+    {
+        $property = match ($stat) {
+            'score' => 'scoreSort',
+            'three_points' => 'threePointsSort',
+            'field_goals' => 'fieldGoalsSort',
+            'free_throws' => 'freeThrowsSort',
+            default => null,
+        };
+
+        if ($property) {
+            if ($mode !== null) {
+                // Set to specific mode (for score which has 3 options)
+                $this->$property = $mode;
+            } else {
+                // Toggle between two modes (for 3PT, FG, FT)
+                $this->$property = $this->$property === 'percent' ? 'made' : 'percent';
+            }
+        }
+    }
+
+    public function getSortMode(string $stat): string
+    {
+        return match ($stat) {
+            'score' => $this->scoreSort,
+            'three_points' => $this->threePointsSort,
+            'field_goals' => $this->fieldGoalsSort,
+            'free_throws' => $this->freeThrowsSort,
+            default => 'percent',
+        };
     }
 
     #[Computed]
@@ -56,7 +101,15 @@ new class extends Component {
     {
         $selectedEventId = $this->selectedEventId ? (int) $this->selectedEventId : null;
 
-        return Stats::playersEventStats(eventId: $selectedEventId);
+        return Stats::playersEventStats(
+            eventId: $selectedEventId,
+            sortModes: [
+                'score' => $this->scoreSort,
+                'three_points' => $this->threePointsSort,
+                'field_goals' => $this->fieldGoalsSort,
+                'free_throws' => $this->freeThrowsSort,
+            ],
+        );
     }
 }; ?>
 
@@ -93,19 +146,19 @@ new class extends Component {
             </div>
 
             <div x-show="activeTab === 'score'" class="mt-4">
-                <x-stats.players-tab type="score" :stats="Arr::get($this->stats, 'score', [])" :teams="$this->teams" />
+                <x-stats.players-tab type="score" :stats="Arr::get($this->stats, 'score', [])" :teams="$this->teams" :sortMode="$this->scoreSort" />
             </div>
 
             <div x-show="activeTab === 'three_points'" class="mt-4">
-                <x-stats.players-tab type="three_points" :stats="Arr::get($this->stats, 'three_points', [])" :teams="$this->teams" />
+                <x-stats.players-tab type="three_points" :stats="Arr::get($this->stats, 'three_points', [])" :teams="$this->teams" :sortMode="$this->threePointsSort" />
             </div>
 
             <div x-show="activeTab === 'field_goals'" class="mt-4">
-                <x-stats.players-tab type="field_goals" :stats="Arr::get($this->stats, 'field_goals', [])" :teams="$this->teams" />
+                <x-stats.players-tab type="field_goals" :stats="Arr::get($this->stats, 'field_goals', [])" :teams="$this->teams" :sortMode="$this->fieldGoalsSort" />
             </div>
 
             <div x-show="activeTab === 'free_throws'" class="mt-4">
-                <x-stats.players-tab type="free_throws" :stats="Arr::get($this->stats, 'free_throws', [])" :teams="$this->teams" />
+                <x-stats.players-tab type="free_throws" :stats="Arr::get($this->stats, 'free_throws', [])" :teams="$this->teams" :sortMode="$this->freeThrowsSort" />
             </div>
 
             <div x-show="activeTab === 'assists'" class="mt-4">

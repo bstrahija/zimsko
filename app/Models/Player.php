@@ -173,7 +173,22 @@ class Player extends Model implements HasMedia
 
     public function photo($size = 'thumb')
     {
-        return $this->getFirstMediaUrl('photos', $size);
+        $photo = $this->getFirstMediaUrl('photos', $size);
+
+        // Fall back to team logo if player has no photo
+        if (empty($photo)) {
+            $team     = $this->teams()->first();
+            $teamLogo = $team?->logo($size);
+
+            if (! empty($teamLogo)) {
+                return $teamLogo;
+            }
+
+            // Fall back to default player placeholder SVG
+            return 'data:image/svg+xml,' . rawurlencode('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#9CA3AF"><circle cx="12" cy="8" r="4"/><path d="M12 14c-6 0-8 3-8 5v1h16v-1c0-2-2-5-8-5z"/></svg>');
+        }
+
+        return $photo;
     }
 
     public function gameCount(?Event $event = null): int
