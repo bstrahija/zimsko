@@ -52,20 +52,20 @@
                                     @endif
                                 </td>
                             </tr>
-                            <tr class="border-b border-gray-200">
+                            {{-- <tr class="border-b border-gray-200">
                                 <th class="py-2">Država:</th>
                                 <td class="py-2">{{ $player->country ?: '-' }}</td>
                             </tr>
                             <tr class="border-b border-gray-200">
                                 <th class="py-2">Starost:</th>
                                 <td class="py-2">{{ $player->age ?: '-' }}</td>
-                            </tr>
+                            </tr> --}}
                             <tr class="border-b border-gray-200">
                                 <th class="py-2">Utakmica:</th>
                                 <td class="py-2">{{ $player->gameCount() }}</td>
                             </tr>
                             <tr class="border-b border-gray-200">
-                                <th class="py-2">Utakmica (Zimsko 2025):</th>
+                                <th class="py-2">Utakmica ({{ \App\Models\Event::current()->title }}):</th>
                                 <td class="py-2">{{ $player->gameCountCurrent() }}</td>
                             </tr>
                             <tr class="border-b border-gray-200">
@@ -73,7 +73,7 @@
                                 <td class="py-2">{{ $player->pointsAverage() }}</td>
                             </tr>
                             <tr class="border-b border-gray-200">
-                                <th class="py-2">Prosjek (Zimsko 2025):</th>
+                                <th class="py-2">Prosjek ({{ \App\Models\Event::current()->title }}):</th>
                                 <td class="py-2">{{ $player->pointsAverageCurrent() }}</td>
                             </tr>
                         </table>
