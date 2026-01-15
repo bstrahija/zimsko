@@ -1,32 +1,36 @@
 <?php
 
-use App\Stats\Stats;
 use App\Models\Event;
-use Livewire\Volt\Component;
+use App\Stats\Stats;
 use Livewire\Attributes\Computed;
-use Illuminate\Support\Facades\Cache;
+use Livewire\Attributes\Url;
+use Livewire\Volt\Component;
 
-new class extends Component {
+new class extends Component
+{
+    #[Url(as: 'team_event')]
     public $selectedEventId = null;
 
     public $tabs = [
-        'score' => 'Poeni',
+        'score'        => 'Poeni',
         'three_points' => '3PT',
-        'field_goals' => 'FG',
-        'free_throws' => 'FT',
-        'assists' => 'AST',
-        'rebounds' => 'REB',
-        'steals' => 'STL',
-        'blocks' => 'BLK',
-        'fouls' => 'FOULS',
-        'turnovers' => 'TO',
-        'efficiency' => 'EFF',
+        'field_goals'  => 'FG',
+        'free_throws'  => 'FT',
+        'assists'      => 'AST',
+        'rebounds'     => 'REB',
+        'steals'       => 'STL',
+        'blocks'       => 'BLK',
+        'fouls'        => 'FOULS',
+        'turnovers'    => 'TO',
+        'efficiency'   => 'EFF',
     ];
 
     public function mount()
     {
-        // Set the initial selected event to the current event
-        $this->selectedEventId = Event::current()->id;
+        // Set the initial selected event to the current event (only if not set from URL)
+        if (is_null($this->selectedEventId)) {
+            $this->selectedEventId = Event::current()->id;
+        }
     }
 
     #[Computed]
@@ -39,10 +43,9 @@ new class extends Component {
     #[Computed]
     public function stats()
     {
-        $selectedEventId = $this->selectedEventId ?: null;
-        $stats = Stats::teamEventStats(eventId: $selectedEventId);
+        $selectedEventId = $this->selectedEventId ? (int) $this->selectedEventId : null;
 
-        return Cache::remember('team_event_stats.leaders.' . $selectedEventId, 60 * 60 * 24, fn() => Stats::teamEventStats(eventId: $selectedEventId));
+        return Stats::teamEventStats(eventId: $selectedEventId);
     }
 }; ?>
 
@@ -50,6 +53,7 @@ new class extends Component {
     <div class="relative mb-3 inline-block text-right">
         <select wire:model.live="selectedEventId"
             class="appearance-none rounded-md border border-gray-300 bg-white px-4 py-2 pr-8 leading-tight text-gray-700 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option value="">Svi događaji</option>
             @foreach ($this->events as $event)
                 <option value="{{ $event->id }}">{{ $event->title }}</option>
             @endforeach

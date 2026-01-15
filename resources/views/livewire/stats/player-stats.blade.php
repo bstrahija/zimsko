@@ -1,32 +1,36 @@
 <?php
 
-use App\Stats\Stats;
 use App\Models\Event;
-use Livewire\Volt\Component;
+use App\Stats\Stats;
 use Livewire\Attributes\Computed;
-use Illuminate\Support\Facades\Cache;
+use Livewire\Attributes\Url;
+use Livewire\Volt\Component;
 
-new class extends Component {
+new class extends Component
+{
+    #[Url(as: 'player_event')]
     public $selectedEventId = null;
 
     public $tabs = [
-        'score' => 'Poeni',
+        'score'        => 'Poeni',
         'three_points' => '3PT',
-        'field_goals' => 'FG',
-        'free_throws' => 'FT',
-        'assists' => 'AST',
-        'rebounds' => 'REB',
-        'steals' => 'STL',
-        'blocks' => 'BLK',
-        'fouls' => 'FOULS',
-        'turnovers' => 'TO',
-        'efficiency' => 'EFF',
+        'field_goals'  => 'FG',
+        'free_throws'  => 'FT',
+        'assists'      => 'AST',
+        'rebounds'     => 'REB',
+        'steals'       => 'STL',
+        'blocks'       => 'BLK',
+        'fouls'        => 'FOULS',
+        'turnovers'    => 'TO',
+        'efficiency'   => 'EFF',
     ];
 
     public function mount()
     {
-        // Set the initial selected event to the current event
-        $this->selectedEventId = Event::current()->id;
+        // Set the initial selected event to the current event (only if not set from URL)
+        if (is_null($this->selectedEventId)) {
+            $this->selectedEventId = Event::current()->id;
+        }
     }
 
     #[Computed]
@@ -45,16 +49,15 @@ new class extends Component {
     #[Computed]
     public function teams()
     {
-        return $this->event ? $this->event->teams : collect();
+        return $this->event ? $this->event->teams : \App\Models\Team::all();
     }
 
     #[Computed]
     public function stats()
     {
-        $selectedEventId = $this->selectedEventId ?: null;
+        $selectedEventId = $this->selectedEventId ? (int) $this->selectedEventId : null;
 
         return Stats::playersEventStats(eventId: $selectedEventId);
-        return Cache::remember('player_event_stats.leaders.' . $selectedEventId, 60 * 60 * 24, fn() => Stats::playersEventStats(eventId: $selectedEventId));
     }
 }; ?>
 

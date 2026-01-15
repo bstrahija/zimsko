@@ -43,7 +43,7 @@
                             <td class="px-2 py-3 text-sm font-semibold text-gray-600">{{ $index + 1 }}.</td>
                             <td class="py-3 pl-0 pr-4 text-xs">
                                 <a href="{{ route('players.show', $stat['player_slug']) }}" class="flex items-center">
-                                    <x-global.player-photo-for-tables :playerPhoto="$stat['player_photo']" :teamLogo="$team->logo()"
+                                    <x-global.player-photo-for-tables :playerPhoto="$stat['player_photo']" :teamLogo="$team?->logo()"
                                         class="mr-3" />
                                     <span class="font-medium text-gray-900">{{ $stat['player_name'] }}</span>
                                 </a>

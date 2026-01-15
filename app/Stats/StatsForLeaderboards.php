@@ -13,18 +13,28 @@ trait StatsForLeaderboards
 {
     public static function teamEventStats($teamId = null, $limit = 20, ?int $eventId = null): array
     {
-        $eventId = $eventId ?: Event::current()->id;
-        $stats   = Stat::with(['team', 'team.media'])->where('for', 'team')->where('type', 'event')->where('event_id', $eventId);
+        // When no eventId, use 'total' stats; otherwise use 'event' stats for specific event
+        $statsType = $eventId ? 'event' : 'total';
+
+        $query = Stat::with(['team', 'team.media'])->where('for', 'team')->where('type', $statsType);
+
+        if ($eventId) {
+            $query->where('event_id', $eventId);
+        }
 
         if ($teamId) {
-            $stats = $stats->where('team_id', $teamId)->first();
+            $stats = $query->where('team_id', $teamId)->first();
         } else {
-            $stats = $stats->get();
+            $stats = $query->get();
 
             // If we get no stats at all, we need to return a list of teams with empty stats
             if (! $stats || ! $stats->count()) {
-                $event = Event::find($eventId);
-                $teams = $event->teams;
+                if ($eventId) {
+                    $event = Event::find($eventId);
+                    $teams = $event->teams;
+                } else {
+                    $teams = \App\Models\Team::all();
+                }
 
                 foreach ($teams as $team) {
                     $emptyStat           = Stat::empty();
@@ -32,7 +42,7 @@ trait StatsForLeaderboards
                     $emptyStat->team     = $team;
                     $emptyStat->event_id = $eventId;
                     $emptyStat->for      = 'team';
-                    $emptyStat->type     = 'event';
+                    $emptyStat->type     = $statsType;
                     $emptyStat->games    = 0;
 
                     $stats->push($emptyStat);
@@ -120,26 +130,35 @@ trait StatsForLeaderboards
 
     public static function playerEventStatsSingle($type, $column, $order = 'desc', $limit = 20, ?int $eventId = null)
     {
-        $eventId = $eventId ?: Event::current()->id;
+        // When no eventId, use 'total' stats; otherwise use 'event' stats for specific event
+        $statsType = $eventId ? 'event' : 'total';
 
         if ($type === 'free_throws') {
-            $stats = Stat::with(['player', 'player.media'])
+            $query = Stat::with(['player', 'player.media'])
                 ->where('for', 'player')
-                ->where('type', 'event')
-                ->where('event_id', $eventId)
+                ->where('type', $statsType)
                 ->orderByRaw("CASE WHEN {$type}_made >= 5 THEN 0 ELSE 1 END")
                 ->orderByRaw("{$type}_percent DESC")
                 ->orderByRaw("{$type}_made DESC")
-                ->take($limit)
-                ->get();
+                ->take($limit);
+
+            if ($eventId) {
+                $query->where('event_id', $eventId);
+            }
+
+            $stats = $query->get();
         } else {
-            $stats = Stat::with(['player', 'player.media'])
+            $query = Stat::with(['player', 'player.media'])
                 ->where('for', 'player')
-                ->where('type', 'event')
-                ->where('event_id', $eventId)
+                ->where('type', $statsType)
                 ->take($limit)
-                ->orderBy($column, $order)
-                ->get();
+                ->orderBy($column, $order);
+
+            if ($eventId) {
+                $query->where('event_id', $eventId);
+            }
+
+            $stats = $query->get();
         }
 
         return self::optimizePlayerDataForLeaderboards($stats, $type);
