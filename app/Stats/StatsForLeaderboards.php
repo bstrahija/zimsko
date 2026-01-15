@@ -8,10 +8,20 @@ use App\Models\Stat;
 use App\Models\Team;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 
 trait StatsForLeaderboards
 {
     public static function teamEventStats($teamId = null, $limit = 20, ?int $eventId = null): array
+    {
+        $cacheKey = "stats.team.{$teamId}.{$limit}.{$eventId}";
+
+        return Cache::remember($cacheKey, now()->addDays(4), function () use ($teamId, $limit, $eventId) {
+            return self::teamEventStatsQuery($teamId, $limit, $eventId);
+        });
+    }
+
+    protected static function teamEventStatsQuery($teamId = null, $limit = 20, ?int $eventId = null): array
     {
         // When no eventId, use 'total' stats; otherwise use 'event' stats for specific event
         $statsType = $eventId ? 'event' : 'total';
@@ -110,6 +120,16 @@ trait StatsForLeaderboards
     }
 
     public static function playersEventStats($playerId = null, $limit = 20, ?int $eventId = null, array $sortModes = []): array
+    {
+        $sortKey  = implode('.', $sortModes);
+        $cacheKey = "stats.players.{$playerId}.{$limit}.{$eventId}.{$sortKey}";
+
+        return Cache::remember($cacheKey, now()->addDays(4), function () use ($playerId, $limit, $eventId, $sortModes) {
+            return self::playersEventStatsQuery($playerId, $limit, $eventId, $sortModes);
+        });
+    }
+
+    protected static function playersEventStatsQuery($playerId = null, $limit = 20, ?int $eventId = null, array $sortModes = []): array
     {
         $stats = [
             'score'        => self::playerEventStatsSingle('score', 'score', 'desc', $limit, $eventId, $sortModes['score'] ?? 'total'),
