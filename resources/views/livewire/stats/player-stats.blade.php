@@ -6,23 +6,22 @@ use Livewire\Attributes\Computed;
 use Livewire\Attributes\Url;
 use Livewire\Volt\Component;
 
-new class extends Component
-{
+new class extends Component {
     #[Url(as: 'player_event')]
     public $selectedEventId = null;
 
     public $tabs = [
-        'score'        => 'Poeni',
+        'score' => 'Poeni',
         'three_points' => '3PT',
-        'field_goals'  => 'FG',
-        'free_throws'  => 'FT',
-        'assists'      => 'AST',
-        'rebounds'     => 'REB',
-        'steals'       => 'STL',
-        'blocks'       => 'BLK',
-        'fouls'        => 'FOULS',
-        'turnovers'    => 'TO',
-        'efficiency'   => 'EFF',
+        'field_goals' => 'FG',
+        'free_throws' => 'FT',
+        'assists' => 'AST',
+        'rebounds' => 'REB',
+        'steals' => 'STL',
+        'blocks' => 'BLK',
+        'fouls' => 'FOULS',
+        'turnovers' => 'TO',
+        'efficiency' => 'EFF',
     ];
 
     public function mount()
