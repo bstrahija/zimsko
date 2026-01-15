@@ -36,6 +36,15 @@ class TeamsController extends Controller
         ]);
     }
 
+    public function games($slug)
+    {
+        $team = Team::query()->where('slug', $slug)->with(['media'])->firstOrFail();
+
+        return view('pages.team-games', [
+            'team' => $team,
+        ]);
+    }
+
     public function showPlayer($slug)
     {
         $player   = Player::where('slug', $slug)->with(['media', 'teams'])->firstOrFail();

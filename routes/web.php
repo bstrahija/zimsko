@@ -28,6 +28,7 @@ Route::get('raspored', [GamesController::class,   'schedule'])->name('schedule')
 Route::get('utakmice/{slug}', [GamesController::class,   'show'])->name('games.show');
 Route::get('ekipe', [TeamsController::class,   'index'])->name('teams');
 Route::get('ekipe/{slug}', [TeamsController::class,   'show'])->name('teams.show');
+Route::get('ekipe/{slug}/utakmice', [TeamsController::class,   'games'])->name('teams.games');
 Route::get('igraci/{slug}', [PlayersController::class, 'show'])->name('players.show');
 Route::get('statistika', [StatsController::class,   'index'])->name('stats');
 

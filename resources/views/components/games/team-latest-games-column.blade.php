@@ -65,6 +65,16 @@
                 @endforeach
             </tbody>
         </table>
+
+        <div class="mt-4 text-center">
+            <a href="{{ route('teams.games', $team->slug) }}"
+                class="inline-flex items-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary/90">
+                Sve Utakmice
+                <svg class="ml-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </a>
+        </div>
     @else
         <p class="py-4 text-center text-sm text-gray-500">Nema dostupnih utakmica.</p>
     @endif
