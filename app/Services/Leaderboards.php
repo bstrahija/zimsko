@@ -3,12 +3,10 @@
 namespace App\Services;
 
 use App\Leaderboards\Leaderboard;
-use App\Models\Leaderboard as LeaderboardModel;
 use App\Leaderboards\LeaderboardPlayerItem;
 use App\Leaderboards\LeaderboardTeamItem;
 use App\Models\Event;
 use App\Models\Game;
-use App\Models\GamePlayer;
 use App\Models\Stat;
 use App\Models\Team;
 use Illuminate\Support\Collection;
@@ -21,6 +19,7 @@ class Leaderboards
 
         // We can have manual lederboards for teams, so we should take them into account
         $manualLeaderboard = $event->leaderboard;
+        $manualLeaderboard = null;
 
         // If we have a manual leaderboard, build up all data
         if ($manualLeaderboard) {
@@ -79,8 +78,8 @@ class Leaderboards
             } else {
                 foreach ($event->teams()->with(['media'])->get() as $team) {
                     $leaderboard->add(new LeaderboardTeamItem([
-                        'id'              => $team->id,
-                        'title'           => $team->title,
+                        'id'    => $team->id,
+                        'title' => $team->title,
                         // 'points'          => $points,
                         // 'wins'            => $stat->wins,
                         // 'losses'          => $stat->losses,
@@ -88,7 +87,7 @@ class Leaderboards
                         // 'score'           => $stat->score,
                         // 'opponentScore'   => $stat->score_against,
                         // 'scoreDifference' => $stat->score_diff,
-                        'team'            => $team,
+                        'team' => $team,
                     ]));
                 }
             }
@@ -106,10 +105,10 @@ class Leaderboards
         if (
             $team->id === $game->homeTeam->id
         ) {
-            $team->statsData['score']          += $game->home_score;
+            $team->statsData['score'] += $game->home_score;
             $team->statsData['opponent_score'] += $game->away_score;
         } elseif ($team->id === $game->awayTeam->id) {
-            $team->statsData['score']          += $game->away_score;
+            $team->statsData['score'] += $game->away_score;
             $team->statsData['opponent_score'] += $game->home_score;
         }
 
