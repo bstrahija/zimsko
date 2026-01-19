@@ -32,7 +32,7 @@
             </div>
 
             <x-global.sidebar class="md:col-span-12 lg:col-span-4">
-                @if ($game?->scheduled_at?->year === 2025 && $game->status === 'completed')
+                @if ($game?->scheduled_at?->year >= 2025 && $game->status === 'completed')
                     <x-ui.card class="mb-8" title="Izvještaj" subtitle="Rezultat i statistika">
                         <x-ui.button class="w-full" tag="a" size="lg" variant="primary"
                             href="{{ route('reports.game', $game->slug) }}" target="_blank">
