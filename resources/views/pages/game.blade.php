@@ -11,7 +11,7 @@
                 @else
                     <x-games.score :game="$game" />
 
-                    @if ($game->scheduled_at->year === 2025)
+                    @if ($game->scheduled_at->year >= 2025)
                         @if ($game->status === 'completed')
                             <x-games.stats :game="$game" :live="$live" />
 

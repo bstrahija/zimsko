@@ -17,12 +17,16 @@ class Leaderboards
     {
         $leaderboard = (new Leaderboard)->setEvent($event);
 
-        // We can have manual lederboards for teams, so we should take them into account
-        $manualLeaderboard = $event->leaderboard;
-        $manualLeaderboard = null;
+        // Which leaderboard to use?
+        $useManualLeaderboard = (bool) Settings::get('general.use_manual_leaderboard');
+
+        // We can have manual leaderboards for teams, so we should take them into account
+        if ($useManualLeaderboard) {
+            $manualLeaderboard = $event->leaderboard;
+        }
 
         // If we have a manual leaderboard, build up all data
-        if ($manualLeaderboard) {
+        if ($useManualLeaderboard && isset($manualLeaderboard) && $manualLeaderboard) {
             $teams = $event->teams;
 
             foreach ($manualLeaderboard as $item) {
@@ -45,12 +49,12 @@ class Leaderboards
             }
         } else {
             // First get the stats
-            $stats = Stat::where(['event_id' => $event->id, 'for' => 'team', 'type' => 'event'])
+            $stats = Stat::query()->where(['event_id' => $event->id, 'for' => 'team', 'type' => 'event'])
                 ->orderBy('score', 'desc')
                 ->with(['team', 'team.media'])->get();
 
             // The add to leaderboard
-            if ($stats && $stats->count()) {
+            if ($stats?->count()) {
                 foreach ($stats as $stat) {
                     // Calculate the points based on the config
                     $points = (config('stats.points_for_win') * $stat->wins) + (config('stats.points_for_loss') * $stat->losses);
@@ -164,7 +168,7 @@ class Leaderboards
         $leaderboard = (new Leaderboard)->setGame($game)->setEvent($game->event);
 
         // Get all stat rows
-        $rows = Stat::where('game_id', $game->id)
+        $rows = Stat::query()->where('game_id', $game->id)
             ->with(['player', 'team', 'player.media', 'team.media'])
             ->where('for', 'player')
             ->where('type', 'game')

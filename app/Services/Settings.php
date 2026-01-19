@@ -21,7 +21,7 @@ class Settings
 
         // Try the DB
         $keys    = self::parseGroupAndKey($key);
-        $payload = Setting::where(['group' => $keys['group'], 'name' => $keys['name']])->first()?->payload;
+        $payload = Setting::query()->where(['group' => $keys['group'], 'name' => $keys['name']])->first()?->payload;
 
         // Update cache
         self::$cache[$key] = $payload;
@@ -35,7 +35,7 @@ class Settings
 
         if (Setting::query()->updateOrCreate(['group' => $keys['group'], 'name' => $keys['name']], ['payload' => $value])) {
             return self::$cache[$key] = $value;
-        };
+        }
     }
 
     protected static function parseGroupAndKey($key): array

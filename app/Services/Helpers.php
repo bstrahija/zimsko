@@ -3,10 +3,7 @@
 namespace App\Services;
 
 use App\Models\Event;
-use App\Models\Game;
-use App\Models\GamePlayer;
 use App\Models\Player;
-use App\Models\Team;
 
 final class Helpers
 {
@@ -20,27 +17,27 @@ final class Helpers
     {
         // return Leaderboards::getTeamLeaderboardForEvent(self::currentEvent());
 
-        return Cache::remember('event_leaderboard.teams.'  . self::currentEvent()?->id, (60 * 60 * 24), fn() => Leaderboards::getTeamLeaderboardForEvent(self::currentEvent()));
+        return Cache::remember('event_leaderboard.teams.' . self::currentEvent()?->id, (60 * 60 * 24), fn () => Leaderboards::getTeamLeaderboardForEvent(self::currentEvent()));
     }
 
     public static function leaderboardPoints()
     {
         // return Leaderboards::getPlayerLeaderboardForEvent(self::currentEvent());
 
-        return Cache::remember('event_leaderboard.points.' . self::currentEvent()?->id, (60 * 60 * 24), fn() => Leaderboards::getPlayerLeaderboardForEvent(self::currentEvent()));
+        return Cache::remember('event_leaderboard.points.' . self::currentEvent()?->id, (60 * 60 * 24), fn () => Leaderboards::getPlayerLeaderboardForEvent(self::currentEvent()));
     }
 
     public static function leaderboardThreePoints()
     {
         // return Leaderboards::getPlayer3PointLeaderboardForEvent(self::currentEvent());
 
-        return Cache::remember('event_leaderboard.3pts.'  . self::currentEvent()?->id, (60 * 60 * 24), fn() => Leaderboards::getPlayer3PointLeaderboardForEvent(self::currentEvent()));
+        return Cache::remember('event_leaderboard.3pts.' . self::currentEvent()?->id, (60 * 60 * 24), fn () => Leaderboards::getPlayer3PointLeaderboardForEvent(self::currentEvent()));
     }
 
     public static function currentTeams()
     {
         if (! self::$currentTeams) {
-            self::$currentTeams = Cache::remember('event_teams.' . self::currentEvent()?->id, (60 * 60), fn() => self::currentEvent()->teams()->with('media')->orderBy('title')->get());
+            self::$currentTeams = Cache::remember('event_teams.' . self::currentEvent()?->id, (60 * 60), fn () => self::currentEvent()->teams()->with('media')->orderBy('title')->get());
         }
 
         return self::$currentTeams;
@@ -57,9 +54,10 @@ final class Helpers
 
         if ($type === 'free_throws') {
             $sorted = collect($players)
-                ->sortByDesc(function ($player) use ($live, $type) {
+                ->sortByDesc(function ($player) {
                     $percent = $player['stats']['free_throws_percent'] ?? 0;
-                    $made = $player['stats']['free_throws_made'] ?? 0;
+                    $made    = $player['stats']['free_throws_made'] ?? 0;
+
                     return [$percent, $made];
                 })
                 ->take($limit)
@@ -67,15 +65,13 @@ final class Helpers
                 ->all();
         } else {
             $sorted = collect($players)
-                ->sortByDesc(function ($player) use ($live, $type) {
+                ->sortByDesc(function ($player) use ($type) {
                     return $player['stats'][$type] ?? 0;
                 })
                 ->take($limit)
                 ->values()
                 ->all();
         }
-
-
 
         return $sorted;
     }
