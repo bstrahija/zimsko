@@ -2,19 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Event;
-use App\Models\Game;
 use App\Models\Order;
 use App\Models\OrderItem;
-use App\Models\Post;
 use App\Models\Product;
-use App\Models\Team;
-use App\Services\Helpers;
-use App\Services\Leaderboards;
-use App\Stats\Stats;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class ProductsController extends Controller
@@ -49,19 +40,20 @@ class ProductsController extends Controller
 
     public function orders()
     {
-        $products = Product::all();
-        $summary  = [];
-        $orders   = Order::orderBy('first_name')
+        $currentYear = now()->year;
+        $products    = Product::all();
+        $summary     = [];
+        $orders      = Order::orderBy('first_name')
             ->with(['orderItems', 'orderItems.product'])
-            ->where('status', 'confirmed')
-            ->orWhere('status', 'completed')
+            ->whereYear('created_at', $currentYear)
+            ->whereIn('status', ['confirmed', 'completed'])
             ->get();
 
         foreach ($products as $product) {
             $items = OrderItem::where('product_id', $product->id)
-                ->whereHas('order', function ($query) {
-                    $query->where('status', 'confirmed')
-                        ->orWhere('status', 'completed');
+                ->whereHas('order', function ($query) use ($currentYear) {
+                    $query->whereYear('created_at', $currentYear)
+                        ->whereIn('status', ['confirmed', 'completed']);
                 })
                 ->with('order')
                 ->get()
@@ -72,7 +64,7 @@ class ProductsController extends Controller
 
             $summary['product_' . $product->id] = [
                 'product' => $product,
-                'items'   => $items
+                'items'   => $items,
             ];
         }
 
@@ -80,26 +72,26 @@ class ProductsController extends Controller
         $votes = Order::select('team_id', DB::raw('count(*) as count'))
             ->with('team')
             ->whereNotNull('team_id')
+            ->whereYear('created_at', $currentYear)
             ->where(function ($query) {
-                $query->where('status', 'confirmed')
-                    ->orWhere('status', 'completed');
+                $query->whereIn('status', ['confirmed', 'completed']);
             })
             ->groupBy('team_id')
             ->orderBy('count', 'desc')
             ->get()
             ->map(function ($order) {
                 return [
-                    'count' => $order->count,
-                    'title' => $order->team->title,
+                    'count'   => $order->count,
+                    'title'   => $order->team->title,
                     'team_id' => $order->team_id,
-                    'team' => $order->team
+                    'team'    => $order->team,
                 ];
             });
 
         return view('products.orders', [
             'orders'  => $orders,
             'summary' => $summary,
-            'votes'   => $votes
+            'votes'   => $votes,
         ]);
     }
 }
