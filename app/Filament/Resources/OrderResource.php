@@ -43,14 +43,23 @@ class OrderResource extends Resource
             ])
             ->filters([
                 SelectFilter::make('year')
-                    ->options(
-                        Order::query()
+                    ->options(function (): array {
+                        $years = Order::query()
                             ->selectRaw('YEAR(created_at) as year')
                             ->distinct()
-                            ->orderBy('year', 'desc')
-                            ->pluck('year', 'year')
-                            ->toArray()
-                    )
+                            ->pluck('year')
+                            ->all();
+
+                        $years[] = now()->year;
+
+                        return collect($years)
+                            ->filter()
+                            ->unique()
+                            ->sortDesc()
+                            ->mapWithKeys(fn (int $year): array => [$year => $year])
+                            ->all();
+                    })
+                    ->default(now()->year)
                     ->query(function (Builder $query, array $data): Builder {
                         return $query->when(
                             $data['value'] ?? null,
