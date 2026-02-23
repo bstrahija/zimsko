@@ -41,7 +41,7 @@ class ProductsController extends Controller
     public function orders()
     {
         $currentYear = now()->year;
-        $products    = Product::all();
+        $products    = Product::where('status', 'active')->get();
         $summary     = [];
         $orders      = Order::orderBy('first_name')
             ->with(['orderItems', 'orderItems.product'])
