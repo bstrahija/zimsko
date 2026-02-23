@@ -28,7 +28,7 @@
 
                             <x-ui.button size="lg" type="submit" variant="primary"
                                 class="w-full text-lg font-semibold uppercase tracking-wider transition-colors duration-300 hover:bg-opacity-90">
-                                Osiguraj majice
+                                Osiguraj merch
                             </x-ui.button>
                         </div>
 

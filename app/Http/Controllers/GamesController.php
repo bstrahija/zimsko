@@ -30,7 +30,7 @@ class GamesController extends Controller
 
     public function show($slug)
     {
-        $game = Game::where('slug', $slug)->firstOrFail();
+        $game = Game::query()->where('slug', $slug)->firstOrFail();
 
         // Let's cache if game is over
         if ($game->isCompleted()) {

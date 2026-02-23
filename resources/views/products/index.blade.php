@@ -6,9 +6,9 @@
     <div class="wrapper">
         <div class="grid grid-cols-1 gap-8 md:grid-cols-12">
             <div class="md:col-span-12 lg:col-span-8">
-                {{-- <livewire:merch-form :products="$products" /> --}}
+                <livewire:merch-form :products="$products" />
 
-                <x-ui.card class="overflow-x-auto space-y-4" title="Donacije" subtitle="Ponuda je ograničena" variant="light">
+                {{-- <x-ui.card class="overflow-x-auto space-y-4" title="Donacije" subtitle="Ponuda je ograničena" variant="light">
                     <div class="p-4 bg-yellow-50 rounded-md border-l-4 border-yellow-400">
                         <div class="flex">
                             <svg xmlns="http://www.w3.org/2000/svg" class="flex-shrink-0 w-5 h-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
@@ -24,7 +24,7 @@
                             </div>
                         </div>
                     </div>
-                </x-ui.card>
+                </x-ui.card> --}}
             </div>
 
             <x-global.sidebar class="md:col-span-12 lg:col-span-4" />
