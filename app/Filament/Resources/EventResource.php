@@ -6,20 +6,13 @@ use App\Filament\Resources\EventResource\Pages;
 use App\Filament\Resources\EventResource\RelationManagers;
 use App\Models\Event;
 use App\Models\Team;
-use Closure;
 use Filament\Forms;
-use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Form;
-use Filament\Forms\Get;
-use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use FilamentTiptapEditor\TiptapEditor;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Illuminate\Support\Str;
 
 class EventResource extends Resource
 {
@@ -61,14 +54,16 @@ class EventResource extends Resource
                                 Tabs\Tab::make('Leaderboard')
                                     ->icon('heroicon-o-chart-bar')
                                     ->schema([
+                                        Forms\Components\Toggle::make('use_manual_leaderboard')
+                                            ->columnSpanFull(),
                                         Forms\Components\Repeater::make('leaderboard')
                                             ->schema([
                                                 Forms\Components\Select::make('team_id')
                                                     ->searchable()
                                                     ->columnSpan(3)
                                                     ->preload()
-                                                    ->getSearchResultsUsing(fn(string $search): array => Team::where('title', 'like', "%{$search}%")->limit(50)->pluck('title', 'id')->toArray())
-                                                    ->getOptionLabelUsing(fn($value): ?string => Team::find($value)?->title)
+                                                    ->getSearchResultsUsing(fn (string $search): array => Team::where('title', 'like', "%{$search}%")->limit(50)->pluck('title', 'id')->toArray())
+                                                    ->getOptionLabelUsing(fn ($value): ?string => Team::find($value)?->title)
                                                     ->required(),
                                                 Forms\Components\TextInput::make('games')->default(0)->integer()->required(),
                                                 Forms\Components\TextInput::make('wins')->default(0)->integer()->required(),
@@ -82,10 +77,6 @@ class EventResource extends Resource
                         ),
                 ]
             );
-
-
-        return $form
-            ->schema([]);
     }
 
     public static function table(Table $table): Table
@@ -125,9 +116,9 @@ class EventResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListEvents::route('/'),
+            'index'  => Pages\ListEvents::route('/'),
             'create' => Pages\CreateEvent::route('/create'),
-            'edit' => Pages\EditEvent::route('/{record}/edit'),
+            'edit'   => Pages\EditEvent::route('/{record}/edit'),
         ];
     }
 }

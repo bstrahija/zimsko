@@ -18,7 +18,10 @@ class Leaderboards
         $leaderboard = (new Leaderboard)->setEvent($event);
 
         // Which leaderboard to use?
-        $useManualLeaderboard = (bool) Settings::get('general.use_manual_leaderboard');
+        $useManualLeaderboard = (bool) (
+            Settings::get('general.use_manual_leaderboard') ||
+            $event->use_manual_leaderboard
+        );
 
         // We can have manual leaderboards for teams, so we should take them into account
         if ($useManualLeaderboard) {

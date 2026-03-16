@@ -22,10 +22,12 @@ use Spatie\Sluggable\SlugOptions;
  * @property int|null $external_id
  * @property array|null $data
  * @property array|null $leaderboard
+ * @property bool $use_manual_leaderboard
  * @property \Illuminate\Support\Carbon|null $scheduled_at
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
+ *
  * @mixin \Eloquent
  */
 class Event extends Model
@@ -36,13 +38,14 @@ class Event extends Model
 
     public static $lastEvent;
 
-    protected $fillable = ['title', 'slug', 'body'];
+    protected $fillable = ['title', 'slug', 'body', 'use_manual_leaderboard'];
 
     protected $casts = [
-        'external_id'  => 'integer',
-        'data'         => 'array',
-        'leaderboard'  => 'array',
-        'scheduled_at' => 'timestamp',
+        'external_id'            => 'integer',
+        'data'                   => 'array',
+        'leaderboard'            => 'array',
+        'scheduled_at'           => 'timestamp',
+        'use_manual_leaderboard' => 'boolean',
     ];
 
     public function rounds(): HasMany
