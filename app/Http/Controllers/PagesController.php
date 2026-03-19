@@ -28,8 +28,6 @@ class PagesController extends Controller
         $pastEvent           = Event::whereNot('id', $currentEvent->id)->whereNot('slug', 'LIKE', '%c-liga%')->orderBy('scheduled_at', 'desc')->first();
         $latestArticles      = Post::query()->orderBy('published_at', 'desc')->take(3)->get();
 
-        dump($currentAllStarEvent);
-
         // $teamEventStats = Stats::teamEventStats(eventId: 10);
         // dump($teamEventStats);
         // $teamEventStats = Stats::teamEventStats(eventId: 8);
