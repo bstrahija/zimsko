@@ -36,6 +36,8 @@ class Event extends Model
 
     public static $currentEvent;
 
+    public static $currentAllStarEvent;
+
     public static $lastEvent;
 
     protected $fillable = ['title', 'slug', 'body', 'use_manual_leaderboard'];
@@ -86,6 +88,16 @@ class Event extends Model
         }
 
         return static::$currentEvent;
+    }
+
+    public static function currentAllStar(array $with = []): ?Event
+    {
+        if (! static::$currentAllStarEvent) {
+            $settingsEventId             = Settings::get('general.current_all_star_event_id', null);
+            static::$currentAllStarEvent = $settingsEventId ? Event::with($with)->find($settingsEventId) : null;
+        }
+
+        return static::$currentAllStarEvent;
     }
 
     public static function last(): ?Event

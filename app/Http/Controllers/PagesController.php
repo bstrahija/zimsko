@@ -22,10 +22,11 @@ class PagesController extends Controller
     public function index()
     {
         // Get data for home page
-        $lastEvent      = Event::last()->toArray();
-        $currentEvent   = Event::current() ?: ($lastEvent ?: null);
-        $pastEvent      = Event::query()->whereNot('id', $currentEvent->id)->whereNot('slug', 'LIKE', '%c-liga%')->orderBy('scheduled_at', 'desc')->first();
-        $latestArticles = Post::query()->query()->orderBy('published_at', 'desc')->take(3)->get();
+        $lastEvent           = Event::last()->toArray();
+        $currentEvent        = Event::current() ?: ($lastEvent ?: null);
+        $currentAllStarEvent = Event::currentAllStar() ?: null;
+        $pastEvent           = Event::whereNot('id', $currentEvent->id)->whereNot('slug', 'LIKE', '%c-liga%')->orderBy('scheduled_at', 'desc')->first();
+        $latestArticles      = Post::query()->orderBy('published_at', 'desc')->take(3)->get();
 
         // $teamEventStats = Stats::teamEventStats(eventId: 10);
         // dump($teamEventStats);
@@ -42,8 +43,13 @@ class PagesController extends Controller
 
         // $game = Game
 
+        $eventIds = [$currentEvent->id];
+        if ($currentAllStarEvent) {
+            $eventIds[] = $currentAllStarEvent->id;
+        }
+
         // Get the latest games
-        $upcomingGames = Game::query()->where(['event_id' => $currentEvent->id])
+        $upcomingGames = Game::query()->whereIn('event_id', $eventIds)
             ->where(function ($query) {
                 $query->where('status', 'scheduled');
                 $query->orWhere('status', 'in_progress');
@@ -52,7 +58,8 @@ class PagesController extends Controller
             ->orderBy('scheduled_at')
             ->limit(6)
             ->get();
-        $latestGames = Game::query()->where(['status' => 'completed', 'event_id' => $currentEvent->id])
+        $latestGames = Game::query()->whereIn('event_id', $eventIds)
+            ->where('status', 'completed')
             ->with(['homeTeam', 'awayTeam', 'homeTeam.media', 'awayTeam.media', 'round', 'event'])
             ->orderByDesc('scheduled_at')
             ->limit(6)
