@@ -88,7 +88,8 @@ class AchievementResource extends Resource
                     ->label('Player')
                     ->searchable(),
             ])
-            ->defaultPaginationPageOption(25)
+            ->defaultPaginationPageOption(100)
+            ->defaultSort('created_at', 'desc')
             ->paginationPageOptions([25, 50, 100])
             ->filters([
                 Tables\Filters\SelectFilter::make('event')
