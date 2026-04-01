@@ -46,8 +46,7 @@ class AchievementResource extends Resource
                 ->relationship('team', 'title')
                 ->searchable()
                 ->columnSpan(1)
-                ->preload()
-                ->required(),
+                ->preload(),
             Forms\Components\Select::make('player_id')
                 ->relationship('player', 'first_name')
                 ->getOptionLabelFromRecordUsing(fn (Player $record) => "{$record->first_name} {$record->last_name}")
@@ -59,8 +58,7 @@ class AchievementResource extends Resource
                     ->mapWithKeys(fn (Player $p) => [$p->id => "{$p->first_name} {$p->last_name}"])
                     ->all())
                 ->searchable()
-                ->columnSpan(1)
-                ->required(),
+                ->columnSpan(1),
         ]);
     }
 

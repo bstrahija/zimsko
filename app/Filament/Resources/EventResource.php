@@ -83,6 +83,7 @@ class EventResource extends Resource
     {
         return $table
             ->defaultSort('title', 'desc')
+            ->paginated([25, 50, 100])
             ->columns([
                 Tables\Columns\TextColumn::make('title')
                     ->sortable(),

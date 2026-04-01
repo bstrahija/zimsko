@@ -24,8 +24,8 @@ class PagesController extends Controller
         // Get data for home page
         $lastEvent      = Event::last()->toArray();
         $currentEvent   = Event::current() ?: ($lastEvent ?: null);
-        $pastEvent      = Event::whereNot('id', $currentEvent->id)->whereNot('slug', 'LIKE', '%c-liga%')->orderBy('scheduled_at', 'desc')->first();
-        $latestArticles = Post::query()->orderBy('published_at', 'desc')->take(3)->get();
+        $pastEvent      = Event::query()->whereNot('id', $currentEvent->id)->whereNot('slug', 'LIKE', '%c-liga%')->orderBy('scheduled_at', 'desc')->first();
+        $latestArticles = Post::query()->query()->orderBy('published_at', 'desc')->take(3)->get();
 
         // $teamEventStats = Stats::teamEventStats(eventId: 10);
         // dump($teamEventStats);
